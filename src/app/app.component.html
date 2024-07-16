@@ -1,29 +1,57 @@
-<mat-drawer-container class="w-full h-full" autosize>
-  <mat-drawer class="h-full max-w-36" #drawer mode="side">
-    <div class="h-full flex flex-col justify-around">a</div>
-  </mat-drawer>
+<div [ngClass]="themeSignal()" class="w-full h-full">
+  <mat-drawer-container class="w-full h-full" autosize>
+    <mat-drawer class="h-full max-w-36" #drawer mode="side">
+      <div class="h-full flex flex-col justify-around">a</div>
+    </mat-drawer>
 
-  <div class="h-full flex">
-    <nav class="flex flex-col justify-between p-2 h-100">
-      <div class="flex flex-col">
-        <button mat-icon-button (click)="drawer.toggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
+    <div class="h-full flex">
+      <nav class="flex flex-col justify-between p-2 h-100">
+        <div class="flex flex-col">
+          <button mat-icon-button (click)="drawer.toggle()">
+            <mat-icon>menu</mat-icon>
+          </button>
 
-        <button mat-icon-button>
-          <mat-icon>account_circle</mat-icon>
-        </button>
-      </div>
+          <button mat-icon-button>
+            <mat-icon>account_circle</mat-icon>
+          </button>
+        </div>
+
+        <div>
+          <button mat-icon-button (click)="toggleTheme()">
+            <mat-icon>{{
+              themeSignal() === Themes.LIGHT ? "light_mode" : "dark_mode"
+            }}</mat-icon>
+          </button>
+        </div>
+      </nav>
 
       <div>
-        <button mat-icon-button>
-          <mat-icon>light_mode</mat-icon>
-        </button>
+        <mat-toolbar>
+          <button
+            mat-icon-button
+            class="example-icon"
+            aria-label="Example icon-button with menu icon"
+          >
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span>My App</span>
+          <span class="example-spacer"></span>
+          <button
+            mat-icon-button
+            class="example-icon favorite-icon"
+            aria-label="Example icon-button with heart icon"
+          >
+            <mat-icon>favorite</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            class="example-icon"
+            aria-label="Example icon-button with share icon"
+          >
+            <mat-icon>share</mat-icon>
+          </button>
+        </mat-toolbar>
       </div>
-    </nav>
-
-    <div>
-      <!-- Open Space -->
     </div>
-  </div>
-</mat-drawer-container>
+  </mat-drawer-container>
+</div>

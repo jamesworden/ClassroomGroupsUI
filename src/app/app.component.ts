@@ -8,6 +8,9 @@ import { Classroom } from './classroom.models';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
+import { ThemeService } from './themes/theme.service';
+import { Themes } from './themes/theme.models';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-root',
@@ -18,18 +21,26 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
+    MatToolbarModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  providers: [ThemeService],
 })
 export class AppComponent implements OnInit {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
+  readonly #themeService = inject(ThemeService);
 
-  readonly classrooms = toSignal(this.#store.select('classrooms'));
+  readonly classroomsSignal = toSignal(this.#store.select('classrooms'));
+  readonly themeSignal = this.#themeService.themeSignal;
 
-  showFiller = false;
+  readonly Themes = Themes;
 
   ngOnInit() {
     this.#store.dispatch(getClassrooms());
+  }
+
+  toggleTheme() {
+    this.#themeService.toggleTheme();
   }
 }

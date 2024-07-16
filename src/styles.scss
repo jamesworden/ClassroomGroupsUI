@@ -1,3 +1,39 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+  )
+);
+
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: mat.$magenta-palette,
+      tertiary: mat.$violet-palette,
+    ),
+  )
+);
+
+.light-theme {
+  @include mat.core-color($light-theme);
+  @include mat.button-color($light-theme);
+  @include mat.all-component-themes($light-theme);
+}
+
+.dark-theme {
+  @include mat.core-color($dark-theme);
+  @include mat.button-color($dark-theme);
+  @include mat.all-component-themes($dark-theme);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
