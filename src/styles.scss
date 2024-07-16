@@ -1,7 +1,6 @@
 @use "@angular/material" as mat;
 
 @use "./app/_sidebar-theme" as sidebar;
-@use "./app/_app-theme" as app;
 
 @include mat.core();
 
@@ -35,12 +34,10 @@ html {
 .light-theme {
   @include mat.all-component-colors($light-theme);
   @include sidebar.theme($light-theme);
-  @include app.theme($light-theme);
 }
 .dark-theme {
   @include mat.all-component-colors($dark-theme);
   @include sidebar.theme($dark-theme);
-  @include app.theme($dark-theme);
 }
 
 @tailwind base;

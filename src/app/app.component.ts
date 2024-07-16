@@ -11,6 +11,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from './themes/theme.service';
 import { Themes } from './themes/theme.models';
 import { MatListModule } from '@angular/material/list';
+import {
+  MatSnackBar,
+  MatSnackBarModule,
+  MatSnackBarRef,
+} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +27,7 @@ import { MatListModule } from '@angular/material/list';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
+    MatSnackBarModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -30,6 +36,7 @@ import { MatListModule } from '@angular/material/list';
 export class AppComponent implements OnInit {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
   readonly #themeService = inject(ThemeService);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   readonly classroomsSignal = toSignal(this.#store.select('classrooms'));
   readonly themeSignal = this.#themeService.themeSignal;
@@ -42,5 +49,13 @@ export class AppComponent implements OnInit {
 
   toggleTheme() {
     this.#themeService.toggleTheme();
+  }
+
+  openUnderConstructionToastMessage() {
+    this.#matSnackBar.open('Under Construction!', 'Hide', {
+      duration: 3000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+    });
   }
 }
