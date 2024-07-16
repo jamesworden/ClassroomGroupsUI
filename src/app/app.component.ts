@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { increment, decrement, reset } from './classrooms.actions';
+import { getClassrooms } from './classrooms.actions';
+import { Classroom } from './classrooms.reducer';
 
 @Component({
   selector: 'app-root',
@@ -12,20 +13,12 @@ import { increment, decrement, reset } from './classrooms.actions';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  readonly #store = inject(Store<{ count: number }>);
+export class AppComponent implements OnInit {
+  readonly #store = inject(Store<{ classrooms: Classroom[] }>);
 
-  readonly count = toSignal(this.#store.select('count'));
+  readonly classrooms = toSignal(this.#store.select('classrooms'));
 
-  increment() {
-    this.#store.dispatch(increment());
-  }
-
-  decrement() {
-    this.#store.dispatch(decrement());
-  }
-
-  reset() {
-    this.#store.dispatch(reset());
+  ngOnInit() {
+    this.#store.dispatch(getClassrooms());
   }
 }
