@@ -10,6 +10,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from './themes/theme.service';
 import { Themes } from './themes/theme.models';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ import { Themes } from './themes/theme.models';
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
+    MatListModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

@@ -1,5 +1,8 @@
 @use "@angular/material" as mat;
 
+@use "./app/_sidebar-theme" as sidebar;
+@use "./app/_app-theme" as app;
+
 @include mat.core();
 
 $light-theme: mat.define-theme(
@@ -22,16 +25,22 @@ $dark-theme: mat.define-theme(
   )
 );
 
-.light-theme {
-  @include mat.core-color($light-theme);
-  @include mat.button-color($light-theme);
-  @include mat.all-component-themes($light-theme);
+/* 
+ * Ensure that `all-component-themes` is only used once because this imports rules that we don't want to duplicate.
+ */
+html {
+  @include mat.core-theme($light-theme);
+  @include mat.button-theme($light-theme);
 }
-
+.light-theme {
+  @include mat.all-component-colors($light-theme);
+  @include sidebar.theme($light-theme);
+  @include app.theme($light-theme);
+}
 .dark-theme {
-  @include mat.core-color($dark-theme);
-  @include mat.button-color($dark-theme);
-  @include mat.all-component-themes($dark-theme);
+  @include mat.all-component-colors($dark-theme);
+  @include sidebar.theme($dark-theme);
+  @include app.theme($dark-theme);
 }
 
 @tailwind base;
