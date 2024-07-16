@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { getClassrooms } from './classrooms.actions';
-import { Classroom } from './classrooms.reducer';
+import { Classroom } from './classroom.models';
 
 @Component({
   selector: 'app-root',
