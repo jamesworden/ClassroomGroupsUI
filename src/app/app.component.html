@@ -7,20 +7,35 @@
       <app-configurations-panel></app-configurations-panel>
     </div>
 
-    <div class="flex flex-col gap-y-4 my-4">
-      <section class="flex justify-between">
+    <div class="flex flex-col gap-y-4 my-4 flex-1">
+      <section class="flex justify-between m-4">
         <div>
-          <h3>Classroom 1</h3>
+          <h4>Classroom 1</h4>
         </div>
 
         <div>
-          <button mat-icon-button>
+          <button mat-icon-button [matMenuTriggerFor]="classroomSettingsMenu">
             <mat-icon>settings</mat-icon>
           </button>
         </div>
       </section>
 
-      <section class="panel-background">TODO</section>
+      <section class="mx-4">TODO</section>
     </div>
   </div>
 </div>
+
+<mat-menu #classroomSettingsMenu="matMenu">
+  <button
+    mat-menu-item
+    [disabled]="classroomsSignal().length <= 1"
+    [matTooltip]="
+      classroomsSignal().length <= 1
+        ? 'You can\'t delete the last classroom!'
+        : ''
+    "
+  >
+    <mat-icon>delete</mat-icon>
+    <span>Delete classroom</span>
+  </button>
+</mat-menu>

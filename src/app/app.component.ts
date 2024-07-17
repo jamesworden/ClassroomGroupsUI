@@ -13,6 +13,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ConfigurationsPanelComponent } from './components/configurations-panel/configurations-panel.component';
 import { ClassroomsPanelComponent } from './components/classrooms-panel/classrooms-panel.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +28,8 @@ import { ClassroomsPanelComponent } from './components/classrooms-panel/classroo
     MatIconModule,
     ConfigurationsPanelComponent,
     ClassroomsPanelComponent,
+    MatMenuModule,
+    MatTooltipModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
