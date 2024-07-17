@@ -52,6 +52,7 @@ export const classroomsReducer = createReducer(
   initialState,
   on(getClassrooms, (state) => {
     // TODO: Fetch and parse classroom data from localstorage
+    state.shownClassroomId = state.classrooms[0]?.id;
     return state;
   }),
   on(showClassroom, (state, { classroomId: shownClassroomId }) => ({
