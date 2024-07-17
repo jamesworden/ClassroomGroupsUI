@@ -51,8 +51,13 @@ export class AppComponent {
 
   readonly ResizableSide = ResizableSide;
 
-  panelWidth = 300;
-  configurationsPanelHeight = Math.floor(window.innerHeight / 2);
+  maxPanelWidth = Math.max(window.innerWidth / 2, 700);
+  minPanelWidth = Math.max(window.innerWidth / 6, 175);
+  panelWidth = Math.max(window.innerWidth / 4, 350);
+
+  maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
+  minConfigurationsPanelHeight = window.innerHeight / 4;
+  configurationsPanelHeight = window.innerHeight / 2;
 
   constructor() {
     this.#store.dispatch(getClassrooms());

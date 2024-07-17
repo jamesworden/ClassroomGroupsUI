@@ -6,6 +6,8 @@
       appResizeable
       [resizableSides]="[ResizableSide.RIGHT]"
       [panelWidth]="panelWidth"
+      [maxWidth]="maxPanelWidth"
+      [minWidth]="minPanelWidth"
       (resizedWidth)="setPanelWidth($event)"
       [ngStyle]="{
         width: panelWidth + 'px'
@@ -17,6 +19,8 @@
         appResizeable
         [resizableSides]="[ResizableSide.TOP]"
         [panelHeight]="configurationsPanelHeight"
+        [maxHeight]="maxConfigurationsPanelHeight"
+        [minHeight]="minConfigurationsPanelHeight"
         (resizedHeight)="setConfigurationsPanelHeight($event)"
         [ngStyle]="{
           height: configurationsPanelHeight + 'px'

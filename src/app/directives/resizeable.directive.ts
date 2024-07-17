@@ -40,9 +40,9 @@ export class ResizeableDirective {
   readonly resizableSides = input<ResizableSide[]>([]);
   readonly edgeWidth = input(10);
   readonly panelWidth = input(300);
-  readonly panelHeight = input(300);
   readonly maxWidth = input(400);
   readonly minWidth = input(200);
+  readonly panelHeight = input(300);
   readonly maxHeight = input(600);
   readonly minHeight = input(200);
 
