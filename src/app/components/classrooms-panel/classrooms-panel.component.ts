@@ -1,13 +1,13 @@
 import { Component, computed, inject, Signal, signal } from '@angular/core';
-import { FormControl, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Classroom } from '../../classroom.models';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { showClassroom } from '../../classrooms.actions';
+import { showClassroom } from '../../state/classrooms.actions';
+import { Classroom } from '../../models/classroom.models';
 
 @Component({
   selector: 'app-classrooms-panel',

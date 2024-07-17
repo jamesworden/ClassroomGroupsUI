@@ -3,8 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { getClassrooms } from './classrooms.actions';
-import { Classroom } from './classroom.models';
+import { getClassrooms } from './state/classrooms.actions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ThemeService } from './themes/theme.service';
@@ -20,6 +19,7 @@ import {
   ResizableSide,
   ResizeableDirective,
 } from './directives/resizeable.directive';
+import { Classroom } from './models/classroom.models';
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
