@@ -25,6 +25,8 @@ export class SidebarComponent {
   }
 
   openUnderConstructionToastMessage() {
-    this.#matSnackBar.open('Under Construction!', 'Hide');
+    this.#matSnackBar.open('Under Construction!', 'Hide', {
+      duration: 3000,
+    });
   }
 }
