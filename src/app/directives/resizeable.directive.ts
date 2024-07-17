@@ -11,16 +11,22 @@ import {
 export enum ResizableSide {
   TOP,
   RIGHT,
+  BOTTOM,
+  LEFT,
 }
 
 const borderClass: { [side: string]: string } = {
   [ResizableSide.TOP]: 'resizeable-border-top',
   [ResizableSide.RIGHT]: 'resizeable-border-right',
+  [ResizableSide.BOTTOM]: 'resizeable-border-bottom',
+  [ResizableSide.LEFT]: 'resizeable-border-left',
 };
 
 const cursorClass: { [side: string]: string } = {
   [ResizableSide.TOP]: 'cursor-row-resize',
   [ResizableSide.RIGHT]: 'cursor-col-resize',
+  [ResizableSide.BOTTOM]: 'cursor-row-resize',
+  [ResizableSide.LEFT]: 'cursor-col-resize',
 };
 
 @Directive({

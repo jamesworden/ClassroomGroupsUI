@@ -8,6 +8,12 @@
   .resizeable-border-right {
     border-right: 2px solid mat.get-theme-color($theme, primary, 50);
   }
+  .resizeable-border-bottom {
+    border-bottom: 2px solid mat.get-theme-color($theme, primary, 50);
+  }
+  .resizeable-border-left {
+    border-left: 2px solid mat.get-theme-color($theme, primary, 50);
+  }
 }
 
 @mixin theme($theme) {
