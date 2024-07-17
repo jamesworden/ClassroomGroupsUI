@@ -1,31 +1,5 @@
-<!-- We're using the MatDrawer as a context to apply the current theme. That's the only reason. -->
-<div [ngClass]="themeSignal()" class="w-full h-full flex">
-  <mat-drawer-container class="flex-1 flex h-full" [hasBackdrop]="false">
-    <mat-drawer opened="true" autoFocus="false">
-      <div class="w-full h-full flex">
-        <ng-container [ngTemplateOutlet]="app"></ng-container>
-      </div>
-    </mat-drawer>
-  </mat-drawer-container>
-</div>
-
-<!-- The actual contents of the application begin here. -->
-<ng-template #app>
-  <nav class="flex flex-col justify-between p-2 h-full sidebar shadow-lg">
-    <div class="flex flex-col">
-      <button mat-icon-button (click)="openUnderConstructionToastMessage()">
-        <mat-icon>account_circle</mat-icon>
-      </button>
-    </div>
-
-    <div class="flex flex-col">
-      <button mat-icon-button (click)="toggleTheme()">
-        <mat-icon>{{
-          themeSignal() === Themes.LIGHT ? "light_mode" : "dark_mode"
-        }}</mat-icon>
-      </button>
-    </div>
-  </nav>
+<div class="w-full h-full flex">
+  <app-sidebar></app-sidebar>
 
   <div class="flex-1 w-full h-full">Test</div>
-</ng-template>
+</div>
