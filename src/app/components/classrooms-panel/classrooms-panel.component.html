@@ -1,1 +1,25 @@
-<div class="flex-1 panel"></div>
+<div class="flex-1 panel p-4">
+  <h5>Classrooms</h5>
+
+  <form>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Find classroom</mat-label>
+      <input
+        type="text"
+        matInput
+        placeholder="4th period English"
+        [(ngModel)]="searchQueryStr"
+        (change)="updateSearchQuery()"
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </form>
+
+  <mat-selection-list [multiple]="false">
+    @for (classroom of filteredClassrooms(); track classroom.key) {
+    <mat-list-option [value]="classroom.key">{{
+      classroom.label
+    }}</mat-list-option>
+    }
+  </mat-selection-list>
+</div>

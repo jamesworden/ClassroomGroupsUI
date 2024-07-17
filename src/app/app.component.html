@@ -12,7 +12,7 @@
       [ngStyle]="{
         width: panelWidth + 'px'
       }"
-      class="flex flex-col border-r border-neutral-400"
+      class="flex flex-col border-r border-neutral-400 shadow-lg"
     >
       <app-classrooms-panel class="flex-1"></app-classrooms-panel>
       <app-configurations-panel
@@ -21,6 +21,8 @@
         [panelHeight]="configurationsPanelHeight"
         [maxHeight]="maxConfigurationsPanelHeight"
         [minHeight]="minConfigurationsPanelHeight"
+        [maxWidth]="maxPanelWidth"
+        [minWidth]="minPanelWidth"
         (resizedHeight)="setConfigurationsPanelHeight($event)"
         [ngStyle]="{
           height: configurationsPanelHeight + 'px'

@@ -61,7 +61,7 @@ export class AppComponent {
   readonly ResizableSide = ResizableSide;
 
   maxPanelWidth = Math.max(window.innerWidth / 2, 700);
-  minPanelWidth = Math.max(window.innerWidth / 6, 175);
+  minPanelWidth = Math.max(window.innerWidth / 5, 350);
   panelWidth = DEFAULT_PANEL_WIDTH;
 
   maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
