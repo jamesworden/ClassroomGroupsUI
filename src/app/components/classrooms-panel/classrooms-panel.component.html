@@ -5,11 +5,11 @@
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Find classroom</mat-label>
       <input
+        #classroomSearchQuery
         type="text"
         matInput
         placeholder="4th period English"
-        [(ngModel)]="searchQueryStr"
-        (change)="updateSearchQuery()"
+        (input)="searchQuery.set(classroomSearchQuery.value)"
       />
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>

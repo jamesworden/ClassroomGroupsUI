@@ -1,5 +1,5 @@
 import { Component, computed, inject, Signal, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Classroom } from '../../classroom.models';
@@ -27,8 +27,7 @@ export class ClassroomsPanelComponent {
     this.#store.select('classrooms')
   );
 
-  searchQuery = signal('');
-  searchQueryStr = '';
+  readonly searchQuery = signal('');
 
   filteredClassrooms: Signal<Classroom[]> = computed(() => {
     const classrooms = this.classrooms();
@@ -38,9 +37,4 @@ export class ClassroomsPanelComponent {
       classroom.label.includes(query.trim())
     );
   });
-
-  updateSearchQuery() {
-    console.log(this.searchQueryStr);
-    this.searchQuery.set(this.searchQueryStr);
-  }
 }
