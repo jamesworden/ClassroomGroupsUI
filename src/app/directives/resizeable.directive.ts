@@ -106,16 +106,22 @@ export class ResizeableDirective {
   }
 
   private shapeshift(mouseX: number, mouseY: number) {
-    if (this.resizableSides().includes(ResizableSide.TOP)) {
+    if (
+      this.resizableSides().includes(ResizableSide.TOP) ||
+      this.resizableSides().includes(ResizableSide.BOTTOM)
+    ) {
       const deltaY = this.startDragY - mouseY;
       const height = this.startDragHeight + deltaY;
       if (height > this.minHeight() && height < this.maxHeight()) {
         this.resizedHeight.emit(height);
       }
     }
-    if (this.resizableSides().includes(ResizableSide.RIGHT)) {
+    if (
+      this.resizableSides().includes(ResizableSide.RIGHT) ||
+      this.resizableSides().includes(ResizableSide.LEFT)
+    ) {
       const deltaX = mouseX - this.startDragX;
-      const width = this.startDragHeight + deltaX;
+      const width = this.startDragWidth + deltaX;
       if (width > this.minWidth() && width < this.maxWidth()) {
         this.resizedWidth.emit(width);
       }
