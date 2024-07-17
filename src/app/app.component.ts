@@ -55,8 +55,8 @@ export class AppComponent {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
   readonly #themeService = inject(ThemeService);
 
-  readonly classroomsSignal = toSignal(this.#store.select('classrooms'));
-  readonly themeSignal = this.#themeService.themeSignal;
+  readonly classrooms = toSignal(this.#store.select('classrooms'));
+  readonly theme = this.#themeService.theme;
 
   readonly ResizableSide = ResizableSide;
 
@@ -80,7 +80,7 @@ export class AppComponent {
           document.body.classList.remove(potentialTheme);
         }
       }
-      const actualTheme = this.themeSignal();
+      const actualTheme = this.theme();
       document.body.classList.add(actualTheme);
     });
   }

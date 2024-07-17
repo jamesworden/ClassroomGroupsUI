@@ -16,7 +16,7 @@ export class SidebarComponent {
   readonly #themeService = inject(ThemeService);
   readonly #matSnackBar = inject(MatSnackBar);
 
-  readonly themeSignal = this.#themeService.themeSignal;
+  readonly themeSignal = this.#themeService.theme;
 
   readonly Themes = Themes;
 
