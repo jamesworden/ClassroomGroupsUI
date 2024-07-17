@@ -5,7 +5,7 @@ import { Themes } from './theme.models';
   providedIn: 'root',
 })
 export class ThemeService {
-  public readonly themeSignal = signal<Themes>(Themes.DARK);
+  public readonly themeSignal = signal<Themes>(Themes.LIGHT);
 
   setTheme(theme: Themes) {
     this.themeSignal.set(theme);

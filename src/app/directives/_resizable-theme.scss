@@ -1,0 +1,17 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin color($theme) {
+  .resizeable-border-top {
+    border-top: 2px solid mat.get-theme-color($theme, primary, 50);
+  }
+  .resizeable-border-right {
+    border-right: 2px solid mat.get-theme-color($theme, primary, 50);
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+}

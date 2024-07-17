@@ -2,7 +2,11 @@
   <app-sidebar></app-sidebar>
 
   <div class="flex-1 w-full h-full flex">
-    <div class="flex flex-col">
+    <div
+      appResizeable
+      [resizableSides]="[ResizableSide.RIGHT]"
+      class="flex flex-col border-r border-neutral-400"
+    >
       <app-classrooms-panel></app-classrooms-panel>
       <app-configurations-panel></app-configurations-panel>
     </div>

@@ -16,6 +16,10 @@ import { ClassroomsPanelComponent } from './components/classrooms-panel/classroo
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfigurationPanelComponent } from './components/configuration-panel/configuration-panel.component';
+import {
+  ResizableSide,
+  ResizeableDirective,
+} from './directives/resizeable.directive';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +36,7 @@ import { ConfigurationPanelComponent } from './components/configuration-panel/co
     MatMenuModule,
     MatTooltipModule,
     ConfigurationPanelComponent,
+    ResizeableDirective,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -43,6 +48,8 @@ export class AppComponent {
 
   readonly classroomsSignal = toSignal(this.#store.select('classrooms'));
   readonly themeSignal = this.#themeService.themeSignal;
+
+  readonly ResizableSide = ResizableSide;
 
   constructor() {
     this.#store.dispatch(getClassrooms());

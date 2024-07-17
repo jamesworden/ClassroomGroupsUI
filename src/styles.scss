@@ -1,7 +1,8 @@
 @use "@angular/material" as mat;
 
 @use "./app/components/sidebar/_sidebar-theme" as sidebar;
-@use "./app/themes/shared/panel-theme" as panel;
+@use "./app/themes/shared/_panel-theme" as panel;
+@use "./app/directives/_resizable-theme" as resizable;
 
 @include mat.core();
 
@@ -31,11 +32,13 @@ html {
 .light-theme {
   @include sidebar.theme($light-theme);
   @include panel.lightTheme($light-theme);
+  @include resizable.theme($light-theme);
 }
 .dark-theme {
   @include mat.all-component-themes($dark-theme);
   @include sidebar.theme($dark-theme);
   @include panel.darkTheme($dark-theme);
+  @include resizable.theme($dark-theme);
 }
 
 @tailwind base;
