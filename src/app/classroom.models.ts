@@ -3,6 +3,7 @@ export interface Classroom {
   key: number;
   configurations: ClassroomConfiguration[];
   students: Student[];
+  description?: string;
 }
 
 export interface ClassroomConfiguration {

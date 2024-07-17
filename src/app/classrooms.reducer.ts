@@ -9,6 +9,7 @@ export const initialState: Classroom[] = [
   {
     key: 0,
     label: 'Classroom 1',
+    description: 'This classroom has great students.',
     configurations: [
       {
         columns: [

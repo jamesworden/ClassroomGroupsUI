@@ -15,11 +15,13 @@
     </mat-form-field>
   </form>
 
-  <mat-selection-list [multiple]="false">
+  <mat-list>
     @for (classroom of filteredClassrooms(); track classroom.key) {
-    <mat-list-option [value]="classroom.key">{{
-      classroom.label
-    }}</mat-list-option>
+    <mat-list-item>
+      <mat-icon matListItemIcon>groups</mat-icon>
+      <div matListItemTitle>{{ classroom.label }}</div>
+      <div matListItemLine>{{ classroom.description }}</div>
+    </mat-list-item>
     }
-  </mat-selection-list>
+  </mat-list>
 </div>
