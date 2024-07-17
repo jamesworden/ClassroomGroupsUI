@@ -52,6 +52,7 @@ export class AppComponent {
   readonly ResizableSide = ResizableSide;
 
   panelWidth = 300;
+  configurationsPanelHeight = Math.floor(window.innerHeight / 2);
 
   constructor() {
     this.#store.dispatch(getClassrooms());
@@ -69,5 +70,9 @@ export class AppComponent {
 
   setPanelWidth(panelWidth: number) {
     this.panelWidth = panelWidth;
+  }
+
+  setConfigurationsPanelHeight(panelHeight: number) {
+    this.configurationsPanelHeight = panelHeight;
   }
 }

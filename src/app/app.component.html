@@ -12,8 +12,17 @@
       }"
       class="flex flex-col border-r border-neutral-400"
     >
-      <app-classrooms-panel></app-classrooms-panel>
-      <app-configurations-panel></app-configurations-panel>
+      <app-classrooms-panel class="flex-1"></app-classrooms-panel>
+      <app-configurations-panel
+        appResizeable
+        [resizableSides]="[ResizableSide.TOP]"
+        [panelHeight]="configurationsPanelHeight"
+        (resizedHeight)="setConfigurationsPanelHeight($event)"
+        [ngStyle]="{
+          height: configurationsPanelHeight + 'px'
+        }"
+        class="border-t border-neutral-400"
+      ></app-configurations-panel>
     </div>
 
     <div class="flex flex-col gap-y-4 my-4 flex-1">

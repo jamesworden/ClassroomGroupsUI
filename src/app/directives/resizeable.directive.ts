@@ -34,15 +34,20 @@ export class ResizeableDirective {
   readonly resizableSides = input<ResizableSide[]>([]);
   readonly edgeWidth = input(10);
   readonly panelWidth = input(300);
+  readonly panelHeight = input(300);
   readonly maxWidth = input(400);
   readonly minWidth = input(200);
+  readonly maxHeight = input(600);
+  readonly minHeight = input(200);
 
   readonly resizedWidth = output<number>();
+  readonly resizedHeight = output<number>();
 
   private isResizing = false;
   private startDragX = 0;
   private startDragY = 0;
   private startDragWidth = 0;
+  private startDragHeight = 0;
   private mouseIsOnEdge = false;
 
   @HostListener('document:mousemove', ['$event'])
@@ -82,6 +87,7 @@ export class ResizeableDirective {
       this.startDragX = event.clientX;
       this.startDragY = event.clientY;
       this.startDragWidth = this.panelWidth();
+      this.startDragHeight = this.panelHeight();
     }
   }
 
@@ -94,17 +100,16 @@ export class ResizeableDirective {
   }
 
   private shapeshift(mouseX: number, mouseY: number) {
-    // if (this.resizableSides().includes(ResizableSide.TOP)) {
-    //   const deltaY = mouseY - this.startDragY;
-    //   this.#elementRef.nativeElement.style.height = `${
-    //     this.startElementHeight + deltaY
-    //   }px`;
-    //   this.startDragY = mouseY;
-    // }
-
+    if (this.resizableSides().includes(ResizableSide.TOP)) {
+      const deltaY = this.startDragY - mouseY;
+      const height = this.startDragHeight + deltaY;
+      if (height > this.minHeight() && height < this.maxHeight()) {
+        this.resizedHeight.emit(height);
+      }
+    }
     if (this.resizableSides().includes(ResizableSide.RIGHT)) {
       const deltaX = mouseX - this.startDragX;
-      const width = this.startDragWidth + deltaX;
+      const width = this.startDragHeight + deltaX;
       if (width > this.minWidth() && width < this.maxWidth()) {
         this.resizedWidth.emit(width);
       }
