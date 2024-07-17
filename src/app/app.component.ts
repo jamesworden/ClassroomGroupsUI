@@ -15,6 +15,7 @@ import { ConfigurationsPanelComponent } from './components/configurations-panel/
 import { ClassroomsPanelComponent } from './components/classrooms-panel/classrooms-panel.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfigurationPanelComponent } from './components/configuration-panel/configuration-panel.component';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ClassroomsPanelComponent,
     MatMenuModule,
     MatTooltipModule,
+    ConfigurationPanelComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
