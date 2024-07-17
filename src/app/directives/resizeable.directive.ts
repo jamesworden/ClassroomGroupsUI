@@ -128,12 +128,20 @@ export class ResizeableDirective {
     }
   }
 
+  /**
+   * Warning: For a RIGHT or LEFT resize, there is no check to make sure
+   * the mouse is close to the div that's being resized itself.
+   *
+   * There is also no support for TOP and LEFT checks at the moment.
+   */
   private isInEdge(mouseX: number, mouseY: number) {
     const elementRect = this.#elementRef.nativeElement.getBoundingClientRect();
     return (
       (this.resizableSides().includes(ResizableSide.TOP) &&
         mouseY < elementRect.top + this.edgeWidth() &&
-        mouseY > elementRect.top) ||
+        mouseY > elementRect.top &&
+        mouseX < elementRect.right &&
+        mouseX > elementRect.left) ||
       (this.resizableSides().includes(ResizableSide.RIGHT) &&
         mouseX > elementRect.right - this.edgeWidth() &&
         mouseX < elementRect.right)
