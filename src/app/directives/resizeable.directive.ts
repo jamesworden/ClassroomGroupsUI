@@ -34,6 +34,8 @@ export class ResizeableDirective {
   readonly resizableSides = input<ResizableSide[]>([]);
   readonly edgeWidth = input(10);
   readonly panelWidth = input(300);
+  readonly maxWidth = input(400);
+  readonly minWidth = input(200);
 
   readonly resizedWidth = output<number>();
 
@@ -102,7 +104,10 @@ export class ResizeableDirective {
 
     if (this.resizableSides().includes(ResizableSide.RIGHT)) {
       const deltaX = mouseX - this.startDragX;
-      this.resizedWidth.emit(this.startDragWidth + deltaX);
+      const width = this.startDragWidth + deltaX;
+      if (width > this.minWidth() && width < this.maxWidth()) {
+        this.resizedWidth.emit(width);
+      }
     }
   }
 
