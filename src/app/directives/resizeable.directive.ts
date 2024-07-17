@@ -45,16 +45,17 @@ export class ResizeableDirective {
   readonly panelHeight = input(300);
   readonly maxHeight = input(600);
   readonly minHeight = input(200);
+  readonly persistenceKey = input<string | null>(null);
 
   readonly resizedWidth = output<number>();
   readonly resizedHeight = output<number>();
 
-  private isResizing = false;
   private startDragX = 0;
   private startDragY = 0;
   private startDragWidth = 0;
   private startDragHeight = 0;
   private mouseIsOnEdge = false;
+  private isResizing = false;
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {

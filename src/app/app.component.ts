@@ -21,6 +21,15 @@ import {
   ResizeableDirective,
 } from './directives/resizeable.directive';
 
+const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
+
+const DEFAULT_CONFIGURATIONS_PANEL_HEIGHT = window.innerHeight / 2;
+
+interface PanelDimensions {
+  width?: number;
+  height?: number;
+}
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -53,14 +62,17 @@ export class AppComponent {
 
   maxPanelWidth = Math.max(window.innerWidth / 2, 700);
   minPanelWidth = Math.max(window.innerWidth / 6, 175);
-  panelWidth = Math.max(window.innerWidth / 4, 350);
+  panelWidth = DEFAULT_PANEL_WIDTH;
 
   maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
   minConfigurationsPanelHeight = window.innerHeight / 4;
-  configurationsPanelHeight = window.innerHeight / 2;
+  configurationsPanelHeight = DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
 
   constructor() {
     this.#store.dispatch(getClassrooms());
+
+    this.loadClassroomsAndConfigurationsPanelDimensions();
+    this.loadConfigurationsPanelDimensions();
 
     effect(() => {
       for (const potentialTheme of Object.values(Themes)) {
@@ -73,11 +85,44 @@ export class AppComponent {
     });
   }
 
+  private loadClassroomsAndConfigurationsPanelDimensions() {
+    const setting = localStorage.getItem('classrooms-and-configurations-panel');
+    if (!setting) {
+      return;
+    }
+    const panelDimensions = JSON.parse(setting) as PanelDimensions;
+    this.panelWidth = panelDimensions.width ?? DEFAULT_PANEL_WIDTH;
+  }
+
+  private loadConfigurationsPanelDimensions() {
+    const setting = localStorage.getItem('configurations-panel');
+    if (!setting) {
+      return;
+    }
+    const panelDimensions = JSON.parse(setting) as PanelDimensions;
+    this.configurationsPanelHeight =
+      panelDimensions.height ?? DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
+  }
+
   setPanelWidth(panelWidth: number) {
     this.panelWidth = panelWidth;
+    const panelDimensions: PanelDimensions = {
+      width: panelWidth,
+    };
+    localStorage.setItem(
+      'classrooms-and-configurations-panel',
+      JSON.stringify(panelDimensions)
+    );
   }
 
   setConfigurationsPanelHeight(panelHeight: number) {
     this.configurationsPanelHeight = panelHeight;
+    const panelDimensions: PanelDimensions = {
+      height: panelHeight,
+    };
+    localStorage.setItem(
+      'configurations-panel',
+      JSON.stringify(panelDimensions)
+    );
   }
 }
