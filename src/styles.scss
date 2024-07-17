@@ -28,7 +28,6 @@ html {
   @include mat.core-theme($light-theme);
 }
 .light-theme {
-  @include mat.all-component-themes($light-theme);
   @include sidebar.theme($light-theme);
 }
 .dark-theme {
