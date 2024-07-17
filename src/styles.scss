@@ -28,17 +28,11 @@ html {
   @include mat.core-theme($light-theme);
 }
 .light-theme {
-  @include mat.core-theme($light-theme);
   @include mat.all-component-themes($light-theme);
-  @include mat.core-color($light-theme);
-  @include mat.all-component-colors($light-theme);
   @include sidebar.theme($light-theme);
 }
 .dark-theme {
-  @include mat.core-theme($dark-theme);
   @include mat.all-component-themes($dark-theme);
-  @include mat.core-color($dark-theme);
-  @include mat.all-component-colors($dark-theme);
   @include sidebar.theme($dark-theme);
 }
 
