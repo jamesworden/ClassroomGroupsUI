@@ -1,5 +1,26 @@
 <div class="w-full h-full flex">
   <app-sidebar></app-sidebar>
 
-  <div class="flex-1 w-full h-full">Test</div>
+  <div class="flex-1 w-full h-full flex">
+    <div class="flex flex-col">
+      <app-classrooms-panel></app-classrooms-panel>
+      <app-configurations-panel></app-configurations-panel>
+    </div>
+
+    <div class="flex flex-col gap-y-4 my-4">
+      <section class="flex justify-between">
+        <div>
+          <h1>Classroom 1</h1>
+        </div>
+
+        <div>
+          <button mat-icon-button>
+            <mat-icon>settings</mat-icon>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel-background">TODO</section>
+    </div>
+  </div>
 </div>

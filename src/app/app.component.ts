@@ -10,6 +10,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { ThemeService } from './themes/theme.service';
 import { Themes } from './themes/theme.models';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { MatIconModule } from '@angular/material/icon';
+import { ConfigurationsPanelComponent } from './components/configurations-panel/configurations-panel.component';
+import { ClassroomsPanelComponent } from './components/classrooms-panel/classrooms-panel.component';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +23,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     MatButtonModule,
     MatSidenavModule,
     SidebarComponent,
+    MatIconModule,
+    ConfigurationsPanelComponent,
+    ClassroomsPanelComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
