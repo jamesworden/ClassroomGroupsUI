@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { Themes } from './theme.models';
 
 @Injectable({
@@ -12,6 +12,16 @@ export class ThemeService {
     if (savedTheme) {
       this.theme.set(savedTheme as Themes);
     }
+
+    effect(() => {
+      for (const potentialTheme of Object.values(Themes)) {
+        if (document.body.classList.contains(potentialTheme)) {
+          document.body.classList.remove(potentialTheme);
+        }
+      }
+      const actualTheme = this.theme();
+      document.body.classList.add(actualTheme);
+    });
   }
 
   toggleTheme() {

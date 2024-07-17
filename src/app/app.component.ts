@@ -60,9 +60,9 @@ export class AppComponent {
 
   readonly ResizableSide = ResizableSide;
 
-  maxPanelWidth = Math.max(window.innerWidth / 2, 700);
-  minPanelWidth = Math.max(window.innerWidth / 5, 350);
-  panelWidth = DEFAULT_PANEL_WIDTH;
+  maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
+  minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
+  classAndConfigPanelWidth = DEFAULT_PANEL_WIDTH;
 
   maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
   minConfigurationsPanelHeight = window.innerHeight / 4;
@@ -70,31 +70,21 @@ export class AppComponent {
 
   constructor() {
     this.#store.dispatch(getClassrooms());
-
-    this.loadClassroomsAndConfigurationsPanelDimensions();
-    this.loadConfigurationsPanelDimensions();
-
-    effect(() => {
-      for (const potentialTheme of Object.values(Themes)) {
-        if (document.body.classList.contains(potentialTheme)) {
-          document.body.classList.remove(potentialTheme);
-        }
-      }
-      const actualTheme = this.theme();
-      document.body.classList.add(actualTheme);
-    });
+    this.loadClassAndConfigPanelDimensions();
+    this.loadConfigPanelDimensions();
   }
 
-  private loadClassroomsAndConfigurationsPanelDimensions() {
+  private loadClassAndConfigPanelDimensions() {
     const setting = localStorage.getItem('classrooms-and-configurations-panel');
     if (!setting) {
       return;
     }
     const panelDimensions = JSON.parse(setting) as PanelDimensions;
-    this.panelWidth = panelDimensions.width ?? DEFAULT_PANEL_WIDTH;
+    this.classAndConfigPanelWidth =
+      panelDimensions.width ?? DEFAULT_PANEL_WIDTH;
   }
 
-  private loadConfigurationsPanelDimensions() {
+  private loadConfigPanelDimensions() {
     const setting = localStorage.getItem('configurations-panel');
     if (!setting) {
       return;
@@ -105,7 +95,7 @@ export class AppComponent {
   }
 
   setPanelWidth(panelWidth: number) {
-    this.panelWidth = panelWidth;
+    this.classAndConfigPanelWidth = panelWidth;
     const panelDimensions: PanelDimensions = {
       width: panelWidth,
     };

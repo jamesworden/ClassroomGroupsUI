@@ -5,12 +5,12 @@
     <div
       appResizeable
       [resizableSides]="[ResizableSide.RIGHT]"
-      [panelWidth]="panelWidth"
-      [maxWidth]="maxPanelWidth"
-      [minWidth]="minPanelWidth"
+      [panelWidth]="classAndConfigPanelWidth"
+      [maxWidth]="maxClassAndConfigPanelWidth"
+      [minWidth]="minClassAndConfigPanelWidth"
       (resizedWidth)="setPanelWidth($event)"
       [ngStyle]="{
-        width: panelWidth + 'px'
+        width: classAndConfigPanelWidth + 'px'
       }"
       class="flex flex-col border-r border-neutral-400 shadow-lg"
     >
@@ -21,8 +21,8 @@
         [panelHeight]="configurationsPanelHeight"
         [maxHeight]="maxConfigurationsPanelHeight"
         [minHeight]="minConfigurationsPanelHeight"
-        [maxWidth]="maxPanelWidth"
-        [minWidth]="minPanelWidth"
+        [maxWidth]="maxClassAndConfigPanelWidth"
+        [minWidth]="minClassAndConfigPanelWidth"
         (resizedHeight)="setConfigurationsPanelHeight($event)"
         [ngStyle]="{
           height: configurationsPanelHeight + 'px'
