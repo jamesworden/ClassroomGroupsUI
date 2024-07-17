@@ -51,6 +51,8 @@ export class AppComponent {
 
   readonly ResizableSide = ResizableSide;
 
+  panelWidth = 300;
+
   constructor() {
     this.#store.dispatch(getClassrooms());
 
@@ -63,5 +65,9 @@ export class AppComponent {
       const actualTheme = this.themeSignal();
       document.body.classList.add(actualTheme);
     });
+  }
+
+  setPanelWidth(panelWidth: number) {
+    this.panelWidth = panelWidth;
   }
 }

@@ -5,6 +5,11 @@
     <div
       appResizeable
       [resizableSides]="[ResizableSide.RIGHT]"
+      [panelWidth]="panelWidth"
+      (resizedWidth)="setPanelWidth($event)"
+      [ngStyle]="{
+        width: panelWidth + 'px'
+      }"
       class="flex flex-col border-r border-neutral-400"
     >
       <app-classrooms-panel></app-classrooms-panel>
