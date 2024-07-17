@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { showClassroom } from '../../classrooms.actions';
 
 @Component({
   selector: 'app-classrooms-panel',
@@ -37,4 +38,8 @@ export class ClassroomsPanelComponent {
       classroom.label.includes(query.trim())
     );
   });
+
+  selectClassroom(classroomId: string) {
+    this.#store.dispatch(showClassroom({ classroomId }));
+  }
 }

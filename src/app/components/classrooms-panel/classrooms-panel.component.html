@@ -16,8 +16,8 @@
   </form>
 
   <mat-list>
-    @for (classroom of filteredClassrooms(); track classroom.key) {
-    <mat-list-item>
+    @for (classroom of filteredClassrooms(); track classroom.id) {
+    <mat-list-item (click)="selectClassroom(classroom.id)">
       <mat-icon matListItemIcon>groups</mat-icon>
       <div matListItemTitle>{{ classroom.label }}</div>
       <div matListItemLine>{{ classroom.description }}</div>

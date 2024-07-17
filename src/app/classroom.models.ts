@@ -1,6 +1,6 @@
 export interface Classroom {
   label: string;
-  key: number;
+  id: string;
   configurations: ClassroomConfiguration[];
   students: Student[];
   description?: string;
@@ -9,13 +9,13 @@ export interface Classroom {
 export interface ClassroomConfiguration {
   label: string;
   description?: string;
-  key: number;
+  id: string;
   columns: ClassroomConfigurationColumn[];
 }
 
 export interface ClassroomConfigurationColumn {
   label: string;
-  key: number;
+  id: string;
   enabled: boolean;
   sort: ClassroomConfigurationColumnSort;
 }
@@ -27,5 +27,5 @@ export enum ClassroomConfigurationColumnSort {
 }
 
 export interface Student {
-  [fieldKey: number]: number | string;
+  [fieldId: string]: number | string;
 }
