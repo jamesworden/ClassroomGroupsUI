@@ -25,3 +25,8 @@ export const selectConfigurations = (classroomId: string) =>
     selectClassroom(classroomId),
     (classroom: Classroom | undefined) => classroom?.configurations ?? []
   );
+
+export const selectViewingConfigurationId = createSelector(
+  selectClassroomsState,
+  (state: ClassroomsState) => state.viewingConfigurationId
+);

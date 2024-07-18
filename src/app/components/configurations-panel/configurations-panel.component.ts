@@ -20,6 +20,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import {
   selectConfigurations,
   selectViewingClassroomId,
+  selectViewingConfigurationId,
 } from '../../state/classrooms/classrooms.selectors';
 import { ClassroomConfiguration } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,6 +55,13 @@ export class ConfigurationsPanelComponent {
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
+
+  readonly viewingConfigurationId = toSignal(
+    this.#store.select(selectViewingConfigurationId),
+    {
+      initialValue: '',
+    }
+  );
 
   readonly viewingClassroomId = toSignal(
     this.#store.select(selectViewingClassroomId),

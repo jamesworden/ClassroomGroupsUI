@@ -64,6 +64,9 @@ export const classroomsReducer = createReducer(
   on(viewClassroom, (state, { classroomId: viewingClassroomId }) => ({
     ...state,
     viewingClassroomId,
+    viewingConfigurationId:
+      state.classrooms.find(({ id }) => viewingClassroomId === id)
+        ?.configurations[0].id ?? '',
   })),
   on(addClassroom, (state, { classroomLabel: label }) => {
     const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
@@ -109,13 +112,19 @@ export const classroomsReducer = createReducer(
   }),
   on(deleteClassroom, (state, { classroomId }) => {
     const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
     newState.classrooms = newState.classrooms.filter(
       ({ id }) => classroomId !== id
     );
     // TODO: Move select first classroom into the dispatching of a new action?
+    newState.viewingClassroomId = newState.classrooms[0].id;
     newState.viewingConfigurationId =
       newState.classrooms[0].configurations[0].id;
-    newState.viewingClassroomId = newState.classrooms[0].id;
+
+    // TODO RESOLVE change detection issue with configurations
+    newState.classrooms[0].configurations = {
+      ...newState.classrooms[0].configurations,
+    };
     return newState;
   })
 );
