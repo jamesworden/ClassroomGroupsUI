@@ -112,8 +112,10 @@ export const classroomsReducer = createReducer(
     newState.classrooms = newState.classrooms.filter(
       ({ id }) => classroomId !== id
     );
+    // TODO: Move select first classroom into the dispatching of a new action?
     newState.viewingConfigurationId =
       newState.classrooms[0].configurations[0].id;
+    newState.viewingClassroomId = newState.classrooms[0].id;
     return newState;
   })
 );
