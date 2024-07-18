@@ -1,4 +1,12 @@
-import { Component, computed, effect, inject, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  Signal,
+  ViewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
