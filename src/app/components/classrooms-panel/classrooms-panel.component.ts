@@ -1,4 +1,13 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  Signal,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -39,6 +48,9 @@ export class ClassroomsPanelComponent {
   readonly #store = inject(Store<{ state: ClassroomsState }>);
   readonly #matSnackBar = inject(MatSnackBar);
 
+  @ViewChild('scrollContainer')
+  scrollContainer!: ElementRef<HTMLElement>;
+
   readonly classrooms = toSignal(this.#store.select(selectClassrooms));
   readonly shownClassroomId = toSignal(
     this.#store.select(selectViewingClassroomId)
@@ -58,6 +70,19 @@ export class ClassroomsPanelComponent {
       classroom.label.includes(query.trim())
     );
   });
+
+  constructor() {
+    effect(() => {
+      this.filteredClassrooms();
+
+      setTimeout(() => {
+        this.scrollContainer.nativeElement.scrollTo({
+          top: this.scrollContainer.nativeElement.scrollHeight,
+          behavior: 'smooth',
+        });
+      });
+    });
+  }
 
   selectClassroom(classroomId: string) {
     this.#store.dispatch(viewClassroom({ classroomId }));

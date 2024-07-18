@@ -1,41 +1,48 @@
-<div class="flex-1 overflow-auto panel p-4">
-  <h5>Classrooms</h5>
+<div class="flex-1 panel relative">
+  <div
+    #scrollContainer
+    class="absolute h-full flex flex-col overflow-auto flex-1 w-full"
+  >
+    <div class="sticky top-0 z-10 panel shadow-lg w-full p-4">
+      <h5>Classrooms</h5>
 
-  <form>
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Find classroom</mat-label>
+      <form>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Find classroom</mat-label>
+          <input
+            #classroomSearchQuery
+            type="text"
+            matInput
+            placeholder="4th period English"
+            (input)="searchQuery.set(classroomSearchQuery.value)"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </form>
+    </div>
+
+    <mat-action-list>
+      @for (classroom of filteredClassrooms(); track classroom.id) {
+      <mat-list-item (click)="selectClassroom(classroom.id)">
+        <mat-icon matListItemIcon>{{
+          classroom.id === shownClassroomId() ? "groups" : null
+        }}</mat-icon>
+        <div matListItemTitle>{{ classroom.label }}</div>
+        <div matListItemLine>{{ classroom.description }}</div>
+      </mat-list-item>
+      }
+    </mat-action-list>
+
+    <div class="ml-4 flex gap-x-2">
+      <button mat-icon-button (click)="addClassroom()">
+        <mat-icon>add</mat-icon>
+      </button>
       <input
-        #classroomSearchQuery
         type="text"
-        matInput
-        placeholder="4th period English"
-        (input)="searchQuery.set(classroomSearchQuery.value)"
+        [(ngModel)]="addClassroomLabel"
+        placeholder="Add classroom"
+        class="outline-none border-b border-gray-600 dark:border-gray-300 bg-transparent placeholder-current"
       />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-  </form>
-
-  <mat-action-list>
-    @for (classroom of filteredClassrooms(); track classroom.id) {
-    <mat-list-item (click)="selectClassroom(classroom.id)">
-      <mat-icon matListItemIcon>{{
-        classroom.id === shownClassroomId() ? "groups" : null
-      }}</mat-icon>
-      <div matListItemTitle>{{ classroom.label }}</div>
-      <div matListItemLine>{{ classroom.description }}</div>
-    </mat-list-item>
-    }
-  </mat-action-list>
-
-  <div class="ml-4 flex gap-x-2">
-    <button mat-icon-button (click)="addClassroom()">
-      <mat-icon>add</mat-icon>
-    </button>
-    <input
-      type="text"
-      [(ngModel)]="addClassroomLabel"
-      placeholder="Add classroom"
-      class="outline-none border-b border-gray-600 dark:border-gray-300 bg-transparent placeholder-current"
-    />
+    </div>
   </div>
 </div>

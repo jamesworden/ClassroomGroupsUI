@@ -62,7 +62,7 @@ export const classroomsReducer = createReducer(
 
     newState.classrooms.push({
       configurations: [],
-      id: `${new Date().getDate()}`, // Temp GUID
+      id: `${new Date().getTime()}`, // Temp GUID
       label,
       students: [],
       description: '',
