@@ -31,12 +31,12 @@ $dark-theme: mat.define-theme(
 html {
   @include mat.core-theme($light-theme);
 }
-.light-theme {
+.light {
   @include sidebar.theme($light-theme);
   @include panel.lightTheme($light-theme);
   @include resizable.theme($light-theme);
 }
-.dark-theme {
+.dark {
   @include mat.all-component-themes($dark-theme);
   @include sidebar.theme($dark-theme);
   @include panel.darkTheme($dark-theme);

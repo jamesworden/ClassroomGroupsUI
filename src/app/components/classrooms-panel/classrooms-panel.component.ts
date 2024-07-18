@@ -41,6 +41,8 @@ export class ClassroomsPanelComponent {
 
   readonly searchQuery = signal('');
 
+  addClassroomLabel = '';
+
   filteredClassrooms: Signal<Classroom[]> = computed(() => {
     const classrooms = this.classrooms();
     if (!classrooms) {
