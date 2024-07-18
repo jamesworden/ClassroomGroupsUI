@@ -15,13 +15,15 @@
     </mat-form-field>
   </form>
 
-  <mat-list>
+  <mat-action-list>
     @for (classroom of filteredClassrooms(); track classroom.id) {
     <mat-list-item (click)="selectClassroom(classroom.id)">
-      <mat-icon matListItemIcon>groups</mat-icon>
+      <mat-icon matListItemIcon>{{
+        classroom.id === shownClassroomId() ? "groups" : null
+      }}</mat-icon>
       <div matListItemTitle>{{ classroom.label }}</div>
       <div matListItemLine>{{ classroom.description }}</div>
     </mat-list-item>
     }
-  </mat-list>
+  </mat-action-list>
 </div>

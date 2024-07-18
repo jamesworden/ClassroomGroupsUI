@@ -46,7 +46,7 @@ export const initialState: Classroom[] = [
 export const classroomsReducer = createReducer(
   initialState,
   on(getClassrooms, (state) => {
-    // TODO: Fetch and parse classroom data from localstorage
+    // TODO: Fetch and parse classroom data.
     return state;
   })
 );

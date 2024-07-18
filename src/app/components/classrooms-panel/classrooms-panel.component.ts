@@ -8,6 +8,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { showClassroom } from '../../state/classrooms.actions';
 import { Classroom } from '../../models/classroom.models';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-classrooms-panel',
@@ -18,6 +20,8 @@ import { Classroom } from '../../models/classroom.models';
     MatInputModule,
     MatListModule,
     MatFormFieldModule,
+    MatDividerModule,
+    MatButtonModule,
   ],
   templateUrl: './classrooms-panel.component.html',
   styleUrl: './classrooms-panel.component.scss',
@@ -26,6 +30,9 @@ export class ClassroomsPanelComponent {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
   readonly classrooms: Signal<Classroom[]> = toSignal(
     this.#store.select('classrooms')
+  );
+  readonly shownClassroomId: Signal<string> = toSignal(
+    this.#store.select('shownClassroomId')
   );
 
   readonly searchQuery = signal('');
