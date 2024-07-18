@@ -3,16 +3,16 @@
 
 @mixin color($theme) {
   .resizeable-border-top {
-    border-top: 2px solid mat.get-theme-color($theme, primary, 50);
+    border-top: 1px solid mat.get-theme-color($theme, primary, 50);
   }
   .resizeable-border-right {
-    border-right: 2px solid mat.get-theme-color($theme, primary, 50);
+    border-right: 1px solid mat.get-theme-color($theme, primary, 50);
   }
   .resizeable-border-bottom {
-    border-bottom: 2px solid mat.get-theme-color($theme, primary, 50);
+    border-bottom: 1px solid mat.get-theme-color($theme, primary, 50);
   }
   .resizeable-border-left {
-    border-left: 2px solid mat.get-theme-color($theme, primary, 50);
+    border-left: 1px solid mat.get-theme-color($theme, primary, 50);
   }
 }
 
