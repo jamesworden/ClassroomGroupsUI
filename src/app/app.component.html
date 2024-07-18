@@ -35,8 +35,9 @@
 
     <div class="flex flex-col gap-y-4 my-4 flex-1">
       <section class="flex justify-between m-4">
-        <div>
-          <h4>Classroom 1</h4>
+        <div class="flex flex-col">
+          <h4 style="margin: 0">{{ viewingClassroom()?.label }}</h4>
+          <p>{{ viewingClassroom()?.description }}</p>
         </div>
 
         <div>

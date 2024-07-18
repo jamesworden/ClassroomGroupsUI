@@ -21,6 +21,7 @@ import { Classroom } from './models/classroom.models';
 import { ResizableService } from './directives/resizable.service';
 import {
   selectClassrooms,
+  selectViewingClassroom,
   selectViewingClassroomId,
 } from './state/classrooms/classrooms.selectors';
 import { deleteClassroom } from './state/classrooms/classrooms.actions';
@@ -78,6 +79,10 @@ export class AppComponent {
   maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
   minConfigurationsPanelHeight = window.innerHeight / 4;
   configurationsPanelHeight = DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
+
+  readonly viewingClassroom = toSignal(
+    this.#store.select(selectViewingClassroom)
+  );
 
   constructor() {
     this.loadClassAndConfigPanelDimensions();
