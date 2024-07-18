@@ -55,7 +55,9 @@ export class AppComponent {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
   readonly #themeService = inject(ThemeService);
 
-  readonly classrooms = toSignal(this.#store.select(selectClassrooms));
+  readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
+    initialValue: [],
+  });
   readonly theme = this.#themeService.theme;
 
   readonly ResizableSide = ResizableSide;
@@ -70,6 +72,8 @@ export class AppComponent {
   constructor() {
     this.loadClassAndConfigPanelDimensions();
     this.loadConfigPanelDimensions();
+
+    setTimeout(() => console.log(this.classrooms()), 3000);
   }
 
   private loadClassAndConfigPanelDimensions() {
