@@ -156,8 +156,6 @@ export class ResizeableDirective {
     id && this.#resizableService.addResizingId(id);
     const resizingMultiple = this.#resizableService.isResizingMultiple();
 
-    console.log(resizingMultiple);
-
     for (const side of this.resizableSides()) {
       this.#renderer2.addClass(
         this.#elementRef.nativeElement,
