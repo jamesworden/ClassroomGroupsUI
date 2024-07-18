@@ -1,9 +1,8 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { getClassrooms } from './state/classrooms.actions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ThemeService } from './themes/theme.service';
@@ -69,7 +68,6 @@ export class AppComponent {
   configurationsPanelHeight = DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
 
   constructor() {
-    this.#store.dispatch(getClassrooms());
     this.loadClassAndConfigPanelDimensions();
     this.loadConfigPanelDimensions();
   }
