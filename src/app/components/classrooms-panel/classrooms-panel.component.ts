@@ -18,6 +18,7 @@ import {
   selectClassrooms,
   selectViewingClassroomId,
 } from '../../state/classrooms/classrooms.selectors';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-classrooms-panel',
@@ -36,6 +37,7 @@ import {
 })
 export class ClassroomsPanelComponent {
   readonly #store = inject(Store<{ state: ClassroomsState }>);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   readonly classrooms = toSignal(this.#store.select(selectClassrooms));
   readonly shownClassroomId = toSignal(
@@ -62,9 +64,22 @@ export class ClassroomsPanelComponent {
   }
 
   addClassroom() {
+    if (this.addClassroomLabel.trim().length <= 0) {
+      this.#matSnackBar.open(
+        'Please enter the name of the classroom.',
+        'Hide',
+        {
+          duration: 3000,
+        }
+      );
+      return;
+    }
     this.#store.dispatch(
       addClassroom({ classroomLabel: this.addClassroomLabel })
     );
     this.addClassroomLabel = '';
+    this.#matSnackBar.open('Classroom created.', 'Hide', {
+      duration: 3000,
+    });
   }
 }

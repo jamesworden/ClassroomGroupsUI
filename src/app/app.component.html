@@ -10,7 +10,7 @@
       [minWidth]="minClassAndConfigPanelWidth"
       (resizedWidth)="setPanelWidth($event)"
       [ngStyle]="{
-        width: classAndConfigPanelWidth + 'px'
+        'min-width': classAndConfigPanelWidth + 'px'
       }"
       class="flex flex-col border-r border-neutral-400 shadow-lg"
       resizingId="classrooms-and-config-panel"
@@ -26,7 +26,7 @@
         [minWidth]="minClassAndConfigPanelWidth"
         (resizedHeight)="setConfigurationsPanelHeight($event)"
         [ngStyle]="{
-          height: configurationsPanelHeight + 'px'
+          'min-height': configurationsPanelHeight + 'px'
         }"
         class="border-t border-neutral-400"
         resizingId="config-panel"
