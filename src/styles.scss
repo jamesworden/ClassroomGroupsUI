@@ -3,6 +3,7 @@
 @use "./app/components/sidebar/_sidebar-theme" as sidebar;
 @use "./app/themes/shared/_panel-theme" as panel;
 @use "./app/directives/_resizable-theme" as resizable;
+@use "./app/material-utilties" as materialUtilities;
 
 @include mat.core();
 
@@ -35,12 +36,14 @@ html {
   @include sidebar.theme($light-theme);
   @include panel.lightTheme($light-theme);
   @include resizable.theme($light-theme);
+  @include materialUtilities.theme($light-theme);
 }
 .dark {
   @include mat.all-component-themes($dark-theme);
   @include sidebar.theme($dark-theme);
   @include panel.darkTheme($dark-theme);
   @include resizable.theme($dark-theme);
+  @include materialUtilities.theme($dark-theme);
 }
 
 @tailwind base;
