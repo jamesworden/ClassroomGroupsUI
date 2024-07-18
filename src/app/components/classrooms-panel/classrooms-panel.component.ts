@@ -10,7 +10,10 @@ import { Classroom } from '../../models/classroom.models';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { ClassroomsState } from '../../state/classrooms/classrooms.reducer';
-import { viewClassroom } from '../../state/classrooms/classrooms.actions';
+import {
+  addClassroom,
+  viewClassroom,
+} from '../../state/classrooms/classrooms.actions';
 import {
   selectClassrooms,
   selectViewingClassroomId,
@@ -56,5 +59,12 @@ export class ClassroomsPanelComponent {
 
   selectClassroom(classroomId: string) {
     this.#store.dispatch(viewClassroom({ classroomId }));
+  }
+
+  addClassroom() {
+    this.#store.dispatch(
+      addClassroom({ classroomLabel: this.addClassroomLabel })
+    );
+    this.addClassroomLabel = '';
   }
 }

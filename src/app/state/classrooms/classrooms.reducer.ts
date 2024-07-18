@@ -3,7 +3,7 @@ import {
   Classroom,
   ClassroomConfigurationColumnSort,
 } from '../../models/classroom.models';
-import { viewClassroom } from './classrooms.actions';
+import { addClassroom, viewClassroom } from './classrooms.actions';
 
 export interface ClassroomsState {
   classrooms: Classroom[];
@@ -56,5 +56,18 @@ export const classroomsReducer = createReducer(
   on(viewClassroom, (state, { classroomId: viewingClassroomId }) => ({
     ...state,
     viewingClassroomId,
-  }))
+  })),
+  on(addClassroom, (state, { classroomLabel: label }) => {
+    const newState = JSON.parse(JSON.stringify(state));
+
+    newState.classrooms.push({
+      configurations: [],
+      id: `${new Date().getDate()}`, // Temp GUID
+      label,
+      students: [],
+      description: '',
+    });
+
+    return newState;
+  })
 );
