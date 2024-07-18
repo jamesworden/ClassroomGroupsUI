@@ -29,8 +29,8 @@ import {
   addConfiguration,
   viewConfiguration,
 } from '../../state/classrooms/classrooms.actions';
-import { mergeMap, tap } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -43,6 +43,7 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     FormsModule,
     MatInputModule,
+    MatButtonModule,
   ],
   templateUrl: './configurations-panel.component.html',
   styleUrl: './configurations-panel.component.scss',

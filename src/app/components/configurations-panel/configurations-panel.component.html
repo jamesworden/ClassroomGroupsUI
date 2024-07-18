@@ -34,14 +34,18 @@
     </mat-action-list>
 
     <div class="ml-4 flex gap-x-2 mb-2">
-      <button mat-icon-button (click)="addConfiguration()">
+      <button
+        [disabled]="!addConfigurationLabel"
+        mat-icon-button
+        (click)="addConfiguration()"
+      >
         <mat-icon>add</mat-icon>
       </button>
       <input
         type="text"
         [(ngModel)]="addConfigurationLabel"
         placeholder="Add classroom"
-        class="outline-none border-b border-gray-600 dark:border-gray-300 bg-transparent placeholder-current"
+        class="outline-none border-b border-gray-600 dark:border-gray-300 bg-transparent placeholder-gray-700 dark:placeholder-current"
       />
     </div>
   </div>
