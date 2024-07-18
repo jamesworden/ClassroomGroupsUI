@@ -1,7 +1,6 @@
 import {
   Component,
   computed,
-  effect,
   ElementRef,
   inject,
   Signal,
@@ -11,7 +10,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,7 +26,7 @@ import {
   selectClassrooms,
   selectViewingClassroomId,
 } from '../../state/classrooms/classrooms.selectors';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-classrooms-panel',
@@ -40,6 +39,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatFormFieldModule,
     MatDividerModule,
     MatButtonModule,
+    MatSnackBarModule,
   ],
   templateUrl: './classrooms-panel.component.html',
   styleUrl: './classrooms-panel.component.scss',
@@ -51,25 +51,24 @@ export class ClassroomsPanelComponent {
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
 
-  readonly classrooms = toSignal(this.#store.select(selectClassrooms));
-  readonly shownClassroomId = toSignal(
-    this.#store.select(selectViewingClassroomId)
+  readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
+    initialValue: [],
+  });
+  readonly viewingClassroomId = toSignal(
+    this.#store.select(selectViewingClassroomId),
+    {
+      initialValue: '',
+    }
   );
-
   readonly searchQuery = signal('');
 
   addClassroomLabel = '';
 
-  filteredClassrooms: Signal<Classroom[]> = computed(() => {
-    const classrooms = this.classrooms();
-    if (!classrooms) {
-      return [];
-    }
-    const query = this.searchQuery();
-    return classrooms.filter((classroom) =>
-      classroom.label.includes(query.trim())
-    );
-  });
+  filteredClassrooms: Signal<Classroom[]> = computed(() =>
+    this.classrooms().filter((classroom) =>
+      classroom.label.includes(this.searchQuery().trim())
+    )
+  );
 
   selectClassroom(classroomId: string) {
     this.#store.dispatch(viewClassroom({ classroomId }));

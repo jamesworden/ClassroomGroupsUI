@@ -3,7 +3,7 @@
     #scrollContainer
     class="absolute h-full flex flex-col overflow-auto flex-1 w-full"
   >
-    <div class="sticky top-0 z-10 panel shadow-lg w-full p-4">
+    <div class="sticky top-0 z-10 panel shadow-lg w-full px-4 pt-4">
       <h5>Classrooms</h5>
 
       <form>
@@ -25,7 +25,7 @@
       @for (classroom of filteredClassrooms(); track classroom.id) {
       <mat-list-item (click)="selectClassroom(classroom.id)">
         <mat-icon matListItemIcon>{{
-          classroom.id === shownClassroomId() ? "groups" : null
+          classroom.id === viewingClassroomId() ? "groups" : null
         }}</mat-icon>
         <div matListItemTitle>{{ classroom.label }}</div>
         <div matListItemLine>{{ classroom.description }}</div>

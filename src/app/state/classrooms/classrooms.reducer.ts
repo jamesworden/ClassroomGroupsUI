@@ -3,11 +3,17 @@ import {
   Classroom,
   ClassroomConfigurationColumnSort,
 } from '../../models/classroom.models';
-import { addClassroom, viewClassroom } from './classrooms.actions';
+import {
+  addClassroom,
+  addConfiguration,
+  viewClassroom,
+  viewConfiguration,
+} from './classrooms.actions';
 
 export interface ClassroomsState {
   classrooms: Classroom[];
-  viewingClassroomId?: string;
+  viewingClassroomId: string;
+  viewingConfigurationId: string;
 }
 
 const initialState: ClassroomsState = {
@@ -49,6 +55,7 @@ const initialState: ClassroomsState = {
     },
   ],
   viewingClassroomId: '15392ca9-3143-4f97-8a9b-a2983c803eb0',
+  viewingConfigurationId: 'f3ee16c4-68a9-41c1-8780-ac367a1df4d9',
 };
 
 export const classroomsReducer = createReducer(
@@ -58,16 +65,49 @@ export const classroomsReducer = createReducer(
     viewingClassroomId,
   })),
   on(addClassroom, (state, { classroomLabel: label }) => {
-    const newState = JSON.parse(JSON.stringify(state));
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
 
     newState.classrooms.push({
-      configurations: [],
-      id: `${new Date().getTime()}`, // Temp GUID
+      configurations: [
+        {
+          columns: [],
+          id: generateUniqueId(),
+          label,
+        },
+      ],
+      id: generateUniqueId(),
       label,
       students: [],
       description: '',
     });
 
     return newState;
+  }),
+  on(
+    viewConfiguration,
+    (state, { configurationId: viewingConfigurationId }) => ({
+      ...state,
+      viewingConfigurationId,
+    })
+  ),
+  on(addConfiguration, (state, { configurationLabel: label, classroomId }) => {
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
+    const classroom = newState.classrooms.find(({ id }) => id === classroomId);
+    if (!classroom) {
+      return state;
+    }
+
+    classroom.configurations.push({
+      columns: [],
+      id: generateUniqueId(),
+      label,
+    });
+
+    return newState;
   })
 );
+
+function generateUniqueId() {
+  return `${new Date().getTime() * Math.random()}`;
+}
