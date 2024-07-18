@@ -22,7 +22,7 @@ const initialState: ClassroomsState = {
     {
       id: '15392ca9-3143-4f97-8a9b-a2983c803eb0',
       label: '4th Period English',
-      description: 'This classroom has great students.',
+      description: 'Historical fiction for young adults',
       configurations: [
         {
           columns: [
@@ -41,6 +41,7 @@ const initialState: ClassroomsState = {
           ],
           id: 'f3ee16c4-68a9-41c1-8780-ac367a1df4d9',
           label: 'Group project 7.18.24',
+          description: 'The Great Gatsby homework assignment',
         },
       ],
       students: [
