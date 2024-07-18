@@ -19,7 +19,11 @@ import {
 } from './directives/resizeable.directive';
 import { Classroom } from './models/classroom.models';
 import { ResizableService } from './directives/resizable.service';
-import { selectClassrooms } from './state/classrooms/classrooms.selectors';
+import {
+  selectClassrooms,
+  selectViewingClassroomId,
+} from './state/classrooms/classrooms.selectors';
+import { deleteClassroom } from './state/classrooms/classrooms.actions';
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
@@ -58,6 +62,12 @@ export class AppComponent {
   readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
     initialValue: [],
   });
+  readonly viewingClassroomId = toSignal(
+    this.#store.select(selectViewingClassroomId),
+    {
+      initialValue: '',
+    }
+  );
   readonly theme = this.#themeService.theme;
 
   readonly ResizableSide = ResizableSide;
@@ -115,6 +125,14 @@ export class AppComponent {
     localStorage.setItem(
       'configurations-panel',
       JSON.stringify(panelDimensions)
+    );
+  }
+
+  deleteViewedClassroom() {
+    this.#store.dispatch(
+      deleteClassroom({
+        classroomId: this.viewingClassroomId(),
+      })
     );
   }
 }

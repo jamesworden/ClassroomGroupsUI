@@ -6,6 +6,7 @@ import {
 import {
   addClassroom,
   addConfiguration,
+  deleteClassroom,
   viewClassroom,
   viewConfiguration,
 } from './classrooms.actions';
@@ -104,6 +105,15 @@ export const classroomsReducer = createReducer(
       label,
     });
 
+    return newState;
+  }),
+  on(deleteClassroom, (state, { classroomId }) => {
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+    newState.classrooms = newState.classrooms.filter(
+      ({ id }) => classroomId !== id
+    );
+    newState.viewingConfigurationId =
+      newState.classrooms[0].configurations[0].id;
     return newState;
   })
 );

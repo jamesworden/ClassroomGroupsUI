@@ -60,6 +60,7 @@
     [matTooltip]="
       classrooms().length <= 1 ? 'You can\'t delete the last classroom!' : ''
     "
+    (click)="deleteViewedClassroom()"
   >
     <mat-icon>delete</mat-icon>
     <span>Delete classroom</span>

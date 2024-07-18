@@ -10,6 +10,11 @@ export const addClassroom = createAction(
   props<{ classroomLabel: string }>()
 );
 
+export const deleteClassroom = createAction(
+  '[Classroom] Delete Classroom',
+  props<{ classroomId: string }>()
+);
+
 export const viewConfiguration = createAction(
   '[Classroom] View Configuration',
   props<{ configurationId: string }>()
