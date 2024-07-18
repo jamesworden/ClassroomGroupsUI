@@ -81,7 +81,9 @@ export class ConfigurationsPanelComponent {
 
   filteredConfigurations: Signal<ClassroomConfiguration[]> = computed(() =>
     this.configurations().filter((configuration) =>
-      configuration.label.includes(this.searchQuery().trim())
+      configuration.label
+        .toLowerCase()
+        .includes(this.searchQuery().trim().toLowerCase())
     )
   );
 

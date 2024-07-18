@@ -66,7 +66,9 @@ export class ClassroomsPanelComponent {
 
   filteredClassrooms: Signal<Classroom[]> = computed(() =>
     this.classrooms().filter((classroom) =>
-      classroom.label.includes(this.searchQuery().trim())
+      classroom.label
+        .toLowerCase()
+        .includes(this.searchQuery().trim().toLowerCase())
     )
   );
 
