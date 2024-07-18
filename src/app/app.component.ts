@@ -35,6 +35,7 @@ import {
 import {
   deleteClassroom,
   updateClassroomDescription,
+  updateClassroomLabel,
 } from './state/classrooms/classrooms.actions';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -98,6 +99,7 @@ export class AppComponent {
   configurationsPanelHeight = DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
 
   updatedClassroomDescription = '';
+  updatedClassroomLabel = '';
 
   readonly viewingClassroom = toSignal(
     this.#store.select(selectViewingClassroom)
@@ -111,6 +113,9 @@ export class AppComponent {
       () =>
         (this.updatedClassroomDescription =
           this.viewingClassroom()?.description ?? '')
+    );
+    effect(
+      () => (this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '')
     );
   }
 
@@ -171,5 +176,18 @@ export class AppComponent {
         description: this.updatedClassroomDescription,
       })
     );
+  }
+
+  updateClassroomLabel() {
+    if (this.updatedClassroomLabel.trim().length === 0) {
+      this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '';
+    } else {
+      this.#store.dispatch(
+        updateClassroomLabel({
+          classroomId: this.viewingClassroomId(),
+          label: this.updatedClassroomLabel,
+        })
+      );
+    }
   }
 }

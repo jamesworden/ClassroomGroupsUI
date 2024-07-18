@@ -8,6 +8,7 @@ import {
   addConfiguration,
   deleteClassroom,
   updateClassroomDescription,
+  updateClassroomLabel,
   viewClassroom,
   viewConfiguration,
 } from './classrooms.actions';
@@ -134,6 +135,18 @@ export const classroomsReducer = createReducer(
     }
 
     classroom.description = description;
+
+    return newState;
+  }),
+  on(updateClassroomLabel, (state, { classroomId, label }) => {
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
+    const classroom = newState.classrooms.find(({ id }) => id === classroomId);
+    if (!classroom) {
+      return state;
+    }
+
+    classroom.label = label;
 
     return newState;
   })

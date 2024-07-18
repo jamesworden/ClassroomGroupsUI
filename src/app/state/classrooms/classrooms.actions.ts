@@ -29,3 +29,8 @@ export const updateClassroomDescription = createAction(
   '[Classroom] Update Classroom Description',
   props<{ description: string; classroomId: string }>()
 );
+
+export const updateClassroomLabel = createAction(
+  '[Classroom] Update Classroom Label',
+  props<{ label: string; classroomId: string }>()
+);
