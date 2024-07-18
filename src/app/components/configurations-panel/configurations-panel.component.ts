@@ -18,7 +18,7 @@ import { ClassroomsState } from '../../state/classrooms/classrooms.reducer';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  selectConfigurations,
+  selectViewingClassroom,
   selectViewingClassroomId,
   selectViewingConfigurationId,
 } from '../../state/classrooms/classrooms.selectors';
@@ -29,7 +29,7 @@ import {
   addConfiguration,
   viewConfiguration,
 } from '../../state/classrooms/classrooms.actions';
-import { mergeMap } from 'rxjs';
+import { mergeMap, tap } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
@@ -63,6 +63,12 @@ export class ConfigurationsPanelComponent {
     }
   );
 
+  readonly viewingClassroom = toSignal(
+    this.#store.select(selectViewingClassroom)
+  );
+
+  readonly searchQuery = signal('');
+
   readonly viewingClassroomId = toSignal(
     this.#store.select(selectViewingClassroomId),
     {
@@ -70,29 +76,13 @@ export class ConfigurationsPanelComponent {
     }
   );
 
-  readonly configurations = toSignal(
-    this.#store
-      .select(selectViewingClassroomId)
-      .pipe(
-        mergeMap((viewingClassroomId) =>
-          this.#store.select(selectConfigurations(viewingClassroomId))
-        )
-      ),
-    {
-      initialValue: [],
-    }
-  );
-
-  readonly searchQuery = signal('');
-
   addConfigurationLabel = '';
 
-  filteredConfigurations: Signal<ClassroomConfiguration[]> = computed(() =>
-    this.configurations().filter((configuration) =>
-      configuration.label
-        .toLowerCase()
-        .includes(this.searchQuery().trim().toLowerCase())
-    )
+  readonly filteredConfigurations: Signal<ClassroomConfiguration[]> = computed(
+    () =>
+      this.viewingClassroom()?.configurations.filter(({ label }) =>
+        label.toLowerCase().includes(this.searchQuery())
+      ) ?? []
   );
 
   selectConfiguration(configurationId: string) {

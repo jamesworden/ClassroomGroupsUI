@@ -121,10 +121,6 @@ export const classroomsReducer = createReducer(
     newState.viewingConfigurationId =
       newState.classrooms[0].configurations[0].id;
 
-    // TODO RESOLVE change detection issue with configurations
-    newState.classrooms[0].configurations = {
-      ...newState.classrooms[0].configurations,
-    };
     return newState;
   })
 );

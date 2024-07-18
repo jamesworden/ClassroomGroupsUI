@@ -15,16 +15,11 @@ export const selectViewingClassroomId = createSelector(
   (state: ClassroomsState) => state.viewingClassroomId
 );
 
-export const selectClassroom = (classroomId: string) =>
-  createSelector(selectClassrooms, (classrooms: Classroom[]) =>
-    classrooms.find(({ id }) => classroomId === id)
-  );
-
-export const selectConfigurations = (classroomId: string) =>
-  createSelector(
-    selectClassroom(classroomId),
-    (classroom: Classroom | undefined) => classroom?.configurations ?? []
-  );
+export const selectViewingClassroom = createSelector(
+  selectClassroomsState,
+  ({ viewingClassroomId, classrooms }: ClassroomsState) =>
+    classrooms.find(({ id }) => id === viewingClassroomId)
+);
 
 export const selectViewingConfigurationId = createSelector(
   selectClassroomsState,
