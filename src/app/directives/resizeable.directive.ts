@@ -7,6 +7,7 @@ import {
   output,
   Renderer2,
 } from '@angular/core';
+import { ResizableService } from './resizable.service';
 
 export enum ResizableSide {
   TOP,
@@ -36,6 +37,7 @@ const cursorClass: { [side: string]: string } = {
 export class ResizeableDirective {
   readonly #elementRef = inject(ElementRef<HTMLElement>);
   readonly #renderer2 = inject(Renderer2);
+  readonly #resizableService = inject(ResizableService);
 
   readonly resizableSides = input<ResizableSide[]>([]);
   readonly edgeWidth = input(10);
@@ -45,7 +47,7 @@ export class ResizeableDirective {
   readonly panelHeight = input(300);
   readonly maxHeight = input(600);
   readonly minHeight = input(200);
-  readonly persistenceKey = input<string | null>(null);
+  readonly resizingId = input<string | null>(null);
 
   readonly resizedWidth = output<number>();
   readonly resizedHeight = output<number>();
@@ -150,19 +152,43 @@ export class ResizeableDirective {
   }
 
   private addBorderStyles() {
+    const id = this.resizingId();
+    id && this.#resizableService.addResizingId(id);
+    const resizingMultiple = this.#resizableService.isResizingMultiple();
+
+    console.log(resizingMultiple);
+
     for (const side of this.resizableSides()) {
       this.#renderer2.addClass(
         this.#elementRef.nativeElement,
         borderClass[side]
       );
-      this.#renderer2.addClass(
-        this.#elementRef.nativeElement,
-        cursorClass[side]
-      );
+      if (resizingMultiple) {
+        this.#renderer2.removeClass(
+          this.#elementRef.nativeElement,
+          cursorClass[side]
+        );
+      } else {
+        this.#renderer2.addClass(
+          this.#elementRef.nativeElement,
+          cursorClass[side]
+        );
+        this.#renderer2.removeClass(
+          this.#elementRef.nativeElement,
+          'cursor-move'
+        );
+      }
+    }
+    if (resizingMultiple) {
+      this.#renderer2.addClass(this.#elementRef.nativeElement, 'cursor-move');
     }
   }
 
   private removeBorderStyles() {
+    const id = this.resizingId();
+    id && this.#resizableService.removeResizingId(id);
+    const resizingMultiple = this.#resizableService.isResizingMultiple();
+
     for (const side of this.resizableSides()) {
       this.#renderer2.removeClass(
         this.#elementRef.nativeElement,
@@ -171,6 +197,12 @@ export class ResizeableDirective {
       this.#renderer2.removeClass(
         this.#elementRef.nativeElement,
         cursorClass[side]
+      );
+    }
+    if (!resizingMultiple) {
+      this.#renderer2.removeClass(
+        this.#elementRef.nativeElement,
+        'cursor-move'
       );
     }
   }

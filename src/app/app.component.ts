@@ -7,7 +7,6 @@ import { getClassrooms } from './state/classrooms.actions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ThemeService } from './themes/theme.service';
-import { Themes } from './themes/theme.models';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ConfigurationsPanelComponent } from './components/configurations-panel/configurations-panel.component';
@@ -20,6 +19,7 @@ import {
   ResizeableDirective,
 } from './directives/resizeable.directive';
 import { Classroom } from './models/classroom.models';
+import { ResizableService } from './directives/resizable.service';
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
@@ -49,7 +49,7 @@ interface PanelDimensions {
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [ThemeService],
+  providers: [ThemeService, ResizableService],
 })
 export class AppComponent {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
