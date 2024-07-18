@@ -24,3 +24,8 @@ export const addConfiguration = createAction(
   '[Classroom] Add Configuration',
   props<{ configurationLabel: string; classroomId: string }>()
 );
+
+export const updateClassroomDescription = createAction(
+  '[Classroom] Update Classroom Description',
+  props<{ description: string; classroomId: string }>()
+);

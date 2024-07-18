@@ -7,6 +7,7 @@ import {
   addClassroom,
   addConfiguration,
   deleteClassroom,
+  updateClassroomDescription,
   viewClassroom,
   viewConfiguration,
 } from './classrooms.actions';
@@ -121,6 +122,18 @@ export const classroomsReducer = createReducer(
     newState.viewingClassroomId = newState.classrooms[0].id;
     newState.viewingConfigurationId =
       newState.classrooms[0].configurations[0].id;
+
+    return newState;
+  }),
+  on(updateClassroomDescription, (state, { classroomId, description }) => {
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
+    const classroom = newState.classrooms.find(({ id }) => id === classroomId);
+    if (!classroom) {
+      return state;
+    }
+
+    classroom.description = description;
 
     return newState;
   })

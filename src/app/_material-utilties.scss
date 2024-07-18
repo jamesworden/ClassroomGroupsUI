@@ -5,6 +5,11 @@
   .text-primary {
     color: mat.get-theme-color($theme, primary, 50) !important;
   }
+  .hover-border-primary {
+    &:hover {
+      border-color: mat.get-theme-color($theme, primary, 50) !important;
+    }
+  }
 }
 
 @mixin theme($theme) {

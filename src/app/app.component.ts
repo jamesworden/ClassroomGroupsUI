@@ -1,4 +1,4 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, computed, effect, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
@@ -24,7 +24,13 @@ import {
   selectViewingClassroom,
   selectViewingClassroomId,
 } from './state/classrooms/classrooms.selectors';
-import { deleteClassroom } from './state/classrooms/classrooms.actions';
+import {
+  deleteClassroom,
+  updateClassroomDescription,
+} from './state/classrooms/classrooms.actions';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
@@ -51,6 +57,9 @@ interface PanelDimensions {
     MatTooltipModule,
     ConfigurationPanelComponent,
     ResizeableDirective,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -80,6 +89,8 @@ export class AppComponent {
   minConfigurationsPanelHeight = window.innerHeight / 4;
   configurationsPanelHeight = DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
 
+  updatedClassroomDescription = '';
+
   readonly viewingClassroom = toSignal(
     this.#store.select(selectViewingClassroom)
   );
@@ -88,7 +99,11 @@ export class AppComponent {
     this.loadClassAndConfigPanelDimensions();
     this.loadConfigPanelDimensions();
 
-    setTimeout(() => console.log(this.classrooms()), 3000);
+    effect(
+      () =>
+        (this.updatedClassroomDescription =
+          this.viewingClassroom()?.description ?? '')
+    );
   }
 
   private loadClassAndConfigPanelDimensions() {
@@ -137,6 +152,15 @@ export class AppComponent {
     this.#store.dispatch(
       deleteClassroom({
         classroomId: this.viewingClassroomId(),
+      })
+    );
+  }
+
+  updateClassroomDescription() {
+    this.#store.dispatch(
+      updateClassroomDescription({
+        classroomId: this.viewingClassroomId(),
+        description: this.updatedClassroomDescription,
       })
     );
   }

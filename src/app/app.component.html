@@ -37,7 +37,12 @@
       <section class="flex justify-between m-4">
         <div class="flex flex-col">
           <h4 style="margin: 0">{{ viewingClassroom()?.label }}</h4>
-          <p>{{ viewingClassroom()?.description }}</p>
+          <input
+            class="appearance-none bg-transparent border border-transparent hover-border-primary rounded p-2 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            [(ngModel)]="updatedClassroomDescription"
+            (change)="updateClassroomDescription()"
+          />
         </div>
 
         <div>
