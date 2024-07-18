@@ -48,6 +48,7 @@ const initialState: ClassroomsState = {
       ],
     },
   ],
+  viewingClassroomId: '15392ca9-3143-4f97-8a9b-a2983c803eb0',
 };
 
 export const classroomsReducer = createReducer(
