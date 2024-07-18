@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
@@ -19,6 +19,7 @@ import {
 } from './directives/resizeable.directive';
 import { Classroom } from './models/classroom.models';
 import { ResizableService } from './directives/resizable.service';
+import { selectClassrooms } from './state/classrooms/classrooms.selectors';
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
@@ -54,11 +55,10 @@ export class AppComponent {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
   readonly #themeService = inject(ThemeService);
 
-  readonly classrooms = toSignal(this.#store.select('classrooms'));
+  readonly classrooms = toSignal(this.#store.select(selectClassrooms));
   readonly theme = this.#themeService.theme;
 
   readonly ResizableSide = ResizableSide;
-
   maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
   minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
   classAndConfigPanelWidth = DEFAULT_PANEL_WIDTH;

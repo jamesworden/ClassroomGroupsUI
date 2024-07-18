@@ -56,9 +56,11 @@
 <mat-menu #classroomSettingsMenu="matMenu">
   <button
     mat-menu-item
-    [disabled]="classrooms().length <= 1"
+    [disabled]="classrooms()?.length ?? 0 <= 1"
     [matTooltip]="
-      classrooms().length <= 1 ? 'You can\'t delete the last classroom!' : ''
+      classrooms()?.length ?? 0 <= 1
+        ? 'You can\'t delete the last classroom!'
+        : ''
     "
   >
     <mat-icon>delete</mat-icon>
