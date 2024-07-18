@@ -71,19 +71,6 @@ export class ClassroomsPanelComponent {
     );
   });
 
-  constructor() {
-    effect(() => {
-      this.filteredClassrooms();
-
-      setTimeout(() => {
-        this.scrollContainer.nativeElement.scrollTo({
-          top: this.scrollContainer.nativeElement.scrollHeight,
-          behavior: 'smooth',
-        });
-      });
-    });
-  }
-
   selectClassroom(classroomId: string) {
     this.#store.dispatch(viewClassroom({ classroomId }));
   }
@@ -105,6 +92,13 @@ export class ClassroomsPanelComponent {
     this.addClassroomLabel = '';
     this.#matSnackBar.open('Classroom created.', 'Hide', {
       duration: 3000,
+    });
+    // TODO: Turn into an ofActionSuccessful
+    setTimeout(() => {
+      this.scrollContainer.nativeElement.scrollTo({
+        top: this.scrollContainer.nativeElement.scrollHeight,
+        behavior: 'smooth',
+      });
     });
   }
 }
