@@ -11,6 +11,7 @@ export interface ClassroomConfiguration {
   description?: string;
   id: string;
   columns: ClassroomConfigurationColumn[];
+  groups: ClassroomConfigurationGroup[];
 }
 
 export interface ClassroomConfigurationColumn {
@@ -19,6 +20,11 @@ export interface ClassroomConfigurationColumn {
   enabled: boolean;
   sort: ClassroomConfigurationColumnSort;
   type: ClassroomConfigurationColumnType;
+}
+
+export interface ClassroomConfigurationGroup {
+  id: string;
+  label: string;
 }
 
 export enum ClassroomConfigurationColumnType {
@@ -33,5 +39,8 @@ export enum ClassroomConfigurationColumnSort {
 }
 
 export interface Student {
-  [columnId: string]: number | string;
+  groupId: string;
+  row: {
+    [columnId: string]: number | string;
+  };
 }

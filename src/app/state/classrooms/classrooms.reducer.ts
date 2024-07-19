@@ -53,16 +53,28 @@ const initialState: ClassroomsState = {
           id: 'f3ee16c4-68a9-41c1-8780-ac367a1df4d9',
           label: 'Group project 7.18.24',
           description: 'The Great Gatsby homework assignment',
+          groups: [
+            {
+              id: 'd6e41cf2-9463-402d-9cac-cc47ba0318d6',
+              label: 'Chapter 1',
+            },
+          ],
         },
       ],
       students: [
         {
-          '6a77ca7a-42b3-45db-b929-fd5bc004d1e7': 'Jane',
-          'd63e23ba-4958-48fc-a304-349d094a4a61': 'Doe',
+          groupId: 'd6e41cf2-9463-402d-9cac-cc47ba0318d6',
+          row: {
+            '6a77ca7a-42b3-45db-b929-fd5bc004d1e7': 'Jane',
+            'd63e23ba-4958-48fc-a304-349d094a4a61': 'Doe',
+          },
         },
         {
-          '6a77ca7a-42b3-45db-b929-fd5bc004d1e7': 'John',
-          'd63e23ba-4958-48fc-a304-349d094a4a61': 'Smith',
+          groupId: 'd6e41cf2-9463-402d-9cac-cc47ba0318d6',
+          row: {
+            '6a77ca7a-42b3-45db-b929-fd5bc004d1e7': 'John',
+            'd63e23ba-4958-48fc-a304-349d094a4a61': 'Smith',
+          },
         },
       ],
     },
@@ -122,6 +134,7 @@ export const classroomsReducer = createReducer(
             columns: [],
             id: generateUniqueId(),
             label: classroomLabel,
+            groups: [],
           },
         ],
         students: [],
@@ -141,6 +154,7 @@ export const classroomsReducer = createReducer(
           columns: [],
           id: generateUniqueId(),
           label: configurationLabel,
+          groups: [],
         },
       ],
     }))
