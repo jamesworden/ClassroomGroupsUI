@@ -67,8 +67,19 @@
           </button>
         </div>
 
-        <div class="flex flex-col justify-around">
-          <button mat-icon-button>
+        <div
+          class="flex flex-col justify-around"
+          [matTooltip]="
+            (viewingClassroom()?.configurations?.length ?? 0) <= 1
+              ? 'You can\'t delete the last configuration!'
+              : ''
+          "
+        >
+          <button
+            mat-icon-button
+            (click)="openDeleteConfigurationModal()"
+            [disabled]="(viewingClassroom()?.configurations?.length ?? 0) <= 1"
+          >
             <mat-icon> delete </mat-icon>
           </button>
         </div>

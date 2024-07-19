@@ -44,3 +44,8 @@ export const updateConfigurationLabel = createAction(
   '[Classroom] Update Configuration Label',
   props<{ label: string; classroomId: string; configurationId: string }>()
 );
+
+export const deleteConfiguration = createAction(
+  '[Configuration] Delete Configuration',
+  props<{ classroomId: string; configurationId: string }>()
+);

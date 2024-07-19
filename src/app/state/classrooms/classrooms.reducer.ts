@@ -7,6 +7,7 @@ import {
   addClassroom,
   addConfiguration,
   deleteClassroom,
+  deleteConfiguration,
   updateClassroomDescription,
   updateClassroomLabel,
   updateConfigurationDescription,
@@ -199,7 +200,23 @@ export const classroomsReducer = createReducer(
 
       return newState;
     }
-  )
+  ),
+  on(deleteConfiguration, (state, { classroomId, configurationId }) => {
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
+    const classroom = newState.classrooms.find(({ id }) => classroomId === id);
+    if (!classroom) {
+      return state;
+    }
+
+    classroom.configurations = classroom.configurations.filter(
+      ({ id }) => id !== configurationId
+    );
+
+    newState.viewingConfigurationId = classroom.configurations[0].id;
+
+    return newState;
+  })
 );
 
 function generateUniqueId() {

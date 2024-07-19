@@ -7,14 +7,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Store } from '@ngrx/store';
 import {
+  selectViewingClassroom,
   selectViewingClassroomId,
   selectViewingConfiguration,
   selectViewingConfigurationId,
 } from '../../state/classrooms/classrooms.selectors';
 import {
+  deleteConfiguration,
   updateConfigurationDescription,
   updateConfigurationLabel,
 } from '../../state/classrooms/classrooms.actions';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from '../yes-no-dialog/yes-no-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -25,12 +33,15 @@ import {
     FormsModule,
     MatIconModule,
     MatButtonModule,
+    MatDialogModule,
+    MatTooltipModule,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',
 })
 export class ConfigurationPanelComponent {
   readonly #store = inject(Store);
+  readonly #matDialog = inject(MatDialog);
 
   readonly viewingConfiguration = toSignal(
     this.#store.select(selectViewingConfiguration)
@@ -48,6 +59,10 @@ export class ConfigurationPanelComponent {
     {
       initialValue: '',
     }
+  );
+
+  readonly viewingClassroom = toSignal(
+    this.#store.select(selectViewingClassroom)
   );
 
   averageScores = false;
@@ -89,5 +104,27 @@ export class ConfigurationPanelComponent {
         configurationId: this.viewingConfigurationId(),
       })
     );
+  }
+
+  openDeleteConfigurationModal() {
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete classroom',
+        subtitle: `Are you sure you want to delete the classroom ${
+          this.viewingConfiguration()?.label
+        } and all of it's data?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success) => {
+      if (success) {
+        this.#store.dispatch(
+          deleteConfiguration({
+            classroomId: this.viewingClassroomId(),
+            configurationId: this.viewingConfigurationId(),
+          })
+        );
+      }
+    });
   }
 }
