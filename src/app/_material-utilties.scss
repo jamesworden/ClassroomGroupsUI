@@ -10,9 +10,6 @@
       border-color: mat.get-theme-color($theme, primary, 50) !important;
     }
   }
-  .border-neutral {
-    border-color: mat.get-theme-color($theme, neutral, 80) !important;
-  }
 }
 
 @mixin theme($theme) {
