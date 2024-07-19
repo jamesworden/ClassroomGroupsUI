@@ -10,6 +10,7 @@ import {
   deleteConfiguration,
   updateClassroomDescription,
   updateClassroomLabel,
+  updateColumns,
   updateConfigurationDescription,
   updateConfigurationLabel,
   viewClassroom,
@@ -214,6 +215,25 @@ export const classroomsReducer = createReducer(
     );
 
     newState.viewingConfigurationId = classroom.configurations[0].id;
+
+    return newState;
+  }),
+  on(updateColumns, (state, { classroomId, configurationId, columns }) => {
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
+    const classroom = newState.classrooms.find(({ id }) => classroomId === id);
+    if (!classroom) {
+      return state;
+    }
+
+    const configuration = classroom.configurations.find(
+      ({ id }) => configurationId === id
+    );
+    if (!configuration) {
+      return state;
+    }
+
+    configuration.columns = columns;
 
     return newState;
   })

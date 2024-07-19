@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { ClassroomConfigurationColumn } from '../../models/classroom.models';
 
 export const viewClassroom = createAction(
   '[Classroom] View Classroom',
@@ -46,6 +47,15 @@ export const updateConfigurationLabel = createAction(
 );
 
 export const deleteConfiguration = createAction(
-  '[Configuration] Delete Configuration',
+  '[Classroom] Delete Configuration',
   props<{ classroomId: string; configurationId: string }>()
+);
+
+export const updateColumns = createAction(
+  '[Classroom] Update Columns',
+  props<{
+    classroomId: string;
+    configurationId: string;
+    columns: ClassroomConfigurationColumn[];
+  }>()
 );

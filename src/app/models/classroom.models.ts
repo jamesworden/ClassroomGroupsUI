@@ -27,5 +27,5 @@ export enum ClassroomConfigurationColumnSort {
 }
 
 export interface Student {
-  [fieldId: string]: number | string;
+  [columnId: string]: number | string;
 }

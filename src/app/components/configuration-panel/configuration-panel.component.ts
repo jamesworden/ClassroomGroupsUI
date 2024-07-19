@@ -14,6 +14,7 @@ import {
 } from '../../state/classrooms/classrooms.selectors';
 import {
   deleteConfiguration,
+  updateColumns,
   updateConfigurationDescription,
   updateConfigurationLabel,
 } from '../../state/classrooms/classrooms.actions';
@@ -90,7 +91,9 @@ export class ConfigurationPanelComponent {
     effect(
       () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
     );
-    effect(() => (this.columns = this.viewingConfiguration()?.columns ?? []));
+    effect(
+      () => (this.columns = [...(this.viewingConfiguration()?.columns ?? [])])
+    );
   }
 
   toggleGroupingType() {
@@ -141,6 +144,12 @@ export class ConfigurationPanelComponent {
 
   drop(event: CdkDragDrop<ClassroomConfigurationColumn>) {
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
-    // Dispatch column rearranged event
+    this.#store.dispatch(
+      updateColumns({
+        classroomId: this.viewingClassroomId(),
+        configurationId: this.viewingConfigurationId(),
+        columns: this.columns,
+      })
+    );
   }
 }
