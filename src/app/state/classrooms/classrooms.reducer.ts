@@ -197,8 +197,6 @@ export const classroomsReducer = createReducer(
 
       configuration.label = label;
 
-      classroom.label = label;
-
       return newState;
     }
   )
