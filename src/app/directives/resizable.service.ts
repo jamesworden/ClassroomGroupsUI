@@ -10,6 +10,8 @@ export class ResizableService {
     () => this.resizingIds().size > 1
   );
 
+  public readonly isResizing = computed(() => this.resizingIds().size > 0);
+
   public addResizingId(resizingId: string) {
     const existingIds = this.resizingIds();
     existingIds.add(resizingId);

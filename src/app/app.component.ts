@@ -77,6 +77,7 @@ interface PanelDimensions {
 export class AppComponent {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
   readonly #themeService = inject(ThemeService);
+  readonly #resizableService = inject(ResizableService);
 
   readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
     initialValue: [],
@@ -88,6 +89,7 @@ export class AppComponent {
     }
   );
   readonly theme = this.#themeService.theme;
+  readonly isResizing = this.#resizableService.isResizing;
 
   readonly ResizableSide = ResizableSide;
   maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
