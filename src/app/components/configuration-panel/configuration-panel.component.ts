@@ -36,6 +36,7 @@ import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
 } from '../create-edit-column-dialog/create-edit-column-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -57,6 +58,7 @@ import {
 export class ConfigurationPanelComponent {
   readonly #store = inject(Store);
   readonly #matDialog = inject(MatDialog);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   readonly viewingConfiguration = toSignal(
     this.#store.select(selectViewingConfiguration)
@@ -167,7 +169,6 @@ export class ConfigurationPanelComponent {
     });
     dialogRef.afterClosed().subscribe((column) => {
       if (column) {
-        console.log(column);
         this.#store.dispatch(
           createColumn({
             classroomId: this.viewingClassroomId(),
@@ -175,6 +176,9 @@ export class ConfigurationPanelComponent {
             column,
           })
         );
+        this.#matSnackBar.open('Column created', 'Hide', {
+          duration: 3000,
+        });
       }
     });
   }
