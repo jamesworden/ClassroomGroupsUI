@@ -40,6 +40,17 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+} from '@angular/material/dialog';
+import { take } from 'rxjs';
+import {
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from './components/yes-no-dialog/yes-no-dialog.component';
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
@@ -78,6 +89,7 @@ export class AppComponent {
   readonly #store = inject(Store<{ classrooms: Classroom[] }>);
   readonly #themeService = inject(ThemeService);
   readonly #resizableService = inject(ResizableService);
+  readonly #matDialog = inject(MatDialog);
 
   readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
     initialValue: [],
@@ -163,12 +175,25 @@ export class AppComponent {
     );
   }
 
-  deleteViewedClassroom() {
-    this.#store.dispatch(
-      deleteClassroom({
-        classroomId: this.viewingClassroomId(),
-      })
-    );
+  openDeleteClassroomDialog() {
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete classroom',
+        subtitle: `Are you sure you want to delete the classroom ${
+          this.viewingClassroom()?.label
+        } and all of it's data?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success) => {
+      if (success) {
+        this.#store.dispatch(
+          deleteClassroom({
+            classroomId: this.viewingClassroomId(),
+          })
+        );
+      }
+    });
   }
 
   updateClassroomDescription() {
