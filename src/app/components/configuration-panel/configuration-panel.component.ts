@@ -23,6 +23,13 @@ import {
   YesNoDialogInputs,
 } from '../yes-no-dialog/yes-no-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  CdkDragDrop,
+  CdkDrag,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { ClassroomConfigurationColumn } from '../../models/classroom.models';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -35,6 +42,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatDialogModule,
     MatTooltipModule,
+    CdkDrag,
+    CdkDropList,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',
@@ -70,6 +79,7 @@ export class ConfigurationPanelComponent {
   groupingValue = 0;
   updatedDescription = '';
   updatedLabel = '';
+  columns: ClassroomConfigurationColumn[] = [];
 
   constructor() {
     effect(
@@ -80,6 +90,7 @@ export class ConfigurationPanelComponent {
     effect(
       () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
     );
+    effect(() => (this.columns = this.viewingConfiguration()?.columns ?? []));
   }
 
   toggleGroupingType() {
@@ -126,5 +137,10 @@ export class ConfigurationPanelComponent {
         );
       }
     });
+  }
+
+  drop(event: CdkDragDrop<ClassroomConfigurationColumn>) {
+    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+    // Dispatch column rearranged event
   }
 }
