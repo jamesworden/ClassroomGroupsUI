@@ -1,66 +1,72 @@
 <div class="rounded-lg panel shadow-lg p-4 flex flex-col">
-  <div class="flex justify-between">
-    <div class="flex flex-col justify-between flex-1 pr-4">
-      <input
-        class="text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-        type="text"
-        maxlength="150"
-        [(ngModel)]="updatedLabel"
-        (change)="updateLabel()"
-      />
-      <input
-        class="appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-        type="text-sm"
-        maxlength="150"
-        [(ngModel)]="updatedDescription"
-        (change)="updateDescription()"
-        placeholder="Add a description for your configuration"
-      />
+  <div class="flex justify-between min-h-16">
+    <div class="flex flex-col justify-around pr-4">
+      <div class="flex flex-col">
+        <input
+          class="text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          maxlength="150"
+          [(ngModel)]="updatedLabel"
+          (change)="updateLabel()"
+        />
+        <input
+          class="text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          maxlength="150"
+          [(ngModel)]="updatedDescription"
+          (change)="updateDescription()"
+          placeholder="Add a description for your configuration"
+        />
+      </div>
     </div>
 
-    <div class="flex gap-x-4">
-      <div class="flex flex-col justify-around">
-        <div class="flex flex-col">
-          <span class="text-sm">Average Scores</span>
-          <div class="flex justify-between">
-            <div></div>
-            <mat-slide-toggle class="scale-75" [checked]="averageScores">
-            </mat-slide-toggle>
+    <div class="relative flex-1">
+      <div class="absolute h-full flex flex-col overflow-auto flex-1 w-full">
+        <div class="flex gap-x-4 mt-2">
+          <div class="flex flex-col justify-around">
+            <div class="flex flex-col">
+              <span class="text-sm">Average Scores</span>
+              <div class="flex justify-between">
+                <div></div>
+                <mat-slide-toggle class="scale-75" [checked]="averageScores">
+                </mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+
+          <mat-form-field
+            appearance="outline"
+            class="w-48"
+            subscriptSizing="dynamic"
+          >
+            <mat-label>{{
+              groupingByDivision ? "Number of groups" : "Students per group"
+            }}</mat-label>
+            <input matInput type="number" [(ngModel)]="groupingValue" />
+            <button matSuffix mat-icon-button (click)="toggleGroupingType()">
+              <mat-icon
+                ><span class="material-symbols-outlined">
+                  safety_divider
+                </span></mat-icon
+              >
+            </button>
+          </mat-form-field>
+
+          <div class="flex gap-x-2">
+            <div class="flex flex-col justify-around">
+              <button mat-flat-button>Group</button>
+            </div>
+
+            <div class="flex flex-col justify-around">
+              <button mat-stroked-button>Shuffle</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <mat-form-field
-        appearance="outline"
-        class="w-48"
-        subscriptSizing="dynamic"
-      >
-        <mat-label>{{
-          groupingByDivision ? "Number of groups" : "Students per group"
-        }}</mat-label>
-        <input matInput type="number" [(ngModel)]="groupingValue" />
-        <button matSuffix mat-icon-button (click)="toggleGroupingType()">
-          <mat-icon
-            ><span class="material-symbols-outlined">
-              safety_divider
-            </span></mat-icon
-          >
-        </button>
-      </mat-form-field>
-
-      <div class="flex gap-x-2">
-        <div class="flex flex-col justify-around">
-          <button mat-flat-button>Group</button>
-        </div>
-
-        <div class="flex flex-col justify-around">
-          <button mat-stroked-button>Shuffle</button>
+        <div>
+          <!-- Panel buttons-->
         </div>
       </div>
-    </div>
-
-    <div>
-      <!-- Panel buttons-->
     </div>
   </div>
 </div>
