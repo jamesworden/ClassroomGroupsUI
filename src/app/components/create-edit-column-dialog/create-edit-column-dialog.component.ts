@@ -17,6 +17,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { generateUniqueId } from '../../logic/generate-unique-id';
 
 export interface CreateEditColumnDialogInputs {
   title: string;
@@ -52,7 +53,7 @@ export class CreateEditColumnDialogComponent {
   readonly title = this.#data.title;
   readonly column: ClassroomConfigurationColumn = {
     enabled: true,
-    id: this.#data.column?.id ?? '',
+    id: this.#data.column?.id ?? generateUniqueId(),
     label: this.#data.column?.label ?? '',
     sort: this.#data.column?.sort ?? ClassroomConfigurationColumnSort.NONE,
     type: this.#data.column?.type ?? ClassroomConfigurationColumnType.TEXT,
