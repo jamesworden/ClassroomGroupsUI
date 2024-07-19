@@ -3,7 +3,10 @@
 
 @mixin color($theme) {
   .sidebar {
-    background-color: mat.get-theme-color($theme, primary, 50);
+    background-color: mat.get-theme-color($theme, primary, 40) !important;
+  }
+  .sidebar-button {
+    color: mat.get-theme-color($theme, primary, 100) !important;
   }
 }
 

@@ -2,9 +2,6 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .text-primary {
-    color: mat.get-theme-color($theme, primary, 50) !important;
-  }
   .hover-border-primary {
     &:hover {
       border-color: mat.get-theme-color($theme, primary, 50) !important;
@@ -12,6 +9,9 @@
   }
   .mdc-switch:enabled .mdc-switch__track::after {
     background: mat.get-theme-color($theme, primary, 40) !important;
+  }
+  .mdc-list-item--with-leading-icon .mdc-list-item__start {
+    color: mat.get-theme-color($theme, primary, 40) !important;
   }
 }
 
