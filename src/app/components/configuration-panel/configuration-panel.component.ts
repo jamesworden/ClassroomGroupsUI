@@ -31,6 +31,10 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { ClassroomConfigurationColumn } from '../../models/classroom.models';
+import {
+  CreateEditColumnDialogComponent,
+  CreateEditColumnDialogInputs,
+} from '../create-edit-column-dialog/create-edit-column-dialog.component';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -151,5 +155,25 @@ export class ConfigurationPanelComponent {
         columns: this.columns,
       })
     );
+  }
+
+  openCreateColumnDialog() {
+    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+      restoreFocus: false,
+      data: <CreateEditColumnDialogInputs>{
+        title: 'Create Column',
+      },
+    });
+    dialogRef.afterClosed().subscribe((column) => {
+      // if (column) {
+      //   this.#store.dispatch(
+      //     createColumn({
+      //       classroomId: this.viewingClassroomId(),
+      //       configurationId: this.viewingConfigurationId(),
+      //       column,
+      //     })
+      //   );
+      // }
+    });
   }
 }

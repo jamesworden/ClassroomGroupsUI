@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import {
   Classroom,
   ClassroomConfigurationColumnSort,
+  ClassroomConfigurationColumnType,
 } from '../../models/classroom.models';
 import {
   addClassroom,
@@ -37,12 +38,14 @@ const initialState: ClassroomsState = {
               id: '6a77ca7a-42b3-45db-b929-fd5bc004d1e7',
               label: 'First Name',
               sort: ClassroomConfigurationColumnSort.NONE,
+              type: ClassroomConfigurationColumnType.TEXT,
             },
             {
               enabled: true,
               id: 'd63e23ba-4958-48fc-a304-349d094a4a61',
               label: 'Last Name',
               sort: ClassroomConfigurationColumnSort.NONE,
+              type: ClassroomConfigurationColumnType.TEXT,
             },
           ],
           id: 'f3ee16c4-68a9-41c1-8780-ac367a1df4d9',

@@ -18,6 +18,12 @@ export interface ClassroomConfigurationColumn {
   id: string;
   enabled: boolean;
   sort: ClassroomConfigurationColumnSort;
+  type: ClassroomConfigurationColumnType;
+}
+
+export enum ClassroomConfigurationColumnType {
+  TEXT = 'TEXT',
+  NUMBER = 'NUMBER',
 }
 
 export enum ClassroomConfigurationColumnSort {
