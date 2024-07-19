@@ -71,194 +71,157 @@ const initialState: ClassroomsState = {
   viewingConfigurationId: 'f3ee16c4-68a9-41c1-8780-ac367a1df4d9',
 };
 
+const updateClassroomProperty = (
+  state: ClassroomsState,
+  classroomId: string,
+  updateFn: (classroom: Classroom) => Classroom
+) => {
+  return {
+    ...state,
+    classrooms: state.classrooms.map((classroom) =>
+      classroom.id === classroomId ? updateFn(classroom) : classroom
+    ),
+  };
+};
+
+const updateConfigurationProperty = (
+  state: ClassroomsState,
+  classroomId: string,
+  configurationId: string,
+  updateFn: (configuration: any) => any
+) => {
+  return updateClassroomProperty(state, classroomId, (classroom) => ({
+    ...classroom,
+    configurations: classroom.configurations.map((configuration) =>
+      configuration.id === configurationId
+        ? updateFn(configuration)
+        : configuration
+    ),
+  }));
+};
+
 export const classroomsReducer = createReducer(
   initialState,
-  on(viewClassroom, (state, { classroomId: viewingClassroomId }) => ({
+  on(viewClassroom, (state, { classroomId }) => ({
     ...state,
-    viewingClassroomId,
+    viewingClassroomId: classroomId,
     viewingConfigurationId:
-      state.classrooms.find(({ id }) => viewingClassroomId === id)
-        ?.configurations[0].id ?? '',
+      state.classrooms.find(({ id }) => classroomId === id)?.configurations[0]
+        ?.id ?? '',
   })),
-  on(addClassroom, (state, { classroomLabel: label }) => {
-    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-    newState.classrooms.push({
+  on(addClassroom, (state, { classroomLabel }) => ({
+    ...state,
+    classrooms: [
+      ...state.classrooms,
+      {
+        id: generateUniqueId(),
+        label: classroomLabel,
+        description: '',
+        configurations: [
+          {
+            columns: [],
+            id: generateUniqueId(),
+            label: classroomLabel,
+          },
+        ],
+        students: [],
+      },
+    ],
+  })),
+  on(viewConfiguration, (state, { configurationId }) => ({
+    ...state,
+    viewingConfigurationId: configurationId,
+  })),
+  on(addConfiguration, (state, { configurationLabel, classroomId }) =>
+    updateClassroomProperty(state, classroomId, (classroom) => ({
+      ...classroom,
       configurations: [
+        ...classroom.configurations,
         {
           columns: [],
           id: generateUniqueId(),
-          label,
+          label: configurationLabel,
         },
       ],
-      id: generateUniqueId(),
-      label,
-      students: [],
-      description: '',
-    });
-
-    return newState;
-  }),
-  on(
-    viewConfiguration,
-    (state, { configurationId: viewingConfigurationId }) => ({
-      ...state,
-      viewingConfigurationId,
-    })
+    }))
   ),
-  on(addConfiguration, (state, { configurationLabel: label, classroomId }) => {
-    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-    const classroom = newState.classrooms.find(({ id }) => id === classroomId);
-    if (!classroom) {
-      return state;
-    }
-
-    classroom.configurations.push({
-      columns: [],
-      id: generateUniqueId(),
-      label,
-    });
-
-    return newState;
-  }),
   on(deleteClassroom, (state, { classroomId }) => {
-    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-    newState.classrooms = newState.classrooms.filter(
-      ({ id }) => classroomId !== id
+    const updatedClassrooms = state.classrooms.filter(
+      ({ id }) => id !== classroomId
     );
-    // TODO: Move select first classroom into the dispatching of a new action?
-    newState.viewingClassroomId = newState.classrooms[0].id;
-    newState.viewingConfigurationId =
-      newState.classrooms[0].configurations[0].id;
-
-    return newState;
+    return {
+      ...state,
+      classrooms: updatedClassrooms,
+      viewingClassroomId: updatedClassrooms[0]?.id ?? '',
+      viewingConfigurationId: updatedClassrooms[0]?.configurations[0]?.id ?? '',
+    };
   }),
-  on(updateClassroomDescription, (state, { classroomId, description }) => {
-    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-    const classroom = newState.classrooms.find(({ id }) => id === classroomId);
-    if (!classroom) {
-      return state;
-    }
-
-    classroom.description = description;
-
-    return newState;
-  }),
-  on(updateClassroomLabel, (state, { classroomId, label }) => {
-    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-    const classroom = newState.classrooms.find(({ id }) => id === classroomId);
-    if (!classroom) {
-      return state;
-    }
-
-    classroom.label = label;
-
-    return newState;
-  }),
+  on(updateClassroomDescription, (state, { classroomId, description }) =>
+    updateClassroomProperty(state, classroomId, (classroom) => ({
+      ...classroom,
+      description,
+    }))
+  ),
+  on(updateClassroomLabel, (state, { classroomId, label }) =>
+    updateClassroomProperty(state, classroomId, (classroom) => ({
+      ...classroom,
+      label,
+    }))
+  ),
   on(
     updateConfigurationDescription,
-    (state, { classroomId, description, configurationId }) => {
-      const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-      const classroom = newState.classrooms.find(
-        ({ id }) => id === classroomId
-      );
-      if (!classroom) {
-        return state;
-      }
-
-      const configuration = classroom.configurations.find(
-        ({ id }) => id === configurationId
-      );
-      if (!configuration) {
-        return state;
-      }
-
-      configuration.description = description;
-
-      return newState;
-    }
+    (state, { classroomId, configurationId, description }) =>
+      updateConfigurationProperty(
+        state,
+        classroomId,
+        configurationId,
+        (configuration) => ({
+          ...configuration,
+          description,
+        })
+      )
   ),
   on(
     updateConfigurationLabel,
-    (state, { classroomId, label, configurationId }) => {
-      const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-      const classroom = newState.classrooms.find(
-        ({ id }) => id === classroomId
-      );
-      if (!classroom) {
-        return state;
-      }
-
-      const configuration = classroom.configurations.find(
-        ({ id }) => id === configurationId
-      );
-      if (!configuration) {
-        return state;
-      }
-
-      configuration.label = label;
-
-      return newState;
-    }
+    (state, { classroomId, configurationId, label }) =>
+      updateConfigurationProperty(
+        state,
+        classroomId,
+        configurationId,
+        (configuration) => ({
+          ...configuration,
+          label,
+        })
+      )
   ),
-  on(deleteConfiguration, (state, { classroomId, configurationId }) => {
-    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-    const classroom = newState.classrooms.find(({ id }) => classroomId === id);
-    if (!classroom) {
-      return state;
-    }
-
-    classroom.configurations = classroom.configurations.filter(
-      ({ id }) => id !== configurationId
-    );
-
-    newState.viewingConfigurationId = classroom.configurations[0].id;
-
-    return newState;
-  }),
-  on(updateColumns, (state, { classroomId, configurationId, columns }) => {
-    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-    const classroom = newState.classrooms.find(({ id }) => classroomId === id);
-    if (!classroom) {
-      return state;
-    }
-
-    const configuration = classroom.configurations.find(
-      ({ id }) => configurationId === id
-    );
-    if (!configuration) {
-      return state;
-    }
-
-    configuration.columns = columns;
-
-    return newState;
-  }),
-  on(createColumn, (state, { classroomId, configurationId, column }) => {
-    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
-
-    const classroom = newState.classrooms.find(({ id }) => classroomId === id);
-    if (!classroom) {
-      return state;
-    }
-
-    const configuration = classroom.configurations.find(
-      ({ id }) => configurationId === id
-    );
-    if (!configuration) {
-      return state;
-    }
-
-    configuration.columns.push(column);
-
-    return newState;
-  })
+  on(deleteConfiguration, (state, { classroomId, configurationId }) =>
+    updateClassroomProperty(state, classroomId, (classroom) => ({
+      ...classroom,
+      configurations: classroom.configurations.filter(
+        ({ id }) => id !== configurationId
+      ),
+    }))
+  ),
+  on(updateColumns, (state, { classroomId, configurationId, columns }) =>
+    updateConfigurationProperty(
+      state,
+      classroomId,
+      configurationId,
+      (configuration) => ({
+        ...configuration,
+        columns,
+      })
+    )
+  ),
+  on(createColumn, (state, { classroomId, configurationId, column }) =>
+    updateConfigurationProperty(
+      state,
+      classroomId,
+      configurationId,
+      (configuration) => ({
+        ...configuration,
+        columns: [...configuration.columns, column],
+      })
+    )
+  )
 );

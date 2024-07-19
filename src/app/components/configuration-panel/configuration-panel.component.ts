@@ -131,7 +131,7 @@ export class ConfigurationPanelComponent {
     const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
-        title: 'Delete classroom',
+        title: 'Delete configuration',
         subtitle: `Are you sure you want to delete the classroom ${
           this.viewingConfiguration()?.label
         } and all of it's data?`,
