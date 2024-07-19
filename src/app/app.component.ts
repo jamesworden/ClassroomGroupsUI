@@ -40,17 +40,12 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import {
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-} from '@angular/material/dialog';
-import { take } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import {
   YesNoDialogComponent,
   YesNoDialogInputs,
 } from './components/yes-no-dialog/yes-no-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
@@ -90,6 +85,7 @@ export class AppComponent {
   readonly #themeService = inject(ThemeService);
   readonly #resizableService = inject(ResizableService);
   readonly #matDialog = inject(MatDialog);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
     initialValue: [],
@@ -122,6 +118,7 @@ export class AppComponent {
   constructor() {
     this.loadClassAndConfigPanelDimensions();
     this.loadConfigPanelDimensions();
+    this.showUnderConstructionToast();
 
     effect(
       () =>
@@ -130,6 +127,13 @@ export class AppComponent {
     );
     effect(
       () => (this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '')
+    );
+  }
+
+  private showUnderConstructionToast() {
+    this.#matSnackBar.open(
+      'Your changes will not be saved! This site is under construction.',
+      'Got it!'
     );
   }
 
