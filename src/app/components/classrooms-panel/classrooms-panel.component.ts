@@ -105,8 +105,4 @@ export class ClassroomsPanelComponent {
       });
     });
   }
-
-  closeClassAndConfigPanel() {
-    this.classAndConfigPanelClosed.emit();
-  }
 }

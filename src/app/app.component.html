@@ -4,9 +4,12 @@
     'select-none': isResizing()
   }"
 >
-  <app-sidebar></app-sidebar>
+  <app-sidebar
+    (toggledClassAndConfigPanel)="toggleClassAndConfigPanel()"
+  ></app-sidebar>
 
   <div class="flex-1 w-full h-full flex">
+    @if (classAndConfigPanelSettings.isOpen) {
     <div
       appResizeable
       [resizableSides]="[ResizableSide.RIGHT]"
@@ -20,10 +23,7 @@
       class="flex flex-col border-r border-neutral-400 shadow-lg"
       resizingId="classrooms-and-config-panel"
     >
-      <app-classrooms-panel
-        class="flex-1"
-        (classAndConfigPanelClosed)="closeClassAndConfigPanel()"
-      ></app-classrooms-panel>
+      <app-classrooms-panel class="flex-1"></app-classrooms-panel>
       <app-configurations-panel
         appResizeable
         [resizableSides]="[ResizableSide.TOP]"
@@ -40,6 +40,7 @@
         resizingId="config-panel"
       ></app-configurations-panel>
     </div>
+    }
 
     <div class="flex flex-col gap-y-4 my-4 flex-1">
       <section class="flex justify-between m-4">

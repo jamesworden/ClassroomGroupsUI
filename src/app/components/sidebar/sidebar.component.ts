@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ThemeService } from '../../themes/theme.service';
@@ -16,6 +16,8 @@ export class SidebarComponent {
   readonly #themeService = inject(ThemeService);
   readonly #matSnackBar = inject(MatSnackBar);
 
+  readonly toggledClassAndConfigPanel = output();
+
   readonly themeSignal = this.#themeService.theme;
 
   readonly Themes = Themes;
@@ -28,5 +30,9 @@ export class SidebarComponent {
     this.#matSnackBar.open('Under construction!', 'Hide', {
       duration: 3000,
     });
+  }
+
+  toggleClassAndConfigPanel() {
+    this.toggledClassAndConfigPanel.emit();
   }
 }

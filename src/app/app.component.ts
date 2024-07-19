@@ -229,5 +229,12 @@ export class AppComponent {
     }
   }
 
-  closeClassAndConfigPanel() {}
+  toggleClassAndConfigPanel() {
+    this.classAndConfigPanelSettings.isOpen =
+      !this.classAndConfigPanelSettings.isOpen;
+    localStorage.setItem(
+      'classrooms-and-configurations-panel',
+      JSON.stringify(this.classAndConfigPanelSettings)
+    );
+  }
 }
