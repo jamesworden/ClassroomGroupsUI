@@ -3,6 +3,7 @@ import {
   computed,
   ElementRef,
   inject,
+  output,
   Signal,
   signal,
   ViewChild,
@@ -47,6 +48,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class ClassroomsPanelComponent {
   readonly #store = inject(Store<{ state: ClassroomsState }>);
   readonly #matSnackBar = inject(MatSnackBar);
+
+  readonly classAndConfigPanelClosed = output();
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
@@ -101,5 +104,9 @@ export class ClassroomsPanelComponent {
         behavior: 'smooth',
       });
     });
+  }
+
+  closeClassAndConfigPanel() {
+    this.classAndConfigPanelClosed.emit();
   }
 }

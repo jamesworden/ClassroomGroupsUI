@@ -51,9 +51,13 @@ const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
 const DEFAULT_CONFIGURATIONS_PANEL_HEIGHT = window.innerHeight / 2;
 
-interface PanelDimensions {
-  width?: number;
-  height?: number;
+interface ClassAndConfigPanelSettings {
+  width: number;
+  isOpen: boolean;
+}
+
+interface ConfigPanelSettings {
+  height: number;
 }
 
 @Component({
@@ -90,24 +94,32 @@ export class AppComponent {
   readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
     initialValue: [],
   });
+
   readonly viewingClassroomId = toSignal(
     this.#store.select(selectViewingClassroomId),
     {
       initialValue: '',
     }
   );
+
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
 
   readonly ResizableSide = ResizableSide;
+
   maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
   minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
-  classAndConfigPanelWidth = DEFAULT_PANEL_WIDTH;
 
   maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
   minConfigurationsPanelHeight = window.innerHeight / 4;
-  configurationsPanelHeight = DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
 
+  classAndConfigPanelSettings: ClassAndConfigPanelSettings = {
+    width: DEFAULT_PANEL_WIDTH,
+    isOpen: true,
+  };
+  configPanelSettings: ConfigPanelSettings = {
+    height: DEFAULT_CONFIGURATIONS_PANEL_HEIGHT,
+  };
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
 
@@ -116,8 +128,8 @@ export class AppComponent {
   );
 
   constructor() {
-    this.loadClassAndConfigPanelDimensions();
-    this.loadConfigPanelDimensions();
+    this.loadClassAndConfigPanelSettings();
+    this.loadConfigPanelSettings();
     this.showUnderConstructionToast();
 
     effect(
@@ -137,45 +149,40 @@ export class AppComponent {
     );
   }
 
-  private loadClassAndConfigPanelDimensions() {
+  private loadClassAndConfigPanelSettings() {
     const setting = localStorage.getItem('classrooms-and-configurations-panel');
     if (!setting) {
       return;
     }
-    const panelDimensions = JSON.parse(setting) as PanelDimensions;
-    this.classAndConfigPanelWidth =
-      panelDimensions.width ?? DEFAULT_PANEL_WIDTH;
+    const settings = JSON.parse(setting) as ClassAndConfigPanelSettings;
+    this.classAndConfigPanelSettings.width =
+      settings.width ?? DEFAULT_PANEL_WIDTH;
+    this.classAndConfigPanelSettings.isOpen = settings.isOpen ?? true;
   }
 
-  private loadConfigPanelDimensions() {
+  private loadConfigPanelSettings() {
     const setting = localStorage.getItem('configurations-panel');
     if (!setting) {
       return;
     }
-    const panelDimensions = JSON.parse(setting) as PanelDimensions;
-    this.configurationsPanelHeight =
-      panelDimensions.height ?? DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
+    const settings = JSON.parse(setting) as ConfigPanelSettings;
+    this.configPanelSettings.height =
+      settings.height ?? DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
   }
 
   setPanelWidth(panelWidth: number) {
-    this.classAndConfigPanelWidth = panelWidth;
-    const panelDimensions: PanelDimensions = {
-      width: panelWidth,
-    };
+    this.classAndConfigPanelSettings.width = panelWidth;
     localStorage.setItem(
       'classrooms-and-configurations-panel',
-      JSON.stringify(panelDimensions)
+      JSON.stringify(this.classAndConfigPanelSettings)
     );
   }
 
   setConfigurationsPanelHeight(panelHeight: number) {
-    this.configurationsPanelHeight = panelHeight;
-    const panelDimensions: PanelDimensions = {
-      height: panelHeight,
-    };
+    this.configPanelSettings.height = panelHeight;
     localStorage.setItem(
       'configurations-panel',
-      JSON.stringify(panelDimensions)
+      JSON.stringify(this.configPanelSettings)
     );
   }
 
@@ -221,4 +228,6 @@ export class AppComponent {
       );
     }
   }
+
+  closeClassAndConfigPanel() {}
 }

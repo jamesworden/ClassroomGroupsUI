@@ -10,28 +10,31 @@
     <div
       appResizeable
       [resizableSides]="[ResizableSide.RIGHT]"
-      [panelWidth]="classAndConfigPanelWidth"
+      [panelWidth]="classAndConfigPanelSettings.width"
       [maxWidth]="maxClassAndConfigPanelWidth"
       [minWidth]="minClassAndConfigPanelWidth"
       (resizedWidth)="setPanelWidth($event)"
       [ngStyle]="{
-        'min-width': classAndConfigPanelWidth + 'px'
+        'min-width': classAndConfigPanelSettings.width + 'px'
       }"
       class="flex flex-col border-r border-neutral-400 shadow-lg"
       resizingId="classrooms-and-config-panel"
     >
-      <app-classrooms-panel class="flex-1"></app-classrooms-panel>
+      <app-classrooms-panel
+        class="flex-1"
+        (classAndConfigPanelClosed)="closeClassAndConfigPanel()"
+      ></app-classrooms-panel>
       <app-configurations-panel
         appResizeable
         [resizableSides]="[ResizableSide.TOP]"
-        [panelHeight]="configurationsPanelHeight"
+        [panelHeight]="configPanelSettings.height"
         [maxHeight]="maxConfigurationsPanelHeight"
         [minHeight]="minConfigurationsPanelHeight"
         [maxWidth]="maxClassAndConfigPanelWidth"
         [minWidth]="minClassAndConfigPanelWidth"
         (resizedHeight)="setConfigurationsPanelHeight($event)"
         [ngStyle]="{
-          'min-height': configurationsPanelHeight + 'px'
+          'min-height': configPanelSettings.height + 'px'
         }"
         class="border-t border-neutral-400"
         resizingId="config-panel"
