@@ -7,6 +7,7 @@ import {
 import {
   addClassroom,
   addConfiguration,
+  createColumn,
   deleteClassroom,
   deleteConfiguration,
   updateClassroomDescription,
@@ -17,6 +18,7 @@ import {
   viewClassroom,
   viewConfiguration,
 } from './classrooms.actions';
+import { generateUniqueId } from '../../logic/generate-unique-id';
 
 export interface ClassroomsState {
   classrooms: Classroom[];
@@ -239,9 +241,24 @@ export const classroomsReducer = createReducer(
     configuration.columns = columns;
 
     return newState;
+  }),
+  on(createColumn, (state, { classroomId, configurationId, column }) => {
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
+    const classroom = newState.classrooms.find(({ id }) => classroomId === id);
+    if (!classroom) {
+      return state;
+    }
+
+    const configuration = classroom.configurations.find(
+      ({ id }) => configurationId === id
+    );
+    if (!configuration) {
+      return state;
+    }
+
+    configuration.columns.push(column);
+
+    return newState;
   })
 );
-
-function generateUniqueId() {
-  return `${new Date().getTime() * Math.random()}`;
-}

@@ -13,6 +13,7 @@ import {
   selectViewingConfigurationId,
 } from '../../state/classrooms/classrooms.selectors';
 import {
+  createColumn,
   deleteConfiguration,
   updateColumns,
   updateConfigurationDescription,
@@ -165,15 +166,16 @@ export class ConfigurationPanelComponent {
       },
     });
     dialogRef.afterClosed().subscribe((column) => {
-      // if (column) {
-      //   this.#store.dispatch(
-      //     createColumn({
-      //       classroomId: this.viewingClassroomId(),
-      //       configurationId: this.viewingConfigurationId(),
-      //       column,
-      //     })
-      //   );
-      // }
+      if (column) {
+        console.log(column);
+        this.#store.dispatch(
+          createColumn({
+            classroomId: this.viewingClassroomId(),
+            configurationId: this.viewingConfigurationId(),
+            column,
+          })
+        );
+      }
     });
   }
 }

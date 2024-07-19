@@ -59,3 +59,12 @@ export const updateColumns = createAction(
     columns: ClassroomConfigurationColumn[];
   }>()
 );
+
+export const createColumn = createAction(
+  '[Classroom] Create Column',
+  props<{
+    classroomId: string;
+    configurationId: string;
+    column: ClassroomConfigurationColumn;
+  }>()
+);
