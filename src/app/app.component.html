@@ -43,14 +43,14 @@
         <div class="flex flex-col flex-1">
           <!-- <h4 style="margin: 0">{{ viewingClassroom()?.label }}</h4> -->
           <input
-            class="text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+            class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
             type="text"
             maxlength="150"
             [(ngModel)]="updatedClassroomLabel"
             (change)="updateClassroomLabel()"
           />
           <input
-            class="appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+            class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
             type="text"
             maxlength="150"
             [(ngModel)]="updatedClassroomDescription"

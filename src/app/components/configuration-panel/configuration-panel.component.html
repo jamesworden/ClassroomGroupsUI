@@ -3,14 +3,14 @@
     <div class="flex flex-col justify-around pr-4">
       <div class="flex flex-col">
         <input
-          class="text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+          class="text-ellipsis text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
-          maxlength="150"
+          maxlength="120"
           [(ngModel)]="updatedLabel"
           (change)="updateLabel()"
         />
         <input
-          class="text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+          class="text-ellipsis text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
           maxlength="150"
           [(ngModel)]="updatedDescription"
