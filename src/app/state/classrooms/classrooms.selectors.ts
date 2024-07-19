@@ -24,3 +24,15 @@ export const selectViewingConfigurationId = createSelector(
   selectClassroomsState,
   (state: ClassroomsState) => state.viewingConfigurationId
 );
+
+export const selectViewingConfiguration = createSelector(
+  selectClassroomsState,
+  ({
+    viewingConfigurationId,
+    viewingClassroomId,
+    classrooms,
+  }: ClassroomsState) =>
+    classrooms
+      .find(({ id }) => id === viewingClassroomId)
+      ?.configurations.find(({ id }) => id === viewingConfigurationId)
+);

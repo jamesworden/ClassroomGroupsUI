@@ -9,6 +9,8 @@ import {
   deleteClassroom,
   updateClassroomDescription,
   updateClassroomLabel,
+  updateConfigurationDescription,
+  updateConfigurationLabel,
   viewClassroom,
   viewConfiguration,
 } from './classrooms.actions';
@@ -149,7 +151,57 @@ export const classroomsReducer = createReducer(
     classroom.label = label;
 
     return newState;
-  })
+  }),
+  on(
+    updateConfigurationDescription,
+    (state, { classroomId, description, configurationId }) => {
+      const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
+      const classroom = newState.classrooms.find(
+        ({ id }) => id === classroomId
+      );
+      if (!classroom) {
+        return state;
+      }
+
+      const configuration = classroom.configurations.find(
+        ({ id }) => id === configurationId
+      );
+      if (!configuration) {
+        return state;
+      }
+
+      configuration.description = description;
+
+      return newState;
+    }
+  ),
+  on(
+    updateConfigurationLabel,
+    (state, { classroomId, label, configurationId }) => {
+      const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+
+      const classroom = newState.classrooms.find(
+        ({ id }) => id === classroomId
+      );
+      if (!classroom) {
+        return state;
+      }
+
+      const configuration = classroom.configurations.find(
+        ({ id }) => id === configurationId
+      );
+      if (!configuration) {
+        return state;
+      }
+
+      configuration.label = label;
+
+      classroom.label = label;
+
+      return newState;
+    }
+  )
 );
 
 function generateUniqueId() {

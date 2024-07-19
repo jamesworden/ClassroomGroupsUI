@@ -34,3 +34,13 @@ export const updateClassroomLabel = createAction(
   '[Classroom] Update Classroom Label',
   props<{ label: string; classroomId: string }>()
 );
+
+export const updateConfigurationDescription = createAction(
+  '[Classroom] Update Configuration Description',
+  props<{ description: string; classroomId: string; configurationId: string }>()
+);
+
+export const updateConfigurationLabel = createAction(
+  '[Classroom] Update Configuration Label',
+  props<{ label: string; classroomId: string; configurationId: string }>()
+);
