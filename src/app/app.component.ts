@@ -119,11 +119,11 @@ export class AppComponent {
   maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
   minConfigurationsPanelHeight = window.innerHeight / 4;
 
-  classAndConfigPanelSettings = signal<ClassAndConfigPanelSettings>({
+  readonly classAndConfigPanelSettings = signal<ClassAndConfigPanelSettings>({
     width: DEFAULT_PANEL_WIDTH,
     isOpen: true,
   });
-  configPanelSettings = signal<ConfigPanelSettings>({
+  readonly configPanelSettings = signal<ConfigPanelSettings>({
     height: DEFAULT_CONFIGURATIONS_PANEL_HEIGHT,
   });
   updatedClassroomDescription = '';
