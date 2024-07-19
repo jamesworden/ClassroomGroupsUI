@@ -10,6 +10,9 @@
       border-color: mat.get-theme-color($theme, primary, 50) !important;
     }
   }
+  .mdc-switch:enabled .mdc-switch__track::after {
+    background: mat.get-theme-color($theme, primary, 40) !important;
+  }
 }
 
 @mixin theme($theme) {
