@@ -4,6 +4,7 @@ import {
   effect,
   ElementRef,
   inject,
+  signal,
   Signal,
   ViewChild,
 } from '@angular/core';
@@ -46,6 +47,11 @@ import {
   YesNoDialogInputs,
 } from './components/yes-no-dialog/yes-no-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+enum StorageKeys {
+  CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
+  CONFIG_PANEL = 'configurations-panel',
+}
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
@@ -113,13 +119,13 @@ export class AppComponent {
   maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
   minConfigurationsPanelHeight = window.innerHeight / 4;
 
-  classAndConfigPanelSettings: ClassAndConfigPanelSettings = {
+  classAndConfigPanelSettings = signal<ClassAndConfigPanelSettings>({
     width: DEFAULT_PANEL_WIDTH,
     isOpen: true,
-  };
-  configPanelSettings: ConfigPanelSettings = {
+  });
+  configPanelSettings = signal<ConfigPanelSettings>({
     height: DEFAULT_CONFIGURATIONS_PANEL_HEIGHT,
-  };
+  });
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
 
@@ -140,6 +146,18 @@ export class AppComponent {
     effect(
       () => (this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '')
     );
+    effect(() => {
+      localStorage.setItem(
+        StorageKeys.CLASS_AND_CONFIG_PANEL,
+        JSON.stringify(this.classAndConfigPanelSettings())
+      );
+    });
+    effect(() => {
+      localStorage.setItem(
+        StorageKeys.CONFIG_PANEL,
+        JSON.stringify(this.configPanelSettings())
+      );
+    });
   }
 
   private showUnderConstructionToast() {
@@ -150,40 +168,39 @@ export class AppComponent {
   }
 
   private loadClassAndConfigPanelSettings() {
-    const setting = localStorage.getItem('classrooms-and-configurations-panel');
-    if (!setting) {
-      return;
+    const setting = localStorage.getItem(StorageKeys.CLASS_AND_CONFIG_PANEL);
+    if (setting) {
+      const settings = JSON.parse(setting) as ClassAndConfigPanelSettings;
+      this.classAndConfigPanelSettings.set({
+        ...settings,
+        width: settings.width ?? DEFAULT_PANEL_WIDTH,
+      });
     }
-    const settings = JSON.parse(setting) as ClassAndConfigPanelSettings;
-    this.classAndConfigPanelSettings.width =
-      settings.width ?? DEFAULT_PANEL_WIDTH;
-    this.classAndConfigPanelSettings.isOpen = settings.isOpen ?? true;
   }
 
   private loadConfigPanelSettings() {
-    const setting = localStorage.getItem('configurations-panel');
-    if (!setting) {
-      return;
+    const setting = localStorage.getItem(StorageKeys.CONFIG_PANEL);
+    if (setting) {
+      const settings = JSON.parse(setting) as ConfigPanelSettings;
+      this.configPanelSettings.set({
+        ...settings,
+        height: settings.height ?? DEFAULT_CONFIGURATIONS_PANEL_HEIGHT,
+      });
     }
-    const settings = JSON.parse(setting) as ConfigPanelSettings;
-    this.configPanelSettings.height =
-      settings.height ?? DEFAULT_CONFIGURATIONS_PANEL_HEIGHT;
   }
 
   setPanelWidth(panelWidth: number) {
-    this.classAndConfigPanelSettings.width = panelWidth;
-    localStorage.setItem(
-      'classrooms-and-configurations-panel',
-      JSON.stringify(this.classAndConfigPanelSettings)
-    );
+    this.classAndConfigPanelSettings.set({
+      ...this.classAndConfigPanelSettings(),
+      width: panelWidth,
+    });
   }
 
-  setConfigurationsPanelHeight(panelHeight: number) {
-    this.configPanelSettings.height = panelHeight;
-    localStorage.setItem(
-      'configurations-panel',
-      JSON.stringify(this.configPanelSettings)
-    );
+  setConfigPanelHeight(panelHeight: number) {
+    this.configPanelSettings.set({
+      ...this.configPanelSettings(),
+      height: panelHeight,
+    });
   }
 
   openDeleteClassroomDialog() {
@@ -230,11 +247,10 @@ export class AppComponent {
   }
 
   toggleClassAndConfigPanel() {
-    this.classAndConfigPanelSettings.isOpen =
-      !this.classAndConfigPanelSettings.isOpen;
-    localStorage.setItem(
-      'classrooms-and-configurations-panel',
-      JSON.stringify(this.classAndConfigPanelSettings)
-    );
+    const existingSettings = this.classAndConfigPanelSettings();
+    this.classAndConfigPanelSettings.set({
+      ...existingSettings,
+      isOpen: !existingSettings.isOpen,
+    });
   }
 }
