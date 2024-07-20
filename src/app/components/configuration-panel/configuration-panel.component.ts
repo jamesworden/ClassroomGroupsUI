@@ -43,6 +43,7 @@ import {
 } from '../create-edit-column-dialog/create-edit-column-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -59,6 +60,7 @@ import { MatMenuModule } from '@angular/material/menu';
     CdkDropList,
     MatSlideToggleModule,
     MatMenuModule,
+    MatBadgeModule,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',
@@ -98,6 +100,20 @@ export class ConfigurationPanelComponent {
       fieldIdsToFields[field.id] = field;
     }
     return fieldIdsToFields;
+  });
+
+  readonly enabledColumnBadges = computed(() => {
+    const enabledColumnBadges: {
+      [columnId: string]: number;
+    } = {};
+    let latestSortValue = 1;
+    for (const column of this.viewingConfiguration()?.columns ?? []) {
+      if (column.enabled) {
+        enabledColumnBadges[column.id] = latestSortValue;
+        latestSortValue++;
+      }
+    }
+    return enabledColumnBadges;
   });
 
   averageScores = false;

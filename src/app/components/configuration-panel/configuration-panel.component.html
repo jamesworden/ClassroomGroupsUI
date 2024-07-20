@@ -89,18 +89,23 @@
     <div
       cdkDropList
       cdkDropListOrientation="horizontal"
-      class="bg-white border border-gray-300 flex flex-row rounded-md overflow-hidden"
+      class="bg-white border border-gray-300 flex flex-row rounded-md"
       (cdkDropListDropped)="drop($event)"
     >
       @for (column of columns; track column.id) {
-      <div class="example-box p-2 border-r border-gray-300" cdkDrag>
+      <div
+        class="example-box p-2 border-r border-gray-300"
+        cdkDrag
+        [matBadge]="enabledColumnBadges()[column.id]"
+        matBadgeOverlap="true"
+      >
         <div class="flex justify-between w-full">
           <div class="flex flex-col justify-around">
             <div class="text-ellipsis">
               {{ fieldIdsToFields()[column.fieldId].label }}
             </div>
           </div>
-          <div>
+          <div class="flex">
             <button
               matSuffix
               mat-icon-button
