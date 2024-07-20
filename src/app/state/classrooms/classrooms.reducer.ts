@@ -10,6 +10,7 @@ import {
   createColumn,
   deleteClassroom,
   deleteConfiguration,
+  toggleColumn,
   updateClassroomDescription,
   updateClassroomLabel,
   updateColumns,
@@ -253,5 +254,22 @@ export const classroomsReducer = createReducer(
       })
     );
     return state;
-  })
+  }),
+  on(toggleColumn, (state, { classroomId, configurationId, columnId }) =>
+    updateConfigurationProperty(
+      state,
+      classroomId,
+      configurationId,
+      (configuration) => ({
+        ...configuration,
+        columns: configuration.columns.map((column: any) => {
+          const newCol = { ...column };
+          if (newCol.id === columnId) {
+            newCol.enabled = !newCol.enabled;
+          }
+          return newCol;
+        }),
+      })
+    )
+  )
 );

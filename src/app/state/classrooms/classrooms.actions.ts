@@ -69,3 +69,12 @@ export const createColumn = createAction(
     field: ClassroomField;
   }>()
 );
+
+export const toggleColumn = createAction(
+  '[Classroom] Toggle Column',
+  props<{
+    classroomId: string;
+    configurationId: string;
+    columnId: string;
+  }>()
+);

@@ -18,6 +18,7 @@ import {
 import {
   createColumn,
   deleteConfiguration,
+  toggleColumn,
   updateColumns,
   updateConfigurationDescription,
   updateConfigurationLabel,
@@ -41,6 +42,7 @@ import {
   CreateEditColumnDialogOutputs,
 } from '../create-edit-column-dialog/create-edit-column-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -56,6 +58,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     CdkDrag,
     CdkDropList,
     MatSlideToggleModule,
+    MatMenuModule,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',
@@ -201,7 +204,13 @@ export class ConfigurationPanelComponent {
       });
   }
 
-  columnToggled({ checked }: MatSlideToggleChange, columnId: string) {
-    // TODO: Dispatch event that toggles the enablement of the column
+  toggleColumn(columnId: string) {
+    this.#store.dispatch(
+      toggleColumn({
+        classroomId: this.viewingClassroomId(),
+        configurationId: this.viewingConfigurationId(),
+        columnId,
+      })
+    );
   }
 }
