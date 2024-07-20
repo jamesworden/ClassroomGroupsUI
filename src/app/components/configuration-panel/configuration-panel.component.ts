@@ -166,7 +166,7 @@ export class ConfigurationPanelComponent {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete configuration',
-        subtitle: `Are you sure you want to delete the classroom ${
+        subtitle: `Are you sure you want to delete the configuration ${
           this.viewingConfiguration()?.label
         } and all of it's data?`,
       },

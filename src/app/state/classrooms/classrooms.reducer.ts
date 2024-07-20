@@ -220,14 +220,16 @@ export const classroomsReducer = createReducer(
         })
       )
   ),
-  on(deleteConfiguration, (state, { classroomId, configurationId }) =>
-    updateClassroomProperty(state, classroomId, (classroom) => ({
+  on(deleteConfiguration, (state, { classroomId, configurationId }) => {
+    state = updateClassroomProperty(state, classroomId, (classroom) => ({
       ...classroom,
       configurations: classroom.configurations.filter(
         ({ id }) => id !== configurationId
       ),
-    }))
-  ),
+    }));
+    state.viewingConfigurationId = state.classrooms[0].configurations[0].id;
+    return state;
+  }),
   on(updateColumns, (state, { classroomId, configurationId, columns }) =>
     updateConfigurationProperty(
       state,

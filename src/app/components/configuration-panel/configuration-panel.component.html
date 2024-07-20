@@ -59,7 +59,11 @@
 
       <div class="flex">
         <div class="flex flex-col justify-around">
-          <button mat-icon-button (click)="openCreateColumnDialog()">
+          <button
+            mat-icon-button
+            (click)="openCreateColumnDialog()"
+            matTooltip="Create column"
+          >
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -69,7 +73,7 @@
           [matTooltip]="
             (viewingClassroom()?.configurations?.length ?? 0) <= 1
               ? 'You can\'t delete the last configuration!'
-              : ''
+              : 'Delete configuration'
           "
         >
           <button
