@@ -1,7 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
 import {
   Classroom,
+  ClassroomColumn,
   ClassroomColumnSort,
+  ClassroomField,
   ClassroomFieldType,
 } from '../../models/classroom.models';
 import {
@@ -163,7 +165,7 @@ export const classroomsReducer = createReducer(
       configurations: [
         ...classroom.configurations,
         {
-          columns: [],
+          columns: getDefaultColumnsFromFields(classroom.fields),
           id: generateUniqueId(),
           label: configurationLabel,
           groups: [],
@@ -241,21 +243,18 @@ export const classroomsReducer = createReducer(
       })
     )
   ),
-  on(createColumn, (state, { classroomId, configurationId, column, field }) => {
+  on(createColumn, (state, { classroomId, column, field }) => {
     state = updateClassroomProperty(state, classroomId, (classroom) => ({
       ...classroom,
       fields: [...classroom.fields, field],
     }));
-    state = updateConfigurationProperty(
-      state,
-      classroomId,
-      configurationId,
-      (configuration) => ({
-        ...configuration,
-        columns: [...configuration.columns, column],
-      })
-    );
-    return state;
+    const newState = JSON.parse(JSON.stringify(state)) as ClassroomsState;
+    newState.classrooms.forEach((classroom) => {
+      classroom.configurations.forEach((configuration) => {
+        configuration.columns = [...configuration.columns, column];
+      });
+    });
+    return newState;
   }),
   on(toggleColumn, (state, { classroomId, configurationId, columnId }) =>
     updateConfigurationProperty(
@@ -275,3 +274,14 @@ export const classroomsReducer = createReducer(
     )
   )
 );
+
+function getDefaultColumnsFromFields(
+  fields: ClassroomField[]
+): ClassroomColumn[] {
+  return fields.map((field) => ({
+    enabled: true,
+    fieldId: field.id,
+    id: generateUniqueId(),
+    sort: ClassroomColumnSort.NONE,
+  }));
+}
