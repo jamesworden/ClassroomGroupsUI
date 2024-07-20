@@ -19,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { generateUniqueId } from '../../logic/generate-unique-id';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export interface CreateEditColumnDialogOutputs {
   column: ClassroomColumn;
@@ -46,6 +47,7 @@ export interface CreateEditColumnDialogInputs {
     MatFormFieldModule,
     FormsModule,
     MatInputModule,
+    MatTooltipModule,
   ],
   templateUrl: './create-edit-column-dialog.component.html',
   styleUrl: './create-edit-column-dialog.component.scss',
@@ -82,6 +84,8 @@ export class CreateEditColumnDialogComponent {
 
   readonly canceled = signal(undefined);
 
+  fieldNameIsValid = false;
+
   constructor() {
     const fieldId = this.#data.existingData?.field?.id ?? generateUniqueId();
 
@@ -96,5 +100,9 @@ export class CreateEditColumnDialogComponent {
       label: this.#data.existingData?.field?.label ?? '',
       type: this.#data.existingData?.field?.type ?? ClassroomFieldType.TEXT,
     };
+  }
+
+  setFieldNameIsValid() {
+    this.fieldNameIsValid = this.field.label.trim().length > 0;
   }
 }
