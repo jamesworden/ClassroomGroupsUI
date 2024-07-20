@@ -10,6 +10,9 @@ export interface ClassroomConfiguration {
   label: string;
   description?: string;
   id: string;
+  /**
+   * TODO: Move to classroom! Wait... I want the fields themselves to be on a per classroom basis, but I want the sort and order to be on a per configuration basis!
+   */
   columns: ClassroomConfigurationColumn[];
   groups: ClassroomConfigurationGroup[];
 }

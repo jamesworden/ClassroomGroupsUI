@@ -4,7 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {
+  MatSlideToggleChange,
+  MatSlideToggleModule,
+} from '@angular/material/slide-toggle';
 import { Store } from '@ngrx/store';
 import {
   selectViewingClassroom,
@@ -51,6 +54,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatTooltipModule,
     CdkDrag,
     CdkDropList,
+    MatSlideToggleModule,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',
@@ -181,5 +185,9 @@ export class ConfigurationPanelComponent {
         });
       }
     });
+  }
+
+  columnToggled({ checked }: MatSlideToggleChange, columnId: string) {
+    // TODO: Dispatch event that toggles the enablement of the column
   }
 }

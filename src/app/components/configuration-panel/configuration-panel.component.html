@@ -93,11 +93,25 @@
     <div
       cdkDropList
       cdkDropListOrientation="horizontal"
-      class="example-list"
+      class="bg-white border border-gray-300 flex flex-row rounded-md overflow-hidden"
       (cdkDropListDropped)="drop($event)"
     >
       @for (column of columns; track column.id) {
-      <div class="example-box" cdkDrag>{{ column.label }}</div>
+      <div class="example-box p-2 border-r border-gray-300" cdkDrag>
+        <div class="flex justify-between w-full">
+          <div class="flex flex-col justify-around">
+            <div>{{ column.label }}</div>
+          </div>
+          <div>
+            <mat-slide-toggle
+              class="scale-75"
+              (change)="columnToggled($event, column.id)"
+              [checked]="column.enabled"
+            >
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
       }
     </div>
   </div>
