@@ -221,62 +221,69 @@ export class ConfigurationPanelComponent {
   }
 
   toggleColumn(columnId: string) {
-    this.columns.forEach((column) => {
-      if (column.id === columnId) {
-        column.enabled = !column.enabled;
-      }
-    });
-    this.#store.dispatch(
-      updateColumns({
-        classroomId: this.viewingClassroomId(),
-        configurationId: this.viewingConfigurationId(),
-        columns: this.columns,
-      })
-    );
+    // this.#store.dispatch(
+    //   updateColumns({
+    //     classroomId: this.viewingClassroomId(),
+    //     configurationId: this.viewingConfigurationId(),
+    //     columns: {
+    //       ...this.columns.map((column) => ({
+    //         ...column,
+    //         enabled: column.id === columnId ? !column.enabled : column.enabled,
+    //       })),
+    //     },
+    //   })
+    // );
   }
 
   setSortAscending(columnId: string) {
-    this.columns.forEach((column) => {
-      if (column.id === columnId) {
-        column.sort = ClassroomColumnSort.ASCENDING;
-      }
-    });
-    this.#store.dispatch(
-      updateColumns({
-        classroomId: this.viewingClassroomId(),
-        configurationId: this.viewingConfigurationId(),
-        columns: this.columns,
-      })
-    );
+    // this.#store.dispatch(
+    //   updateColumns({
+    //     classroomId: this.viewingClassroomId(),
+    //     configurationId: this.viewingConfigurationId(),
+    //     columns: {
+    //       ...this.columns.map((column) => ({
+    //         ...column,
+    //         sort:
+    //           column.id === columnId
+    //             ? ClassroomColumnSort.ASCENDING
+    //             : column.sort,
+    //       })),
+    //     },
+    //   })
+    // );
   }
 
   setSortDescending(columnId: string) {
-    this.columns.forEach((column) => {
-      if (column.id === columnId) {
-        column.sort = ClassroomColumnSort.DESCENDING;
-      }
-    });
-    this.#store.dispatch(
-      updateColumns({
-        classroomId: this.viewingClassroomId(),
-        configurationId: this.viewingConfigurationId(),
-        columns: this.columns,
-      })
-    );
+    // this.#store.dispatch(
+    //   updateColumns({
+    //     classroomId: this.viewingClassroomId(),
+    //     configurationId: this.viewingConfigurationId(),
+    //     columns: {
+    //       ...this.columns.map((column) => ({
+    //         ...column,
+    //         sort:
+    //           column.id === columnId
+    //             ? ClassroomColumnSort.DESCENDING
+    //             : column.sort,
+    //       })),
+    //     },
+    //   })
+    // );
   }
 
   removeSort(columnId: string) {
-    this.columns.forEach((column) => {
-      if (column.id === columnId) {
-        column.sort = ClassroomColumnSort.NONE;
-      }
-    });
-    this.#store.dispatch(
-      updateColumns({
-        classroomId: this.viewingClassroomId(),
-        configurationId: this.viewingConfigurationId(),
-        columns: this.columns,
-      })
-    );
+    // this.#store.dispatch(
+    //   updateColumns({
+    //     classroomId: this.viewingClassroomId(),
+    //     configurationId: this.viewingConfigurationId(),
+    //     columns: {
+    //       ...this.columns.map((column) => ({
+    //         ...column,
+    //         sort:
+    //           column.id === columnId ? ClassroomColumnSort.NONE : column.sort,
+    //       })),
+    //     },
+    //   })
+    // );
   }
 }
