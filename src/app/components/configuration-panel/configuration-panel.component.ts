@@ -4,10 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import {
-  MatSlideToggleChange,
-  MatSlideToggleModule,
-} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Store } from '@ngrx/store';
 import {
   selectViewingClassroom,
@@ -18,7 +15,6 @@ import {
 import {
   createColumn,
   deleteConfiguration,
-  toggleColumn,
   updateColumns,
   updateConfigurationDescription,
   updateConfigurationLabel,
@@ -35,7 +31,11 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ClassroomColumn, ClassroomField } from '../../models/classroom.models';
+import {
+  ClassroomColumn,
+  ClassroomColumnSort,
+  ClassroomField,
+} from '../../models/classroom.models';
 import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
@@ -221,11 +221,61 @@ export class ConfigurationPanelComponent {
   }
 
   toggleColumn(columnId: string) {
+    this.columns.forEach((column) => {
+      if (column.id === columnId) {
+        column.enabled = !column.enabled;
+      }
+    });
     this.#store.dispatch(
-      toggleColumn({
+      updateColumns({
         classroomId: this.viewingClassroomId(),
         configurationId: this.viewingConfigurationId(),
-        columnId,
+        columns: this.columns,
+      })
+    );
+  }
+
+  setSortAscending(columnId: string) {
+    this.columns.forEach((column) => {
+      if (column.id === columnId) {
+        column.sort = ClassroomColumnSort.ASCENDING;
+      }
+    });
+    this.#store.dispatch(
+      updateColumns({
+        classroomId: this.viewingClassroomId(),
+        configurationId: this.viewingConfigurationId(),
+        columns: this.columns,
+      })
+    );
+  }
+
+  setSortDescending(columnId: string) {
+    this.columns.forEach((column) => {
+      if (column.id === columnId) {
+        column.sort = ClassroomColumnSort.DESCENDING;
+      }
+    });
+    this.#store.dispatch(
+      updateColumns({
+        classroomId: this.viewingClassroomId(),
+        configurationId: this.viewingConfigurationId(),
+        columns: this.columns,
+      })
+    );
+  }
+
+  removeSort(columnId: string) {
+    this.columns.forEach((column) => {
+      if (column.id === columnId) {
+        column.sort = ClassroomColumnSort.NONE;
+      }
+    });
+    this.#store.dispatch(
+      updateColumns({
+        classroomId: this.viewingClassroomId(),
+        configurationId: this.viewingConfigurationId(),
+        columns: this.columns,
       })
     );
   }
