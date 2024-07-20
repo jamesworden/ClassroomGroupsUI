@@ -89,7 +89,7 @@
     <div
       cdkDropList
       cdkDropListOrientation="horizontal"
-      class="bg-white border border-gray-300 flex flex-row rounded-md"
+      class="bg-white border border-gray-300 flex flex-row rounded-md min-h-16"
       (cdkDropListDropped)="drop($event)"
     >
       @for (column of columns; track column.id) {
