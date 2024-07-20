@@ -22,7 +22,7 @@ import {
   selectViewingClassroomId,
   selectViewingConfigurationId,
 } from '../../state/classrooms/classrooms.selectors';
-import { ClassroomConfiguration } from '../../models/classroom.models';
+import { ClassroomConfig } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import {
@@ -79,7 +79,7 @@ export class ConfigurationsPanelComponent {
 
   addConfigurationLabel = '';
 
-  readonly filteredConfigurations: Signal<ClassroomConfiguration[]> = computed(
+  readonly filteredConfigurations: Signal<ClassroomConfig[]> = computed(
     () =>
       this.viewingClassroom()?.configurations.filter(({ label }) =>
         label.toLowerCase().includes(this.searchQuery())

@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,10 +34,11 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ClassroomConfigurationColumn } from '../../models/classroom.models';
+import { ClassroomColumn, ClassroomField } from '../../models/classroom.models';
 import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
+  CreateEditColumnDialogOutputs,
 } from '../create-edit-column-dialog/create-edit-column-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -86,12 +87,22 @@ export class ConfigurationPanelComponent {
     this.#store.select(selectViewingClassroom)
   );
 
+  readonly fieldIdsToFields = computed(() => {
+    const fieldIdsToFields: {
+      [fieldId: string]: ClassroomField;
+    } = {};
+    for (const field of this.viewingClassroom()?.fields ?? []) {
+      fieldIdsToFields[field.id] = field;
+    }
+    return fieldIdsToFields;
+  });
+
   averageScores = false;
   groupingByDivision = false;
   groupingValue = 0;
   updatedDescription = '';
   updatedLabel = '';
-  columns: ClassroomConfigurationColumn[] = [];
+  columns: ClassroomColumn[] = [];
 
   constructor() {
     effect(
@@ -153,7 +164,7 @@ export class ConfigurationPanelComponent {
     });
   }
 
-  drop(event: CdkDragDrop<ClassroomConfigurationColumn>) {
+  drop(event: CdkDragDrop<ClassroomColumn>) {
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
     this.#store.dispatch(
       updateColumns({
@@ -171,20 +182,23 @@ export class ConfigurationPanelComponent {
         title: 'Create Column',
       },
     });
-    dialogRef.afterClosed().subscribe((column) => {
-      if (column) {
-        this.#store.dispatch(
-          createColumn({
-            classroomId: this.viewingClassroomId(),
-            configurationId: this.viewingConfigurationId(),
-            column,
-          })
-        );
-        this.#matSnackBar.open('Column created', 'Hide', {
-          duration: 3000,
-        });
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#store.dispatch(
+            createColumn({
+              classroomId: this.viewingClassroomId(),
+              configurationId: this.viewingConfigurationId(),
+              column: outputs.column,
+              field: outputs.field,
+            })
+          );
+          this.#matSnackBar.open('Column created', 'Hide', {
+            duration: 3000,
+          });
+        }
+      });
   }
 
   columnToggled({ checked }: MatSlideToggleChange, columnId: string) {

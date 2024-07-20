@@ -1,12 +1,12 @@
-<h2 mat-dialog-title>{{ title }}</h2>
+<h2 mat-dialog-title>{{ title() }}</h2>
 
 <div class="px-4 flex flex-col gap-y-2">
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Column name</mat-label>
-    <input [(ngModel)]="column.label" type="text" matInput />
+    <input [(ngModel)]="field.label" type="text" matInput />
   </mat-form-field>
 
-  <mat-radio-group [(ngModel)]="column.type">
+  <mat-radio-group [(ngModel)]="field.type">
     <mat-radio-button color="primary" [value]="Type.TEXT"
       >Text</mat-radio-button
     >
@@ -18,5 +18,7 @@
 
 <mat-dialog-actions>
   <button mat-button [mat-dialog-close]="canceled()">Cancel</button>
-  <button mat-button [mat-dialog-close]="saved()" cdkFocusInitial>Save</button>
+  <button mat-button [mat-dialog-close]="saved()()" cdkFocusInitial>
+    Save
+  </button>
 </mat-dialog-actions>

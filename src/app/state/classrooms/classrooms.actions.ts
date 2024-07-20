@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ClassroomConfigurationColumn } from '../../models/classroom.models';
+import { ClassroomColumn, ClassroomField } from '../../models/classroom.models';
 
 export const viewClassroom = createAction(
   '[Classroom] View Classroom',
@@ -56,7 +56,7 @@ export const updateColumns = createAction(
   props<{
     classroomId: string;
     configurationId: string;
-    columns: ClassroomConfigurationColumn[];
+    columns: ClassroomColumn[];
   }>()
 );
 
@@ -65,6 +65,7 @@ export const createColumn = createAction(
   props<{
     classroomId: string;
     configurationId: string;
-    column: ClassroomConfigurationColumn;
+    column: ClassroomColumn;
+    field: ClassroomField;
   }>()
 );

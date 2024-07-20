@@ -1,41 +1,44 @@
 export interface Classroom {
   label: string;
   id: string;
-  configurations: ClassroomConfiguration[];
+  configurations: ClassroomConfig[];
   students: Student[];
   description?: string;
+  fields: ClassroomField[];
 }
 
-export interface ClassroomConfiguration {
+export interface ClassroomConfig {
   label: string;
   description?: string;
   id: string;
-  /**
-   * TODO: Move to classroom! Wait... I want the fields themselves to be on a per classroom basis, but I want the sort and order to be on a per configuration basis!
-   */
-  columns: ClassroomConfigurationColumn[];
-  groups: ClassroomConfigurationGroup[];
+  columns: ClassroomColumn[];
+  groups: ClassroomGroup[];
 }
 
-export interface ClassroomConfigurationColumn {
+export interface ClassroomField {
   label: string;
+  id: string;
+  type: ClassroomFieldType;
+}
+
+export interface ClassroomColumn {
   id: string;
   enabled: boolean;
-  sort: ClassroomConfigurationColumnSort;
-  type: ClassroomConfigurationColumnType;
+  sort: ClassroomColumnSort;
+  fieldId: string;
 }
 
-export interface ClassroomConfigurationGroup {
+export interface ClassroomGroup {
   id: string;
   label: string;
 }
 
-export enum ClassroomConfigurationColumnType {
+export enum ClassroomFieldType {
   TEXT = 'TEXT',
   NUMBER = 'NUMBER',
 }
 
-export enum ClassroomConfigurationColumnSort {
+export enum ClassroomColumnSort {
   ASCENDING = 'ASCENDING',
   DESCENDING = 'DESCENDING',
   NONE = 'NONE',
@@ -44,6 +47,6 @@ export enum ClassroomConfigurationColumnSort {
 export interface Student {
   groupId: string;
   row: {
-    [columnId: string]: number | string;
+    [fieldId: string]: number | string;
   };
 }

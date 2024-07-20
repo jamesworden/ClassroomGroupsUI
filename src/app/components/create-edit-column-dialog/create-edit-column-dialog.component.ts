@@ -1,8 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import {
-  ClassroomConfigurationColumn,
-  ClassroomConfigurationColumnSort,
-  ClassroomConfigurationColumnType,
+  ClassroomColumn,
+  ClassroomColumnSort,
+  ClassroomFieldType,
+  ClassroomField,
 } from '../../models/classroom.models';
 import {
   MAT_DIALOG_DATA,
@@ -19,9 +20,17 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { generateUniqueId } from '../../logic/generate-unique-id';
 
+export interface CreateEditColumnDialogOutputs {
+  column: ClassroomColumn;
+  field: ClassroomField;
+}
+
 export interface CreateEditColumnDialogInputs {
   title: string;
-  column?: ClassroomConfigurationColumn;
+  existingData?: {
+    column: ClassroomColumn;
+    field: ClassroomField;
+  };
 }
 
 @Component({
@@ -44,21 +53,48 @@ export interface CreateEditColumnDialogInputs {
 export class CreateEditColumnDialogComponent {
   readonly #data = inject<CreateEditColumnDialogInputs>(MAT_DIALOG_DATA);
 
-  readonly Type = ClassroomConfigurationColumnType;
+  readonly Type = ClassroomFieldType;
 
   public readonly dialogRef = inject(
     MatDialogRef<CreateEditColumnDialogComponent>
   );
 
-  readonly title = this.#data.title;
-  readonly column: ClassroomConfigurationColumn = {
+  readonly title = signal(this.#data.title);
+
+  readonly column: ClassroomColumn = {
     enabled: true,
-    id: this.#data.column?.id ?? generateUniqueId(),
-    label: this.#data.column?.label ?? '',
-    sort: this.#data.column?.sort ?? ClassroomConfigurationColumnSort.NONE,
-    type: this.#data.column?.type ?? ClassroomConfigurationColumnType.TEXT,
+    fieldId: '',
+    id: '',
+    sort: ClassroomColumnSort.NONE,
   };
 
-  readonly saved = signal(this.column);
+  readonly field: ClassroomField = {
+    id: '',
+    label: '',
+    type: ClassroomFieldType.TEXT,
+  };
+
+  readonly saved = () =>
+    signal<CreateEditColumnDialogOutputs>({
+      column: this.column,
+      field: this.field,
+    });
+
   readonly canceled = signal(undefined);
+
+  constructor() {
+    const fieldId = this.#data.existingData?.field?.id ?? generateUniqueId();
+
+    this.column = {
+      enabled: true,
+      id: this.#data.existingData?.column?.id ?? generateUniqueId(),
+      sort: this.#data.existingData?.column?.sort ?? ClassroomColumnSort.NONE,
+      fieldId,
+    };
+    this.field = {
+      id: fieldId,
+      label: this.#data.existingData?.field?.label ?? '',
+      type: this.#data.existingData?.field?.type ?? ClassroomFieldType.TEXT,
+    };
+  }
 }

@@ -1,8 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
 import {
   Classroom,
-  ClassroomConfigurationColumnSort,
-  ClassroomConfigurationColumnType,
+  ClassroomColumnSort,
+  ClassroomFieldType,
 } from '../../models/classroom.models';
 import {
   addClassroom,
@@ -38,16 +38,14 @@ const initialState: ClassroomsState = {
             {
               enabled: true,
               id: '6a77ca7a-42b3-45db-b929-fd5bc004d1e7',
-              label: 'First Name',
-              sort: ClassroomConfigurationColumnSort.NONE,
-              type: ClassroomConfigurationColumnType.TEXT,
+              sort: ClassroomColumnSort.NONE,
+              fieldId: 'first-name-field-id',
             },
             {
               enabled: true,
               id: 'd63e23ba-4958-48fc-a304-349d094a4a61',
-              label: 'Last Name',
-              sort: ClassroomConfigurationColumnSort.NONE,
-              type: ClassroomConfigurationColumnType.TEXT,
+              sort: ClassroomColumnSort.ASCENDING,
+              fieldId: 'last-name-field-id',
             },
           ],
           id: 'f3ee16c4-68a9-41c1-8780-ac367a1df4d9',
@@ -75,6 +73,18 @@ const initialState: ClassroomsState = {
             '6a77ca7a-42b3-45db-b929-fd5bc004d1e7': 'John',
             'd63e23ba-4958-48fc-a304-349d094a4a61': 'Smith',
           },
+        },
+      ],
+      fields: [
+        {
+          id: 'first-name-field-id',
+          label: 'First Name',
+          type: ClassroomFieldType.TEXT,
+        },
+        {
+          id: 'last-name-field-id',
+          label: 'Last Name',
+          type: ClassroomFieldType.TEXT,
         },
       ],
     },
@@ -138,6 +148,7 @@ export const classroomsReducer = createReducer(
           },
         ],
         students: [],
+        fields: [],
       },
     ],
   })),
@@ -227,8 +238,12 @@ export const classroomsReducer = createReducer(
       })
     )
   ),
-  on(createColumn, (state, { classroomId, configurationId, column }) =>
-    updateConfigurationProperty(
+  on(createColumn, (state, { classroomId, configurationId, column, field }) => {
+    state = updateClassroomProperty(state, classroomId, (classroom) => ({
+      ...classroom,
+      fields: [...classroom.fields, field],
+    }));
+    state = updateConfigurationProperty(
       state,
       classroomId,
       configurationId,
@@ -236,6 +251,7 @@ export const classroomsReducer = createReducer(
         ...configuration,
         columns: [...configuration.columns, column],
       })
-    )
-  )
+    );
+    return state;
+  })
 );
