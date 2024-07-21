@@ -178,11 +178,9 @@ export class ConfigurationPanelComponent {
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
         const classroomId = this.viewingClassroomId();
-        const configurationId = this.viewingConfigurationId();
-        if (outputs && classroomId && configurationId) {
+        if (outputs && classroomId) {
           this.#classroomsService.createColumn(
             classroomId,
-            configurationId,
             outputs.column,
             outputs.field
           );

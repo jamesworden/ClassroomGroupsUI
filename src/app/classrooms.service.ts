@@ -175,7 +175,6 @@ export class ClassroomsService {
 
   public createColumn(
     classroomId: string,
-    configurationId: string,
     column: ClassroomColumn,
     field: ClassroomField
   ) {
@@ -183,9 +182,7 @@ export class ClassroomsService {
       ...this._classrooms$.getValue().map((classroom) => {
         if (classroom.id === classroomId) {
           classroom.configurations.map((configuration) => {
-            if (configuration.id === configurationId) {
-              configuration.columns = [...configuration.columns, column];
-            }
+            configuration.columns = [...configuration.columns, column];
             return { ...configuration };
           });
           classroom.fields = [...classroom.fields, field];
