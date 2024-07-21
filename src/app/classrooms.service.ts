@@ -3,6 +3,7 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import {
   Classroom,
   ClassroomColumn,
+  ClassroomColumnSort,
   ClassroomField,
 } from './models/classroom.models';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -178,19 +179,22 @@ export class ClassroomsService {
     column: ClassroomColumn,
     field: ClassroomField
   ) {
-    this._classrooms$.next(
-      this._classrooms$.getValue().map((classroom) => {
+    const newClassrooms: Classroom[] = [
+      ...this._classrooms$.getValue().map((classroom) => {
         if (classroom.id === classroomId) {
           classroom.configurations.map((configuration) => {
             if (configuration.id === configurationId) {
-              configuration.columns.push(column);
+              configuration.columns = [...configuration.columns, column];
             }
             return { ...configuration };
           });
-          classroom.fields.push(field);
+          classroom.fields = [...classroom.fields, field];
         }
         return { ...classroom };
-      })
+      }),
+    ];
+    this._classrooms$.next(
+      JSON.parse(JSON.stringify(newClassrooms)) as Classroom[]
     );
   }
 
@@ -203,7 +207,15 @@ export class ClassroomsService {
       this._classrooms$.getValue().map((classroom) => {
         if (classroom.id === classroomId) {
           classroom.configurations.push({
-            columns: [],
+            columns: classroom.fields.map((field) => {
+              const newCol: ClassroomColumn = {
+                enabled: true,
+                fieldId: field.id,
+                id: generateUniqueId(),
+                sort: ClassroomColumnSort.NONE,
+              };
+              return newCol;
+            }),
             groups: [],
             id: generateUniqueId(),
             label,
