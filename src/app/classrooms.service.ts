@@ -158,8 +158,9 @@ export class ClassroomsService {
     configurationId: string,
     columns: ClassroomColumn[]
   ) {
-    this._classrooms$.next(
-      this._classrooms$.getValue().map((classroom) => {
+    const newClassrooms: Classroom[] = this._classrooms$
+      .getValue()
+      .map((classroom) => {
         if (classroom.id === classroomId) {
           classroom.configurations.map((configuration) => {
             if (configuration.id === configurationId) {
@@ -169,7 +170,9 @@ export class ClassroomsService {
           });
         }
         return { ...classroom };
-      })
+      });
+    this._classrooms$.next(
+      JSON.parse(JSON.stringify(newClassrooms)) as Classroom[]
     );
   }
 
