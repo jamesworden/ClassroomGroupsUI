@@ -1,24 +1,9 @@
 import { Component, computed, effect, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { Store } from '@ngrx/store';
-import {
-  selectViewingClassroom,
-  selectViewingClassroomId,
-  selectViewingConfiguration,
-  selectViewingConfigurationId,
-} from '../../state/classrooms/classrooms.selectors';
-import {
-  createColumn,
-  deleteConfiguration,
-  updateColumns,
-  updateConfigurationDescription,
-  updateConfigurationLabel,
-} from '../../state/classrooms/classrooms.actions';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
   YesNoDialogComponent,
@@ -31,11 +16,7 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import {
-  ClassroomColumn,
-  ClassroomColumnSort,
-  ClassroomField,
-} from '../../models/classroom.models';
+import { ClassroomColumn, ClassroomField } from '../../models/classroom.models';
 import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
@@ -44,6 +25,7 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
+import { ClassroomsService } from '../../classrooms.service';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -66,31 +48,16 @@ import { MatBadgeModule } from '@angular/material/badge';
   styleUrl: './configuration-panel.component.scss',
 })
 export class ConfigurationPanelComponent {
-  readonly #store = inject(Store);
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
+  readonly #classroomsService = inject(ClassroomsService);
 
-  readonly viewingConfiguration = toSignal(
-    this.#store.select(selectViewingConfiguration)
-  );
-
-  readonly viewingClassroomId = toSignal(
-    this.#store.select(selectViewingClassroomId),
-    {
-      initialValue: '',
-    }
-  );
-
-  readonly viewingConfigurationId = toSignal(
-    this.#store.select(selectViewingConfigurationId),
-    {
-      initialValue: '',
-    }
-  );
-
-  readonly viewingClassroom = toSignal(
-    this.#store.select(selectViewingClassroom)
-  );
+  readonly classrooms = this.#classroomsService.classrooms;
+  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
+  readonly viewingClassroom = this.#classroomsService.viewingClassroom;
+  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
+  readonly viewingConfigurationId =
+    this.#classroomsService.viewingConfigurationId;
 
   readonly fieldIdsToFields = computed(() => {
     const fieldIdsToFields: {
@@ -142,23 +109,27 @@ export class ConfigurationPanelComponent {
   }
 
   updateDescription() {
-    this.#store.dispatch(
-      updateConfigurationDescription({
-        classroomId: this.viewingClassroomId(),
-        description: this.updatedDescription,
-        configurationId: this.viewingConfigurationId(),
-      })
-    );
+    const classroomId = this.viewingClassroomId();
+    const configurationId = this.viewingConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.updateConfigurationDescription(
+        classroomId,
+        configurationId,
+        this.updatedDescription
+      );
+    }
   }
 
   updateLabel() {
-    this.#store.dispatch(
-      updateConfigurationLabel({
-        classroomId: this.viewingClassroomId(),
-        label: this.updatedLabel,
-        configurationId: this.viewingConfigurationId(),
-      })
-    );
+    const classroomId = this.viewingClassroomId();
+    const configurationId = this.viewingConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.updateConfigurationLabel(
+        classroomId,
+        configurationId,
+        this.updatedLabel
+      );
+    }
   }
 
   openDeleteConfigurationModal() {
@@ -172,12 +143,12 @@ export class ConfigurationPanelComponent {
       },
     });
     dialogRef.afterClosed().subscribe((success) => {
-      if (success) {
-        this.#store.dispatch(
-          deleteConfiguration({
-            classroomId: this.viewingClassroomId(),
-            configurationId: this.viewingConfigurationId(),
-          })
+      const classroomId = this.viewingClassroomId();
+      const configurationId = this.viewingConfigurationId();
+      if (success && classroomId && configurationId) {
+        this.#classroomsService.deleteConfiguration(
+          classroomId,
+          configurationId
         );
       }
     });
@@ -185,13 +156,15 @@ export class ConfigurationPanelComponent {
 
   drop(event: CdkDragDrop<ClassroomColumn>) {
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
-    this.#store.dispatch(
-      updateColumns({
-        classroomId: this.viewingClassroomId(),
-        configurationId: this.viewingConfigurationId(),
-        columns: this.columns,
-      })
-    );
+    const classroomId = this.viewingClassroomId();
+    const configurationId = this.viewingConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.updateColumns(
+        classroomId,
+        configurationId,
+        this.columns
+      );
+    }
   }
 
   openCreateColumnDialog() {
@@ -204,14 +177,14 @@ export class ConfigurationPanelComponent {
     dialogRef
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#store.dispatch(
-            createColumn({
-              classroomId: this.viewingClassroomId(),
-              configurationId: this.viewingConfigurationId(),
-              column: outputs.column,
-              field: outputs.field,
-            })
+        const classroomId = this.viewingClassroomId();
+        const configurationId = this.viewingConfigurationId();
+        if (outputs && classroomId && configurationId) {
+          this.#classroomsService.createColumn(
+            classroomId,
+            configurationId,
+            outputs.column,
+            outputs.field
           );
           this.#matSnackBar.open('Column created', 'Hide', {
             duration: 3000,

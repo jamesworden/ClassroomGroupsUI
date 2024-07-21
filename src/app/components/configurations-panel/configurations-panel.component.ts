@@ -13,24 +13,14 @@ import {
 } from '../../directives/resizeable.directive';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
-import { Store } from '@ngrx/store';
-import { ClassroomsState } from '../../state/classrooms/classrooms.reducer';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  selectViewingClassroom,
-  selectViewingClassroomId,
-  selectViewingConfigurationId,
-} from '../../state/classrooms/classrooms.selectors';
 import { ClassroomConfig } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import {
-  addConfiguration,
-  viewConfiguration,
-} from '../../state/classrooms/classrooms.actions';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { ClassroomsService } from '../../classrooms.service';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -49,34 +39,21 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './configurations-panel.component.scss',
 })
 export class ConfigurationsPanelComponent {
-  readonly ResizableSide = ResizableSide;
-
-  readonly #store = inject(Store<{ state: ClassroomsState }>);
   readonly #matSnackBar = inject(MatSnackBar);
+  readonly #classroomsService = inject(ClassroomsService);
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
 
-  readonly viewingConfigurationId = toSignal(
-    this.#store.select(selectViewingConfigurationId),
-    {
-      initialValue: '',
-    }
-  );
-
-  readonly viewingClassroom = toSignal(
-    this.#store.select(selectViewingClassroom)
-  );
+  readonly classrooms = this.#classroomsService.classrooms;
+  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
+  readonly viewingClassroom = this.#classroomsService.viewingClassroom;
+  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
+  readonly viewingConfigurationId =
+    this.#classroomsService.viewingConfigurationId;
+  readonly ResizableSide = ResizableSide;
 
   readonly searchQuery = signal('');
-
-  readonly viewingClassroomId = toSignal(
-    this.#store.select(selectViewingClassroomId),
-    {
-      initialValue: '',
-    }
-  );
-
   addConfigurationLabel = '';
 
   readonly filteredConfigurations: Signal<ClassroomConfig[]> = computed(
@@ -87,7 +64,7 @@ export class ConfigurationsPanelComponent {
   );
 
   selectConfiguration(configurationId: string) {
-    this.#store.dispatch(viewConfiguration({ configurationId }));
+    this.#classroomsService.viewConfiguration(configurationId);
   }
 
   addConfiguration() {
@@ -101,12 +78,13 @@ export class ConfigurationsPanelComponent {
       );
       return;
     }
-    this.#store.dispatch(
-      addConfiguration({
-        configurationLabel: this.addConfigurationLabel,
-        classroomId: this.viewingClassroomId(),
-      })
-    );
+    const classroomId = this.viewingClassroomId();
+    if (classroomId) {
+      this.#classroomsService.addConfiguration(
+        classroomId,
+        this.addConfigurationLabel
+      );
+    }
     this.addConfigurationLabel = '';
     this.#matSnackBar.open('Configuration created.', 'Hide', {
       duration: 3000,

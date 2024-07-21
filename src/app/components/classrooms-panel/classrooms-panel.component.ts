@@ -11,23 +11,14 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Classroom } from '../../models/classroom.models';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
-import { ClassroomsState } from '../../state/classrooms/classrooms.reducer';
-import {
-  addClassroom,
-  viewClassroom,
-} from '../../state/classrooms/classrooms.actions';
-import {
-  selectClassrooms,
-  selectViewingClassroomId,
-} from '../../state/classrooms/classrooms.selectors';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ClassroomsService } from '../../classrooms.service';
 
 @Component({
   selector: 'app-classrooms-panel',
@@ -46,23 +37,16 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   styleUrl: './classrooms-panel.component.scss',
 })
 export class ClassroomsPanelComponent {
-  readonly #store = inject(Store<{ state: ClassroomsState }>);
   readonly #matSnackBar = inject(MatSnackBar);
+  readonly #classroomsService = inject(ClassroomsService);
 
   readonly classAndConfigPanelClosed = output();
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
 
-  readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
-    initialValue: [],
-  });
-  readonly viewingClassroomId = toSignal(
-    this.#store.select(selectViewingClassroomId),
-    {
-      initialValue: '',
-    }
-  );
+  readonly classrooms = this.#classroomsService.classrooms;
+  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
   readonly searchQuery = signal('');
 
   addClassroomLabel = '';
@@ -76,7 +60,7 @@ export class ClassroomsPanelComponent {
   );
 
   selectClassroom(classroomId: string) {
-    this.#store.dispatch(viewClassroom({ classroomId }));
+    this.#classroomsService.viewClassroom(classroomId);
   }
 
   addClassroom() {
@@ -90,9 +74,7 @@ export class ClassroomsPanelComponent {
       );
       return;
     }
-    this.#store.dispatch(
-      addClassroom({ classroomLabel: this.addClassroomLabel })
-    );
+    this.#classroomsService.addClassroom(this.addClassroomLabel);
     this.addClassroomLabel = '';
     this.#matSnackBar.open('Classroom created.', 'Hide', {
       duration: 3000,

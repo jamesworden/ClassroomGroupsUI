@@ -1,17 +1,6 @@
-import {
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  inject,
-  signal,
-  Signal,
-  ViewChild,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ThemeService } from './themes/theme.service';
@@ -26,18 +15,7 @@ import {
   ResizableSide,
   ResizeableDirective,
 } from './directives/resizeable.directive';
-import { Classroom } from './models/classroom.models';
 import { ResizableService } from './directives/resizable.service';
-import {
-  selectClassrooms,
-  selectViewingClassroom,
-  selectViewingClassroomId,
-} from './state/classrooms/classrooms.selectors';
-import {
-  deleteClassroom,
-  updateClassroomDescription,
-  updateClassroomLabel,
-} from './state/classrooms/classrooms.actions';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -47,6 +25,7 @@ import {
   YesNoDialogInputs,
 } from './components/yes-no-dialog/yes-no-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ClassroomsService } from './classrooms.service';
 
 enum StorageKeys {
   CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
@@ -88,25 +67,18 @@ interface ConfigPanelSettings {
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [ThemeService, ResizableService],
+  providers: [ThemeService, ResizableService, ClassroomsService],
 })
 export class AppComponent {
-  readonly #store = inject(Store<{ classrooms: Classroom[] }>);
   readonly #themeService = inject(ThemeService);
   readonly #resizableService = inject(ResizableService);
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
+  readonly #classroomsService = inject(ClassroomsService);
 
-  readonly classrooms = toSignal(this.#store.select(selectClassrooms), {
-    initialValue: [],
-  });
-
-  readonly viewingClassroomId = toSignal(
-    this.#store.select(selectViewingClassroomId),
-    {
-      initialValue: '',
-    }
-  );
+  readonly classrooms = this.#classroomsService.classrooms;
+  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
+  readonly viewingClassroom = this.#classroomsService.viewingClassroom;
 
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
@@ -128,10 +100,6 @@ export class AppComponent {
   });
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
-
-  readonly viewingClassroom = toSignal(
-    this.#store.select(selectViewingClassroom)
-  );
 
   constructor() {
     this.loadClassAndConfigPanelSettings();
@@ -214,34 +182,31 @@ export class AppComponent {
       },
     });
     dialogRef.afterClosed().subscribe((success) => {
-      if (success) {
-        this.#store.dispatch(
-          deleteClassroom({
-            classroomId: this.viewingClassroomId(),
-          })
-        );
+      const classroomId = this.viewingClassroomId();
+      if (success && classroomId) {
+        this.#classroomsService.deleteClassroom(classroomId);
       }
     });
   }
 
   updateClassroomDescription() {
-    this.#store.dispatch(
-      updateClassroomDescription({
-        classroomId: this.viewingClassroomId(),
-        description: this.updatedClassroomDescription,
-      })
-    );
+    const classroomId = this.viewingClassroomId();
+    if (classroomId) {
+      this.#classroomsService.updateClassroomDescription(
+        classroomId,
+        this.updatedClassroomDescription
+      );
+    }
   }
 
   updateClassroomLabel() {
+    const classroomId = this.viewingClassroomId();
     if (this.updatedClassroomLabel.trim().length === 0) {
       this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '';
-    } else {
-      this.#store.dispatch(
-        updateClassroomLabel({
-          classroomId: this.viewingClassroomId(),
-          label: this.updatedClassroomLabel,
-        })
+    } else if (classroomId) {
+      this.#classroomsService.updateClassroomLabel(
+        classroomId,
+        this.updatedClassroomLabel
       );
     }
   }
