@@ -36,6 +36,8 @@
   @if(students.length > 0) {
   <div
     cdkDropList
+    [id]="group()?.id ?? ''"
+    [cdkDropListConnectedTo]="viewingGroupIds()"
     class="example-list w-full my-2"
     (cdkDropListDropped)="drop($event)"
   >

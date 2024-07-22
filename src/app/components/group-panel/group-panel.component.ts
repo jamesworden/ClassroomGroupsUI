@@ -56,6 +56,10 @@ export class GroupPanelComponent {
     )
   );
 
+  readonly viewingGroupIds = computed(() =>
+    (this.viewingConfiguration()?.groups ?? []).map(({ id }) => id)
+  );
+
   readonly studentsWithOrderedFields = computed<StudentWithOrderedValues[]>(
     () => {
       const students = this.viewingStudents();
