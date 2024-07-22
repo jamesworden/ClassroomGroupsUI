@@ -45,6 +45,7 @@ export enum ClassroomColumnSort {
 }
 
 export interface Student {
+  id: string;
   groupId: string;
   row: {
     [fieldId: string]: number | string;

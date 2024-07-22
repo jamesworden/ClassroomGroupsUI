@@ -38,17 +38,19 @@ export const INITIAL_CLASSROOMS: Classroom[] = [
     ],
     students: [
       {
+        id: 'jane-doe-id',
         groupId: 'd6e41cf2-9463-402d-9cac-cc47ba0318d6',
         row: {
-          '6a77ca7a-42b3-45db-b929-fd5bc004d1e7': 'Jane',
-          'd63e23ba-4958-48fc-a304-349d094a4a61': 'Doe',
+          'first-name-field-id': 'Jane',
+          'last-name-field-id': 'Doe',
         },
       },
       {
+        id: 'john-smith-id',
         groupId: 'd6e41cf2-9463-402d-9cac-cc47ba0318d6',
         row: {
-          '6a77ca7a-42b3-45db-b929-fd5bc004d1e7': 'John',
-          'd63e23ba-4958-48fc-a304-349d094a4a61': 'Smith',
+          'first-name-field-id': 'John',
+          'last-name-field-id': 'Smith',
         },
       },
     ],

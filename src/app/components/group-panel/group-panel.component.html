@@ -33,7 +33,22 @@
     </div>
   </div>
 
-  <!-- Data Grid -->
+  @if(students.length > 0) {
+  <div
+    cdkDropList
+    class="example-list w-full my-2"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (student of students; track student.id) {
+    <div class="example-box flex" cdkDrag>
+      @for(value of student.orderedValues; track value) {
+      <div class="flex-1">{{ value }}</div>
+      }
+    </div>
+    }
+  </div>
+  }
+
   <div class="flex justify-start">
     <div class="flex gap-x-2 text-sm">
       <div class="flex flex-col justify-around">
