@@ -1,1 +1,40 @@
-{{ group()?.label }}
+<div class="panel rounded-lg flex-col gap-y-2 p-4 shadow-lg">
+  <div class="flex justify-between">
+    <div class="flex gap-x-2">
+      <div class="flex flex-col justify-around">
+        <mat-icon>drag_handle</mat-icon>
+      </div>
+
+      <div class="flex flex-col justify-around">
+        <mat-checkbox color="primary"></mat-checkbox>
+      </div>
+
+      <div class="flex flex-col justify-around">
+        <h6 style="margin: 0">{{ group()?.label }}</h6>
+      </div>
+    </div>
+
+    <div class="flex gap-x-2">
+      <button mat-icon-button (click)="deleteGroup()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Data Grid -->
+
+  <div class="flex justify-between">
+    <div class="flex gap-x-2 text-sm">
+      <div class="flex flex-col justify-around">
+        <button mat-icon-button (click)="addStudent()">
+          <mat-icon>add_person</mat-icon>
+        </button>
+      </div>
+
+      <div class="flex flex-col justify-around">
+        <span> Add Student </span>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</div>

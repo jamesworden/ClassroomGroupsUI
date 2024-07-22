@@ -70,12 +70,17 @@
     <div
       cdkDropList
       cdkDropListOrientation="horizontal"
-      class="bg-white border border-gray-300 flex flex-row rounded-md min-h-16"
+      class="bg-white border border-gray-300 flex flex-row rounded-md min-h-16 rounded-b-lg rounded-l-lg"
+      [ngClass]="{
+        'rounded-tr-lg':
+          columns.length > 0 &&
+          enabledColumnBadges()[columns[columns.length - 1].id]
+      }"
       (cdkDropListDropped)="drop($event)"
     >
       @for (column of columns; track column.id) {
       <div
-        class="example-box p-2 border-r border-gray-300"
+        class="example-box rounded-b-lg rounded-l-lg p-2 border-r border-gray-300"
         cdkDrag
         [matBadge]="enabledColumnBadges()[column.id]"
         matBadgeOverlap="true"

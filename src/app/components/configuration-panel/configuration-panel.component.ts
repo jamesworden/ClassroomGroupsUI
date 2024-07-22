@@ -26,6 +26,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ClassroomsService } from '../../classrooms.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -43,6 +44,7 @@ import { ClassroomsService } from '../../classrooms.service';
     MatSlideToggleModule,
     MatMenuModule,
     MatBadgeModule,
+    CommonModule,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',
