@@ -255,5 +255,11 @@ export class ConfigurationPanelComponent {
     // );
   }
 
-  createGroup() {}
+  createGroup() {
+    const classroomId = this.viewingClassroomId();
+    const configurationId = this.viewingConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createGroup(classroomId, configurationId);
+    }
+  }
 }
