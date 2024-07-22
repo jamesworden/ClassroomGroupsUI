@@ -83,13 +83,26 @@ export class ClassroomsService {
 
   public viewClassroom(classroomId: string) {
     this._viewingClassroomId$.next(classroomId);
+    this._viewingConfigurationId$.next(
+      this._classrooms$
+        .getValue()
+        .find((classroom) => classroom.id === classroomId)?.configurations[0].id
+    );
   }
 
   public addClassroom(label: string) {
     this._classrooms$.next(
       this._classrooms$.getValue().concat([
         {
-          configurations: [],
+          configurations: [
+            {
+              columns: [],
+              groups: [],
+              id: generateUniqueId(),
+              label: 'New Configuration',
+              description: '',
+            },
+          ],
           fields: [],
           id: generateUniqueId(),
           label,
