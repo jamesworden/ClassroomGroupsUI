@@ -26,6 +26,7 @@ import {
 } from './components/yes-no-dialog/yes-no-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassroomsService } from './classrooms.service';
+import { GroupPanelComponent } from './components/group-panel/group-panel.component';
 
 enum StorageKeys {
   CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
@@ -64,6 +65,7 @@ interface ConfigPanelSettings {
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
+    GroupPanelComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

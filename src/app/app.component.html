@@ -97,6 +97,12 @@
           </div>
         </div>
       </section>
+      } @else {
+      <section class="mx-4 flex flex-col flex-1">
+        @for(group of viewingConfiguration()?.groups ?? []; track group.id) {
+        <app-group-panel [group]="group"></app-group-panel>
+        }
+      </section>
       }
     </div>
   </div>
