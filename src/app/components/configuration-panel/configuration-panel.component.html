@@ -80,7 +80,7 @@
     >
       @for (column of columns; track column.id) {
       <div
-        class="example-box rounded-b-lg rounded-l-lg p-2 border-r border-gray-300"
+        class="draggable-field rounded-b-lg rounded-l-lg p-2 border-r border-gray-300"
         cdkDrag
         [matBadge]="enabledColumnBadges()[column.id]"
         matBadgeOverlap="true"
