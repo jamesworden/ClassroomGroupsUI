@@ -42,7 +42,7 @@
     </div>
     }
 
-    <div class="flex flex-col flex-1 overflow-auto configuration-boundary">
+    <div class="flex flex-col flex-1 overflow-auto">
       <div class="my-4">
         <section class="flex justify-between m-4">
           <div class="flex flex-col flex-1">
@@ -103,16 +103,11 @@
           <section
             cdkDropList
             (cdkDropListDropped)="drop($event)"
-            class="mx-4 flex flex-col flex-1 gap-y-6 groups-boundary"
+            class="mx-4 flex flex-col flex-1 gap-y-6"
           >
             @for(group of viewingConfiguration()?.groups ?? []; track group.id)
             {
-            <app-group-panel
-              cdkDrag
-              cdkDragLockAxis="y"
-              cdkDragBoundary=".groups-boundary"
-              [group]="group"
-            >
+            <app-group-panel cdkDrag [group]="group">
               <mat-icon
                 class=""
                 [ngClass]="{

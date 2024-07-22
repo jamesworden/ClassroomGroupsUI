@@ -42,12 +42,7 @@
     (cdkDropListDropped)="drop($event)"
   >
     @for (student of students; track student.id) {
-    <div
-      class="example-box flex"
-      cdkDrag
-      cdkDragBoundary=".groups-boundary"
-      cdkDragLockAxis="y"
-    >
+    <div class="example-box flex" cdkDrag>
       @for(value of student.orderedValues; track i; let i = $index) {
       <div class="flex-1">
         <div>
