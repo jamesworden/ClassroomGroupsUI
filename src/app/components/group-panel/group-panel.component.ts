@@ -13,6 +13,7 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface StudentWithOrderedValues extends Student {
   orderedValues: (number | string)[];
@@ -32,6 +33,7 @@ interface StudentWithOrderedValues extends Student {
     CdkDropList,
     CdkDrag,
     CommonModule,
+    FormsModule,
   ],
   templateUrl: './group-panel.component.html',
   styleUrl: './group-panel.component.scss',
@@ -75,6 +77,9 @@ export class GroupPanelComponent {
   );
 
   students: StudentWithOrderedValues[] = [];
+  editingOrderedFieldIndex?: number;
+  editingStudentId?: string;
+  editingField?: string | number;
 
   constructor() {
     effect(() => (this.students = this.studentsWithOrderedFields()));
@@ -111,5 +116,23 @@ export class GroupPanelComponent {
 
   drop(event: CdkDragDrop<Student[]>) {
     moveItemInArray(this.students, event.previousIndex, event.currentIndex);
+    // TODO: Persist changes
+  }
+
+  startEditing(
+    studentId: string,
+    editingIndex: number,
+    initialValue: string | number
+  ) {
+    this.editingOrderedFieldIndex = editingIndex;
+    this.editingStudentId = studentId;
+    this.editingField = initialValue;
+  }
+
+  saveEdits() {
+    // TODO: Persist changes
+    this.editingOrderedFieldIndex = undefined;
+    this.editingStudentId = undefined;
+    this.editingField = undefined;
   }
 }

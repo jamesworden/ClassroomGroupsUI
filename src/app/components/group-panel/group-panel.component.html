@@ -41,8 +41,28 @@
   >
     @for (student of students; track student.id) {
     <div class="example-box flex" cdkDrag>
-      @for(value of student.orderedValues; track value) {
-      <div class="flex-1">{{ value }}</div>
+      @for(value of student.orderedValues; track i; let i = $index) {
+      <div class="flex-1">
+        <div>
+          @if(editingOrderedFieldIndex === i && editingStudentId === student.id)
+          {
+          <input
+            type="text"
+            [value]="editingField"
+            placeholder="Add value"
+            class="outline-none bg-transparent border-none w-full text-ellipsis"
+            (change)="saveEdits()"
+          />
+          } @else {
+          <span
+            class="cursor-text"
+            (click)="startEditing(student.id, i, value)"
+          >
+            {{ value }}
+          </span>
+          }
+        </div>
+      </div>
       }
     </div>
     }
