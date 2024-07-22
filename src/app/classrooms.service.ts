@@ -266,4 +266,23 @@ export class ClassroomsService {
     });
     this._classrooms$.next(newClassrooms);
   }
+
+  public createGroup(classroomId: string, configurationId: string) {
+    const newClassrooms = JSON.parse(
+      JSON.stringify(this._classrooms$.getValue())
+    ) as Classroom[];
+    newClassrooms.forEach((classroom) => {
+      if (classroom.id === classroomId) {
+        classroom.configurations.forEach((configuration) => {
+          if (configuration.id === configurationId) {
+            configuration.groups.push({
+              id: generateUniqueId(),
+              label: `Group ${configuration.groups.length + 1}`,
+            });
+          }
+        });
+      }
+    });
+    this._classrooms$.next(newClassrooms);
+  }
 }

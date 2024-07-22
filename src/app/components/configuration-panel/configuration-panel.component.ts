@@ -254,4 +254,6 @@ export class ConfigurationPanelComponent {
     //   })
     // );
   }
+
+  createGroup() {}
 }

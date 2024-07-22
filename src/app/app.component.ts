@@ -79,17 +79,17 @@ export class AppComponent {
   readonly classrooms = this.#classroomsService.classrooms;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
   readonly viewingClassroom = this.#classroomsService.viewingClassroom;
-
+  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
+  readonly viewingConfigurationId =
+    this.#classroomsService.viewingConfigurationId;
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
 
   readonly ResizableSide = ResizableSide;
-
-  maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
-  minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
-
-  maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
-  minConfigurationsPanelHeight = window.innerHeight / 4;
+  readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
+  readonly minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
+  readonly maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
+  readonly minConfigurationsPanelHeight = window.innerHeight / 4;
 
   readonly classAndConfigPanelSettings = signal<ClassAndConfigPanelSettings>({
     width: DEFAULT_PANEL_WIDTH,
@@ -98,6 +98,7 @@ export class AppComponent {
   readonly configPanelSettings = signal<ConfigPanelSettings>({
     height: DEFAULT_CONFIGURATIONS_PANEL_HEIGHT,
   });
+
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
 
@@ -217,5 +218,13 @@ export class AppComponent {
       ...existingSettings,
       isOpen: !existingSettings.isOpen,
     });
+  }
+
+  createGroup() {
+    const classroomId = this.viewingClassroomId();
+    const configurationId = this.viewingConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createGroup(classroomId, configurationId);
+    }
   }
 }

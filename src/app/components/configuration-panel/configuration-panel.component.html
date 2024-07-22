@@ -55,33 +55,10 @@
         <div class="flex flex-col justify-around">
           <button mat-stroked-button>Shuffle</button>
         </div>
-      </div>
 
-      <div class="flex">
         <div class="flex flex-col justify-around">
-          <button
-            mat-icon-button
-            (click)="openCreateColumnDialog()"
-            matTooltip="Create column"
-          >
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-
-        <div
-          class="flex flex-col justify-around"
-          [matTooltip]="
-            (viewingClassroom()?.configurations?.length ?? 0) <= 1
-              ? 'You can\'t delete the last configuration!'
-              : 'Delete configuration'
-          "
-        >
-          <button
-            mat-icon-button
-            (click)="openDeleteConfigurationModal()"
-            [disabled]="(viewingClassroom()?.configurations?.length ?? 0) <= 1"
-          >
-            <mat-icon>delete</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="configurationMenu">
+            <mat-icon>more_vert</mat-icon>
           </button>
         </div>
       </div>
@@ -136,16 +113,41 @@
       <span>{{ column.enabled ? "Disable grouping" : "Enable grouping" }}</span>
     </button>
     <!-- <button mat-menu-item (click)="setSortAscending(column.id)">
-      <mat-icon>arrow_upward</mat-icon>
-      <span>Sort ascending</span>
+  <mat-icon>arrow_upward</mat-icon>
+  <span>Sort ascending</span>
+</button>
+<button mat-menu-item (click)="setSortDescending(column.id)">
+  <mat-icon>arrow_downward</mat-icon>
+  <span>Sort descending</span>
+</button>
+<button mat-menu-item (click)="removeSort(column.id)">
+  <mat-icon>remove</mat-icon>
+  <span>Remove sort</span>
+</button> -->
+  </ng-template>
+</mat-menu>
+
+<mat-menu #configurationMenu="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item (click)="createGroup()">
+      <mat-icon>add</mat-icon>
+      <span>Create group</span>
     </button>
-    <button mat-menu-item (click)="setSortDescending(column.id)">
-      <mat-icon>arrow_downward</mat-icon>
-      <span>Sort descending</span>
+    <button mat-menu-item (click)="openCreateColumnDialog()">
+      <mat-icon>add</mat-icon>
+      <span>Create column</span>
     </button>
-    <button mat-menu-item (click)="removeSort(column.id)">
-      <mat-icon>remove</mat-icon>
-      <span>Remove sort</span>
-    </button> -->
+    <button
+      mat-menu-item
+      (click)="openDeleteConfigurationModal()"
+      [matTooltip]="
+        (viewingClassroom()?.configurations?.length ?? 0) <= 1
+          ? 'You can\'t delete the last configuration!'
+          : 'Delete configuration'
+      "
+    >
+      <mat-icon>delete</mat-icon>
+      <span>Delete configuration</span>
+    </button>
   </ng-template>
 </mat-menu>

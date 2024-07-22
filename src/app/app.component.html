@@ -72,6 +72,32 @@
       <section class="mx-4">
         <app-configuration-panel></app-configuration-panel>
       </section>
+
+      @if((viewingConfiguration()?.groups?.length ?? 0) === 0) {
+      <section
+        class="mx-4 border border-4 border-dashed border-gray-300 flex-1 flex flex-col justify-around"
+      >
+        <div class="flex flex-col gap-y-4">
+          <div class="flex flex-col gap-y-1">
+            <div class="flex justify-around">
+              <h5 class="opacity-50" style="margin: 0">
+                Drag a spreadsheet here
+              </h5>
+            </div>
+
+            <div class="flex justify-around">
+              <span class="opacity-50">Or if you prefer...</span>
+            </div>
+          </div>
+
+          <div class="flex justify-around">
+            <button mat-flat-button (click)="createGroup()">
+              Create a new group
+            </button>
+          </div>
+        </div>
+      </section>
+      }
     </div>
   </div>
 </div>
