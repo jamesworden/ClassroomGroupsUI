@@ -42,7 +42,7 @@
     </div>
     }
 
-    <div class="flex flex-col flex-1 overflow-auto">
+    <div class="flex flex-col flex-1 overflow-auto group-panel-boundary">
       <div class="my-4">
         <section class="flex justify-between m-4">
           <div class="flex flex-col flex-1">
@@ -107,7 +107,11 @@
           >
             @for(group of viewingConfiguration()?.groups ?? []; track group.id)
             {
-            <app-group-panel cdkDrag [group]="group">
+            <app-group-panel
+              cdkDrag
+              [group]="group"
+              cdkDragBoundary=".group-panel-boundary"
+            >
               <mat-icon class="cursor-move" cdkDragHandle>drag_handle</mat-icon>
             </app-group-panel>
 
