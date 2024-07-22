@@ -42,7 +42,7 @@
     </div>
     }
 
-    <div class="flex flex-col flex-1 overflow-auto group-panel-boundary">
+    <div class="flex flex-col flex-1 overflow-auto configuration-boundary">
       <div class="my-4">
         <section class="flex justify-between m-4">
           <div class="flex flex-col flex-1">
@@ -103,16 +103,26 @@
           <section
             cdkDropList
             (cdkDropListDropped)="drop($event)"
-            class="mx-4 flex flex-col flex-1 gap-y-6"
+            class="mx-4 flex flex-col flex-1 gap-y-6 groups-boundary"
           >
             @for(group of viewingConfiguration()?.groups ?? []; track group.id)
             {
             <app-group-panel
               cdkDrag
+              cdkDragLockAxis="y"
+              cdkDragBoundary=".groups-boundary"
               [group]="group"
-              cdkDragBoundary=".group-panel-boundary"
             >
-              <mat-icon class="cursor-move" cdkDragHandle>drag_handle</mat-icon>
+              <mat-icon
+                class=""
+                [ngClass]="{
+                  'opacity-50 cursor-not-allowed':
+                    (viewingConfiguration()?.groups?.length ?? 0) <= 1,
+                    'cursor-move': (viewingConfiguration()?.groups?.length ?? 0) > 1,
+                }"
+                cdkDragHandle
+                >drag_handle</mat-icon
+              >
             </app-group-panel>
 
             }

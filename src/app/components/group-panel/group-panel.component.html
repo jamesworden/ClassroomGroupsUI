@@ -45,7 +45,8 @@
     <div
       class="example-box flex"
       cdkDrag
-      cdkDragBoundary=".group-panel-boundary"
+      cdkDragBoundary=".groups-boundary"
+      cdkDragLockAxis="y"
     >
       @for(value of student.orderedValues; track i; let i = $index) {
       <div class="flex-1">
