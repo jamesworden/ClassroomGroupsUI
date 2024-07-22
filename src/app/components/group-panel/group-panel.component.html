@@ -15,14 +15,25 @@
     </div>
 
     <div class="flex gap-x-2">
-      <button mat-icon-button (click)="deleteGroup()">
-        <mat-icon>delete</mat-icon>
-      </button>
+      <div
+        [matTooltip]="
+          studentsInGroup().length > 0
+            ? 'You can\'t delete group that contains students'
+            : ''
+        "
+      >
+        <button
+          mat-icon-button
+          (click)="deleteGroup()"
+          [disabled]="studentsInGroup().length > 0"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- Data Grid -->
-
   <div class="flex justify-between">
     <div class="flex gap-x-2 text-sm">
       <div class="flex flex-col justify-around">

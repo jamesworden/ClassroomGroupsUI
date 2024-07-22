@@ -1,15 +1,21 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { ClassroomGroup } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { ClassroomsService } from '../../classrooms.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-group-panel',
   standalone: true,
-  imports: [MatIconModule, MatCheckboxModule, MatButtonModule],
+  imports: [
+    MatIconModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatTooltipModule,
+  ],
   templateUrl: './group-panel.component.html',
   styleUrl: './group-panel.component.scss',
 })
@@ -24,15 +30,18 @@ export class GroupPanelComponent {
   readonly viewingConfigurationId =
     this.#classroomsService.viewingConfigurationId;
 
+  readonly studentsInGroup = computed(() =>
+    this.viewingStudents().filter(
+      (student) => student.groupId === this.group()?.id
+    )
+  );
+
   addStudent() {}
 
   deleteGroup() {
-    const studentIsInGroup = this.viewingStudents().some(
-      (student) => student.groupId === this.group()?.id
-    );
-    if (studentIsInGroup) {
+    if (this.studentsInGroup().length > 0) {
       this.#matSnackBar.open(
-        "Can't delete group that contains students",
+        "You can't delete group that contains students",
         'Hide',
         {
           duration: 3000,
