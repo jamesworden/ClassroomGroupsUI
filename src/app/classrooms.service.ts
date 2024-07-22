@@ -57,6 +57,10 @@ export class ClassroomsService {
     this._classrooms$.next(
       this._classrooms$.getValue().filter(({ id }) => id !== classroomId)
     );
+    this._viewingClassroomId$.next(this._classrooms$.getValue()[0].id);
+    this._viewingConfigurationId$.next(
+      this._classrooms$.getValue()[0].configurations[0].id
+    );
   }
 
   public updateClassroomDescription(classroomId: string, description: string) {
