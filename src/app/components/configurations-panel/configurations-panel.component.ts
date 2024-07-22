@@ -86,7 +86,7 @@ export class ConfigurationsPanelComponent {
       );
     }
     this.addConfigurationLabel = '';
-    this.#matSnackBar.open('Configuration created.', 'Hide', {
+    this.#matSnackBar.open('Configuration created', 'Hide', {
       duration: 3000,
     });
     // TODO: Turn into an ofActionSuccessful

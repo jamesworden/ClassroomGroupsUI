@@ -76,7 +76,7 @@ export class ClassroomsPanelComponent {
     }
     this.#classroomsService.addClassroom(this.addClassroomLabel);
     this.addClassroomLabel = '';
-    this.#matSnackBar.open('Classroom created.', 'Hide', {
+    this.#matSnackBar.open('Classroom created', 'Hide', {
       duration: 3000,
     });
     // TODO: Turn into an ofActionSuccessful
