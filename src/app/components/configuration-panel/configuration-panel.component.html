@@ -145,6 +145,7 @@
     <button
       mat-menu-item
       (click)="openDeleteConfigurationModal()"
+      [disabled]="viewingClassroom()?.configurations?.length ?? 0"
       [matTooltip]="
         (viewingClassroom()?.configurations?.length ?? 0) <= 1
           ? 'You can\'t delete the last configuration!'
