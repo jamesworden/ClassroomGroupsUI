@@ -100,10 +100,17 @@
             </div>
           </section>
           } @else {
-          <section class="mx-4 flex flex-col flex-1 gap-y-6">
+          <section
+            cdkDropList
+            (cdkDropListDropped)="drop($event)"
+            class="mx-4 flex flex-col flex-1 gap-y-6 example-list"
+          >
             @for(group of viewingConfiguration()?.groups ?? []; track group.id)
             {
-            <app-group-panel [group]="group"></app-group-panel>
+            <app-group-panel class="example-box" cdkDrag [group]="group">
+              <mat-icon class="cursor-move" cdkDragHandle>drag_handle</mat-icon>
+            </app-group-panel>
+
             }
           </section>
           }

@@ -27,6 +27,14 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassroomsService } from './classrooms.service';
 import { GroupPanelComponent } from './components/group-panel/group-panel.component';
+import { ClassroomGroup } from './models/classroom.models';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 
 enum StorageKeys {
   CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
@@ -66,6 +74,9 @@ interface ConfigPanelSettings {
     MatInputModule,
     FormsModule,
     GroupPanelComponent,
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -103,6 +114,7 @@ export class AppComponent {
 
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
+  viewingGroups: ClassroomGroup[] = [];
 
   constructor() {
     this.loadClassAndConfigPanelSettings();
@@ -116,6 +128,9 @@ export class AppComponent {
     );
     effect(
       () => (this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '')
+    );
+    effect(
+      () => (this.viewingGroups = this.#classroomsService.viewingGroups())
     );
     effect(() => {
       localStorage.setItem(
@@ -228,5 +243,13 @@ export class AppComponent {
     if (classroomId && configurationId) {
       this.#classroomsService.createGroup(classroomId, configurationId);
     }
+  }
+
+  drop(event: CdkDragDrop<ClassroomGroup[]>) {
+    moveItemInArray(
+      this.viewingGroups,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
 }

@@ -60,6 +60,13 @@ export class ClassroomsService {
     initialValue: [],
   });
 
+  private readonly _viewingGroups$ = this._viewingConfiguration$.pipe(
+    map((configuration) => configuration?.groups ?? [])
+  );
+  public readonly viewingGroups = toSignal(this._viewingGroups$, {
+    initialValue: [],
+  });
+
   public deleteClassroom(classroomId: string) {
     this._classrooms$.next(
       this._classrooms$.getValue().filter(({ id }) => id !== classroomId)
