@@ -53,6 +53,13 @@ export class ClassroomsService {
   );
   public readonly viewingConfiguration = toSignal(this._viewingConfiguration$);
 
+  private readonly _viewingStudents$ = this._viewingClassroom$.pipe(
+    map((classroom) => classroom?.students ?? [])
+  );
+  public readonly viewingStudents = toSignal(this._viewingStudents$, {
+    initialValue: [],
+  });
+
   public deleteClassroom(classroomId: string) {
     this._classrooms$.next(
       this._classrooms$.getValue().filter(({ id }) => id !== classroomId)
@@ -279,6 +286,28 @@ export class ClassroomsService {
               id: generateUniqueId(),
               label: `Group ${configuration.groups.length + 1}`,
             });
+          }
+        });
+      }
+    });
+    this._classrooms$.next(newClassrooms);
+  }
+
+  public deleteGroup(
+    classroomId: string,
+    configurationId: string,
+    groupId: string
+  ) {
+    const newClassrooms = JSON.parse(
+      JSON.stringify(this._classrooms$.getValue())
+    ) as Classroom[];
+    newClassrooms.forEach((classroom) => {
+      if (classroom.id === classroomId) {
+        classroom.configurations.forEach((configuration) => {
+          if (configuration.id === configurationId) {
+            configuration.groups = configuration.groups.filter(
+              (group) => group.id !== groupId
+            );
           }
         });
       }
