@@ -238,4 +238,28 @@ export class ClassroomsService {
       })
     );
   }
+
+  public toggleColumn(
+    classroomId: string,
+    configurationId: string,
+    columnId: string
+  ) {
+    const newClassrooms = JSON.parse(
+      JSON.stringify(this._classrooms$.getValue())
+    ) as Classroom[];
+    newClassrooms.forEach((classroom) => {
+      if (classroom.id === classroomId) {
+        classroom.configurations.forEach((configuration) => {
+          if (configuration.id === configurationId) {
+            configuration.columns.forEach((column) => {
+              if (column.id === columnId) {
+                column.enabled = !column.enabled;
+              }
+            });
+          }
+        });
+      }
+    });
+    this._classrooms$.next(newClassrooms);
+  }
 }

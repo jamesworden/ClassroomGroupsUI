@@ -192,18 +192,15 @@ export class ConfigurationPanelComponent {
   }
 
   toggleColumn(columnId: string) {
-    // this.#store.dispatch(
-    //   updateColumns({
-    //     classroomId: this.viewingClassroomId(),
-    //     configurationId: this.viewingConfigurationId(),
-    //     columns: {
-    //       ...this.columns.map((column) => ({
-    //         ...column,
-    //         enabled: column.id === columnId ? !column.enabled : column.enabled,
-    //       })),
-    //     },
-    //   })
-    // );
+    const classroomId = this.viewingClassroomId();
+    const configurationId = this.viewingConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.toggleColumn(
+        classroomId,
+        configurationId,
+        columnId
+      );
+    }
   }
 
   setSortAscending(columnId: string) {
