@@ -14,7 +14,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Configuration } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -66,6 +66,19 @@ export class ConfigurationsPanelComponent {
       ) ?? []
   );
 
+  constructor() {
+    this.#classroomsService.addedConfiguration$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        setTimeout(() => {
+          this.scrollContainer.nativeElement.scrollTo({
+            top: this.scrollContainer.nativeElement.scrollHeight,
+            behavior: 'smooth',
+          });
+        });
+      });
+  }
+
   selectConfiguration(configurationId: string) {
     this.#classroomsService.viewConfiguration(configurationId);
   }
@@ -81,23 +94,13 @@ export class ConfigurationsPanelComponent {
       );
       return;
     }
-    const classroomId = this.viewingClassroomId();
-    if (classroomId) {
-      this.#classroomsService.addConfiguration(
-        classroomId,
-        this.addConfigurationLabel
-      );
-    }
+    this.#classroomsService.addConfiguration(
+      this.viewingClassroomId(),
+      this.addConfigurationLabel
+    );
     this.addConfigurationLabel = '';
     this.#matSnackBar.open('Configuration created', 'Hide', {
       duration: 3000,
-    });
-    // TODO: Turn into an ofActionSuccessful
-    setTimeout(() => {
-      this.scrollContainer.nativeElement.scrollTo({
-        top: this.scrollContainer.nativeElement.scrollHeight,
-        behavior: 'smooth',
-      });
     });
   }
 }

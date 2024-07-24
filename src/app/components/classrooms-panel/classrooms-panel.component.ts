@@ -11,7 +11,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Classroom } from '../../models/classroom.models';
@@ -51,13 +51,26 @@ export class ClassroomsPanelComponent {
 
   addClassroomLabel = '';
 
-  filteredClassrooms: Signal<Classroom[]> = computed(() =>
+  readonly filteredClassrooms: Signal<Classroom[]> = computed(() =>
     this.classrooms().filter((classroom) =>
       classroom.label
         .toLowerCase()
         .includes(this.searchQuery().trim().toLowerCase())
     )
   );
+
+  constructor() {
+    this.#classroomsService.addedClassroom$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        setTimeout(() => {
+          this.scrollContainer.nativeElement.scrollTo({
+            top: this.scrollContainer.nativeElement.scrollHeight,
+            behavior: 'smooth',
+          });
+        });
+      });
+  }
 
   selectClassroom(classroomId: string) {
     this.#classroomsService.viewClassroom(classroomId);
@@ -78,13 +91,6 @@ export class ClassroomsPanelComponent {
     this.addClassroomLabel = '';
     this.#matSnackBar.open('Classroom created', 'Hide', {
       duration: 3000,
-    });
-    // TODO: Turn into an ofActionSuccessful
-    setTimeout(() => {
-      this.scrollContainer.nativeElement.scrollTo({
-        top: this.scrollContainer.nativeElement.scrollHeight,
-        behavior: 'smooth',
-      });
     });
   }
 }

@@ -30,6 +30,7 @@ import {
   getGroupViewModels,
   getStudentViewModel,
 } from './logic/get-view-models';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -46,6 +47,13 @@ export class ClassroomsService {
   private readonly _viewingConfigurationId = signal(
     DEFAULT_CONFIGURATIONS[0].id
   );
+  private readonly _addedClassroom$ = new Subject<void>();
+  private readonly _addedConfiguration$ = new Subject<void>();
+
+  public readonly addedClassroom$ = this._addedClassroom$.asObservable();
+
+  public readonly addedConfiguration$ =
+    this._addedConfiguration$.asObservable();
 
   public readonly viewingConfigurationId =
     this._viewingConfigurationId.asReadonly();
@@ -293,15 +301,17 @@ export class ClassroomsService {
   }
 
   public addClassroom(label: string) {
+    const classroomId = generateUniqueId();
     this._classrooms.set(
       this._classrooms().concat([
         {
-          id: generateUniqueId(),
+          id: classroomId,
           label,
           description: '',
         },
       ])
     );
+    this._addedClassroom$.next();
   }
 
   public viewClassroom(classroomId: string) {
@@ -328,5 +338,6 @@ export class ClassroomsService {
         },
       ])
     );
+    this._addedConfiguration$.next();
   }
 }
