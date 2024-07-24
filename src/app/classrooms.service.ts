@@ -310,6 +310,11 @@ export class ClassroomsService {
 
   public viewClassroom(classroomId: string) {
     this.viewingClassroomId.set(classroomId);
+    this.viewingConfigurationId.set(
+      this.configurations().find(
+        (configuration) => configuration.classroomId === classroomId
+      )?.id || ''
+    );
   }
 
   public viewConfiguration(configurationId: string) {
