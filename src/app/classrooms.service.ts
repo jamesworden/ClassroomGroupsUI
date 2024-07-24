@@ -1,11 +1,8 @@
 import { computed, Injectable, signal } from '@angular/core';
 import {
-  Classroom,
   Column,
   ColumnSort,
-  Configuration,
   Field,
-  Group,
   StudentField,
 } from './models/classroom.models';
 import {
@@ -39,10 +36,21 @@ import {
 })
 export class ClassroomsService {
   private readonly _classrooms = signal(DEFAULT_CLASSROOMS);
-
   private readonly _students = signal(DEFAULT_STUDENTS);
-
   private readonly _configurations = signal(DEFAULT_CONFIGURATIONS);
+  private readonly _columns = signal(DEFAULT_COLUMNS);
+  private readonly _fields = signal(DEFAULT_FIELDS);
+  private readonly _studentFields = signal(DEFAULT_STUDENT_FIELDS);
+  private readonly _groups = signal(DEFAULT_GROUPS);
+  private readonly _viewingClassroomId = signal(DEFAULT_CLASSROOMS[0].id);
+  private readonly _viewingConfigurationId = signal(
+    DEFAULT_CONFIGURATIONS[0].id
+  );
+
+  public readonly viewingConfigurationId =
+    this._viewingConfigurationId.asReadonly();
+
+  public readonly viewingClassroomId = this._viewingClassroomId.asReadonly();
 
   public readonly configurations = computed(() =>
     this._configurations().map((configuration) =>
@@ -57,13 +65,9 @@ export class ClassroomsService {
     }, {} as { [configurationId: string]: ConfigurationViewModel })
   );
 
-  private readonly _columns = signal(DEFAULT_COLUMNS);
-
   public readonly columns = computed(() =>
     this._columns().map((column) => getColumnViewModel(column))
   );
-
-  private readonly _fields = signal(DEFAULT_FIELDS);
 
   public readonly fields = computed(() =>
     this._fields().map((field) => getFieldViewModel(field))
@@ -76,9 +80,7 @@ export class ClassroomsService {
     }, {} as { [fieldId: string]: Field })
   );
 
-  private readonly _studentFields = signal(DEFAULT_STUDENT_FIELDS);
-
-  private readonly _studentFieldsById = computed(() =>
+  public readonly studentFieldsById = computed(() =>
     this._studentFields().reduce((acc, studentField) => {
       if (!acc[studentField.studentId]) {
         acc[studentField.studentId] = {};
@@ -87,8 +89,6 @@ export class ClassroomsService {
       return acc;
     }, {} as { [studentId: string]: { [fieldId: string]: StudentField } })
   );
-
-  private readonly _groups = signal(DEFAULT_GROUPS);
 
   public readonly groups = computed(() =>
     this._groups().map((group) => getGroupViewModels(group))
@@ -101,13 +101,9 @@ export class ClassroomsService {
     }, {} as { [groupId: string]: GroupViewModel })
   );
 
-  public readonly viewingClassroomId = signal(DEFAULT_CLASSROOMS[0].id);
-
   public readonly viewingClassroom = computed(() =>
     this.classrooms().find(({ id }) => id === this.viewingClassroomId())
   );
-
-  public readonly viewingConfigurationId = signal(DEFAULT_CONFIGURATIONS[0].id);
 
   public readonly viewingGroups = computed(() =>
     this.groups().filter(
@@ -115,18 +111,18 @@ export class ClassroomsService {
     )
   );
 
-  private readonly _viewingGroupIds = computed(() =>
+  public readonly viewingGroupIds = computed(() =>
     this.viewingGroups().map(({ id }) => id)
   );
 
-  private readonly _viewingStudents = computed(() =>
+  public readonly viewingStudents = computed(() =>
     this._students().filter(({ groupId }) =>
-      this._viewingGroupIds().includes(groupId)
+      this.viewingGroupIds().includes(groupId)
     )
   );
 
-  private readonly _viewingStudentIds = computed(() =>
-    this._viewingStudents().map(({ id }) => id)
+  public readonly viewingStudentIds = computed(() =>
+    this.viewingStudents().map(({ id }) => id)
   );
 
   public readonly viewingConfiguration = computed(() =>
@@ -147,25 +143,25 @@ export class ClassroomsService {
     )
   );
 
-  private _viewingFields = computed(() =>
+  public viewingFields = computed(() =>
     this._fields().filter(
       (field) => field.classroomId === this.viewingClassroomId()
     )
   );
 
-  private _viewingFieldIds = computed(() =>
-    this._viewingFields().map((viewingField) => viewingField.id)
+  public viewingFieldIds = computed(() =>
+    this.viewingFields().map((viewingField) => viewingField.id)
   );
 
   private readonly _viewingStudentFields = computed(() =>
     this._studentFields().filter(
       (studentField) =>
-        this._viewingFieldIds().includes(studentField.fieldId) &&
-        this._viewingStudentIds().includes(studentField.studentId)
+        this.viewingFieldIds().includes(studentField.fieldId) &&
+        this.viewingStudentIds().includes(studentField.studentId)
     )
   );
 
-  private readonly _viewingStudentFieldsByStudentIds = computed(() =>
+  public readonly viewingStudentFieldsByStudentIds = computed(() =>
     this._viewingStudentFields().reduce((acc, viewingStudentField) => {
       if (!acc[viewingStudentField.studentId]) {
         acc[viewingStudentField.studentId] = [];
@@ -180,10 +176,10 @@ export class ClassroomsService {
   );
 
   public readonly students = computed(() =>
-    this._viewingStudents().map((viewingStudent) =>
+    this.viewingStudents().map((viewingStudent) =>
       getStudentViewModel(
         viewingStudent,
-        this._viewingStudentFieldsByStudentIds()[viewingStudent.id] ?? [],
+        this.viewingStudentFieldsByStudentIds()[viewingStudent.id] ?? [],
         this.viewingColumns()
       )
     )
@@ -309,8 +305,8 @@ export class ClassroomsService {
   }
 
   public viewClassroom(classroomId: string) {
-    this.viewingClassroomId.set(classroomId);
-    this.viewingConfigurationId.set(
+    this._viewingClassroomId.set(classroomId);
+    this._viewingConfigurationId.set(
       this.configurations().find(
         (configuration) => configuration.classroomId === classroomId
       )?.id || ''
@@ -318,7 +314,7 @@ export class ClassroomsService {
   }
 
   public viewConfiguration(configurationId: string) {
-    this.viewingConfigurationId.set(configurationId);
+    this._viewingConfigurationId.set(configurationId);
   }
 
   public addConfiguration(classroomId: string, label: string) {
