@@ -41,9 +41,9 @@
     class="example-list w-full my-2"
     (cdkDropListDropped)="drop($event)"
   >
-    @for (student of students; track student.id) {
+    @for (student of editingStudents; track student.id) {
     <div class="example-box flex" cdkDrag>
-      @for(value of student.orderedValues; track i; let i = $index) {
+      @for(field of student.fields; track i; let i = $index) {
       <div class="flex-1">
         <div>
           @if(editingOrderedFieldIndex === i && editingStudentId === student.id)
@@ -58,9 +58,9 @@
           } @else {
           <span
             class="cursor-text"
-            (click)="startEditing(student.id, i, value)"
+            (click)="startEditing(student.id, i, field.value)"
           >
-            {{ value }}
+            {{ field.value }}
           </span>
           }
         </div>

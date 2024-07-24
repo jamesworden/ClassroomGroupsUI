@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, input } from '@angular/core';
-import { ClassroomGroup, Student } from '../../models/classroom.models';
+import { Group, Student } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,10 +14,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface StudentWithOrderedValues extends Student {
-  orderedValues: (number | string)[];
-}
+import { StudentViewModel } from '../../models/classroom-view.models';
 
 @Component({
   selector: 'app-group-panel',
@@ -42,85 +39,73 @@ export class GroupPanelComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #matSnackBar = inject(MatSnackBar);
 
-  readonly group = input<ClassroomGroup>();
+  readonly group = input<Group>();
 
-  readonly viewingStudents = this.#classroomsService.viewingStudents;
+  readonly students = this.#classroomsService.students;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
   readonly viewingConfigurationId =
     this.#classroomsService.viewingConfigurationId;
   readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
+  readonly viewingGroups = this.#classroomsService.viewingGroups;
+  readonly viewingColumns = this.#classroomsService.viewingColumns;
 
   readonly studentsInGroup = computed(() =>
-    this.viewingStudents().filter(
-      (student) => student.groupId === this.group()?.id
-    )
+    this.students().filter((student) => student.groupId === this.group()?.id)
   );
 
   readonly viewingGroupIds = computed(() =>
-    (this.viewingConfiguration()?.groups ?? []).map(({ id }) => id)
+    this.viewingGroups().map(({ id }) => id)
   );
 
-  readonly studentsWithOrderedFields = computed<StudentWithOrderedValues[]>(
-    () => {
-      const students = this.viewingStudents();
-      const columns = this.viewingConfiguration()?.columns ?? [];
-
-      const x: StudentWithOrderedValues[] = students.map((student) => {
-        const orderedValues: (number | string)[] = [];
-        for (const column of columns) {
-          orderedValues.push(student.row[column.fieldId]);
-        }
-        return {
-          ...student,
-          orderedValues,
-        };
-      });
-
-      return x;
-    }
-  );
-
-  students: StudentWithOrderedValues[] = [];
   editingOrderedFieldIndex?: number;
   editingStudentId?: string;
   editingField?: string | number;
+  editingStudents: StudentViewModel[] = [];
 
   constructor() {
-    effect(() => (this.students = this.studentsWithOrderedFields()));
+    effect(() => {
+      this.editingStudents = this.students();
+    });
   }
 
   addStudent() {}
 
   deleteGroup() {
-    if (this.studentsInGroup().length > 0) {
-      this.#matSnackBar.open(
-        "You can't delete group that contains students",
-        'Hide',
-        {
-          duration: 3000,
-        }
-      );
-      return;
-    }
-
-    const classroomId = this.viewingClassroomId();
-    const configurationId = this.viewingConfigurationId();
-    const groupId = this.group()?.id;
-    if (classroomId && configurationId && groupId) {
-      this.#classroomsService.deleteGroup(
-        classroomId,
-        configurationId,
-        groupId
-      );
-      this.#matSnackBar.open('Group deleted', 'Hide', {
-        duration: 3000,
-      });
-    }
+    // if (this.studentsInGroup().length > 0) {
+    //   this.#matSnackBar.open(
+    //     "You can't delete group that contains students",
+    //     'Hide',
+    //     {
+    //       duration: 3000,
+    //     }
+    //   );
+    //   return;
+    // }
+    // const classroomId = this.viewingClassroomId();
+    // const configurationId = this.viewingConfigurationId();
+    // const groupId = this.group()?.id;
+    // if (classroomId && configurationId && groupId) {
+    //   this.#classroomsService.deleteGroup(
+    //     classroomId,
+    //     configurationId,
+    //     groupId
+    //   );
+    //   this.#matSnackBar.open('Group deleted', 'Hide', {
+    //     duration: 3000,
+    //   });
+    // }
   }
 
   drop(event: CdkDragDrop<Student[]>) {
-    moveItemInArray(this.students, event.previousIndex, event.currentIndex);
-    // TODO: Persist changes
+    moveItemInArray(
+      this.editingStudents,
+      event.previousIndex,
+      event.currentIndex
+    );
+    this.#classroomsService.updateStudents(
+      this.viewingClassroomId(),
+      this.editingStudents
+    );
   }
 
   startEditing(

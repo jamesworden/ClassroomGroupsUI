@@ -93,7 +93,7 @@
         <div class="flex justify-between w-full">
           <div class="flex flex-col justify-around">
             <div class="text-ellipsis">
-              {{ fieldIdsToFields()[column.fieldId].label }}
+              {{ fieldsById()[column.fieldId].label }}
             </div>
           </div>
           <div class="flex">
@@ -103,7 +103,7 @@
               [matMenuTriggerFor]="fieldMenu"
               [matMenuTriggerData]="{
                 column: column,
-                field: fieldIdsToFields()[column.fieldId]
+                field: fieldsById()[column.fieldId]
               }"
             >
               <mat-icon>more_vert</mat-icon>
@@ -150,9 +150,9 @@
     <button
       mat-menu-item
       (click)="openDeleteConfigurationModal()"
-      [disabled]="viewingClassroom()?.configurations?.length ?? 0"
+      [disabled]="viewingConfigurations().length"
       [matTooltip]="
-        (viewingClassroom()?.configurations?.length ?? 0) <= 1
+        viewingConfigurations().length <= 1
           ? 'You can\'t delete the last configuration!'
           : 'Delete configuration'
       "

@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ClassroomConfig } from '../../models/classroom.models';
+import { Configuration } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -51,50 +51,53 @@ export class ConfigurationsPanelComponent {
   readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
   readonly viewingConfigurationId =
     this.#classroomsService.viewingConfigurationId;
+  readonly viewingConfigurations =
+    this.#classroomsService.viewingConfigurations;
+
   readonly ResizableSide = ResizableSide;
 
   readonly searchQuery = signal('');
   addConfigurationLabel = '';
 
-  readonly filteredConfigurations: Signal<ClassroomConfig[]> = computed(
+  readonly filteredConfigurations: Signal<Configuration[]> = computed(
     () =>
-      this.viewingClassroom()?.configurations.filter(({ label }) =>
+      this.viewingConfigurations().filter(({ label }) =>
         label.toLowerCase().includes(this.searchQuery())
       ) ?? []
   );
 
   selectConfiguration(configurationId: string) {
-    this.#classroomsService.viewConfiguration(configurationId);
+    // this.#classroomsService.viewConfiguration(configurationId);
   }
 
   addConfiguration() {
-    if (this.addConfigurationLabel.trim().length <= 0) {
-      this.#matSnackBar.open(
-        'Please enter the name of the configuration.',
-        'Hide',
-        {
-          duration: 3000,
-        }
-      );
-      return;
-    }
-    const classroomId = this.viewingClassroomId();
-    if (classroomId) {
-      this.#classroomsService.addConfiguration(
-        classroomId,
-        this.addConfigurationLabel
-      );
-    }
-    this.addConfigurationLabel = '';
-    this.#matSnackBar.open('Configuration created', 'Hide', {
-      duration: 3000,
-    });
-    // TODO: Turn into an ofActionSuccessful
-    setTimeout(() => {
-      this.scrollContainer.nativeElement.scrollTo({
-        top: this.scrollContainer.nativeElement.scrollHeight,
-        behavior: 'smooth',
-      });
-    });
+    // if (this.addConfigurationLabel.trim().length <= 0) {
+    //   this.#matSnackBar.open(
+    //     'Please enter the name of the configuration.',
+    //     'Hide',
+    //     {
+    //       duration: 3000,
+    //     }
+    //   );
+    //   return;
+    // }
+    // const classroomId = this.viewingClassroomId();
+    // if (classroomId) {
+    //   this.#classroomsService.addConfiguration(
+    //     classroomId,
+    //     this.addConfigurationLabel
+    //   );
+    // }
+    // this.addConfigurationLabel = '';
+    // this.#matSnackBar.open('Configuration created', 'Hide', {
+    //   duration: 3000,
+    // });
+    // // TODO: Turn into an ofActionSuccessful
+    // setTimeout(() => {
+    //   this.scrollContainer.nativeElement.scrollTo({
+    //     top: this.scrollContainer.nativeElement.scrollHeight,
+    //     behavior: 'smooth',
+    //   });
+    // });
   }
 }

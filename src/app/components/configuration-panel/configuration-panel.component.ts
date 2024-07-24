@@ -16,7 +16,7 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ClassroomColumn, ClassroomField } from '../../models/classroom.models';
+import { Column, Field } from '../../models/classroom.models';
 import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
@@ -60,23 +60,17 @@ export class ConfigurationPanelComponent {
   readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
   readonly viewingConfigurationId =
     this.#classroomsService.viewingConfigurationId;
-
-  readonly fieldIdsToFields = computed(() => {
-    const fieldIdsToFields: {
-      [fieldId: string]: ClassroomField;
-    } = {};
-    for (const field of this.viewingClassroom()?.fields ?? []) {
-      fieldIdsToFields[field.id] = field;
-    }
-    return fieldIdsToFields;
-  });
+  readonly viewingColumns = this.#classroomsService.viewingColumns;
+  readonly fieldsById = this.#classroomsService.fieldsById;
+  readonly viewingConfigurations =
+    this.#classroomsService.viewingConfigurations;
 
   readonly enabledColumnBadges = computed(() => {
     const enabledColumnBadges: {
       [columnId: string]: number;
     } = {};
     let latestSortValue = 1;
-    for (const column of this.viewingConfiguration()?.columns ?? []) {
+    for (const column of this.viewingColumns() ?? []) {
       if (column.enabled) {
         enabledColumnBadges[column.id] = latestSortValue;
         latestSortValue++;
@@ -90,7 +84,7 @@ export class ConfigurationPanelComponent {
   groupingValue = 0;
   updatedDescription = '';
   updatedLabel = '';
-  columns: ClassroomColumn[] = [];
+  columns: Column[] = [];
 
   constructor() {
     effect(
@@ -101,9 +95,7 @@ export class ConfigurationPanelComponent {
     effect(
       () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
     );
-    effect(
-      () => (this.columns = [...(this.viewingConfiguration()?.columns ?? [])])
-    );
+    effect(() => (this.columns = [...this.viewingColumns()]));
   }
 
   toggleGroupingType() {
@@ -111,14 +103,11 @@ export class ConfigurationPanelComponent {
   }
 
   updateDescription() {
-    const classroomId = this.viewingClassroomId();
     const configurationId = this.viewingConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.updateConfigurationDescription(
-        classroomId,
-        configurationId,
-        this.updatedDescription
-      );
+    if (configurationId) {
+      this.#classroomsService.updateConfiguration(configurationId, {
+        description: this.updatedDescription,
+      });
     }
   }
 
@@ -126,11 +115,9 @@ export class ConfigurationPanelComponent {
     const classroomId = this.viewingClassroomId();
     const configurationId = this.viewingConfigurationId();
     if (classroomId && configurationId) {
-      this.#classroomsService.updateConfigurationLabel(
-        classroomId,
-        configurationId,
-        this.updatedLabel
-      );
+      this.#classroomsService.updateConfiguration(classroomId, {
+        label: this.updatedLabel,
+      });
     }
   }
 
@@ -148,24 +135,17 @@ export class ConfigurationPanelComponent {
       const classroomId = this.viewingClassroomId();
       const configurationId = this.viewingConfigurationId();
       if (success && classroomId && configurationId) {
-        this.#classroomsService.deleteConfiguration(
-          classroomId,
-          configurationId
-        );
+        this.#classroomsService.deleteConfiguration(configurationId);
       }
     });
   }
 
-  drop(event: CdkDragDrop<ClassroomColumn>) {
+  drop(event: CdkDragDrop<Column>) {
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
     const classroomId = this.viewingClassroomId();
     const configurationId = this.viewingConfigurationId();
     if (classroomId && configurationId) {
-      this.#classroomsService.updateColumns(
-        classroomId,
-        configurationId,
-        this.columns
-      );
+      this.#classroomsService.updateColumns(configurationId, this.columns);
     }
   }
 
@@ -181,11 +161,7 @@ export class ConfigurationPanelComponent {
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
         const classroomId = this.viewingClassroomId();
         if (outputs && classroomId) {
-          this.#classroomsService.createColumn(
-            classroomId,
-            outputs.column,
-            outputs.field
-          );
+          this.#classroomsService.createField(classroomId, outputs.field);
           this.#matSnackBar.open('Column created', 'Hide', {
             duration: 3000,
           });
@@ -194,15 +170,7 @@ export class ConfigurationPanelComponent {
   }
 
   toggleColumn(columnId: string) {
-    const classroomId = this.viewingClassroomId();
-    const configurationId = this.viewingConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.toggleColumn(
-        classroomId,
-        configurationId,
-        columnId
-      );
-    }
+    this.#classroomsService.toggleColumn(columnId);
   }
 
   setSortAscending(columnId: string) {
@@ -258,13 +226,13 @@ export class ConfigurationPanelComponent {
   }
 
   createGroup() {
-    const classroomId = this.viewingClassroomId();
-    const configurationId = this.viewingConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createGroup(classroomId, configurationId);
-      this.#matSnackBar.open('Group created', 'Hide', {
-        duration: 3000,
-      });
-    }
+    // const classroomId = this.viewingClassroomId();
+    // const configurationId = this.viewingConfigurationId();
+    // if (classroomId && configurationId) {
+    //   this.#classroomsService.createGroup(classroomId, configurationId);
+    //   this.#matSnackBar.open('Group created', 'Hide', {
+    //     duration: 3000,
+    //   });
+    // }
   }
 }

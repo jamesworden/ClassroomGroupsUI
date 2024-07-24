@@ -27,7 +27,7 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassroomsService } from './classrooms.service';
 import { GroupPanelComponent } from './components/group-panel/group-panel.component';
-import { ClassroomGroup } from './models/classroom.models';
+import { Group } from './models/classroom.models';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -95,6 +95,7 @@ export class AppComponent {
   readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
   readonly viewingConfigurationId =
     this.#classroomsService.viewingConfigurationId;
+  readonly viewingGroups = this.#classroomsService.viewingGroups;
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
 
@@ -114,7 +115,7 @@ export class AppComponent {
 
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
-  viewingGroups: ClassroomGroup[] = [];
+  editingGroups: Group[] = [];
 
   constructor() {
     this.loadClassAndConfigPanelSettings();
@@ -130,7 +131,7 @@ export class AppComponent {
       () => (this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '')
     );
     effect(
-      () => (this.viewingGroups = this.#classroomsService.viewingGroups())
+      () => (this.editingGroups = this.#classroomsService.viewingGroups())
     );
     effect(() => {
       localStorage.setItem(
@@ -210,10 +211,9 @@ export class AppComponent {
   updateClassroomDescription() {
     const classroomId = this.viewingClassroomId();
     if (classroomId) {
-      this.#classroomsService.updateClassroomDescription(
-        classroomId,
-        this.updatedClassroomDescription
-      );
+      this.#classroomsService.updateClassroom(classroomId, {
+        description: this.updatedClassroomDescription,
+      });
     }
   }
 
@@ -222,10 +222,9 @@ export class AppComponent {
     if (this.updatedClassroomLabel.trim().length === 0) {
       this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '';
     } else if (classroomId) {
-      this.#classroomsService.updateClassroomLabel(
-        classroomId,
-        this.updatedClassroomLabel
-      );
+      this.#classroomsService.updateClassroom(classroomId, {
+        label: this.updatedClassroomLabel,
+      });
     }
   }
 
@@ -238,18 +237,21 @@ export class AppComponent {
   }
 
   createGroup() {
-    const classroomId = this.viewingClassroomId();
     const configurationId = this.viewingConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createGroup(classroomId, configurationId);
+    if (configurationId) {
+      this.#classroomsService.createGroup(configurationId);
     }
   }
 
-  drop(event: CdkDragDrop<ClassroomGroup[]>) {
+  drop(event: CdkDragDrop<Group[]>) {
     moveItemInArray(
-      this.viewingGroups,
+      this.editingGroups,
       event.previousIndex,
       event.currentIndex
+    );
+    this.#classroomsService.updateGroups(
+      this.viewingConfigurationId(),
+      this.editingGroups
     );
   }
 }

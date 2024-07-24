@@ -1,44 +1,43 @@
 export interface Classroom {
   label: string;
   id: string;
-  configurations: ClassroomConfig[];
-  students: Student[];
   description?: string;
-  fields: ClassroomField[];
 }
 
-export interface ClassroomConfig {
+export interface Configuration {
   label: string;
   description?: string;
   id: string;
-  columns: ClassroomColumn[];
-  groups: ClassroomGroup[];
+  classroomId: string;
 }
 
-export interface ClassroomField {
+export interface Field {
   label: string;
   id: string;
-  type: ClassroomFieldType;
+  type: FieldType;
+  classroomId: string;
 }
 
-export interface ClassroomColumn {
+export interface Column {
   id: string;
   enabled: boolean;
-  sort: ClassroomColumnSort;
+  sort: ColumnSort;
   fieldId: string;
+  configurationId: string;
 }
 
-export interface ClassroomGroup {
+export interface Group {
   id: string;
+  configurationId: string;
   label: string;
 }
 
-export enum ClassroomFieldType {
+export enum FieldType {
   TEXT = 'TEXT',
   NUMBER = 'NUMBER',
 }
 
-export enum ClassroomColumnSort {
+export enum ColumnSort {
   ASCENDING = 'ASCENDING',
   DESCENDING = 'DESCENDING',
   NONE = 'NONE',
@@ -47,7 +46,11 @@ export enum ClassroomColumnSort {
 export interface Student {
   id: string;
   groupId: string;
-  row: {
-    [fieldId: string]: number | string;
-  };
+  classroomId: string;
+}
+
+export interface StudentField {
+  studentId: string;
+  fieldId: string;
+  value: number | string;
 }

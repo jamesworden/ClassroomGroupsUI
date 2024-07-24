@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import {
-  ClassroomColumn,
-  ClassroomColumnSort,
-  ClassroomFieldType,
-  ClassroomField,
+  Column,
+  ColumnSort,
+  Field,
+  FieldType,
 } from '../../models/classroom.models';
 import {
   MAT_DIALOG_DATA,
@@ -20,17 +20,18 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { generateUniqueId } from '../../logic/generate-unique-id';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ClassroomsService } from '../../classrooms.service';
 
 export interface CreateEditColumnDialogOutputs {
-  column: ClassroomColumn;
-  field: ClassroomField;
+  column: Column;
+  field: Field;
 }
 
 export interface CreateEditColumnDialogInputs {
   title: string;
   existingData?: {
-    column: ClassroomColumn;
-    field: ClassroomField;
+    column: Column;
+    field: Field;
   };
 }
 
@@ -54,8 +55,11 @@ export interface CreateEditColumnDialogInputs {
 })
 export class CreateEditColumnDialogComponent {
   readonly #data = inject<CreateEditColumnDialogInputs>(MAT_DIALOG_DATA);
+  readonly #classroomsService = inject(ClassroomsService);
 
-  readonly Type = ClassroomFieldType;
+  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
+
+  readonly Type = FieldType;
 
   public readonly dialogRef = inject(
     MatDialogRef<CreateEditColumnDialogComponent>
@@ -63,17 +67,19 @@ export class CreateEditColumnDialogComponent {
 
   readonly title = signal(this.#data.title);
 
-  readonly column: ClassroomColumn = {
+  readonly column: Column = {
     enabled: true,
     fieldId: '',
     id: '',
-    sort: ClassroomColumnSort.NONE,
+    sort: ColumnSort.NONE,
+    configurationId: '',
   };
 
-  readonly field: ClassroomField = {
+  readonly field: Field = {
     id: '',
     label: '',
-    type: ClassroomFieldType.TEXT,
+    type: FieldType.TEXT,
+    classroomId: this.viewingClassroomId(),
   };
 
   readonly saved = () =>
@@ -92,13 +98,15 @@ export class CreateEditColumnDialogComponent {
     this.column = {
       enabled: true,
       id: this.#data.existingData?.column?.id ?? generateUniqueId(),
-      sort: this.#data.existingData?.column?.sort ?? ClassroomColumnSort.NONE,
+      sort: this.#data.existingData?.column?.sort ?? ColumnSort.NONE,
       fieldId,
+      configurationId: '',
     };
     this.field = {
       id: fieldId,
       label: this.#data.existingData?.field?.label ?? '',
-      type: this.#data.existingData?.field?.type ?? ClassroomFieldType.TEXT,
+      type: this.#data.existingData?.field?.type ?? FieldType.TEXT,
+      classroomId: this.viewingClassroomId(),
     };
   }
 
