@@ -307,4 +307,8 @@ export class ClassroomsService {
       ])
     );
   }
+
+  public viewClassroom(classroomId: string) {
+    this.viewingClassroomId.set(classroomId);
+  }
 }

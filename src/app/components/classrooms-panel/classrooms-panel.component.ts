@@ -60,7 +60,7 @@ export class ClassroomsPanelComponent {
   );
 
   selectClassroom(classroomId: string) {
-    // this.#classroomsService.viewClassroom(classroomId);
+    this.#classroomsService.viewClassroom(classroomId);
   }
 
   addClassroom() {
