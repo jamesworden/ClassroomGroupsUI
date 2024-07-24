@@ -311,4 +311,21 @@ export class ClassroomsService {
   public viewClassroom(classroomId: string) {
     this.viewingClassroomId.set(classroomId);
   }
+
+  public viewConfiguration(configurationId: string) {
+    this.viewingConfigurationId.set(configurationId);
+  }
+
+  public addConfiguration(classroomId: string, label: string) {
+    this._configurations.set(
+      this._configurations().concat([
+        {
+          classroomId,
+          label,
+          id: generateUniqueId(),
+          description: '',
+        },
+      ])
+    );
+  }
 }

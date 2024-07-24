@@ -67,37 +67,37 @@ export class ConfigurationsPanelComponent {
   );
 
   selectConfiguration(configurationId: string) {
-    // this.#classroomsService.viewConfiguration(configurationId);
+    this.#classroomsService.viewConfiguration(configurationId);
   }
 
   addConfiguration() {
-    // if (this.addConfigurationLabel.trim().length <= 0) {
-    //   this.#matSnackBar.open(
-    //     'Please enter the name of the configuration.',
-    //     'Hide',
-    //     {
-    //       duration: 3000,
-    //     }
-    //   );
-    //   return;
-    // }
-    // const classroomId = this.viewingClassroomId();
-    // if (classroomId) {
-    //   this.#classroomsService.addConfiguration(
-    //     classroomId,
-    //     this.addConfigurationLabel
-    //   );
-    // }
-    // this.addConfigurationLabel = '';
-    // this.#matSnackBar.open('Configuration created', 'Hide', {
-    //   duration: 3000,
-    // });
-    // // TODO: Turn into an ofActionSuccessful
-    // setTimeout(() => {
-    //   this.scrollContainer.nativeElement.scrollTo({
-    //     top: this.scrollContainer.nativeElement.scrollHeight,
-    //     behavior: 'smooth',
-    //   });
-    // });
+    if (this.addConfigurationLabel.trim().length <= 0) {
+      this.#matSnackBar.open(
+        'Please enter the name of the configuration.',
+        'Hide',
+        {
+          duration: 3000,
+        }
+      );
+      return;
+    }
+    const classroomId = this.viewingClassroomId();
+    if (classroomId) {
+      this.#classroomsService.addConfiguration(
+        classroomId,
+        this.addConfigurationLabel
+      );
+    }
+    this.addConfigurationLabel = '';
+    this.#matSnackBar.open('Configuration created', 'Hide', {
+      duration: 3000,
+    });
+    // TODO: Turn into an ofActionSuccessful
+    setTimeout(() => {
+      this.scrollContainer.nativeElement.scrollTo({
+        top: this.scrollContainer.nativeElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    });
   }
 }
