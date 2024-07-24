@@ -53,10 +53,9 @@ export class ConfigurationsPanelComponent {
     this.#classroomsService.viewingConfigurationId;
   readonly viewingConfigurations =
     this.#classroomsService.viewingConfigurations;
-
   readonly ResizableSide = ResizableSide;
-
   readonly searchQuery = signal('');
+
   addConfigurationLabel = '';
 
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
