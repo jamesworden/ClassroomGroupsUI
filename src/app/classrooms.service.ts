@@ -252,26 +252,22 @@ export class ClassroomsService {
   }
 
   public createField(classroomId: string, field: Field) {
-    const fields = this._fields();
-    const columns = this._columns();
+    this._fields.set(this._fields().concat([field]));
 
-    fields.push(field);
-    this._fields.set(fields);
-
-    const newColumns = this._configurations()
-      .filter((configuration) => configuration.id === classroomId)
-      .map(({ id }) => {
-        const column: Column = {
-          configurationId: id,
-          enabled: true,
-          fieldId: field.id,
-          id: generateUniqueId(),
-          sort: ColumnSort.NONE,
-        };
-        return column;
-      });
-    columns.push(...newColumns);
-    this._columns.set(newColumns);
+    this._columns.set(
+      this._columns().concat(
+        this._configurations().map((configuration) => {
+          const column: Column = {
+            configurationId: configuration.id,
+            enabled: true,
+            fieldId: field.id,
+            id: generateUniqueId(),
+            sort: ColumnSort.NONE,
+          };
+          return column;
+        })
+      )
+    );
   }
 
   public toggleColumn(columnId: string) {
