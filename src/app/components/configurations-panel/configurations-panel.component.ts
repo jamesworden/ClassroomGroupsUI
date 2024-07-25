@@ -74,6 +74,9 @@ export class ConfigurationsPanelComponent {
             top: this.scrollContainer.nativeElement.scrollHeight,
             behavior: 'smooth',
           });
+          this.#matSnackBar.open('Configuration created', 'Hide', {
+            duration: 3000,
+          });
         });
       });
   }
@@ -98,8 +101,5 @@ export class ConfigurationsPanelComponent {
       this.addConfigurationLabel
     );
     this.addConfigurationLabel = '';
-    this.#matSnackBar.open('Configuration created', 'Hide', {
-      duration: 3000,
-    });
   }
 }

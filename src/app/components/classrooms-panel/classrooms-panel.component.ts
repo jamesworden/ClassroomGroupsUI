@@ -68,6 +68,9 @@ export class ClassroomsPanelComponent {
             top: this.scrollContainer.nativeElement.scrollHeight,
             behavior: 'smooth',
           });
+          this.#matSnackBar.open('Classroom created', 'Hide', {
+            duration: 3000,
+          });
         });
       });
   }
@@ -89,8 +92,5 @@ export class ClassroomsPanelComponent {
     }
     this.#classroomsService.addClassroom(this.addClassroomLabel);
     this.addClassroomLabel = '';
-    this.#matSnackBar.open('Classroom created', 'Hide', {
-      duration: 3000,
-    });
   }
 }
