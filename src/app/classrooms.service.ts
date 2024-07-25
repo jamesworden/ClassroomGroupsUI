@@ -83,7 +83,9 @@ export class ClassroomsService {
   );
 
   public readonly columns = computed(() =>
-    this._columns().map((column) => getColumnViewModel(column))
+    this._columns()
+      .map((column) => getColumnViewModel(column))
+      .sort((a, b) => a.ordinal - b.ordinal)
   );
 
   public readonly fields = computed(() =>
@@ -108,7 +110,9 @@ export class ClassroomsService {
   );
 
   public readonly groups = computed(() =>
-    this._groups().map((group) => getGroupViewModels(group))
+    this._groups()
+      .map((group) => getGroupViewModels(group))
+      .sort((a, b) => a.ordinal - b.ordinal)
   );
 
   public readonly groupsById = computed(() =>
@@ -193,13 +197,15 @@ export class ClassroomsService {
   );
 
   public readonly students = computed(() =>
-    this.viewingStudents().map((viewingStudent) =>
-      getStudentViewModel(
-        viewingStudent,
-        this.viewingStudentFieldsByStudentIds()[viewingStudent.id] ?? [],
-        this.viewingColumns()
+    this.viewingStudents()
+      .map((viewingStudent) =>
+        getStudentViewModel(
+          viewingStudent,
+          this.viewingStudentFieldsByStudentIds()[viewingStudent.id] ?? [],
+          this.viewingColumns()
+        )
       )
-    )
+      .sort((a, b) => a.ordinal - b.ordinal)
   );
 
   public deleteClassroom(classroomId: string) {
@@ -228,6 +234,7 @@ export class ClassroomsService {
       configurationId,
       id: generateUniqueId(),
       label: `Group ${groups.length}`,
+      ordinal: groups.length - 1,
     });
     this._groups.set(groups);
   }
@@ -256,11 +263,11 @@ export class ClassroomsService {
     this._columns.set(
       this._columns()
         .filter((column) => column.configurationId !== configurationId)
-        .concat(updates)
+        .concat(updates.map((column, i) => ({ ...column, ordinal: i })))
     );
   }
 
-  public createField(classroomId: string, field: Field) {
+  public createField(field: Field) {
     this._fields.set(this._fields().concat([field]));
 
     this._columns.set(
@@ -272,6 +279,7 @@ export class ClassroomsService {
             fieldId: field.id,
             id: generateUniqueId(),
             sort: ColumnSort.NONE,
+            ordinal: this._fields().length - 1,
           };
           return column;
         })
@@ -290,19 +298,19 @@ export class ClassroomsService {
     );
   }
 
-  public updateStudents(classroomId: string, updates: StudentViewModel[]) {
+  public updateStudents(classroomId: string, students: StudentViewModel[]) {
     this._students.set(
       this._students()
         .filter((student) => student.classroomId !== classroomId)
-        .concat(updates)
+        .concat(students.map((student, i) => ({ ...student, ordinal: i })))
     );
   }
 
-  public updateGroups(configurationId: string, updates: GroupViewModel[]) {
+  public updateGroups(configurationId: string, groups: GroupViewModel[]) {
     this._groups.set(
       this._groups()
         .filter((group) => group.configurationId !== configurationId)
-        .concat(updates)
+        .concat(groups.map((group, i) => ({ ...group, ordinal: i })))
     );
   }
 
@@ -330,12 +338,13 @@ export class ClassroomsService {
     );
     this._columns.set(
       this._columns().concat(
-        this.viewingFieldIds().map((fieldId) => ({
+        this.viewingFieldIds().map((fieldId, i) => ({
           configurationId,
           enabled: true,
           fieldId,
           id: generateUniqueId(),
           sort: ColumnSort.NONE,
+          ordinal: i,
         }))
       )
     );
@@ -369,12 +378,13 @@ export class ClassroomsService {
     );
     this._columns.set(
       this._columns().concat(
-        this.viewingFieldIds().map((fieldId) => ({
+        this.viewingFieldIds().map((fieldId, i) => ({
           configurationId,
           enabled: true,
           fieldId,
           id: generateUniqueId(),
           sort: ColumnSort.NONE,
+          ordinal: i,
         }))
       )
     );

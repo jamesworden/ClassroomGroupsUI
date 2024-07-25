@@ -24,12 +24,14 @@ export interface Column {
   sort: ColumnSort;
   fieldId: string;
   configurationId: string;
+  ordinal: number;
 }
 
 export interface Group {
   id: string;
   configurationId: string;
   label: string;
+  ordinal: number;
 }
 
 export enum FieldType {
@@ -47,6 +49,7 @@ export interface Student {
   id: string;
   groupId: string;
   classroomId: string;
+  ordinal: number;
 }
 
 export interface StudentField {

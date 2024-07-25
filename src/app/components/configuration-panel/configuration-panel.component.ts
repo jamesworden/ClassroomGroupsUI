@@ -159,9 +159,8 @@ export class ConfigurationPanelComponent {
     dialogRef
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        const classroomId = this.viewingClassroomId();
-        if (outputs && classroomId) {
-          this.#classroomsService.createField(classroomId, outputs.field);
+        if (outputs) {
+          this.#classroomsService.createField(outputs.field);
           this.#matSnackBar.open('Column created', 'Hide', {
             duration: 3000,
           });

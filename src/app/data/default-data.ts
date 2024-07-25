@@ -23,11 +23,13 @@ export const DEFAULT_STUDENTS: Student[] = [
     id: 'jane-doe-id',
     groupId: 'group-id',
     classroomId: 'classroom-id',
+    ordinal: 0,
   },
   {
     id: 'john-smith-id',
     groupId: 'group-id',
     classroomId: 'classroom-id',
+    ordinal: 1,
   },
 ];
 
@@ -47,6 +49,7 @@ export const DEFAULT_COLUMNS: Column[] = [
     sort: ColumnSort.NONE,
     fieldId: 'first-name-field-id',
     configurationId: 'configuration-id',
+    ordinal: 0,
   },
   {
     enabled: true,
@@ -54,6 +57,7 @@ export const DEFAULT_COLUMNS: Column[] = [
     sort: ColumnSort.ASCENDING,
     fieldId: 'last-name-field-id',
     configurationId: 'configuration-id',
+    ordinal: 1,
   },
 ];
 
@@ -100,5 +104,6 @@ export const DEFAULT_GROUPS: Group[] = [
     id: 'group-id',
     configurationId: 'configuration-id',
     label: 'Chapter 1',
+    ordinal: 0,
   },
 ];

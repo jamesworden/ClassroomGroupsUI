@@ -58,6 +58,7 @@ export class CreateEditColumnDialogComponent {
   readonly #classroomsService = inject(ClassroomsService);
 
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
+  readonly viewingColumns = this.#classroomsService.viewingColumns;
 
   readonly Type = FieldType;
 
@@ -73,6 +74,7 @@ export class CreateEditColumnDialogComponent {
     id: '',
     sort: ColumnSort.NONE,
     configurationId: '',
+    ordinal: this.viewingColumns().length - 1,
   };
 
   readonly field: Field = {
@@ -101,6 +103,7 @@ export class CreateEditColumnDialogComponent {
       sort: this.#data.existingData?.column?.sort ?? ColumnSort.NONE,
       fieldId,
       configurationId: '',
+      ordinal: this.viewingColumns().length - 1,
     };
     this.field = {
       id: fieldId,
