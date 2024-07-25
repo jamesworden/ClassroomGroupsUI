@@ -272,13 +272,14 @@ export class ClassroomsService {
   }
 
   public toggleColumn(columnId: string) {
-    const columns = this._columns();
-    for (const column of columns) {
-      if (column.id === columnId) {
-        column.enabled = !column.enabled;
-      }
-    }
-    this._columns.set(columns);
+    this._columns.set(
+      this._columns().map((column) => {
+        if (column.id === columnId) {
+          column.enabled = !column.enabled;
+        }
+        return column;
+      })
+    );
   }
 
   public updateStudents(classroomId: string, updates: StudentViewModel[]) {
