@@ -247,7 +247,7 @@ export class ClassroomsService {
   public updateColumns(configurationId: string, updates: ColumnViewModel[]) {
     this._columns.set(
       this._columns()
-        .filter((column) => column.configurationId === configurationId)
+        .filter((column) => column.configurationId !== configurationId)
         .concat(updates)
     );
   }
@@ -284,7 +284,7 @@ export class ClassroomsService {
   public updateStudents(classroomId: string, updates: StudentViewModel[]) {
     this._students.set(
       this._students()
-        .filter((student) => student.classroomId === classroomId)
+        .filter((student) => student.classroomId !== classroomId)
         .concat(updates)
     );
   }
@@ -292,7 +292,7 @@ export class ClassroomsService {
   public updateGroups(configurationId: string, updates: GroupViewModel[]) {
     this._groups.set(
       this._groups()
-        .filter((group) => group.configurationId === configurationId)
+        .filter((group) => group.configurationId !== configurationId)
         .concat(updates)
     );
   }
