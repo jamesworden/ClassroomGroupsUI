@@ -338,15 +338,27 @@ export class ClassroomsService {
   }
 
   public addConfiguration(classroomId: string, label: string) {
+    const configurationId = generateUniqueId();
     this._configurations.set(
       this._configurations().concat([
         {
           classroomId,
           label,
-          id: generateUniqueId(),
+          id: configurationId,
           description: '',
         },
       ])
+    );
+    this._columns.set(
+      this._columns().concat(
+        this.viewingFieldIds().map((fieldId) => ({
+          configurationId,
+          enabled: true,
+          fieldId,
+          id: generateUniqueId(),
+          sort: ColumnSort.NONE,
+        }))
+      )
     );
     this._addedConfiguration$.next();
   }
