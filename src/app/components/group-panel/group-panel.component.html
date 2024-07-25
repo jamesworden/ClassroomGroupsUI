@@ -49,6 +49,7 @@
           @if(editingOrderedFieldIndex === i && editingStudentId === student.id)
           {
           <input
+            #valueInput
             type="text"
             [value]="editingField"
             placeholder="Add value"

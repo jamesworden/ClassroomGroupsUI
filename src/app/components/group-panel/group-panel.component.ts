@@ -1,4 +1,12 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  ViewChild,
+} from '@angular/core';
 import { Group, Student } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -38,6 +46,9 @@ import { StudentViewModel } from '../../models/classroom-view.models';
 export class GroupPanelComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #matSnackBar = inject(MatSnackBar);
+
+  @ViewChild('valueInput', { read: ElementRef })
+  valueInput!: ElementRef<HTMLInputElement>;
 
   readonly group = input<Group>();
 
@@ -116,6 +127,7 @@ export class GroupPanelComponent {
     this.editingOrderedFieldIndex = editingIndex;
     this.editingStudentId = studentId;
     this.editingField = initialValue;
+    setTimeout(() => this.valueInput.nativeElement.focus());
   }
 
   saveEdits() {
