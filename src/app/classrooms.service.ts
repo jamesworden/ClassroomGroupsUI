@@ -372,4 +372,22 @@ export class ClassroomsService {
     );
     this._addedConfiguration$.next();
   }
+
+  public setStudentValue(
+    studentId: string,
+    fieldId: string,
+    value: string | number
+  ) {
+    this._studentFields.set(
+      this._studentFields().map((studentField) => {
+        if (
+          studentField.fieldId === fieldId &&
+          studentField.studentId === studentId
+        ) {
+          studentField.value = value;
+        }
+        return studentField;
+      })
+    );
+  }
 }

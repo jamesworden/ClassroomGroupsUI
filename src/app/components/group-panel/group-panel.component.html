@@ -46,12 +46,12 @@
       @for(field of student.fields; track i; let i = $index) {
       <div class="flex-1">
         <div>
-          @if(editingOrderedFieldIndex === i && editingStudentId === student.id)
-          {
+          @if(editingFieldId === field.fieldId && editingStudentId ===
+          student.id) {
           <input
             #valueInput
             type="text"
-            [value]="editingField"
+            [(ngModel)]="editingField"
             placeholder="Add value"
             class="outline-none bg-transparent border-none w-full text-ellipsis"
             (change)="saveEdits()"
@@ -59,9 +59,12 @@
           } @else {
           <span
             class="cursor-text"
-            (click)="startEditing(student.id, i, field.value)"
+            [ngClass]="{
+              'opacity-50': !field.value
+            }"
+            (click)="startEditing(field)"
           >
-            {{ field.value }}
+            {{ field.value || "Add value" }}
           </span>
           }
         </div>

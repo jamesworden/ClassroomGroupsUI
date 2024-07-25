@@ -7,7 +7,7 @@ import {
   input,
   ViewChild,
 } from '@angular/core';
-import { Group, Student } from '../../models/classroom.models';
+import { Group, Student, StudentField } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +22,10 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StudentViewModel } from '../../models/classroom-view.models';
+import {
+  FieldViewModel,
+  StudentViewModel,
+} from '../../models/classroom-view.models';
 
 @Component({
   selector: 'app-group-panel',
@@ -68,7 +71,7 @@ export class GroupPanelComponent {
     this.viewingGroups().map(({ id }) => id)
   );
 
-  editingOrderedFieldIndex?: number;
+  editingFieldId?: string;
   editingStudentId?: string;
   editingField?: string | number;
   editingStudents: StudentViewModel[] = [];
@@ -119,21 +122,28 @@ export class GroupPanelComponent {
     );
   }
 
-  startEditing(
-    studentId: string,
-    editingIndex: number,
-    initialValue: string | number
-  ) {
-    this.editingOrderedFieldIndex = editingIndex;
-    this.editingStudentId = studentId;
-    this.editingField = initialValue;
+  startEditing(studentField: StudentField) {
+    this.editingField = studentField.value;
+    this.editingFieldId = studentField.fieldId;
+    this.editingStudentId = studentField.studentId;
     setTimeout(() => this.valueInput.nativeElement.focus());
   }
 
   saveEdits() {
-    // TODO: Persist changes
-    this.editingOrderedFieldIndex = undefined;
-    this.editingStudentId = undefined;
+    if (
+      this.editingStudentId !== undefined &&
+      this.editingFieldId !== undefined &&
+      this.editingField !== undefined
+    ) {
+      this.#classroomsService.setStudentValue(
+        this.editingStudentId,
+        this.editingFieldId,
+        this.editingField
+      );
+    }
+
     this.editingField = undefined;
+    this.editingFieldId = undefined;
+    this.editingStudentId = undefined;
   }
 }
