@@ -38,11 +38,11 @@
     cdkDropList
     [id]="group()?.id ?? ''"
     [cdkDropListConnectedTo]="viewingGroupIds()"
-    class="example-list w-full my-2"
+    class="bg-white dark:bg-zinc-700 example-list w-full my-2"
     (cdkDropListDropped)="drop($event)"
   >
     @for (student of editingStudents; track student.id) {
-    <div class="example-box flex" cdkDrag>
+    <div class="bg-white dark:bg-zinc-700 example-box flex" cdkDrag>
       @for(field of student.fields; track i; let i = $index) {
       <div class="flex-1">
         <div>
