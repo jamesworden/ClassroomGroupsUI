@@ -93,7 +93,7 @@
         <div class="flex justify-between w-full">
           <div class="flex flex-col justify-around">
             <div class="text-ellipsis">
-              {{ fieldsById()[column.fieldId].label }}
+              {{ viewingFieldsById()[column.fieldId].label }}
             </div>
           </div>
           <div class="flex">
@@ -103,7 +103,7 @@
               [matMenuTriggerFor]="fieldMenu"
               [matMenuTriggerData]="{
                 column: column,
-                field: fieldsById()[column.fieldId]
+                field: viewingFieldsById()[column.fieldId]
               }"
             >
               <mat-icon>more_vert</mat-icon>

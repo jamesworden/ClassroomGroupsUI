@@ -61,7 +61,7 @@ export class ConfigurationPanelComponent {
   readonly viewingConfigurationId =
     this.#classroomsService.viewingConfigurationId;
   readonly viewingColumns = this.#classroomsService.viewingColumns;
-  readonly fieldsById = this.#classroomsService.fieldsById;
+  readonly viewingFieldsById = this.#classroomsService.viewingFieldsById;
   readonly viewingConfigurations =
     this.#classroomsService.viewingConfigurations;
 
@@ -95,7 +95,7 @@ export class ConfigurationPanelComponent {
     effect(
       () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
     );
-    effect(() => (this.columns = [...this.viewingColumns()]));
+    effect(() => (this.columns = this.viewingColumns()));
   }
 
   toggleGroupingType() {

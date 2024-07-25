@@ -19,6 +19,7 @@ import {
   ClassroomViewModel,
   ColumnViewModel,
   ConfigurationViewModel,
+  FieldViewModel,
   GroupViewModel,
   StudentViewModel,
 } from './models/classroom-view.models';
@@ -81,11 +82,11 @@ export class ClassroomsService {
     this._fields().map((field) => getFieldViewModel(field))
   );
 
-  public readonly fieldsById = computed(() =>
-    this.fields().reduce((acc, field) => {
+  public readonly viewingFieldsById = computed(() =>
+    this.viewingFields().reduce((acc, field) => {
       acc[field.id] = field;
       return acc;
-    }, {} as { [fieldId: string]: Field })
+    }, {} as { [fieldId: string]: FieldViewModel })
   );
 
   public readonly studentFieldsById = computed(() =>
@@ -151,13 +152,13 @@ export class ClassroomsService {
     )
   );
 
-  public viewingFields = computed(() =>
+  public readonly viewingFields = computed(() =>
     this._fields().filter(
       (field) => field.classroomId === this.viewingClassroomId()
     )
   );
 
-  public viewingFieldIds = computed(() =>
+  public readonly viewingFieldIds = computed(() =>
     this.viewingFields().map((viewingField) => viewingField.id)
   );
 
