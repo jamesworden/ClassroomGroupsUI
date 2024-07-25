@@ -4,6 +4,7 @@ import {
   ConfigurationViewModel,
   FieldViewModel,
   GroupViewModel,
+  StudentFieldViewModel,
   StudentViewModel,
 } from '../models/classroom-view.models';
 import {
@@ -51,6 +52,12 @@ export function getFieldViewModel(field: Field): FieldViewModel {
 
 export function getGroupViewModels(group: Group): GroupViewModel {
   return group;
+}
+
+export function getStudentFieldViewModel(
+  studentField: StudentField
+): StudentFieldViewModel {
+  return studentField;
 }
 
 function sortFieldsByColumns(

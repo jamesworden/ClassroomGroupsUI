@@ -21,6 +21,7 @@ import {
   ConfigurationViewModel,
   FieldViewModel,
   GroupViewModel,
+  StudentFieldViewModel,
   StudentViewModel,
 } from './models/classroom-view.models';
 import {
@@ -29,6 +30,7 @@ import {
   getConfigurationViewModel,
   getFieldViewModel,
   getGroupViewModels,
+  getStudentFieldViewModel,
   getStudentViewModel,
 } from './logic/get-view-models';
 import { Subject } from 'rxjs';
@@ -74,6 +76,12 @@ export class ClassroomsService {
     }, {} as { [configurationId: string]: ConfigurationViewModel })
   );
 
+  public readonly studentFields = computed(() =>
+    this._studentFields().map((studentField) =>
+      getStudentFieldViewModel(studentField)
+    )
+  );
+
   public readonly columns = computed(() =>
     this._columns().map((column) => getColumnViewModel(column))
   );
@@ -90,13 +98,13 @@ export class ClassroomsService {
   );
 
   public readonly studentFieldsById = computed(() =>
-    this._studentFields().reduce((acc, studentField) => {
+    this.studentFields().reduce((acc, studentField) => {
       if (!acc[studentField.studentId]) {
         acc[studentField.studentId] = {};
       }
       acc[studentField.studentId][studentField.fieldId] = studentField;
       return acc;
-    }, {} as { [studentId: string]: { [fieldId: string]: StudentField } })
+    }, {} as { [studentId: string]: { [fieldId: string]: StudentFieldViewModel } })
   );
 
   public readonly groups = computed(() =>
@@ -163,7 +171,7 @@ export class ClassroomsService {
   );
 
   private readonly _viewingStudentFields = computed(() =>
-    this._studentFields().filter(
+    this.studentFields().filter(
       (studentField) =>
         this.viewingFieldIds().includes(studentField.fieldId) &&
         this.viewingStudentIds().includes(studentField.studentId)

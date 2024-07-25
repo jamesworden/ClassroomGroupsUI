@@ -22,10 +22,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  FieldViewModel,
-  StudentViewModel,
-} from '../../models/classroom-view.models';
+import { StudentViewModel } from '../../models/classroom-view.models';
 
 @Component({
   selector: 'app-group-panel',

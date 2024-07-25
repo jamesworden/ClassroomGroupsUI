@@ -21,3 +21,5 @@ export interface ColumnViewModel extends Column {}
 export interface FieldViewModel extends Field {}
 
 export interface GroupViewModel extends Group {}
+
+export interface StudentFieldViewModel extends StudentField {}
