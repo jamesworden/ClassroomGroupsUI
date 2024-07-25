@@ -311,6 +311,16 @@ export class ClassroomsService {
         },
       ])
     );
+    const configurations = this._configurations();
+    this._configurations.set(
+      configurations.concat([
+        {
+          classroomId: classroomId,
+          id: generateUniqueId(),
+          label: `Configuration ${configurations.length}`,
+        },
+      ])
+    );
     this._addedClassroom$.next();
   }
 
