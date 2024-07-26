@@ -8,6 +8,7 @@ import {
   Group,
   Student,
   StudentField,
+  StudentGroup,
 } from '../models/classroom.models';
 
 export const DEFAULT_CLASSROOMS: Classroom[] = [
@@ -21,13 +22,11 @@ export const DEFAULT_CLASSROOMS: Classroom[] = [
 export const DEFAULT_STUDENTS: Student[] = [
   {
     id: 'jane-doe-id',
-    groupId: 'group-id',
     classroomId: 'classroom-id',
     ordinal: 0,
   },
   {
     id: 'john-smith-id',
-    groupId: 'group-id',
     classroomId: 'classroom-id',
     ordinal: 1,
   },
@@ -105,5 +104,20 @@ export const DEFAULT_GROUPS: Group[] = [
     configurationId: 'configuration-id',
     label: 'Chapter 1',
     ordinal: 0,
+  },
+];
+
+export const DEFAULT_STUDENT_GROUPS: StudentGroup[] = [
+  {
+    id: 'student-group-1',
+    configurationId: 'configuration-id',
+    groupId: 'group-id',
+    studentId: 'jane-doe-id',
+  },
+  {
+    id: 'student-group-2',
+    configurationId: 'configuration-id',
+    groupId: 'group-id',
+    studentId: 'john-smith-id',
   },
 ];

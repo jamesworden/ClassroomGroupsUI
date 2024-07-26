@@ -52,7 +52,7 @@ export class GroupPanelComponent {
 
   readonly group = input<Group>();
 
-  readonly students = this.#classroomsService.students;
+  readonly viewingStudents = this.#classroomsService.viewingStudents;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
   readonly viewingConfigurationId =
     this.#classroomsService.viewingConfigurationId;
@@ -61,7 +61,9 @@ export class GroupPanelComponent {
   readonly viewingColumns = this.#classroomsService.viewingColumns;
 
   readonly studentsInGroup = computed(() =>
-    this.students().filter((student) => student.groupId === this.group()?.id)
+    this.viewingStudents().filter(
+      (student) => student.groupId === this.group()?.id
+    )
   );
 
   readonly viewingGroupIds = computed(() =>
@@ -75,7 +77,7 @@ export class GroupPanelComponent {
 
   constructor() {
     effect(() => {
-      this.editingStudents = this.students();
+      this.editingStudents = this.viewingStudents();
     });
   }
 

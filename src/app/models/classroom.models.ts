@@ -47,7 +47,6 @@ export enum ColumnSort {
 
 export interface Student {
   id: string;
-  groupId: string;
   classroomId: string;
   ordinal: number;
 }
@@ -56,4 +55,11 @@ export interface StudentField {
   studentId: string;
   fieldId: string;
   value: number | string;
+}
+
+export interface StudentGroup {
+  id: string;
+  studentId: string;
+  groupId: string;
+  configurationId: string;
 }

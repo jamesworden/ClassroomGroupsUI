@@ -5,6 +5,7 @@ import {
   FieldViewModel,
   GroupViewModel,
   StudentFieldViewModel,
+  StudentGroupViewModel,
   StudentViewModel,
 } from '../models/classroom-view.models';
 import {
@@ -15,6 +16,7 @@ import {
   Group,
   Student,
   StudentField,
+  StudentGroup,
 } from '../models/classroom.models';
 
 export function getClassroomViewModel(
@@ -28,11 +30,13 @@ export function getClassroomViewModel(
 export function getStudentViewModel(
   student: Student,
   studentFields: StudentField[],
-  columns: Column[]
+  columns: Column[],
+  groupId: string
 ): StudentViewModel {
   return <StudentViewModel>{
     ...student,
     fields: sortFieldsByColumns(studentFields, columns),
+    groupId,
   };
 }
 
@@ -58,6 +62,12 @@ export function getStudentFieldViewModel(
   studentField: StudentField
 ): StudentFieldViewModel {
   return studentField;
+}
+
+export function getStudentGroupViewModel(
+  studentGroup: StudentGroup
+): StudentGroupViewModel {
+  return studentGroup;
 }
 
 function sortFieldsByColumns(

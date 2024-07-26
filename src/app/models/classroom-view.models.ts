@@ -6,10 +6,12 @@ import {
   Group,
   Student,
   StudentField,
+  StudentGroup,
 } from './classroom.models';
 
 export interface StudentViewModel extends Student {
   fields: StudentField[];
+  groupId: string;
 }
 
 export interface ClassroomViewModel extends Classroom {}
@@ -23,3 +25,5 @@ export interface FieldViewModel extends Field {}
 export interface GroupViewModel extends Group {}
 
 export interface StudentFieldViewModel extends StudentField {}
+
+export interface StudentGroupViewModel extends StudentGroup {}
