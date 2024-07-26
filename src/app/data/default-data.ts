@@ -113,11 +113,13 @@ export const DEFAULT_STUDENT_GROUPS: StudentGroup[] = [
     configurationId: 'configuration-id',
     groupId: 'group-id',
     studentId: 'jane-doe-id',
+    ordinal: 0,
   },
   {
     id: 'student-group-2',
     configurationId: 'configuration-id',
     groupId: 'group-id',
     studentId: 'john-smith-id',
+    ordinal: 1,
   },
 ];

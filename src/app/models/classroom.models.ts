@@ -62,4 +62,5 @@ export interface StudentGroup {
   studentId: string;
   groupId: string;
   configurationId: string;
+  ordinal: number;
 }

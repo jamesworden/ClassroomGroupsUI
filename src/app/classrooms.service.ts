@@ -400,11 +400,12 @@ export class ClassroomsService {
       this._studentGroups().concat(
         this._students()
           .filter((student) => student.classroomId === classroomId)
-          .map((student) => ({
+          .map((student, ordinal) => ({
             configurationId,
             groupId,
             id: generateUniqueId(),
             studentId: student.id,
+            ordinal,
           }))
       )
     );
