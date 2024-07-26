@@ -31,12 +31,13 @@ export function getStudentViewModel(
   student: Student,
   studentFields: StudentField[],
   columns: Column[],
-  groupId: string
+  studentGroup: StudentGroupViewModel
 ): StudentViewModel {
   return <StudentViewModel>{
     ...student,
     fields: sortFieldsByColumns(studentFields, columns),
-    groupId,
+    groupId: studentGroup.groupId,
+    ordinal: studentGroup.ordinal,
   };
 }
 

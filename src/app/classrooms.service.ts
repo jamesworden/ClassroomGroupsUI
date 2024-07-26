@@ -18,6 +18,7 @@ import {
   FieldViewModel,
   GroupViewModel,
   StudentFieldViewModel,
+  StudentGroupViewModel,
   StudentViewModel,
 } from './models/classroom-view.models';
 import {
@@ -184,21 +185,22 @@ export class ClassroomsService {
 
   public readonly viewingStudents = computed(() => {
     const configurationId = this.viewingConfigurationId();
+    const studentGroups = this.studentGroups();
     return this._students()
       .map((student) => {
-        const groupId = this.studentGroups().find(
+        const studentGroup = studentGroups.find(
           (studentGroup) =>
             studentGroup.configurationId === configurationId &&
             studentGroup.studentId === student.id
-        )?.groupId;
-        if (!groupId) {
+        );
+        if (!studentGroup) {
           return undefined;
         }
         return getStudentViewModel(
           student,
           this.viewingStudentFieldsByStudentIds()[student.id] ?? [],
           this.viewingColumns(),
-          groupId
+          studentGroup
         );
       })
       .filter((student) => !!student)
@@ -307,11 +309,13 @@ export class ClassroomsService {
     );
   }
 
-  public updateStudents(classroomId: string, students: StudentViewModel[]) {
-    this._students.set(
-      this._students()
-        .filter((student) => student.classroomId !== classroomId)
-        .concat(students.map((student, i) => ({ ...student, ordinal: i })))
+  public updateStudentGroups(updatedStudentGroups: StudentGroupViewModel[]) {
+    this._studentGroups.set(
+      this._studentGroups().map(
+        (studentGroup) =>
+          updatedStudentGroups.find((s) => s.id === studentGroup.id) ||
+          studentGroup
+      )
     );
   }
 

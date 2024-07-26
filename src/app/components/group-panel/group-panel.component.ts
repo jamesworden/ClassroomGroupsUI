@@ -22,7 +22,10 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StudentViewModel } from '../../models/classroom-view.models';
+import {
+  StudentGroupViewModel,
+  StudentViewModel,
+} from '../../models/classroom-view.models';
 
 @Component({
   selector: 'app-group-panel',
@@ -110,15 +113,36 @@ export class GroupPanelComponent {
   }
 
   drop(event: CdkDragDrop<Student[]>) {
-    moveItemInArray(
-      this.editingStudents,
-      event.previousIndex,
-      event.currentIndex
-    );
-    this.#classroomsService.updateStudents(
-      this.viewingClassroomId(),
-      this.editingStudents
-    );
+    const ontoSameGroup = event.container === event.previousContainer;
+    if (ontoSameGroup) {
+      // Order editingStudents
+      moveItemInArray(
+        this.editingStudents,
+        event.previousIndex,
+        event.currentIndex
+      );
+      // Assign ordinals according to the order
+      this.editingStudents = this.editingStudents.map(
+        (editingStudent, ordinal) => ({ ...editingStudent, ordinal })
+      );
+      // Create correct student group updates
+      const studentGroups = this.#classroomsService
+        .studentGroups()
+        .map((studentGroup) => {
+          const updatedStudent = this.editingStudents.find(
+            ({ id }) => id === studentGroup.studentId
+          );
+          if (updatedStudent) {
+            studentGroup.ordinal = updatedStudent.ordinal;
+          }
+          return studentGroup;
+        });
+      // Persist updates
+      this.#classroomsService.updateStudentGroups(studentGroups);
+      return;
+    }
+
+    // Recalculate ordinals
   }
 
   startEditing(studentField: StudentField) {
