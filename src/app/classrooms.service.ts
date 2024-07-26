@@ -282,6 +282,16 @@ export class ClassroomsService {
         })
       )
     );
+
+    this._studentFields.set(
+      this._studentFields().concat(
+        this.viewingStudents().map((student) => ({
+          fieldId: field.id,
+          studentId: student.id,
+          value: '',
+        }))
+      )
+    );
   }
 
   public toggleColumn(columnId: string) {
