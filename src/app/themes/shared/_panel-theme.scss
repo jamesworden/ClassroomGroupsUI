@@ -5,6 +5,9 @@
   .panel {
     background-color: mat.get-theme-color($theme, neutral, 90);
   }
+  .grid-row {
+    background-color: mat.get-theme-color($theme, neutral, 100);
+  }
 }
 
 @mixin lightTheme($theme) {
@@ -16,6 +19,9 @@
 @mixin darkColor($theme) {
   .panel {
     background-color: mat.get-theme-color($theme, neutral, 20);
+  }
+  .grid-row {
+    background-color: mat.get-theme-color($theme, neutral, 30);
   }
 }
 
