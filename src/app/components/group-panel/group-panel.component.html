@@ -42,7 +42,7 @@
     cdkDropList
     [id]="group()?.id ?? ''"
     [cdkDropListConnectedTo]="viewingGroupIds()"
-    class="grid-row example-list w-full my-2"
+    class="grid-row example-list w-full mt-2"
     (cdkDropListDropped)="drop($event)"
   >
     @for (student of editingStudents; track student.id) {
