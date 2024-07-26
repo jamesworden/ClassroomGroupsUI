@@ -77,7 +77,7 @@ export class GroupPanelComponent {
 
   constructor() {
     effect(() => {
-      this.editingStudents = this.viewingStudents();
+      this.editingStudents = this.studentsInGroup();
     });
   }
 

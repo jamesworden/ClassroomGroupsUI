@@ -37,12 +37,11 @@
     </div>
   </div>
 
-  @if(editingStudents.length > 0) {
   <div
     cdkDropList
     [id]="group()?.id ?? ''"
     [cdkDropListConnectedTo]="viewingGroupIds()"
-    class="grid-row example-list w-full mt-2"
+    class="grid-row example-list min-h-16 w-full mt-2"
     (cdkDropListDropped)="drop($event)"
   >
     @for (student of editingStudents; track student.id) {
@@ -77,5 +76,4 @@
     </div>
     }
   </div>
-  }
 </div>

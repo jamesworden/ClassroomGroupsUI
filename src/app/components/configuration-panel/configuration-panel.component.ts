@@ -225,13 +225,9 @@ export class ConfigurationPanelComponent {
   }
 
   createGroup() {
-    // const classroomId = this.viewingClassroomId();
-    // const configurationId = this.viewingConfigurationId();
-    // if (classroomId && configurationId) {
-    //   this.#classroomsService.createGroup(classroomId, configurationId);
-    //   this.#matSnackBar.open('Group created', 'Hide', {
-    //     duration: 3000,
-    //   });
-    // }
+    this.#classroomsService.createGroup(this.viewingConfigurationId());
+    this.#matSnackBar.open('Group created', 'Hide', {
+      duration: 3000,
+    });
   }
 }

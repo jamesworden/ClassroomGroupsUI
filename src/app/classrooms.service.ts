@@ -226,14 +226,16 @@ export class ClassroomsService {
   }
 
   public createGroup(configurationId: string) {
-    const groups = this._groups();
-    groups.push({
-      configurationId,
-      id: generateUniqueId(),
-      label: `Group ${groups.length}`,
-      ordinal: groups.length - 1,
-    });
-    this._groups.set(groups);
+    this._groups.set(
+      this._groups().concat([
+        {
+          configurationId,
+          id: generateUniqueId(),
+          label: `Group ${this._groups().length + 1}`,
+          ordinal: this._groups().length,
+        },
+      ])
+    );
   }
 
   public updateConfiguration(
