@@ -1,10 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import {
-  Column,
-  ColumnSort,
-  Field,
-  StudentField,
-} from './models/classroom.models';
+import { Column, ColumnSort, Field } from './models/classroom.models';
 import {
   DEFAULT_CLASSROOMS,
   DEFAULT_COLUMNS,
@@ -388,6 +383,29 @@ export class ClassroomsService {
           sort: ColumnSort.NONE,
           ordinal: i,
         }))
+      )
+    );
+    const groupId = generateUniqueId();
+    this._groups.set(
+      this._groups().concat([
+        {
+          configurationId,
+          id: groupId,
+          label: 'Group 1',
+          ordinal: 0,
+        },
+      ])
+    );
+    this._studentGroups.set(
+      this._studentGroups().concat(
+        this._students()
+          .filter((student) => student.classroomId === classroomId)
+          .map((student) => ({
+            configurationId,
+            groupId,
+            id: generateUniqueId(),
+            studentId: student.id,
+          }))
       )
     );
     this._addedConfiguration$.next();
