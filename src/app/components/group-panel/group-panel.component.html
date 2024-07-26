@@ -1,4 +1,4 @@
-<div class="panel rounded-lg flex-col gap-y-2 px-4 pt-4 pb-2 shadow-lg">
+<div class="panel rounded-lg flex-col gap-y-2 p-2 shadow-lg">
   <div class="flex justify-between">
     <div class="flex gap-x-2">
       <div class="flex flex-col justify-around">
@@ -10,11 +10,15 @@
       </div>
 
       <div class="flex flex-col justify-around">
-        <h6 style="margin: 0">{{ group()?.label }}</h6>
+        <span class="text-xl">{{ group()?.label }}</span>
       </div>
     </div>
 
     <div class="flex gap-x-2">
+      <button mat-icon-button (click)="addStudent()">
+        <mat-icon>person_add</mat-icon>
+      </button>
+
       <div
         [matTooltip]="
           studentsInGroup().length > 0
@@ -74,18 +78,4 @@
     }
   </div>
   }
-
-  <div class="flex justify-start">
-    <div class="flex gap-x-2 text-sm">
-      <div class="flex flex-col justify-around">
-        <button mat-icon-button (click)="addStudent()">
-          <mat-icon>person_add</mat-icon>
-        </button>
-      </div>
-
-      <div class="flex flex-col justify-around">
-        <span> Add student </span>
-      </div>
-    </div>
-  </div>
 </div>
