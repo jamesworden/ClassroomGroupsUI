@@ -186,12 +186,14 @@ export class ClassroomsService {
   public readonly viewingStudents = computed(() => {
     const configurationId = this.viewingConfigurationId();
     const studentGroups = this.studentGroups();
+    const groupsById = this.groupsById();
+
     return this._students()
       .map((student) => {
         const studentGroup = studentGroups.find(
           (studentGroup) =>
-            studentGroup.configurationId === configurationId &&
-            studentGroup.studentId === student.id
+            groupsById[studentGroup.groupId].configurationId ===
+              configurationId && studentGroup.studentId === student.id
         );
         if (!studentGroup) {
           return undefined;

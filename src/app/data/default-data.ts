@@ -110,14 +110,12 @@ export const DEFAULT_GROUPS: Group[] = [
 export const DEFAULT_STUDENT_GROUPS: StudentGroup[] = [
   {
     id: 'student-group-1',
-    configurationId: 'configuration-id',
     groupId: 'group-id',
     studentId: 'jane-doe-id',
     ordinal: 0,
   },
   {
     id: 'student-group-2',
-    configurationId: 'configuration-id',
     groupId: 'group-id',
     studentId: 'john-smith-id',
     ordinal: 1,
