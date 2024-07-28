@@ -48,7 +48,6 @@ export enum ColumnSort {
 export interface Student {
   id: string;
   classroomId: string;
-  ordinal: number;
 }
 
 export interface StudentField {

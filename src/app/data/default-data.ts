@@ -23,12 +23,10 @@ export const DEFAULT_STUDENTS: Student[] = [
   {
     id: 'jane-doe-id',
     classroomId: 'classroom-id',
-    ordinal: 0,
   },
   {
     id: 'john-smith-id',
     classroomId: 'classroom-id',
-    ordinal: 1,
   },
 ];
 

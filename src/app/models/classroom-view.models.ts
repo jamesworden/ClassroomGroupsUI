@@ -12,6 +12,7 @@ import {
 export interface StudentViewModel extends Student {
   fields: StudentField[];
   groupId: string;
+  ordinal: number;
 }
 
 export interface ClassroomViewModel extends Classroom {}
