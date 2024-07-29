@@ -1,5 +1,10 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { Column, ColumnSort, Field } from './models/classroom.models';
+import {
+  Classroom,
+  Column,
+  ColumnSort,
+  Field,
+} from './models/classroom.models';
 import {
   DEFAULT_CLASSROOMS,
   DEFAULT_COLUMNS,
@@ -32,11 +37,26 @@ import {
   getStudentViewModel,
 } from './logic/get-view-models';
 import { Subject } from 'rxjs';
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from '@microsoft/signalr';
+
+enum MessageType {
+  ClassroomUpdated = 'ClassroomUpdated',
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClassroomsService {
+  private hubConnection: HubConnection = new HubConnectionBuilder()
+    .withUrl(`https://localhost:7192/classroom-groups`)
+    .withAutomaticReconnect()
+    .configureLogging(LogLevel.Information)
+    .build();
+
   private readonly _classrooms = signal(DEFAULT_CLASSROOMS);
   private readonly _students = signal(DEFAULT_STUDENTS);
   private readonly _configurations = signal(DEFAULT_CONFIGURATIONS);
@@ -51,6 +71,7 @@ export class ClassroomsService {
   private readonly _studentGroups = signal(DEFAULT_STUDENT_GROUPS);
   private readonly _addedClassroom$ = new Subject<void>();
   private readonly _addedConfiguration$ = new Subject<void>();
+  private readonly _isConnectedToServer = signal(false);
 
   public readonly addedClassroom$ = this._addedClassroom$.asObservable();
 
@@ -208,6 +229,10 @@ export class ClassroomsService {
       .filter((student) => !!student)
       .sort((a, b) => a.ordinal - b.ordinal);
   });
+
+  constructor() {
+    this.connectToServer();
+  }
 
   public deleteClassroom(classroomId: string) {
     this._classrooms.set(
@@ -446,5 +471,35 @@ export class ClassroomsService {
         return studentField;
       })
     );
+  }
+
+  public connectToServer() {
+    this.connectAndRegisterEvents();
+    this.registerServerEvents();
+  }
+
+  private connectAndRegisterEvents() {
+    this.hubConnection.start().then(
+      () => {
+        console.log('Connected to server.');
+        this._isConnectedToServer.set(true);
+      },
+      () => {
+        console.error('Unable to connect to server.');
+        this._isConnectedToServer.set(false);
+      }
+    );
+    this.hubConnection.onreconnecting(() => {
+      this._isConnectedToServer.set(false);
+    });
+    this.hubConnection.onreconnected(() => {
+      this._isConnectedToServer.set(true);
+    });
+  }
+
+  private registerServerEvents(): void {
+    this.hubConnection.on(MessageType.ClassroomUpdated, () => {
+      // TODO
+    });
   }
 }
