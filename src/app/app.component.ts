@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { AfterContentInit, Component, effect, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -82,7 +82,7 @@ interface ConfigPanelSettings {
   styleUrls: ['./app.component.scss'],
   providers: [ThemeService, ResizableService, ClassroomsService],
 })
-export class AppComponent {
+export class AppComponent implements AfterContentInit, OnDestroy {
   readonly #themeService = inject(ThemeService);
   readonly #resizableService = inject(ResizableService);
   readonly #matDialog = inject(MatDialog);
@@ -116,6 +116,7 @@ export class AppComponent {
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
   editingGroups: Group[] = [];
+  script: HTMLScriptElement | undefined
 
   constructor() {
     this.loadClassAndConfigPanelSettings();
@@ -144,6 +145,20 @@ export class AppComponent {
         JSON.stringify(this.configPanelSettings())
       );
     });
+  }
+
+  ngAfterContentInit() {
+    this.script = document.createElement('script');
+    this.script.src = 'https://accounts.google.com/gsi/client';
+    this.script.async = true;
+    this.script.defer = true;
+    document.body.appendChild(this.script);
+  }
+
+  ngOnDestroy() {
+    if (this.script) {
+      document.body.removeChild(this.script);
+    }
   }
 
   private loadClassAndConfigPanelSettings() {
