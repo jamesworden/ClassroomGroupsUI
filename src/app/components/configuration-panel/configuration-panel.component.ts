@@ -225,7 +225,7 @@ export class ConfigurationPanelComponent {
   }
 
   createGroup() {
-    this.#classroomsService.createGroup(this.viewingConfigurationId());
+    this.#classroomsService.createGroup(this.viewingConfigurationId() ?? '');
     this.#matSnackBar.open('Group created', 'Hide', {
       duration: 3000,
     });

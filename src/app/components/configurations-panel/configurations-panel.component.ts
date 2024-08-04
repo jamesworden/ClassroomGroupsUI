@@ -97,7 +97,7 @@ export class ConfigurationsPanelComponent {
       return;
     }
     this.#classroomsService.addConfiguration(
-      this.viewingClassroomId(),
+      this.viewingClassroomId() ?? '',
       this.addConfigurationLabel
     );
     this.addConfigurationLabel = '';

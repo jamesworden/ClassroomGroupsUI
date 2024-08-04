@@ -1,9 +1,14 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, effect, Injectable, signal } from '@angular/core';
 import {
   Classroom,
   Column,
   ColumnSort,
+  Configuration,
   Field,
+  Group,
+  Student,
+  StudentField,
+  StudentGroup,
 } from './models/classroom.models';
 import {
   DEFAULT_CLASSROOMS,
@@ -57,18 +62,22 @@ export class ClassroomsService {
     .configureLogging(LogLevel.Information)
     .build();
 
-  private readonly _classrooms = signal(DEFAULT_CLASSROOMS);
-  private readonly _students = signal(DEFAULT_STUDENTS);
-  private readonly _configurations = signal(DEFAULT_CONFIGURATIONS);
-  private readonly _columns = signal(DEFAULT_COLUMNS);
-  private readonly _fields = signal(DEFAULT_FIELDS);
-  private readonly _studentFields = signal(DEFAULT_STUDENT_FIELDS);
-  private readonly _groups = signal(DEFAULT_GROUPS);
-  private readonly _viewingClassroomId = signal(DEFAULT_CLASSROOMS[0].id);
-  private readonly _viewingConfigurationId = signal(
+  private readonly _classrooms = signal<Classroom[]>(DEFAULT_CLASSROOMS);
+  private readonly _students = signal<Student[]>([]);
+  private readonly _configurations = signal<Configuration[]>(
+    DEFAULT_CONFIGURATIONS
+  );
+  private readonly _columns = signal<Column[]>(DEFAULT_COLUMNS);
+  private readonly _fields = signal<Field[]>(DEFAULT_FIELDS);
+  private readonly _studentFields = signal<StudentField[]>([]);
+  private readonly _groups = signal<Group[]>([]);
+  private readonly _viewingClassroomId = signal<string | undefined>(
+    DEFAULT_CLASSROOMS[0].id
+  );
+  private readonly _viewingConfigurationId = signal<string | undefined>(
     DEFAULT_CONFIGURATIONS[0].id
   );
-  private readonly _studentGroups = signal(DEFAULT_STUDENT_GROUPS);
+  private readonly _studentGroups = signal<StudentGroup[]>([]);
   private readonly _addedClassroom$ = new Subject<void>();
   private readonly _addedConfiguration$ = new Subject<void>();
   private readonly _isConnectedToServer = signal(false);
@@ -164,7 +173,7 @@ export class ClassroomsService {
 
   public readonly viewingConfiguration = computed(() =>
     this.viewingConfigurationId()
-      ? this.configurationsById()[this.viewingConfigurationId()]
+      ? this.configurationsById()[this.viewingConfigurationId() ?? '']
       : undefined
   );
 
@@ -232,6 +241,12 @@ export class ClassroomsService {
 
   constructor() {
     this.connectToServer();
+
+    effect(() => {
+      const groups = this._groups();
+      // Persist to local storage
+      // If authenticated, WS bulk groups update to
+    });
   }
 
   public deleteClassroom(classroomId: string) {

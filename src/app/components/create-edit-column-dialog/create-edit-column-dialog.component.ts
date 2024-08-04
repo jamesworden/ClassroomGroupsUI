@@ -81,7 +81,7 @@ export class CreateEditColumnDialogComponent {
     id: '',
     label: '',
     type: FieldType.TEXT,
-    classroomId: this.viewingClassroomId(),
+    classroomId: this.viewingClassroomId() ?? '',
   };
 
   readonly saved = () =>
@@ -109,7 +109,7 @@ export class CreateEditColumnDialogComponent {
       id: fieldId,
       label: this.#data.existingData?.field?.label ?? '',
       type: this.#data.existingData?.field?.type ?? FieldType.TEXT,
-      classroomId: this.viewingClassroomId(),
+      classroomId: this.viewingClassroomId() ?? '',
     };
   }
 

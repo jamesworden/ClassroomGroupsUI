@@ -120,7 +120,6 @@ export class AppComponent {
   constructor() {
     this.loadClassAndConfigPanelSettings();
     this.loadConfigPanelSettings();
-    this.showUnderConstructionToast();
 
     effect(
       () =>
@@ -145,13 +144,6 @@ export class AppComponent {
         JSON.stringify(this.configPanelSettings())
       );
     });
-  }
-
-  private showUnderConstructionToast() {
-    this.#matSnackBar.open(
-      'Your changes will not be saved! This site is under construction.',
-      'Got it!'
-    );
   }
 
   private loadClassAndConfigPanelSettings() {
@@ -250,8 +242,14 @@ export class AppComponent {
       event.currentIndex
     );
     this.#classroomsService.updateGroups(
-      this.viewingConfigurationId(),
+      this.viewingConfigurationId() ?? '',
       this.editingGroups
     );
+  }
+
+  chooseFileToUpload() {
+    this.#matSnackBar.open('Under construction!', 'Hide', {
+      duration: 3000,
+    });
   }
 }
