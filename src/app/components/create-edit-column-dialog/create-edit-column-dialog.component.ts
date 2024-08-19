@@ -1,11 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import {
-  Column,
-  ColumnSort,
-  Field,
-  FieldType,
-} from '../../models/classroom.models';
-import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
@@ -18,9 +12,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { generateUniqueId } from '../../logic/generate-unique-id';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ClassroomsService } from '../../classrooms.service';
+import { ClassroomsService, Column, ColumnSort, Field, FieldType, generateUniqueId } from '@shared/classrooms';
 
 export interface CreateEditColumnDialogOutputs {
   column: Column;

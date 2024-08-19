@@ -79,7 +79,9 @@
           <section
             class="mx-4 border border-4 border-dashed border-gray-300 flex-1 flex flex-col justify-around"
           >
-            <div class="flex flex-col gap-y-4">
+            <div class="flex flex-col" [ngClass]="{
+              'gap-y-4': !isLoggedIn()
+            }">
               <div class="flex flex-col gap-y-1">
                 <div class="flex justify-around">
                   <h5 class="opacity-50" style="margin: 0">
@@ -94,7 +96,7 @@
 
               <div class="flex flex-col gap-y-2">
                 <div class="flex justify-around">
-                  @if (!isAuthenticated()) {
+                  @if (!isLoggedIn()) {
                     <div>
                       <div
                         id="g_id_onload"

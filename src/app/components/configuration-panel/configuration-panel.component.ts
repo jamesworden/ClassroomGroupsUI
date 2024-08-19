@@ -16,7 +16,6 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { Column, Field } from '../../models/classroom.models';
 import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
@@ -25,8 +24,8 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
-import { ClassroomsService } from '../../classrooms.service';
 import { CommonModule } from '@angular/common';
+import { ClassroomsService, Column } from '@shared/classrooms';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -89,8 +88,8 @@ export class ConfigurationPanelComponent {
   constructor() {
     effect(
       () =>
-        (this.updatedDescription =
-          this.viewingConfiguration()?.description ?? '')
+      (this.updatedDescription =
+        this.viewingConfiguration()?.description ?? '')
     );
     effect(
       () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
@@ -126,9 +125,8 @@ export class ConfigurationPanelComponent {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete configuration',
-        subtitle: `Are you sure you want to delete the configuration ${
-          this.viewingConfiguration()?.label
-        } and all of it's data?`,
+        subtitle: `Are you sure you want to delete the configuration ${this.viewingConfiguration()?.label
+          } and all of it's data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success) => {

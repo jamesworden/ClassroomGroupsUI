@@ -15,12 +15,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Configuration } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { ClassroomsService } from '../../classrooms.service';
+import { ClassroomsService, Configuration } from '@shared/classrooms';
 
 @Component({
   selector: 'app-configurations-panel',

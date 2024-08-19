@@ -14,11 +14,10 @@ import { MatInputModule } from '@angular/material/input';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Classroom } from '../../models/classroom.models';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ClassroomsService } from '../../classrooms.service';
+import { Classroom, ClassroomsService } from '@shared/classrooms';
 
 @Component({
   selector: 'app-classrooms-panel',

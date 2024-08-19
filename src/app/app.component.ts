@@ -24,10 +24,8 @@ import {
   YesNoDialogComponent,
   YesNoDialogInputs,
 } from './components/yes-no-dialog/yes-no-dialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ClassroomsService } from './classrooms.service';
+import { MatSnackBar } from '@angular/material/snack-bar'
 import { GroupPanelComponent } from './components/group-panel/group-panel.component';
-import { Group } from './models/classroom.models';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -35,7 +33,8 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { AuthService } from './auth.service';
+import { ClassroomsService, Group } from '@shared/classrooms';
+import { AccountsService } from '@shared/accounts';
 
 enum StorageKeys {
   CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
@@ -89,7 +88,7 @@ export class AppComponent implements AfterContentInit, OnDestroy {
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #authService = inject(AuthService)
+  readonly #accountsService = inject(AccountsService)
 
   readonly classrooms = this.#classroomsService.classrooms;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
@@ -100,7 +99,7 @@ export class AppComponent implements AfterContentInit, OnDestroy {
   readonly viewingGroups = this.#classroomsService.viewingGroups;
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
-  readonly isAuthenticated = this.#authService.isAuthenticated;
+  readonly isLoggedIn = this.#accountsService.isLoggedIn;
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);

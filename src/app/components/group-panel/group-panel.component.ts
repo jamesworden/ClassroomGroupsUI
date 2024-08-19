@@ -7,11 +7,9 @@ import {
   input,
   ViewChild,
 } from '@angular/core';
-import { Group, Student, StudentField } from '../../models/classroom.models';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
-import { ClassroomsService } from '../../classrooms.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
@@ -22,10 +20,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  StudentGroupViewModel,
-  StudentViewModel,
-} from '../../models/classroom-view.models';
+import { ClassroomsService, Group, Student, StudentField, StudentViewModel } from '@shared/classrooms';
 
 @Component({
   selector: 'app-group-panel',
@@ -84,7 +79,7 @@ export class GroupPanelComponent {
     });
   }
 
-  addStudent() {}
+  addStudent() { }
 
   deleteGroup() {
     // if (this.studentsInGroup().length > 0) {
