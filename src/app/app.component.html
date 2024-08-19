@@ -94,26 +94,28 @@
 
               <div class="flex flex-col gap-y-2">
                 <div class="flex justify-around">
-                  <div>
-                    <div
-                      id="g_id_onload"
-                      data-client_id="379282615975-blkaldtgv9vuieo7hc2gmttkl2nb5983.apps.googleusercontent.com"
-                      data-context="signin"
-                      data-ux_mode="popup"
-                      data-login_uri="https://localhost:7192/classroom-groups/api/v1/login/google"
-                      data-redirecturi="https://localhost:4200/"
-                      data-auto_prompt="false"
-                    ></div>
-                    <div
-                      class="g_id_signin"
-                      data-type="standard"
-                      data-shape="rectangular"
-                      data-theme="outline"
-                      data-text="signin_with"
-                      data-size="large"
-                      data-logo_alignment="left"
-                    ></div>
-                  </div>
+                  @if (!isAuthenticated()) {
+                    <div>
+                      <div
+                        id="g_id_onload"
+                        data-client_id="379282615975-blkaldtgv9vuieo7hc2gmttkl2nb5983.apps.googleusercontent.com"
+                        data-context="signin"
+                        data-ux_mode="popup"
+                        data-login_uri="https://localhost:7192/classroom-groups/api/v1/authentication/login-with-google"
+                        data-redirecturi="https://localhost:4200/"
+                        data-auto_prompt="false"
+                      ></div>
+                      <div
+                        class="g_id_signin"
+                        data-type="standard"
+                        data-shape="rectangular"
+                        data-theme="outline"
+                        data-text="signin_with"
+                        data-size="large"
+                        data-logo_alignment="left"
+                      ></div>
+                    </div>
+                  }
                 </div>
 
                 <div class="flex justify-around">

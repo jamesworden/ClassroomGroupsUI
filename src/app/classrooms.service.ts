@@ -15,10 +15,6 @@ import {
   DEFAULT_COLUMNS,
   DEFAULT_CONFIGURATIONS,
   DEFAULT_FIELDS,
-  DEFAULT_GROUPS,
-  DEFAULT_STUDENT_FIELDS,
-  DEFAULT_STUDENT_GROUPS,
-  DEFAULT_STUDENTS,
 } from './data/default-data';
 import { generateUniqueId } from './logic/generate-unique-id';
 import {
@@ -42,26 +38,12 @@ import {
   getStudentViewModel,
 } from './logic/get-view-models';
 import { Subject } from 'rxjs';
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  LogLevel,
-} from '@microsoft/signalr';
 
-enum MessageType {
-  ClassroomUpdated = 'ClassroomUpdated',
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClassroomsService {
-  private hubConnection: HubConnection = new HubConnectionBuilder()
-    .withUrl(`https://localhost:7192/classroom-groups`)
-    .withAutomaticReconnect()
-    .configureLogging(LogLevel.Information)
-    .build();
-
   private readonly _classrooms = signal<Classroom[]>(DEFAULT_CLASSROOMS);
   private readonly _students = signal<Student[]>([]);
   private readonly _configurations = signal<Configuration[]>(
@@ -80,7 +62,6 @@ export class ClassroomsService {
   private readonly _studentGroups = signal<StudentGroup[]>([]);
   private readonly _addedClassroom$ = new Subject<void>();
   private readonly _addedConfiguration$ = new Subject<void>();
-  private readonly _isConnectedToServer = signal(false);
 
   public readonly addedClassroom$ = this._addedClassroom$.asObservable();
 
@@ -223,7 +204,7 @@ export class ClassroomsService {
         const studentGroup = studentGroups.find(
           (studentGroup) =>
             groupsById[studentGroup.groupId].configurationId ===
-              configurationId && studentGroup.studentId === student.id
+            configurationId && studentGroup.studentId === student.id
         );
         if (!studentGroup) {
           return undefined;
@@ -238,16 +219,6 @@ export class ClassroomsService {
       .filter((student) => !!student)
       .sort((a, b) => a.ordinal - b.ordinal);
   });
-
-  constructor() {
-    this.connectToServer();
-
-    effect(() => {
-      const groups = this._groups();
-      // Persist to local storage
-      // If authenticated, WS bulk groups update to
-    });
-  }
 
   public deleteClassroom(classroomId: string) {
     this._classrooms.set(
@@ -486,35 +457,5 @@ export class ClassroomsService {
         return studentField;
       })
     );
-  }
-
-  public connectToServer() {
-    this.connectAndRegisterEvents();
-    this.registerServerEvents();
-  }
-
-  private connectAndRegisterEvents() {
-    this.hubConnection.start().then(
-      () => {
-        console.log('Connected to server.');
-        this._isConnectedToServer.set(true);
-      },
-      () => {
-        console.error('Unable to connect to server.');
-        this._isConnectedToServer.set(false);
-      }
-    );
-    this.hubConnection.onreconnecting(() => {
-      this._isConnectedToServer.set(false);
-    });
-    this.hubConnection.onreconnected(() => {
-      this._isConnectedToServer.set(true);
-    });
-  }
-
-  private registerServerEvents(): void {
-    this.hubConnection.on(MessageType.ClassroomUpdated, () => {
-      // TODO
-    });
   }
 }

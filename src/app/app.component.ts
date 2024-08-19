@@ -35,6 +35,7 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { AuthService } from './auth.service';
 
 enum StorageKeys {
   CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
@@ -88,6 +89,7 @@ export class AppComponent implements AfterContentInit, OnDestroy {
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #authService = inject(AuthService)
 
   readonly classrooms = this.#classroomsService.classrooms;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
@@ -98,6 +100,7 @@ export class AppComponent implements AfterContentInit, OnDestroy {
   readonly viewingGroups = this.#classroomsService.viewingGroups;
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
+  readonly isAuthenticated = this.#authService.isAuthenticated;
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -124,8 +127,8 @@ export class AppComponent implements AfterContentInit, OnDestroy {
 
     effect(
       () =>
-        (this.updatedClassroomDescription =
-          this.viewingClassroom()?.description ?? '')
+      (this.updatedClassroomDescription =
+        this.viewingClassroom()?.description ?? '')
     );
     effect(
       () => (this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '')
@@ -202,9 +205,8 @@ export class AppComponent implements AfterContentInit, OnDestroy {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete the classroom ${
-          this.viewingClassroom()?.label
-        } and all of it's data?`,
+        subtitle: `Are you sure you want to delete the classroom ${this.viewingClassroom()?.label
+          } and all of it's data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success) => {
