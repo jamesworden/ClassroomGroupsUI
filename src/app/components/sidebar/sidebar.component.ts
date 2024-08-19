@@ -31,7 +31,7 @@ export class SidebarComponent {
 
   openUnderConstructionToastMessage() {
     console.log('test')
-    return this.#httpClient.post('https://localhost:7192/classroom-groups/api/v1/authentication/logout', {
+    return this.#httpClient.post('/api/v1/authentication/logout', {
       withCredentials: true,  // This is crucial to send cookies
     }).subscribe((x) => {
       console.log(x)

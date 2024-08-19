@@ -21,7 +21,7 @@ export class AuthService {
                 console.log(authToken)
                 this._authToken.set(authToken)
             }
-        }, 1000)
+        }, 3000)
 
     }
 

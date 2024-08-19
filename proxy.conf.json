@@ -1,0 +1,6 @@
+{
+    "/api": {
+        "target": "https://localhost:7192/classroom-groups",
+        "secure": false
+    }
+}
