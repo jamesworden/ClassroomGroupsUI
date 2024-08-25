@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, effect, inject, OnDestroy, signal } from '@angular/core';
+import { AfterContentInit, Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +35,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ClassroomsService, Group } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
+import { HttpClientModule } from '@angular/common/http';
 
 enum StorageKeys {
   CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
@@ -77,10 +78,11 @@ interface ConfigPanelSettings {
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
+    HttpClientModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [ThemeService, ResizableService, ClassroomsService],
+  providers: [ThemeService, ResizableService, ClassroomsService, AccountsService],
 })
 export class AppComponent implements AfterContentInit, OnDestroy {
   readonly #themeService = inject(ThemeService);
@@ -121,6 +123,8 @@ export class AppComponent implements AfterContentInit, OnDestroy {
   script: HTMLScriptElement | undefined
 
   constructor() {
+    this.#accountsService.getAccount()
+
     this.loadClassAndConfigPanelSettings();
     this.loadConfigPanelSettings();
 

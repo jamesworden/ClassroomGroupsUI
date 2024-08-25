@@ -1,27 +1,28 @@
 import { Component, inject, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ThemeService } from '../../themes/theme.service';
 import { Themes } from '../../themes/theme.models';
 import { MatButtonModule } from '@angular/material/button';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { map } from 'rxjs';
+import { MatMenuModule } from '@angular/material/menu';
+import { AccountsService } from '@shared/accounts';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [MatIconModule, MatSnackBarModule, MatButtonModule, HttpClientModule],
+  imports: [MatIconModule, MatSnackBarModule, MatButtonModule, MatMenuModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
   readonly #themeService = inject(ThemeService);
-  readonly #matSnackBar = inject(MatSnackBar);
-  readonly #httpClient = inject(HttpClient)
+  readonly #accountsService = inject(AccountsService)
 
   readonly toggledClassAndConfigPanel = output();
 
-  readonly themeSignal = this.#themeService.theme;
+  readonly theme = this.#themeService.theme;
+  readonly isLoggedIn = this.#accountsService.isLoggedIn;
+  readonly account = this.#accountsService.account;
 
   readonly Themes = Themes;
 
@@ -29,16 +30,11 @@ export class SidebarComponent {
     this.#themeService.toggleTheme();
   }
 
-  openUnderConstructionToastMessage() {
-    console.log('test')
-    return this.#httpClient.post('/api/v1/authentication/logout', {
-      withCredentials: true,  // This is crucial to send cookies
-    }).subscribe((x) => {
-      console.log(x)
-    })
-  }
-
   toggleClassAndConfigPanel() {
     this.toggledClassAndConfigPanel.emit();
+  }
+
+  logout() {
+    this.#accountsService.logout()
   }
 }
