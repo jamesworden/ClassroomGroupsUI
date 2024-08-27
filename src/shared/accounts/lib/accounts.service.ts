@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { computed, inject, Injectable, signal } from "@angular/core";
-import { catchError, map, Observable, throwError } from "rxjs";
+import { catchError, finalize, map, Observable, of, tap, throwError } from "rxjs";
 import { Account } from "./models";
 
 @Injectable({
@@ -8,6 +8,9 @@ import { Account } from "./models";
 })
 export class AccountsService {
     readonly #httpClient = inject(HttpClient)
+
+    private _accountLoading = signal(true)
+    public accountLoading = this._accountLoading.asReadonly()
 
     private _account = signal<Account | undefined>(undefined)
     public account = this._account.asReadonly();
@@ -17,11 +20,25 @@ export class AccountsService {
     getAccount() {
         return this.#httpClient.get<Account>('/api/v1/authentication/get-account', {
             withCredentials: true
-        }).subscribe((account) => {
-            this._account.set(account)
-            console.log(account)
-            return account
-        })
+        }).pipe(
+            tap(() => {
+                this._accountLoading.set(true);
+            }),
+            catchError((error: HttpErrorResponse) => {
+                if (error.status !== 403) {
+                    console.error('Error fetching account:', error);
+                }
+                return of(null);
+            }),
+            finalize(() => {
+                this._accountLoading.set(false);
+            })
+        ).subscribe((account) => {
+            if (account) {
+                this._account.set(account);
+                console.log('[Logged In]', account);
+            }
+        });
     }
 
     logout() {

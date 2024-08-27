@@ -102,6 +102,7 @@ export class AppComponent implements AfterContentInit, OnDestroy {
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
   readonly isLoggedIn = this.#accountsService.isLoggedIn;
+  readonly accountLoading = this.#accountsService.accountLoading
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
