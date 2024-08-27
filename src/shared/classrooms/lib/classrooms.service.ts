@@ -1,6 +1,7 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import {
     Classroom,
+    ClassroomDetails,
     Column,
     Configuration,
     Field,
@@ -13,11 +14,14 @@ import { Subject } from 'rxjs';
 import { DEFAULT_CLASSROOMS, DEFAULT_COLUMNS, DEFAULT_CONFIGURATIONS, DEFAULT_FIELDS } from './example-data';
 import { ClassroomViewModel, ColumnViewModel, ConfigurationViewModel, FieldViewModel, GroupViewModel, StudentFieldViewModel, StudentGroupViewModel } from './view-models';
 import { getClassroomViewModel, getColumnViewModel, getConfigurationViewModel, getFieldViewModel, getGroupViewModels, getStudentFieldViewModel, getStudentGroupViewModel, getStudentViewModel } from './logic/get-view-models';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ClassroomsService {
+    readonly #httpClient = inject(HttpClient)
+
     private readonly _classrooms = signal<Classroom[]>(DEFAULT_CLASSROOMS);
     private readonly _students = signal<Student[]>([]);
     private readonly _configurations = signal<Configuration[]>(
@@ -431,5 +435,29 @@ export class ClassroomsService {
                 return studentField;
             })
         );
+    }
+
+    public getClassroomsDetails() {
+        return this.#httpClient.get<ClassroomDetails>('/api/v1/classroom-details', {
+            withCredentials: true,
+        }).subscribe(({
+            classrooms,
+            columns,
+            configurations,
+            fields,
+            groups,
+            studentFields,
+            studentGroups,
+            students
+        }) => {
+            this._classrooms.set(classrooms)
+            this._columns.set(columns)
+            this._configurations.set(configurations)
+            this._fields.set(fields)
+            this._groups.set(groups)
+            this._studentFields.set(studentFields)
+            this._studentGroups.set(studentGroups)
+            this._students.set(students)
+        })
     }
 }

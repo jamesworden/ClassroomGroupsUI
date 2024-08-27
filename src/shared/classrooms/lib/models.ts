@@ -62,3 +62,14 @@ export interface StudentGroup {
     groupId: string;
     ordinal: number;
 }
+
+export interface ClassroomDetails {
+    classrooms: Classroom[]
+    students: Student[]
+    fields: Field[]
+    configurations: Configuration[]
+    studentGroups: StudentGroup[]
+    columns: Column[]
+    studentFields: StudentField[]
+    groups: Group[]
+}

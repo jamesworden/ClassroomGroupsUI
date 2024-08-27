@@ -153,6 +153,7 @@ export class AppComponent {
         JSON.stringify(this.configPanelSettings())
       );
     });
+    effect(() => this.isLoggedIn() && this.#classroomsService.getClassroomsDetails())
   }
 
   private loadClassAndConfigPanelSettings() {
