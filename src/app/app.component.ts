@@ -151,9 +151,14 @@ export class AppComponent implements AfterContentInit, OnDestroy {
         JSON.stringify(this.configPanelSettings())
       );
     });
+    effect(() => !this.#accountsService.isLoggedIn() && this.initSignInWithGoogleButton())
   }
 
   ngAfterContentInit() {
+    this.initSignInWithGoogleButton()
+  }
+
+  initSignInWithGoogleButton() {
     this.script = document.createElement('script');
     this.script.src = 'https://accounts.google.com/gsi/client';
     this.script.async = true;
