@@ -14,21 +14,14 @@ export class AccountsService {
 
     public isLoggedIn = computed(() => !!this._account())
 
-    getAccount(): Observable<Account> {
+    getAccount() {
         return this.#httpClient.get<Account>('/api/v1/authentication/get-account', {
             withCredentials: true
-        }).pipe(
-            map((account) => {
-                this._account.set(account)
-                return account
-            }),
-            catchError((error: HttpErrorResponse) => {
-                if (error.status === 403) {
-                    this._account.set(undefined);
-                }
-                return throwError(() => error)
-            })
-        )
+        }).subscribe((account) => {
+            this._account.set(account)
+            console.log(account)
+            return account
+        })
     }
 
     logout() {
