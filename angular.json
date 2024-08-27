@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
+  "newProjectRoot": "src/shared",
   "projects": {
     "classroom-groups": {
       "projectType": "application",
@@ -86,6 +86,39 @@
               "@angular/material/prebuilt-themes/rose-red.css"
             ],
             "scripts": []
+          }
+        }
+      }
+    },
+    "ui-inputs": {
+      "projectType": "library",
+      "root": "src/shared/ui-inputs",
+      "sourceRoot": "src/shared/ui-inputs/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "src/shared/ui-inputs/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "src/shared/ui-inputs/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "src/shared/ui-inputs/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "src/shared/ui-inputs/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
           }
         }
       }

@@ -5,7 +5,12 @@
     "baseUrl": "src",
     "paths": {
       "@shared/accounts": ["shared/accounts"],
-      "@shared/classrooms": ["shared/classrooms"]
+      "@shared/classrooms": [
+        "shared/classrooms"
+      ],
+      "@ui-inputs": [
+        "shared/ui-inputs/src/public-api"
+      ]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

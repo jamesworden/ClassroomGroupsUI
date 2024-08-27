@@ -6,11 +6,12 @@ import { Themes } from '../../themes/theme.models';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { AccountsService } from '@shared/accounts';
+import { GoogleSignInButtonComponent } from '@ui-inputs';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [MatIconModule, MatSnackBarModule, MatButtonModule, MatMenuModule],
+  imports: [MatIconModule, MatSnackBarModule, MatButtonModule, MatMenuModule, GoogleSignInButtonComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })

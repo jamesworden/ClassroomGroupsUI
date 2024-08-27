@@ -36,6 +36,7 @@ import {
 import { ClassroomsService, Group } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { HttpClientModule } from '@angular/common/http';
+import { GoogleSignInButtonComponent } from '@ui-inputs';
 
 enum StorageKeys {
   CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
@@ -78,13 +79,14 @@ interface ConfigPanelSettings {
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    HttpClientModule
+    HttpClientModule,
+    GoogleSignInButtonComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [ThemeService, ResizableService, ClassroomsService, AccountsService],
 })
-export class AppComponent implements AfterContentInit, OnDestroy {
+export class AppComponent {
   readonly #themeService = inject(ThemeService);
   readonly #resizableService = inject(ResizableService);
   readonly #matDialog = inject(MatDialog);
@@ -121,7 +123,6 @@ export class AppComponent implements AfterContentInit, OnDestroy {
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
   editingGroups: Group[] = [];
-  script: HTMLScriptElement | undefined
 
   constructor() {
     this.#accountsService.getAccount()
@@ -152,25 +153,6 @@ export class AppComponent implements AfterContentInit, OnDestroy {
         JSON.stringify(this.configPanelSettings())
       );
     });
-    effect(() => !this.#accountsService.isLoggedIn() && this.initSignInWithGoogleButton())
-  }
-
-  ngAfterContentInit() {
-    this.initSignInWithGoogleButton()
-  }
-
-  initSignInWithGoogleButton() {
-    this.script = document.createElement('script');
-    this.script.src = 'https://accounts.google.com/gsi/client';
-    this.script.async = true;
-    this.script.defer = true;
-    document.body.appendChild(this.script);
-  }
-
-  ngOnDestroy() {
-    if (this.script) {
-      document.body.removeChild(this.script);
-    }
   }
 
   private loadClassAndConfigPanelSettings() {
