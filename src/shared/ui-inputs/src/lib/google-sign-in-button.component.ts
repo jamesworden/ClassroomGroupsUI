@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, input, OnDestroy } from '@angular/core';
+import { AfterContentInit, Component, effect, input, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-google-sign-in-button',
@@ -25,22 +25,36 @@ import { AfterContentInit, Component, input, OnDestroy } from '@angular/core';
     ></div>
   `,
 })
-export class GoogleSignInButtonComponent implements AfterContentInit, OnDestroy {
+export class GoogleSignInButtonComponent implements OnDestroy {
   dataSize = input('large')
+  isVisible = input(true)
 
   script: HTMLScriptElement | undefined
 
-  ngAfterContentInit() {
+  constructor() {
+    effect(() => {
+      if (this.isVisible()) {
+        this.removeScriptIfExists()
+        this.addScript()
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.removeScriptIfExists()
+  }
+
+  removeScriptIfExists() {
+    if (this.script) {
+      document.body.removeChild(this.script);
+    }
+  }
+
+  addScript() {
     this.script = document.createElement('script');
     this.script.src = 'https://accounts.google.com/gsi/client';
     this.script.async = true;
     this.script.defer = true;
     document.body.appendChild(this.script);
-  }
-
-  ngOnDestroy() {
-    if (this.script) {
-      document.body.removeChild(this.script);
-    }
   }
 }

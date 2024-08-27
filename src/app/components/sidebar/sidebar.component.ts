@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ThemeService } from '../../themes/theme.service';
@@ -26,6 +26,7 @@ export class SidebarComponent {
   readonly account = this.#accountsService.account;
 
   readonly Themes = Themes;
+  readonly menuIsOpen = signal(false)
 
   toggleTheme() {
     this.#themeService.toggleTheme();
@@ -37,5 +38,13 @@ export class SidebarComponent {
 
   logout() {
     this.#accountsService.logout()
+  }
+
+  markMenuAsOpen() {
+    this.menuIsOpen.set(true)
+  }
+
+  markMenuAsClosed() {
+    this.menuIsOpen.set(false)
   }
 }
