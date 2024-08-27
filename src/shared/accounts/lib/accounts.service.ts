@@ -27,6 +27,8 @@ export class AccountsService {
     logout() {
         return this.#httpClient.post('/api/v1/authentication/logout', {
             withCredentials: true,
+        }).subscribe(() => {
+            this._account.set(undefined)
         })
     }
 }
