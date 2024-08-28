@@ -440,24 +440,16 @@ export class ClassroomsService {
     public getClassroomsDetails() {
         return this.#httpClient.get<ClassroomDetails>('/api/v1/classrooms/classroom-details', {
             withCredentials: true,
-        }).subscribe(({
-            classrooms,
-            columns,
-            configurations,
-            fields,
-            groups,
-            studentFields,
-            studentGroups,
-            students
-        }) => {
-            this._classrooms.set(classrooms)
-            this._columns.set(columns)
-            this._configurations.set(configurations)
-            this._fields.set(fields)
-            this._groups.set(groups)
-            this._studentFields.set(studentFields)
-            this._studentGroups.set(studentGroups)
-            this._students.set(students)
+        }).subscribe((classroomDetails) => {
+            console.log('[Classroom Details]', classroomDetails)
+            this._classrooms.set(classroomDetails.classrooms)
+            this._columns.set(classroomDetails.columns)
+            this._configurations.set(classroomDetails.configurations)
+            this._fields.set(classroomDetails.fields)
+            this._groups.set(classroomDetails.groups)
+            this._studentFields.set(classroomDetails.studentFields)
+            this._studentGroups.set(classroomDetails.studentGroups)
+            this._students.set(classroomDetails.students)
         })
     }
 }
