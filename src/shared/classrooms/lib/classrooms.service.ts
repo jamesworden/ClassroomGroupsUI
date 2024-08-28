@@ -438,7 +438,7 @@ export class ClassroomsService {
     }
 
     public getClassroomsDetails() {
-        return this.#httpClient.get<ClassroomDetails>('/api/v1/classroom-details', {
+        return this.#httpClient.get<ClassroomDetails>('/api/v1/classrooms/classroom-details', {
             withCredentials: true,
         }).subscribe(({
             classrooms,
