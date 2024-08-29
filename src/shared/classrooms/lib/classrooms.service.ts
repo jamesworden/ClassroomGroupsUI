@@ -15,6 +15,7 @@ import { DEFAULT_CLASSROOMS, DEFAULT_COLUMNS, DEFAULT_CONFIGURATIONS, DEFAULT_FI
 import { ClassroomViewModel, ColumnViewModel, ConfigurationViewModel, FieldViewModel, GroupViewModel, StudentFieldViewModel, StudentGroupViewModel } from './view-models';
 import { getClassroomViewModel, getColumnViewModel, getConfigurationViewModel, getFieldViewModel, getGroupViewModels, getStudentFieldViewModel, getStudentGroupViewModel, getStudentViewModel } from './logic/get-view-models';
 import { HttpClient } from '@angular/common/http';
+import { CreateClassroomResponse } from './responses';
 
 @Injectable({
     providedIn: 'root',
@@ -318,41 +319,15 @@ export class ClassroomsService {
         );
     }
 
-    public addClassroom(label: string) {
-        // const classroomId = generateUniqueId();
-        // this._classrooms.set(
-        //     this._classrooms().concat([
-        //         {
-        //             id: classroomId,
-        //             label,
-        //             description: '',
-        //         },
-        //     ])
-        // );
-        // const configurations = this._configurations();
-        // const configurationId = generateUniqueId();
-        // this._configurations.set(
-        //     configurations.concat([
-        //         {
-        //             classroomId: classroomId,
-        //             id: configurationId,
-        //             label: `Configuration ${configurations.length}`,
-        //         },
-        //     ])
-        // );
-        // this._columns.set(
-        //     this._columns().concat(
-        //         this.viewingFieldIds().map((fieldId, i) => ({
-        //             configurationId,
-        //             enabled: true,
-        //             fieldId,
-        //             id: generateUniqueId(),
-        //             sort: ColumnSort.NONE,
-        //             ordinal: i,
-        //         }))
-        //     )
-        // );
-        // this._addedClassroom$.next();
+    public createClassroom(label: string) {
+        return this.#httpClient.post<CreateClassroomResponse>('/api/v1/classrooms', { label }, {
+            withCredentials: true,
+        }).subscribe(({ createdClassroom, createdConfiguration }) => {
+            console.log('[Created Classroom]', createdClassroom)
+            console.log('[Created Configuration]', createdConfiguration)
+            this._classrooms.set(this.classrooms().concat(createdClassroom))
+            this._classrooms.set(this.configurations().concat(createdConfiguration))
+        })
     }
 
     public viewClassroom(classroomId: string) {

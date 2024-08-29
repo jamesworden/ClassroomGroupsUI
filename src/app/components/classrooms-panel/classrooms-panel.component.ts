@@ -89,7 +89,7 @@ export class ClassroomsPanelComponent {
       );
       return;
     }
-    this.#classroomsService.addClassroom(this.addClassroomLabel);
+    this.#classroomsService.createClassroom(this.addClassroomLabel);
     this.addClassroomLabel = '';
   }
 }
