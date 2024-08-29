@@ -1,6 +1,11 @@
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,9 +26,15 @@ import { ConfigurationPanelComponent } from 'app/components/configuration-panel/
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
 import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
 import { SidebarComponent } from 'app/components/sidebar/sidebar.component';
-import { YesNoDialogComponent, YesNoDialogInputs } from 'app/components/yes-no-dialog/yes-no-dialog.component';
+import {
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from 'app/components/yes-no-dialog/yes-no-dialog.component';
 import { ResizableService } from 'app/directives/resizable.service';
-import { ResizableSide, ResizeableDirective } from 'app/directives/resizeable.directive';
+import {
+  ResizableSide,
+  ResizeableDirective,
+} from 'app/directives/resizeable.directive';
 import { ThemeService } from 'app/themes/theme.service';
 
 enum StorageKeys {
@@ -67,12 +78,16 @@ interface ConfigPanelSettings {
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    HttpClientModule,
-    GoogleSignInButtonComponent
+    GoogleSignInButtonComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
-  providers: [ThemeService, ResizableService, ClassroomsService, AccountsService],
+  providers: [
+    ThemeService,
+    ResizableService,
+    ClassroomsService,
+    AccountsService,
+  ],
 })
 export class ClassroomViewComponent {
   readonly #themeService = inject(ThemeService);
@@ -80,7 +95,7 @@ export class ClassroomViewComponent {
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #accountsService = inject(AccountsService)
+  readonly #accountsService = inject(AccountsService);
 
   readonly classrooms = this.#classroomsService.classrooms;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
@@ -92,7 +107,7 @@ export class ClassroomViewComponent {
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
   readonly isLoggedIn = this.#accountsService.isLoggedIn;
-  readonly accountLoading = this.#accountsService.accountLoading
+  readonly accountLoading = this.#accountsService.accountLoading;
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -113,15 +128,15 @@ export class ClassroomViewComponent {
   editingGroups: Group[] = [];
 
   constructor() {
-    this.#accountsService.getAccount()
+    this.#accountsService.getAccount();
 
     this.loadClassAndConfigPanelSettings();
     this.loadConfigPanelSettings();
 
     effect(
       () =>
-      (this.updatedClassroomDescription =
-        this.viewingClassroom()?.description ?? '')
+        (this.updatedClassroomDescription =
+          this.viewingClassroom()?.description ?? '')
     );
     effect(
       () => (this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '')
@@ -141,15 +156,6 @@ export class ClassroomViewComponent {
         JSON.stringify(this.configPanelSettings())
       );
     });
-    effect(() => {
-      if (this.#accountsService.isLoggedIn()) {
-        this.#classroomsService.getClassroomsDetails()
-      } else {
-        this.#classroomsService.reset()
-      }
-    }, {
-      allowSignalWrites: true
-    })
   }
 
   private loadClassAndConfigPanelSettings() {
@@ -193,8 +199,9 @@ export class ClassroomViewComponent {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete the classroom ${this.viewingClassroom()?.label
-          } and all of it's data?`,
+        subtitle: `Are you sure you want to delete the classroom ${
+          this.viewingClassroom()?.label
+        } and all of it's data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success) => {

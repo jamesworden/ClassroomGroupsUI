@@ -9,13 +9,10 @@ export const routes: Routes = [
   {
     path: 'classrooms',
     component: ClassroomsViewComponent,
-    children: [
-      {
-        path: ':classroomId',
-        component: ClassroomViewComponent,
-      },
-    ],
   },
-
+  {
+    path: 'classrooms/:id',
+    component: ClassroomViewComponent,
+  },
   { path: '**', component: PageNotFoundViewComponent },
 ];
