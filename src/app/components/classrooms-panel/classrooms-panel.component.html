@@ -35,14 +35,16 @@
       }
     </mat-action-list>
 
-    <div class="ml-4 flex gap-x-2 mb-2">
-      <button
-        [disabled]="!addClassroomLabel"
+    <div class="ml-4 flex gap-x-2 mb-2" >
+      <div [matTooltip]="isLoggedIn() ? '' : 'You must be logged in!'"> 
+        <button
+        [disabled]="!addClassroomLabel || !isLoggedIn()"
         mat-icon-button
         (click)="addClassroom()"
       >
         <mat-icon>add</mat-icon>
       </button>
+      </div>
       <input
         type="text"
         [(ngModel)]="addClassroomLabel"

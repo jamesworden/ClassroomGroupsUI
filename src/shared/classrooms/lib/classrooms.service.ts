@@ -11,11 +11,10 @@ import {
     StudentGroup,
 } from './models';
 import { Subject } from 'rxjs';
-import { DEFAULT_CLASSROOMS, DEFAULT_COLUMNS, DEFAULT_CONFIGURATIONS, DEFAULT_FIELDS } from './example-data';
 import { ClassroomViewModel, ColumnViewModel, ConfigurationViewModel, FieldViewModel, GroupViewModel, StudentFieldViewModel, StudentGroupViewModel } from './view-models';
 import { getClassroomViewModel, getColumnViewModel, getConfigurationViewModel, getFieldViewModel, getGroupViewModels, getStudentFieldViewModel, getStudentGroupViewModel, getStudentViewModel } from './logic/get-view-models';
 import { HttpClient } from '@angular/common/http';
-import { CreateClassroomResponse } from './responses';
+import { CreateClassroomResponse, DeleteClassroomResponse } from './responses';
 
 @Injectable({
     providedIn: 'root',
@@ -23,20 +22,18 @@ import { CreateClassroomResponse } from './responses';
 export class ClassroomsService {
     readonly #httpClient = inject(HttpClient)
 
-    private readonly _classrooms = signal<Classroom[]>(DEFAULT_CLASSROOMS);
+    private readonly _classrooms = signal<Classroom[]>([]);
     private readonly _students = signal<Student[]>([]);
-    private readonly _configurations = signal<Configuration[]>(
-        DEFAULT_CONFIGURATIONS
-    );
-    private readonly _columns = signal<Column[]>(DEFAULT_COLUMNS);
-    private readonly _fields = signal<Field[]>(DEFAULT_FIELDS);
+    private readonly _configurations = signal<Configuration[]>([]);
+    private readonly _columns = signal<Column[]>([]);
+    private readonly _fields = signal<Field[]>([]);
     private readonly _studentFields = signal<StudentField[]>([]);
     private readonly _groups = signal<Group[]>([]);
     private readonly _viewingClassroomId = signal<string | undefined>(
-        DEFAULT_CLASSROOMS[0].id
+        undefined
     );
     private readonly _viewingConfigurationId = signal<string | undefined>(
-        DEFAULT_CONFIGURATIONS[0].id
+        undefined
     );
     private readonly _studentGroups = signal<StudentGroup[]>([]);
     private readonly _addedClassroom$ = new Subject<void>();
@@ -200,9 +197,18 @@ export class ClassroomsService {
     });
 
     public deleteClassroom(classroomId: string) {
-        this._classrooms.set(
-            this._classrooms().filter(({ id }) => classroomId !== id)
-        );
+        return this.#httpClient.delete<DeleteClassroomResponse>('/api/v1/classrooms', {
+            withCredentials: true,
+            body: {
+                classroomId
+            }
+        }).subscribe(({ deletedClassroom }) => {
+            console.log('[Deleted Classroom]', deletedClassroom)
+            this._classrooms.set(
+                this._classrooms().filter(({ id }) => deletedClassroom.id !== id)
+            );
+            this._viewingClassroomId.set(this.classrooms().find(c => c.id !== deletedClassroom.id)?.id)
+        })
     }
 
     public updateClassroom(

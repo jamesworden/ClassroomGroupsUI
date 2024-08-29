@@ -18,6 +18,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Classroom, ClassroomsService } from '@shared/classrooms';
+import { AccountsService } from '@shared/accounts';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-classrooms-panel',
@@ -31,6 +33,7 @@ import { Classroom, ClassroomsService } from '@shared/classrooms';
     MatDividerModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatTooltipModule
   ],
   templateUrl: './classrooms-panel.component.html',
   styleUrl: './classrooms-panel.component.scss',
@@ -38,6 +41,7 @@ import { Classroom, ClassroomsService } from '@shared/classrooms';
 export class ClassroomsPanelComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #accountsService = inject(AccountsService)
 
   readonly classAndConfigPanelClosed = output();
 
@@ -46,6 +50,7 @@ export class ClassroomsPanelComponent {
 
   readonly classrooms = this.#classroomsService.classrooms;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
+  readonly isLoggedIn = this.#accountsService.isLoggedIn;
   readonly searchQuery = signal('');
 
   addClassroomLabel = '';

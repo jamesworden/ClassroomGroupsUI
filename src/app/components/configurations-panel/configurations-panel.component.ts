@@ -20,6 +20,8 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ClassroomsService, Configuration } from '@shared/classrooms';
+import { AccountsService } from '@shared/accounts';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -33,6 +35,7 @@ import { ClassroomsService, Configuration } from '@shared/classrooms';
     FormsModule,
     MatInputModule,
     MatButtonModule,
+    MatTooltipModule
   ],
   templateUrl: './configurations-panel.component.html',
   styleUrl: './configurations-panel.component.scss',
@@ -40,6 +43,7 @@ import { ClassroomsService, Configuration } from '@shared/classrooms';
 export class ConfigurationsPanelComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #accountsService = inject(AccountsService)
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
@@ -54,6 +58,7 @@ export class ConfigurationsPanelComponent {
     this.#classroomsService.viewingConfigurations;
   readonly ResizableSide = ResizableSide;
   readonly searchQuery = signal('');
+  readonly isLoggedIn = this.#accountsService.isLoggedIn;
 
   addConfigurationLabel = '';
 

@@ -1,11 +1,12 @@
-import { AfterContentInit, Component, effect, input, OnDestroy } from '@angular/core';
+import { Component, effect, input, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-google-sign-in-button',
   standalone: true,
   imports: [],
   template: `
-    <div
+  <div class="h-[44px] max-w-[222px]">
+  <div
       id="g_id_onload"
       data-client_id="379282615975-blkaldtgv9vuieo7hc2gmttkl2nb5983.apps.googleusercontent.com"
       data-context="signin"
@@ -23,6 +24,7 @@ import { AfterContentInit, Component, effect, input, OnDestroy } from '@angular/
       [attr.data-size]="dataSize()"
       data-logo_alignment="left"
     ></div>
+  </div>
   `,
 })
 export class GoogleSignInButtonComponent implements OnDestroy {

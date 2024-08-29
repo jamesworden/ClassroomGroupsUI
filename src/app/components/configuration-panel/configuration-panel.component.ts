@@ -26,6 +26,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CommonModule } from '@angular/common';
 import { ClassroomsService, Column } from '@shared/classrooms';
+import { AccountsService } from '@shared/accounts';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -44,6 +45,7 @@ import { ClassroomsService, Column } from '@shared/classrooms';
     MatMenuModule,
     MatBadgeModule,
     CommonModule,
+    MatTooltipModule
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',

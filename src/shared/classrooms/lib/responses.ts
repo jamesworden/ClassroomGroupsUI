@@ -5,3 +5,7 @@ export interface CreateClassroomResponse {
     createdConfiguration: Configuration,
     createdColumns: Column[]
 }
+
+export interface DeleteClassroomResponse {
+    deletedClassroom: Classroom
+}
