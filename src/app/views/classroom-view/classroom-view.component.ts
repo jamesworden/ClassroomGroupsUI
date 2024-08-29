@@ -17,7 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { ClassroomsService, Group } from '@shared/classrooms';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
@@ -96,6 +96,7 @@ export class ClassroomViewComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
+  readonly #router = inject(Router);
 
   readonly classrooms = this.#classroomsService.classrooms;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
@@ -128,8 +129,6 @@ export class ClassroomViewComponent {
   editingGroups: Group[] = [];
 
   constructor() {
-    this.#accountsService.getAccount();
-
     this.loadClassAndConfigPanelSettings();
     this.loadConfigPanelSettings();
 

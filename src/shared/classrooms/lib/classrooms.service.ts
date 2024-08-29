@@ -472,6 +472,7 @@ export class ClassroomsService {
   }
 
   public reset() {
+    console.log('[Classrooms] Resetting state...');
     this._classrooms.set([]);
     this._columns.set([]);
     this._configurations.set([]);
