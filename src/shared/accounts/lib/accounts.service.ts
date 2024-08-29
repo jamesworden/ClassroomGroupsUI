@@ -62,7 +62,12 @@ export class AccountsService {
         withCredentials: true,
       })
       .subscribe(() => {
-        this._account.set(undefined);
+        this.reset();
       });
+  }
+
+  reset() {
+    this._account.set(undefined);
+    this._accountLoading.set(false);
   }
 }

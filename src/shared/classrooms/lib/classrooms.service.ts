@@ -39,7 +39,6 @@ import { AccountsService } from '@shared/accounts';
 })
 export class ClassroomsService {
   readonly #httpClient = inject(HttpClient);
-  readonly #accountsService = inject(AccountsService);
 
   private readonly _classrooms = signal<Classroom[]>([]);
   private readonly _students = signal<Student[]>([]);
