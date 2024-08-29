@@ -431,6 +431,10 @@ export class ClassroomsService {
             this._studentFields.set(classroomDetails.studentFields)
             this._studentGroups.set(classroomDetails.studentGroups)
             this._students.set(classroomDetails.students)
+
+            if (classroomDetails.classrooms.length > 0) {
+                this._viewingClassroomId.set(classroomDetails.classrooms[0].id)
+            }
         })
     }
 }
