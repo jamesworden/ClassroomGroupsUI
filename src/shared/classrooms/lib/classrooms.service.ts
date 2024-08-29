@@ -15,12 +15,14 @@ import { ClassroomViewModel, ColumnViewModel, ConfigurationViewModel, FieldViewM
 import { getClassroomViewModel, getColumnViewModel, getConfigurationViewModel, getFieldViewModel, getGroupViewModels, getStudentFieldViewModel, getStudentGroupViewModel, getStudentViewModel } from './logic/get-view-models';
 import { HttpClient } from '@angular/common/http';
 import { CreateClassroomResponse, DeleteClassroomResponse } from './responses';
+import { AccountsService } from '@shared/accounts';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ClassroomsService {
     readonly #httpClient = inject(HttpClient)
+    readonly #accountsService = inject(AccountsService)
 
     private readonly _classrooms = signal<Classroom[]>([]);
     private readonly _students = signal<Student[]>([]);
@@ -195,6 +197,10 @@ export class ClassroomsService {
             .filter((student) => !!student)
             .sort((a, b) => a.ordinal - b.ordinal);
     });
+
+    constructor() {
+
+    }
 
     public deleteClassroom(classroomId: string) {
         return this.#httpClient.delete<DeleteClassroomResponse>('/api/v1/classrooms', {
@@ -436,5 +442,18 @@ export class ClassroomsService {
                 this._viewingClassroomId.set(classroomDetails.classrooms[0].id)
             }
         })
+    }
+
+    public reset() {
+        this._classrooms.set([])
+        this._columns.set([])
+        this._configurations.set([])
+        this._fields.set([])
+        this._groups.set([])
+        this._studentFields.set([])
+        this._studentGroups.set([])
+        this._students.set([])
+        this._viewingClassroomId.set(undefined)
+        this._viewingConfigurationId.set(undefined)
     }
 }

@@ -153,7 +153,15 @@ export class AppComponent {
         JSON.stringify(this.configPanelSettings())
       );
     });
-    effect(() => this.isLoggedIn() && this.#classroomsService.getClassroomsDetails())
+    effect(() => {
+      if (this.#accountsService.isLoggedIn()) {
+        this.#classroomsService.getClassroomsDetails()
+      } else {
+        this.#classroomsService.reset()
+      }
+    }, {
+      allowSignalWrites: true
+    })
   }
 
   private loadClassAndConfigPanelSettings() {
