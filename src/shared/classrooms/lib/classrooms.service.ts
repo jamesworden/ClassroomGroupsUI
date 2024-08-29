@@ -340,6 +340,7 @@ export class ClassroomsService {
             this._classrooms.set(this.classrooms().concat(createdClassroom))
             this._classrooms.set(this.configurations().concat(createdConfiguration))
             this._viewingClassroomId.set(createdClassroom.id)
+            this._viewingConfigurationId.set(undefined)
         })
     }
 
