@@ -7,6 +7,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,7 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { ClassroomsService, Group } from '@shared/classrooms';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
@@ -88,7 +89,7 @@ export class ClassroomViewComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
-  readonly #router = inject(Router);
+  readonly #route = inject(ActivatedRoute);
 
   readonly classrooms = this.#classroomsService.classrooms;
   readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
@@ -101,12 +102,15 @@ export class ClassroomViewComponent {
   readonly isResizing = this.#resizableService.isResizing;
   readonly isLoggedIn = this.#accountsService.isLoggedIn;
   readonly accountLoading = this.#accountsService.accountLoading;
+  readonly queryParams = toSignal(this.#route.params, {
+    initialValue: {
+      id: '',
+    },
+  });
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
   readonly minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
-  readonly maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
-  readonly minConfigurationsPanelHeight = window.innerHeight / 4;
 
   readonly configPanelSettings = signal<ConfigPanelSettings>({
     width: DEFAULT_PANEL_WIDTH,

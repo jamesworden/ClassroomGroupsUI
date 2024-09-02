@@ -35,7 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     MatInputModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './configurations-panel.component.html',
   styleUrl: './configurations-panel.component.scss',
@@ -43,7 +43,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class ConfigurationsPanelComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #accountsService = inject(AccountsService)
+  readonly #accountsService = inject(AccountsService);
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
@@ -60,7 +60,7 @@ export class ConfigurationsPanelComponent {
   readonly searchQuery = signal('');
   readonly isLoggedIn = this.#accountsService.isLoggedIn;
 
-  addConfigurationLabel = '';
+  createConfigurationLabel = '';
 
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
     () =>
@@ -89,8 +89,8 @@ export class ConfigurationsPanelComponent {
     this.#classroomsService.viewConfiguration(configurationId);
   }
 
-  addConfiguration() {
-    if (this.addConfigurationLabel.trim().length <= 0) {
+  createConfiguration() {
+    if (this.createConfigurationLabel.trim().length <= 0) {
       this.#matSnackBar.open(
         'Please enter the name of the configuration.',
         'Hide',
@@ -100,10 +100,10 @@ export class ConfigurationsPanelComponent {
       );
       return;
     }
-    this.#classroomsService.addConfiguration(
+    this.#classroomsService.createConfiguration(
       this.viewingClassroomId() ?? '',
-      this.addConfigurationLabel
+      this.createConfigurationLabel
     );
-    this.addConfigurationLabel = '';
+    this.createConfigurationLabel = '';
   }
 }

@@ -32,13 +32,21 @@ import {
 } from './logic/get-view-models';
 import { HttpClient } from '@angular/common/http';
 import { CreateClassroomResponse, DeleteClassroomResponse } from './responses';
-import { AccountsService } from '@shared/accounts';
+import { ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClassroomsService {
   readonly #httpClient = inject(HttpClient);
+  readonly #route = inject(ActivatedRoute);
+
+  readonly queryParams = toSignal(this.#route.params, {
+    initialValue: {
+      id: null,
+    },
+  });
 
   private readonly _classrooms = signal<Classroom[]>([]);
   private readonly _students = signal<Student[]>([]);
@@ -47,13 +55,14 @@ export class ClassroomsService {
   private readonly _fields = signal<Field[]>([]);
   private readonly _studentFields = signal<StudentField[]>([]);
   private readonly _groups = signal<Group[]>([]);
-  private readonly _viewingClassroomId = signal<string | undefined>(undefined);
   private readonly _viewingConfigurationId = signal<string | undefined>(
     undefined
   );
   private readonly _studentGroups = signal<StudentGroup[]>([]);
   private readonly _addedClassroom$ = new Subject<void>();
   private readonly _addedConfiguration$ = new Subject<void>();
+
+  public readonly viewingClassroomId = computed(() => this.queryParams().id);
 
   public readonly addedClassroom$ = this._addedClassroom$.asObservable();
 
@@ -62,8 +71,6 @@ export class ClassroomsService {
 
   public readonly viewingConfigurationId =
     this._viewingConfigurationId.asReadonly();
-
-  public readonly viewingClassroomId = this._viewingClassroomId.asReadonly();
 
   public readonly configurations = computed(() =>
     this._configurations().map((configuration) =>
@@ -227,9 +234,6 @@ export class ClassroomsService {
         this._classrooms.set(
           this._classrooms().filter(({ id }) => deletedClassroom.id !== id)
         );
-        this._viewingClassroomId.set(
-          this.classrooms().find((c) => c.id !== deletedClassroom.id)?.id
-        );
       });
   }
 
@@ -358,76 +362,33 @@ export class ClassroomsService {
         console.log('[Created Classroom]', createdClassroom);
         console.log('[Created Configuration]', createdConfiguration);
         this._classrooms.set(this.classrooms().concat(createdClassroom));
-        this._classrooms.set(
+        this._configurations.set(
           this.configurations().concat(createdConfiguration)
         );
-        this._viewingClassroomId.set(createdClassroom.id);
-        this._viewingConfigurationId.set(undefined);
+        this._viewingConfigurationId.set(createdConfiguration.id);
       });
-  }
-
-  public viewClassroom(classroomId: string) {
-    this._viewingClassroomId.set(classroomId);
-    this._viewingConfigurationId.set(
-      this.configurations().find(
-        (configuration) => configuration.classroomId === classroomId
-      )?.id || ''
-    );
   }
 
   public viewConfiguration(configurationId: string) {
     this._viewingConfigurationId.set(configurationId);
   }
 
-  public addConfiguration(classroomId: string, label: string) {
-    // const configurationId = generateUniqueId();
-    // this._configurations.set(
-    //     this._configurations().concat([
-    //         {
-    //             classroomId,
-    //             label,
-    //             id: configurationId,
-    //             description: '',
-    //         },
-    //     ])
-    // );
-    // this._columns.set(
-    //     this._columns().concat(
-    //         this.viewingFieldIds().map((fieldId, i) => ({
-    //             configurationId,
-    //             enabled: true,
-    //             fieldId,
-    //             id: generateUniqueId(),
-    //             sort: ColumnSort.NONE,
-    //             ordinal: i,
-    //         }))
-    //     )
-    // );
-    // const groupId = generateUniqueId();
-    // this._groups.set(
-    //     this._groups().concat([
-    //         {
-    //             configurationId,
-    //             id: groupId,
-    //             label: 'Group 1',
-    //             ordinal: 0,
-    //         },
-    //     ])
-    // );
-    // this._studentGroups.set(
-    //     this._studentGroups().concat(
-    //         this._students()
-    //             .filter((student) => student.classroomId === classroomId)
-    //             .map((student, ordinal) => ({
-    //                 configurationId,
-    //                 groupId,
-    //                 id: generateUniqueId(),
-    //                 studentId: student.id,
-    //                 ordinal,
-    //             }))
-    //     )
-    // );
-    // this._addedConfiguration$.next();
+  public createConfiguration(classroomId: string, label: string) {
+    return this.#httpClient
+      .post<CreateClassroomResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations`,
+        { label },
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(({ createdConfiguration }) => {
+        console.log('[Created Configuration]', createdConfiguration);
+        this._configurations.set(
+          this.configurations().concat(createdConfiguration)
+        );
+        this._viewingConfigurationId.set(createdConfiguration.id);
+      });
   }
 
   public setStudentValue(
@@ -463,10 +424,6 @@ export class ClassroomsService {
         this._studentFields.set(classroomDetails.studentFields);
         this._studentGroups.set(classroomDetails.studentGroups);
         this._students.set(classroomDetails.students);
-
-        if (classroomDetails.classrooms.length > 0) {
-          this._viewingClassroomId.set(classroomDetails.classrooms[0].id);
-        }
       });
   }
 
@@ -480,7 +437,5 @@ export class ClassroomsService {
     this._studentFields.set([]);
     this._studentGroups.set([]);
     this._students.set([]);
-    this._viewingClassroomId.set(undefined);
-    this._viewingConfigurationId.set(undefined);
   }
 }

@@ -25,7 +25,7 @@
       @for (configuration of filteredConfigurations(); track configuration.id) {
       <mat-list-item (click)="selectConfiguration(configuration.id)">
         <mat-icon matListItemIcon>{{
-          configuration.id === viewingConfigurationId() ? "group" : null
+          configuration.id === viewingConfigurationId() ? 'group' : null
         }}</mat-icon>
         <div matListItemTitle>{{ configuration.label }}</div>
         <div matListItemLine>{{ configuration.description }}</div>
@@ -33,19 +33,19 @@
       }
     </mat-action-list>
 
-    <div class="ml-4 flex gap-x-2 mb-2" >
+    <div class="ml-4 flex gap-x-2 mb-2">
       <div [matTooltip]="isLoggedIn() ? '' : 'You must be logged in!'">
         <button
-        [disabled]="!addConfigurationLabel || !isLoggedIn()"
-        mat-icon-button
-        (click)="addConfiguration()"
-      >
-        <mat-icon >add</mat-icon>
-      </button>
+          [disabled]="!createConfigurationLabel || !isLoggedIn()"
+          mat-icon-button
+          (click)="createConfiguration()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
       <input
         type="text"
-        [(ngModel)]="addConfigurationLabel"
+        [(ngModel)]="createConfigurationLabel"
         placeholder="Add configuration"
         class="outline-none border-b border-gray-600 dark:border-gray-300 bg-transparent placeholder-gray-700 dark:placeholder-current"
       />
