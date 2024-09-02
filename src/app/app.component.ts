@@ -1,6 +1,6 @@
-import { Component, effect, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { AccountsService } from '@shared/accounts';
+import { Component, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -8,18 +8,8 @@ import { AccountsService } from '@shared/accounts';
   imports: [RouterModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  providers: [AppService],
 })
 export class AppComponent {
-  readonly #accountsService = inject(AccountsService);
-  readonly #router = inject(Router);
-
-  readonly isLoggedIn = this.#accountsService.isLoggedIn;
-
-  constructor() {
-    effect(() => {
-      if (!this.isLoggedIn()) {
-        this.#router.navigate(['/']);
-      }
-    });
-  }
+  readonly #appService = inject(AppService);
 }

@@ -11,13 +11,19 @@ import { GoogleSignInButtonComponent } from '@ui-inputs';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [MatIconModule, MatSnackBarModule, MatButtonModule, MatMenuModule, GoogleSignInButtonComponent],
+  imports: [
+    MatIconModule,
+    MatSnackBarModule,
+    MatButtonModule,
+    MatMenuModule,
+    GoogleSignInButtonComponent,
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
   readonly #themeService = inject(ThemeService);
-  readonly #accountsService = inject(AccountsService)
+  readonly #accountsService = inject(AccountsService);
 
   readonly toggledClassAndConfigPanel = output();
 
@@ -26,7 +32,7 @@ export class SidebarComponent {
   readonly account = this.#accountsService.account;
 
   readonly Themes = Themes;
-  readonly menuIsOpen = signal(false)
+  readonly menuIsOpen = signal(false);
 
   toggleTheme() {
     this.#themeService.toggleTheme();
@@ -37,14 +43,14 @@ export class SidebarComponent {
   }
 
   logout() {
-    this.#accountsService.logout()
+    this.#accountsService.logout();
   }
 
   markMenuAsOpen() {
-    this.menuIsOpen.set(true)
+    this.menuIsOpen.set(true);
   }
 
   markMenuAsClosed() {
-    this.menuIsOpen.set(false)
+    this.menuIsOpen.set(false);
   }
 }
