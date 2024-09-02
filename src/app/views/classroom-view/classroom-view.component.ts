@@ -38,7 +38,6 @@ import {
 import { ThemeService } from 'app/themes/theme.service';
 
 enum StorageKeys {
-  CLASS_AND_CONFIG_PANEL = 'classrooms-and-configurations-panel',
   CONFIG_PANEL = 'configurations-panel',
 }
 
@@ -137,14 +136,14 @@ export class ClassroomViewComponent {
     );
     effect(() => {
       localStorage.setItem(
-        StorageKeys.CLASS_AND_CONFIG_PANEL,
+        StorageKeys.CONFIG_PANEL,
         JSON.stringify(this.configPanelSettings())
       );
     });
   }
 
   private loadConfigPanelSettings() {
-    const setting = localStorage.getItem(StorageKeys.CLASS_AND_CONFIG_PANEL);
+    const setting = localStorage.getItem(StorageKeys.CONFIG_PANEL);
     if (setting) {
       const settings = JSON.parse(setting) as ConfigPanelSettings;
       this.configPanelSettings.set({
