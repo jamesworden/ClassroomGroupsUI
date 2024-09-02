@@ -59,18 +59,18 @@ export class ClassroomsService {
     undefined
   );
   private readonly _studentGroups = signal<StudentGroup[]>([]);
+
   private readonly _addedClassroom$ = new Subject<void>();
-  private readonly _addedConfiguration$ = new Subject<void>();
-
-  public readonly viewingClassroomId = computed(() => this.queryParams().id);
-
   public readonly addedClassroom$ = this._addedClassroom$.asObservable();
 
+  private readonly _addedConfiguration$ = new Subject<void>();
   public readonly addedConfiguration$ =
     this._addedConfiguration$.asObservable();
 
   public readonly viewingConfigurationId =
     this._viewingConfigurationId.asReadonly();
+
+  public readonly viewingClassroomId = computed(() => this.queryParams().id);
 
   public readonly configurations = computed(() =>
     this._configurations().map((configuration) =>
