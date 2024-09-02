@@ -13,8 +13,8 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr
-        (dblclick)="viewClassroom(row.id)"
-        class="classroom-row"
+        (click)="viewClassroom(row.id)"
+        class="classroom-row cursor-pointer"
         mat-row
         *matRowDef="let row; columns: displayedColumns"
       ></tr>
