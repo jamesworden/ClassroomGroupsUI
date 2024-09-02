@@ -21,7 +21,6 @@ import { Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { ClassroomsService, Group } from '@shared/classrooms';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
-import { ClassroomsPanelComponent } from 'app/components/classrooms-panel/classrooms-panel.component';
 import { ConfigurationPanelComponent } from 'app/components/configuration-panel/configuration-panel.component';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
 import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
@@ -66,7 +65,6 @@ interface ConfigPanelSettings {
     SidebarComponent,
     MatIconModule,
     ConfigurationsPanelComponent,
-    ClassroomsPanelComponent,
     MatMenuModule,
     MatTooltipModule,
     ConfigurationPanelComponent,

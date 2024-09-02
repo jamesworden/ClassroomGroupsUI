@@ -23,22 +23,7 @@
       class="flex flex-col border-r border-neutral-400 shadow-lg"
       resizingId="classrooms-and-config-panel"
     >
-      <app-classrooms-panel class="flex-1"></app-classrooms-panel>
-      <app-configurations-panel
-        appResizeable
-        [resizableSides]="[ResizableSide.TOP]"
-        [panelHeight]="configPanelSettings().height"
-        [maxHeight]="maxConfigurationsPanelHeight"
-        [minHeight]="minConfigurationsPanelHeight"
-        [maxWidth]="maxClassAndConfigPanelWidth"
-        [minWidth]="minClassAndConfigPanelWidth"
-        (resizedHeight)="setConfigPanelHeight($event)"
-        [ngStyle]="{
-          'min-height': configPanelSettings().height + 'px'
-        }"
-        class="border-t border-neutral-400"
-        resizingId="config-panel"
-      ></app-configurations-panel>
+      <app-configurations-panel class="flex-1"></app-configurations-panel>
     </div>
     }
 
