@@ -43,7 +43,7 @@
         subscriptSizing="dynamic"
       >
         <mat-label>{{
-          groupingByDivision ? "Number of groups" : "Students per group"
+          groupingByDivision ? 'Number of groups' : 'Students per group'
         }}</mat-label>
         <input matInput type="number" [(ngModel)]="groupingValue" />
         <button matSuffix mat-icon-button (click)="toggleGroupingType()">
@@ -119,8 +119,8 @@
 <mat-menu #fieldMenu="matMenu">
   <ng-template matMenuContent let-column="column" let-field="field">
     <button mat-menu-item (click)="toggleColumn(column.id)">
-      <mat-icon>{{ column.enabled ? "close" : "check" }}</mat-icon>
-      <span>{{ column.enabled ? "Disable grouping" : "Enable grouping" }}</span>
+      <mat-icon>{{ column.enabled ? 'close' : 'check' }}</mat-icon>
+      <span>{{ column.enabled ? 'Disable grouping' : 'Enable grouping' }}</span>
     </button>
     <!-- <button mat-menu-item (click)="setSortAscending(column.id)">
   <mat-icon>arrow_upward</mat-icon>
@@ -150,12 +150,7 @@
     <button
       mat-menu-item
       (click)="openDeleteConfigurationModal()"
-      [disabled]="viewingConfigurations().length"
-      [matTooltip]="
-        viewingConfigurations().length <= 1
-          ? 'You can\'t delete the last configuration!'
-          : 'Delete configuration'
-      "
+      matTooltip="Delete Configuration"
     >
       <mat-icon>delete</mat-icon>
       <span>Delete configuration</span>
