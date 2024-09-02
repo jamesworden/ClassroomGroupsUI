@@ -43,15 +43,9 @@ enum StorageKeys {
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
-const DEFAULT_CONFIGURATIONS_PANEL_HEIGHT = window.innerHeight / 2;
-
-interface ClassAndConfigPanelSettings {
+interface ConfigPanelSettings {
   width: number;
   isOpen: boolean;
-}
-
-interface ConfigPanelSettings {
-  height: number;
 }
 
 @Component({
@@ -114,12 +108,9 @@ export class ClassroomViewComponent {
   readonly maxConfigurationsPanelHeight = (window.innerHeight * 3) / 4;
   readonly minConfigurationsPanelHeight = window.innerHeight / 4;
 
-  readonly classAndConfigPanelSettings = signal<ClassAndConfigPanelSettings>({
+  readonly configPanelSettings = signal<ConfigPanelSettings>({
     width: DEFAULT_PANEL_WIDTH,
     isOpen: true,
-  });
-  readonly configPanelSettings = signal<ConfigPanelSettings>({
-    height: DEFAULT_CONFIGURATIONS_PANEL_HEIGHT,
   });
 
   updatedClassroomDescription = '';
@@ -127,7 +118,6 @@ export class ClassroomViewComponent {
   editingGroups: Group[] = [];
 
   constructor() {
-    this.loadClassAndConfigPanelSettings();
     this.loadConfigPanelSettings();
 
     effect(
@@ -144,50 +134,26 @@ export class ClassroomViewComponent {
     effect(() => {
       localStorage.setItem(
         StorageKeys.CLASS_AND_CONFIG_PANEL,
-        JSON.stringify(this.classAndConfigPanelSettings())
-      );
-    });
-    effect(() => {
-      localStorage.setItem(
-        StorageKeys.CONFIG_PANEL,
         JSON.stringify(this.configPanelSettings())
       );
     });
   }
 
-  private loadClassAndConfigPanelSettings() {
+  private loadConfigPanelSettings() {
     const setting = localStorage.getItem(StorageKeys.CLASS_AND_CONFIG_PANEL);
     if (setting) {
-      const settings = JSON.parse(setting) as ClassAndConfigPanelSettings;
-      this.classAndConfigPanelSettings.set({
+      const settings = JSON.parse(setting) as ConfigPanelSettings;
+      this.configPanelSettings.set({
         ...settings,
         width: settings.width ?? DEFAULT_PANEL_WIDTH,
       });
     }
   }
 
-  private loadConfigPanelSettings() {
-    const setting = localStorage.getItem(StorageKeys.CONFIG_PANEL);
-    if (setting) {
-      const settings = JSON.parse(setting) as ConfigPanelSettings;
-      this.configPanelSettings.set({
-        ...settings,
-        height: settings.height ?? DEFAULT_CONFIGURATIONS_PANEL_HEIGHT,
-      });
-    }
-  }
-
   setPanelWidth(panelWidth: number) {
-    this.classAndConfigPanelSettings.set({
-      ...this.classAndConfigPanelSettings(),
-      width: panelWidth,
-    });
-  }
-
-  setConfigPanelHeight(panelHeight: number) {
     this.configPanelSettings.set({
       ...this.configPanelSettings(),
-      height: panelHeight,
+      width: panelWidth,
     });
   }
 
@@ -230,8 +196,8 @@ export class ClassroomViewComponent {
   }
 
   toggleClassAndConfigPanel() {
-    const existingSettings = this.classAndConfigPanelSettings();
-    this.classAndConfigPanelSettings.set({
+    const existingSettings = this.configPanelSettings();
+    this.configPanelSettings.set({
       ...existingSettings,
       isOpen: !existingSettings.isOpen,
     });

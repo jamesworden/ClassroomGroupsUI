@@ -9,19 +9,19 @@
   ></app-sidebar>
 
   <div class="flex-1 w-full h-full flex">
-    @if (classAndConfigPanelSettings().isOpen) {
+    @if (configPanelSettings().isOpen) {
     <div
       appResizeable
       [resizableSides]="[ResizableSide.RIGHT]"
-      [panelWidth]="classAndConfigPanelSettings().width"
+      [panelWidth]="configPanelSettings().width"
       [maxWidth]="maxClassAndConfigPanelWidth"
       [minWidth]="minClassAndConfigPanelWidth"
       (resizedWidth)="setPanelWidth($event)"
       [ngStyle]="{
-        'min-width': classAndConfigPanelSettings().width + 'px'
+        'min-width': configPanelSettings().width + 'px'
       }"
       class="flex flex-col border-r border-neutral-400 shadow-lg"
-      resizingId="classrooms-and-config-panel"
+      resizingId="config-panel"
     >
       <app-configurations-panel class="flex-1"></app-configurations-panel>
     </div>
