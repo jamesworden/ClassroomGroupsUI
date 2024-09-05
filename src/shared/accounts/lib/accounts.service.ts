@@ -51,7 +51,7 @@ export class AccountsService {
       .subscribe((account) => {
         if (account) {
           this._account.set(account);
-          console.log('[Logged In]', account);
+          console.log('[Account]:', account);
         }
       });
   }

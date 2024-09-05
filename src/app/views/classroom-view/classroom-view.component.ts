@@ -18,7 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { ClassroomsService, Group } from '@shared/classrooms';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
@@ -74,12 +74,6 @@ interface ConfigPanelSettings {
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
-  providers: [
-    ThemeService,
-    ResizableService,
-    ClassroomsService,
-    AccountsService,
-  ],
 })
 export class ClassroomViewComponent {
   readonly #themeService = inject(ThemeService);

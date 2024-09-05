@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   Classroom,
   ClassroomDetails,
@@ -218,8 +218,6 @@ export class ClassroomsService {
       .filter((student) => !!student)
       .sort((a, b) => a.ordinal - b.ordinal);
   });
-
-  constructor() {}
 
   public deleteClassroom(classroomId: string) {
     return this.#httpClient
