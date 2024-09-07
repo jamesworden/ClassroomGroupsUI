@@ -6,7 +6,7 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
-import { ClassroomsService, Group } from '@shared/classrooms';
+import { ClassroomsService, Group, GroupViewModel } from '@shared/classrooms';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
 import { ConfigurationPanelComponent } from 'app/components/configuration-panel/configuration-panel.component';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
@@ -82,24 +82,29 @@ export class ClassroomViewComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
-  readonly #route = inject(ActivatedRoute);
+  readonly #activatedRoute = inject(ActivatedRoute);
 
-  readonly classrooms = this.#classroomsService.classrooms;
-  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
-  readonly viewingClassroom = this.#classroomsService.viewingClassroom;
-  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
-  readonly viewingConfigurationId =
-    this.#classroomsService.viewingConfigurationId;
-  readonly viewingGroups = this.#classroomsService.viewingGroups;
+  readonly queryParams = toSignal(this.#activatedRoute.params, {
+    initialValue: {
+      id: null,
+    },
+  });
+  readonly classroomId = computed(() => this.queryParams().id);
+  readonly classroom = computed(() =>
+    this.#classroomsService.classroom(this.classroomId())()
+  );
+  readonly configurationId = signal<string | undefined>(undefined);
+  readonly configuration = computed(() =>
+    this.#classroomsService.configuration(this.configurationId())()
+  );
+  readonly groups = computed(() =>
+    this.#classroomsService.groups(this.configurationId())()
+  );
+
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
   readonly isLoggedIn = this.#accountsService.isLoggedIn;
   readonly accountLoading = this.#accountsService.accountLoading;
-  readonly queryParams = toSignal(this.#route.params, {
-    initialValue: {
-      id: '',
-    },
-  });
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -112,22 +117,17 @@ export class ClassroomViewComponent {
 
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
-  editingGroups: Group[] = [];
+  editingGroups: GroupViewModel[] = [];
 
   constructor() {
     this.loadConfigPanelSettings();
 
     effect(
       () =>
-        (this.updatedClassroomDescription =
-          this.viewingClassroom()?.description ?? '')
+        (this.updatedClassroomDescription = this.classroom()?.description ?? '')
     );
-    effect(
-      () => (this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '')
-    );
-    effect(
-      () => (this.editingGroups = this.#classroomsService.viewingGroups())
-    );
+    effect(() => (this.updatedClassroomLabel = this.classroom()?.label ?? ''));
+    effect(() => (this.editingGroups = this.groups()));
     effect(() => {
       localStorage.setItem(
         StorageKeys.CONFIG_PANEL,
@@ -160,36 +160,36 @@ export class ClassroomViewComponent {
       data: <YesNoDialogInputs>{
         title: 'Delete classroom',
         subtitle: `Are you sure you want to delete the classroom ${
-          this.viewingClassroom()?.label
+          this.classroom()?.label
         } and all of it's data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success) => {
-      const classroomId = this.viewingClassroomId();
-      if (success && classroomId) {
-        this.#classroomsService.deleteClassroom(classroomId);
-      }
+      // const classroomId = this.classroomId();
+      // if (success && classroomId) {
+      //   this.#classroomsService.deleteClassroom(classroomId);
+      // }
     });
   }
 
   updateClassroomDescription() {
-    const classroomId = this.viewingClassroomId();
-    if (classroomId) {
-      this.#classroomsService.updateClassroom(classroomId, {
-        description: this.updatedClassroomDescription,
-      });
-    }
+    // const classroomId = this.classroomId();
+    // if (classroomId) {
+    //   this.#classroomsService.updateClassroom(classroomId, {
+    //     description: this.updatedClassroomDescription,
+    //   });
+    // }
   }
 
   updateClassroomLabel() {
-    const classroomId = this.viewingClassroomId();
-    if (this.updatedClassroomLabel.trim().length === 0) {
-      this.updatedClassroomLabel = this.viewingClassroom()?.label ?? '';
-    } else if (classroomId) {
-      this.#classroomsService.updateClassroom(classroomId, {
-        label: this.updatedClassroomLabel,
-      });
-    }
+    // const classroomId = this.classroomId();
+    // if (this.updatedClassroomLabel.trim().length === 0) {
+    //   this.updatedClassroomLabel = this.classroomId()?.label ?? '';
+    // } else if (classroomId) {
+    //   this.#classroomsService.updateClassroom(classroomId, {
+    //     label: this.updatedClassroomLabel,
+    //   });
+    // }
   }
 
   toggleClassAndConfigPanel() {
@@ -201,22 +201,22 @@ export class ClassroomViewComponent {
   }
 
   createGroup() {
-    const configurationId = this.viewingConfigurationId();
-    if (configurationId) {
-      this.#classroomsService.createGroup(configurationId);
-    }
+    // const configurationId = this.configurationId();
+    // if (configurationId) {
+    //   this.#classroomsService.createGroup(configurationId);
+    // }
   }
 
-  drop(event: CdkDragDrop<Group[]>) {
-    moveItemInArray(
-      this.editingGroups,
-      event.previousIndex,
-      event.currentIndex
-    );
-    this.#classroomsService.updateGroups(
-      this.viewingConfigurationId() ?? '',
-      this.editingGroups
-    );
+  drop(event: CdkDragDrop<GroupViewModel[]>) {
+    // moveItemInArray(
+    //   this.editingGroups,
+    //   event.previousIndex,
+    //   event.currentIndex
+    // );
+    // this.#classroomsService.updateGroups(
+    //   this.configurationId() ?? '',
+    //   this.editingGroups
+    // );
   }
 
   chooseFileToUpload() {

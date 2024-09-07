@@ -20,7 +20,16 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ClassroomsService, Group, Student, StudentField, StudentViewModel } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  ClassroomViewModel,
+  ConfigurationViewModel,
+  Group,
+  GroupViewModel,
+  Student,
+  StudentField,
+  StudentViewModel,
+} from '@shared/classrooms';
 
 @Component({
   selector: 'app-group-panel',
@@ -48,24 +57,23 @@ export class GroupPanelComponent {
   @ViewChild('valueInput', { read: ElementRef })
   valueInput!: ElementRef<HTMLInputElement>;
 
-  readonly group = input<Group>();
+  readonly classroom = input<ClassroomViewModel>();
+  readonly configuration = input<ConfigurationViewModel>();
+  readonly group = input<GroupViewModel>();
 
-  readonly viewingStudents = this.#classroomsService.viewingStudents;
-  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
-  readonly viewingConfigurationId =
-    this.#classroomsService.viewingConfigurationId;
-  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
-  readonly viewingGroups = this.#classroomsService.viewingGroups;
-  readonly viewingColumns = this.#classroomsService.viewingColumns;
-
-  readonly studentsInGroup = computed(() =>
-    this.viewingStudents().filter(
-      (student) => student.groupId === this.group()?.id
-    )
+  readonly students = computed(() =>
+    this.#classroomsService.students(this.classroom()?.id)()
   );
-
+  readonly columns = computed(() =>
+    this.#classroomsService.columns(this.configuration()?.id)
+  );
+  readonly studentsInGroup = computed(() =>
+    this.students().filter((student) => student.groupId === this.group()?.id)
+  );
   readonly viewingGroupIds = computed(() =>
-    this.viewingGroups().map(({ id }) => id)
+    (this.#classroomsService.groups(this.configuration()?.id)() ?? []).map(
+      ({ id }) => id
+    )
   );
 
   editingFieldId?: string;
@@ -79,64 +87,39 @@ export class GroupPanelComponent {
     });
   }
 
-  addStudent() { }
+  addStudent() {}
 
-  deleteGroup() {
-    // if (this.studentsInGroup().length > 0) {
-    //   this.#matSnackBar.open(
-    //     "You can't delete group that contains students",
-    //     'Hide',
-    //     {
-    //       duration: 3000,
-    //     }
-    //   );
-    //   return;
-    // }
-    // const classroomId = this.viewingClassroomId();
-    // const configurationId = this.viewingConfigurationId();
-    // const groupId = this.group()?.id;
-    // if (classroomId && configurationId && groupId) {
-    //   this.#classroomsService.deleteGroup(
-    //     classroomId,
-    //     configurationId,
-    //     groupId
-    //   );
-    //   this.#matSnackBar.open('Group deleted', 'Hide', {
-    //     duration: 3000,
-    //   });
-    // }
-  }
+  deleteGroup() {}
 
   drop(event: CdkDragDrop<Student[]>) {
-    const ontoSameGroup = event.container === event.previousContainer;
-    if (ontoSameGroup) {
-      // Order editingStudents
-      moveItemInArray(
-        this.editingStudents,
-        event.previousIndex,
-        event.currentIndex
-      );
-      // Assign ordinals according to the order
-      this.editingStudents = this.editingStudents.map(
-        (editingStudent, ordinal) => ({ ...editingStudent, ordinal })
-      );
-      // Create correct student group updates
-      const studentGroups = this.#classroomsService
-        .studentGroups()
-        .map((studentGroup) => {
-          const updatedStudent = this.editingStudents.find(
-            ({ id }) => id === studentGroup.studentId
-          );
-          if (updatedStudent) {
-            studentGroup.ordinal = updatedStudent.ordinal;
-          }
-          return studentGroup;
-        });
-      // Persist updates
-      this.#classroomsService.updateStudentGroups(studentGroups);
-      return;
-    }
-
+    // const ontoSameGroup = event.container === event.previousContainer;
+    // if (ontoSameGroup) {
+    //   // Order editingStudents
+    //   moveItemInArray(
+    //     this.editingStudents,
+    //     event.previousIndex,
+    //     event.currentIndex
+    //   );
+    //   // Assign ordinals according to the order
+    //   this.editingStudents = this.editingStudents.map(
+    //     (editingStudent, ordinal) => ({ ...editingStudent, ordinal })
+    //   );
+    //   // Create correct student group updates
+    //   const studentGroups = this.#classroomsService
+    //     .studentGroups()
+    //     .map((studentGroup) => {
+    //       const updatedStudent = this.editingStudents.find(
+    //         ({ id }) => id === studentGroup.studentId
+    //       );
+    //       if (updatedStudent) {
+    //         studentGroup.ordinal = updatedStudent.ordinal;
+    //       }
+    //       return studentGroup;
+    //     });
+    //   // Persist updates
+    //   this.#classroomsService.updateStudentGroups(studentGroups);
+    //   return;
+    // }
     // Recalculate ordinals
   }
 
@@ -148,20 +131,19 @@ export class GroupPanelComponent {
   }
 
   saveEdits() {
-    if (
-      this.editingStudentId !== undefined &&
-      this.editingFieldId !== undefined &&
-      this.editingField !== undefined
-    ) {
-      this.#classroomsService.setStudentValue(
-        this.editingStudentId,
-        this.editingFieldId,
-        this.editingField
-      );
-    }
-
-    this.editingField = undefined;
-    this.editingFieldId = undefined;
-    this.editingStudentId = undefined;
+    // if (
+    //   this.editingStudentId !== undefined &&
+    //   this.editingFieldId !== undefined &&
+    //   this.editingField !== undefined
+    // ) {
+    //   this.#classroomsService.setStudentValue(
+    //     this.editingStudentId,
+    //     this.editingFieldId,
+    //     this.editingField
+    //   );
+    // }
+    // this.editingField = undefined;
+    // this.editingFieldId = undefined;
+    // this.editingStudentId = undefined;
   }
 }

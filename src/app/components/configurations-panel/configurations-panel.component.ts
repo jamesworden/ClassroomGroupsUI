@@ -49,61 +49,54 @@ export class ConfigurationsPanelComponent {
   scrollContainer!: ElementRef<HTMLElement>;
 
   readonly classrooms = this.#classroomsService.classrooms;
-  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
-  readonly viewingClassroom = this.#classroomsService.viewingClassroom;
-  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
-  readonly viewingConfigurationId =
-    this.#classroomsService.viewingConfigurationId;
-  readonly viewingConfigurations =
-    this.#classroomsService.viewingConfigurations;
   readonly ResizableSide = ResizableSide;
   readonly searchQuery = signal('');
   readonly isLoggedIn = this.#accountsService.isLoggedIn;
 
   createConfigurationLabel = '';
 
-  readonly filteredConfigurations: Signal<Configuration[]> = computed(
-    () =>
-      this.viewingConfigurations().filter(({ label }) =>
-        label.toLowerCase().includes(this.searchQuery())
-      ) ?? []
+  readonly filteredConfigurations: Signal<Configuration[]> = computed(() =>
+    // this.viewingConfigurations().filter(({ label }) =>
+    //   label.toLowerCase().includes(this.searchQuery())
+    // ) ??
+    []
   );
 
   constructor() {
-    this.#classroomsService.addedConfiguration$
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => {
-        setTimeout(() => {
-          this.scrollContainer.nativeElement.scrollTo({
-            top: this.scrollContainer.nativeElement.scrollHeight,
-            behavior: 'smooth',
-          });
-          this.#matSnackBar.open('Configuration created', 'Hide', {
-            duration: 3000,
-          });
-        });
-      });
+    // this.#classroomsService.addedConfiguration$
+    //   .pipe(takeUntilDestroyed())
+    //   .subscribe(() => {
+    //     setTimeout(() => {
+    //       this.scrollContainer.nativeElement.scrollTo({
+    //         top: this.scrollContainer.nativeElement.scrollHeight,
+    //         behavior: 'smooth',
+    //       });
+    //       this.#matSnackBar.open('Configuration created', 'Hide', {
+    //         duration: 3000,
+    //       });
+    //     });
+    //   });
   }
 
   selectConfiguration(configurationId: string) {
-    this.#classroomsService.viewConfiguration(configurationId);
+    // this.#classroomsService.viewConfiguration(configurationId);
   }
 
   createConfiguration() {
-    if (this.createConfigurationLabel.trim().length <= 0) {
-      this.#matSnackBar.open(
-        'Please enter the name of the configuration.',
-        'Hide',
-        {
-          duration: 3000,
-        }
-      );
-      return;
-    }
-    this.#classroomsService.createConfiguration(
-      this.viewingClassroomId() ?? '',
-      this.createConfigurationLabel
-    );
-    this.createConfigurationLabel = '';
+    // if (this.createConfigurationLabel.trim().length <= 0) {
+    //   this.#matSnackBar.open(
+    //     'Please enter the name of the configuration.',
+    //     'Hide',
+    //     {
+    //       duration: 3000,
+    //     }
+    //   );
+    //   return;
+    // }
+    // this.#classroomsService.createConfiguration(
+    //   this.viewingClassroomId() ?? '',
+    //   this.createConfigurationLabel
+    // );
+    // this.createConfigurationLabel = '';
   }
 }

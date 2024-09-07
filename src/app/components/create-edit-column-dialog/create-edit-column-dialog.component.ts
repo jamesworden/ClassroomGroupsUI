@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -13,7 +13,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ClassroomsService, Column, ColumnSort, Field, FieldType, generateUniqueId } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  ClassroomViewModel,
+  Column,
+  ColumnSort,
+  ConfigurationViewModel,
+  Field,
+  FieldType,
+  generateUniqueId,
+} from '@shared/classrooms';
 
 export interface CreateEditColumnDialogOutputs {
   column: Column;
@@ -50,8 +59,12 @@ export class CreateEditColumnDialogComponent {
   readonly #data = inject<CreateEditColumnDialogInputs>(MAT_DIALOG_DATA);
   readonly #classroomsService = inject(ClassroomsService);
 
-  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
-  readonly viewingColumns = this.#classroomsService.viewingColumns;
+  readonly viewingClassroom = input<ClassroomViewModel>();
+  readonly viewingConfiguration = input<ConfigurationViewModel>();
+
+  readonly viewingColumns = computed(() =>
+    this.#classroomsService.columns(this.viewingConfiguration()?.id)
+  );
 
   readonly Type = FieldType;
 
@@ -74,7 +87,7 @@ export class CreateEditColumnDialogComponent {
     id: '',
     label: '',
     type: FieldType.TEXT,
-    classroomId: this.viewingClassroomId() ?? '',
+    classroomId: this.viewingClassroom()?.id ?? '',
   };
 
   readonly saved = () =>
@@ -102,7 +115,7 @@ export class CreateEditColumnDialogComponent {
       id: fieldId,
       label: this.#data.existingData?.field?.label ?? '',
       type: this.#data.existingData?.field?.type ?? FieldType.TEXT,
-      classroomId: this.viewingClassroomId() ?? '',
+      classroomId: this.viewingClassroom()?.id ?? '',
     };
   }
 

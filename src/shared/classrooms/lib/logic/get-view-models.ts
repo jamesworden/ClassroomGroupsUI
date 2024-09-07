@@ -1,69 +1,87 @@
-import { Classroom, Column, Configuration, Field, Group, Student, StudentField, StudentGroup } from "../models";
-import { ClassroomViewModel, ColumnViewModel, ConfigurationViewModel, FieldViewModel, GroupViewModel, StudentFieldViewModel, StudentGroupViewModel, StudentViewModel } from "../view-models";
+import {
+  Classroom,
+  Column,
+  Configuration,
+  Field,
+  Group,
+  Student,
+  StudentField,
+  StudentGroup,
+} from '../models';
+import {
+  ClassroomViewModel,
+  ColumnViewModel,
+  ConfigurationViewModel,
+  FieldViewModel,
+  GroupViewModel,
+  StudentFieldViewModel,
+  StudentGroupViewModel,
+  StudentViewModel,
+} from '../view-models';
 
 export function getClassroomViewModel(
-    classroom: Classroom
+  classroom: Classroom
 ): ClassroomViewModel {
-    return {
-        ...classroom,
-    };
+  return {
+    ...classroom,
+  };
 }
 
 export function getStudentViewModel(
-    student: Student,
-    studentFields: StudentField[],
-    columns: Column[],
-    studentGroup: StudentGroupViewModel
+  student: Student,
+  studentFields: StudentField[],
+  columns: Column[],
+  studentGroup: StudentGroupViewModel
 ): StudentViewModel {
-    return <StudentViewModel>{
-        ...student,
-        fields: sortFieldsByColumns(studentFields, columns),
-        groupId: studentGroup.groupId,
-        ordinal: studentGroup.ordinal,
-    };
+  return <StudentViewModel>{
+    ...student,
+    fields: sortFieldsByColumns(studentFields, columns),
+    groupId: studentGroup.groupId,
+    ordinal: studentGroup.ordinal,
+  };
 }
 
 export function getConfigurationViewModel(
-    configuration: Configuration
+  configuration: Configuration
 ): ConfigurationViewModel {
-    return configuration;
+  return configuration;
 }
 
 export function getColumnViewModel(column: Column): ColumnViewModel {
-    return column;
+  return column;
 }
 
 export function getFieldViewModel(field: Field): FieldViewModel {
-    return field;
+  return field;
 }
 
 export function getGroupViewModels(group: Group): GroupViewModel {
-    return group;
+  return group;
 }
 
 export function getStudentFieldViewModel(
-    studentField: StudentField
+  studentField: StudentField
 ): StudentFieldViewModel {
-    return studentField;
+  return studentField;
 }
 
 export function getStudentGroupViewModel(
-    studentGroup: StudentGroup
+  studentGroup: StudentGroup
 ): StudentGroupViewModel {
-    return studentGroup;
+  return studentGroup;
 }
 
 function sortFieldsByColumns(
-    studentFields: StudentField[],
-    columns: Column[]
+  studentFields: StudentField[],
+  columns: Column[]
 ): StudentField[] {
-    const fieldIdsToIndexes = new Map<string, number>();
-    columns.forEach(({ fieldId }, index) =>
-        fieldIdsToIndexes.set(fieldId, index)
-    );
-    return studentFields.sort(
-        (a, b) =>
-            (fieldIdsToIndexes.get(a.fieldId) ?? studentFields.length) -
-            (fieldIdsToIndexes.get(b.fieldId) ?? studentFields.length)
-    );
+  const fieldIdsToIndexes = new Map<string, number>();
+  columns.forEach(({ fieldId }, index) =>
+    fieldIdsToIndexes.set(fieldId, index)
+  );
+  return studentFields.sort(
+    (a, b) =>
+      (fieldIdsToIndexes.get(a.fieldId) ?? studentFields.length) -
+      (fieldIdsToIndexes.get(b.fieldId) ?? studentFields.length)
+  );
 }

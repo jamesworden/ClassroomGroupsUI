@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,8 +25,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CommonModule } from '@angular/common';
-import { ClassroomsService, Column } from '@shared/classrooms';
-import { AccountsService } from '@shared/accounts';
+import { ClassroomsService, Column, Configuration } from '@shared/classrooms';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -45,7 +44,7 @@ import { AccountsService } from '@shared/accounts';
     MatMenuModule,
     MatBadgeModule,
     CommonModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',
@@ -55,16 +54,11 @@ export class ConfigurationPanelComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
 
-  readonly classrooms = this.#classroomsService.classrooms;
-  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
-  readonly viewingClassroom = this.#classroomsService.viewingClassroom;
-  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
-  readonly viewingConfigurationId =
-    this.#classroomsService.viewingConfigurationId;
-  readonly viewingColumns = this.#classroomsService.viewingColumns;
-  readonly viewingFieldsById = this.#classroomsService.viewingFieldsById;
-  readonly viewingConfigurations =
-    this.#classroomsService.viewingConfigurations;
+  readonly viewingConfiguration = input<Configuration>();
+
+  readonly viewingColumns = computed(() =>
+    this.#classroomsService.columns(this.viewingConfiguration()?.id)()
+  );
 
   readonly enabledColumnBadges = computed(() => {
     const enabledColumnBadges: {
@@ -90,8 +84,8 @@ export class ConfigurationPanelComponent {
   constructor() {
     effect(
       () =>
-      (this.updatedDescription =
-        this.viewingConfiguration()?.description ?? '')
+        (this.updatedDescription =
+          this.viewingConfiguration()?.description ?? '')
     );
     effect(
       () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
@@ -104,72 +98,73 @@ export class ConfigurationPanelComponent {
   }
 
   updateDescription() {
-    const configurationId = this.viewingConfigurationId();
+    const configurationId = this.viewingConfiguration()?.id;
     if (configurationId) {
-      this.#classroomsService.updateConfiguration(configurationId, {
-        description: this.updatedDescription,
-      });
+      // this.#classroomsService.updateConfiguration(configurationId, {
+      //   description: this.updatedDescription,
+      // });
     }
   }
 
   updateLabel() {
-    const classroomId = this.viewingClassroomId();
-    const configurationId = this.viewingConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.updateConfiguration(classroomId, {
-        label: this.updatedLabel,
-      });
-    }
+    // const classroomId = this.viewingClassroomId();
+    // const configurationId = this.viewingConfigurationId();
+    // if (classroomId && configurationId) {
+    //   this.#classroomsService.updateConfiguration(classroomId, {
+    //     label: this.updatedLabel,
+    //   });
+    // }
   }
 
   openDeleteConfigurationModal() {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete configuration',
-        subtitle: `Are you sure you want to delete the configuration ${this.viewingConfiguration()?.label
-          } and all of it's data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      const classroomId = this.viewingClassroomId();
-      const configurationId = this.viewingConfigurationId();
-      if (success && classroomId && configurationId) {
-        this.#classroomsService.deleteConfiguration(configurationId);
-      }
-    });
+    // const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+    //   restoreFocus: false,
+    //   data: <YesNoDialogInputs>{
+    //     title: 'Delete configuration',
+    //     subtitle: `Are you sure you want to delete the configuration ${
+    //       this.viewingConfiguration()?.label
+    //     } and all of it's data?`,
+    //   },
+    // });
+    // dialogRef.afterClosed().subscribe((success) => {
+    //   const classroomId = this.viewingClassroomId();
+    //   const configurationId = this.viewingConfigurationId();
+    //   if (success && classroomId && configurationId) {
+    //     this.#classroomsService.deleteConfiguration(configurationId);
+    //   }
+    // });
   }
 
   drop(event: CdkDragDrop<Column>) {
-    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
-    const classroomId = this.viewingClassroomId();
-    const configurationId = this.viewingConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.updateColumns(configurationId, this.columns);
-    }
+    // moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+    // const classroomId = this.viewingClassroomId();
+    // const configurationId = this.viewingConfigurationId();
+    // if (classroomId && configurationId) {
+    //   this.#classroomsService.updateColumns(configurationId, this.columns);
+    // }
   }
 
   openCreateColumnDialog() {
-    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-      restoreFocus: false,
-      data: <CreateEditColumnDialogInputs>{
-        title: 'Create Column',
-      },
-    });
-    dialogRef
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.createField(outputs.field);
-          this.#matSnackBar.open('Column created', 'Hide', {
-            duration: 3000,
-          });
-        }
-      });
+    // const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+    //   restoreFocus: false,
+    //   data: <CreateEditColumnDialogInputs>{
+    //     title: 'Create Column',
+    //   },
+    // });
+    // dialogRef
+    //   .afterClosed()
+    //   .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+    //     if (outputs) {
+    //       this.#classroomsService.createField(outputs.field);
+    //       this.#matSnackBar.open('Column created', 'Hide', {
+    //         duration: 3000,
+    //       });
+    //     }
+    //   });
   }
 
   toggleColumn(columnId: string) {
-    this.#classroomsService.toggleColumn(columnId);
+    // this.#classroomsService.toggleColumn(columnId);
   }
 
   setSortAscending(columnId: string) {
@@ -225,9 +220,9 @@ export class ConfigurationPanelComponent {
   }
 
   createGroup() {
-    this.#classroomsService.createGroup(this.viewingConfigurationId() ?? '');
-    this.#matSnackBar.open('Group created', 'Hide', {
-      duration: 3000,
-    });
+    // this.#classroomsService.createGroup(this.viewingConfigurationId() ?? '');
+    // this.#matSnackBar.open('Group created', 'Hide', {
+    //   duration: 3000,
+    // });
   }
 }
