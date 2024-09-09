@@ -3,6 +3,7 @@ import {
   ClassroomDetail,
   ConfigurationDetail,
   CreatedClassroomResponse,
+  CreatedConfigurationResponse,
   DeletedClassroomResponse,
 } from './models';
 
@@ -69,10 +70,10 @@ export class ClassroomsService {
       });
   }
 
-  public getConfigurationDetail(configurationId: string) {
+  public getConfigurationDetail(classroomId: string, configurationId: string) {
     return this.#httpClient
       .get<ConfigurationDetail[]>(
-        `/api/v1/classrooms/configuration-detail/${configurationId}`,
+        `/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
         {
           withCredentials: true,
         }
@@ -101,7 +102,7 @@ export class ClassroomsService {
         }
       )
       .subscribe(({ createdClassroomDetail }) => {
-        console.log('[Classroom]', createdClassroomDetail);
+        console.log('[Created Classroom Detail]', createdClassroomDetail);
         this.patchState((state) => ({
           classroomDetails: [...state.classroomDetails, createdClassroomDetail],
           classroomsLoading: false,
@@ -114,12 +115,9 @@ export class ClassroomsService {
       classroomsLoading: true,
     }));
     return this.#httpClient
-      .delete<DeletedClassroomResponse>(
-        `/api/v1/classrooms/classrooms/${classroomId}`,
-        {
-          withCredentials: true,
-        }
-      )
+      .delete<DeletedClassroomResponse>(`/api/v1/classrooms/${classroomId}`, {
+        withCredentials: true,
+      })
       .subscribe(({ deletedClassroom }) => {
         this.patchState((state) => ({
           classroomDetails: [
@@ -128,6 +126,31 @@ export class ClassroomsService {
             ),
           ],
           classroomsLoading: false,
+        }));
+      });
+  }
+
+  public createConfiguration(classroomId: string, label: string) {
+    return this.#httpClient
+      .post<CreatedConfigurationResponse>(
+        `/api/v1/classrooms/${classroomId}`,
+        {
+          label,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(({ createdConfigurationDetail }) => {
+        console.log(
+          '[Created Configuration Detail]',
+          createdConfigurationDetail
+        );
+        this.patchState((state) => ({
+          configurationDetails: [
+            ...state.configurationDetails,
+            createdConfigurationDetail,
+          ],
         }));
       });
   }

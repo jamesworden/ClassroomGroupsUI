@@ -94,20 +94,20 @@ export class ConfigurationsPanelComponent {
   }
 
   createConfiguration() {
-    // if (this.createConfigurationLabel.trim().length <= 0) {
-    //   this.#matSnackBar.open(
-    //     'Please enter the name of the configuration.',
-    //     'Hide',
-    //     {
-    //       duration: 3000,
-    //     }
-    //   );
-    //   return;
-    // }
-    // this.#classroomsService.createConfiguration(
-    //   this.viewingClassroomId() ?? '',
-    //   this.createConfigurationLabel
-    // );
-    // this.createConfigurationLabel = '';
+    if (this.createConfigurationLabel.trim().length <= 0) {
+      this.#matSnackBar.open(
+        'Please enter the name of the configuration.',
+        'Hide',
+        {
+          duration: 3000,
+        }
+      );
+      return;
+    }
+    this.#classroomsService.createConfiguration(
+      this.classroomId()!,
+      this.createConfigurationLabel
+    );
+    this.createConfigurationLabel = '';
   }
 }

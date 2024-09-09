@@ -134,7 +134,10 @@ export class ClassroomViewComponent {
     effect(
       () =>
         this.configurationId() &&
-        this.#classroomsService.getConfigurationDetail(this.configurationId()!)
+        this.#classroomsService.getConfigurationDetail(
+          this.classroomId(),
+          this.configurationId()!
+        )
     );
   }
 
