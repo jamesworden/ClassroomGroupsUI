@@ -25,7 +25,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CommonModule } from '@angular/common';
-import { ClassroomsService, Column, Configuration } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  Column,
+  Configuration,
+  ConfigurationDetail,
+} from '@shared/classrooms';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -54,24 +59,21 @@ export class ConfigurationPanelComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
 
-  readonly viewingConfiguration = input<Configuration>();
-
-  readonly viewingColumns = computed(() =>
-    this.#classroomsService.columns(this.viewingConfiguration()?.id)()
-  );
+  readonly configurationDetail = input<ConfigurationDetail>();
 
   readonly enabledColumnBadges = computed(() => {
-    const enabledColumnBadges: {
-      [columnId: string]: number;
-    } = {};
-    let latestSortValue = 1;
-    for (const column of this.viewingColumns() ?? []) {
-      if (column.enabled) {
-        enabledColumnBadges[column.id] = latestSortValue;
-        latestSortValue++;
-      }
-    }
-    return enabledColumnBadges;
+    // const enabledColumnBadges: {
+    //   [columnId: string]: number;
+    // } = {};
+    // let latestSortValue = 1;
+    // for (const column of this.viewingColumns() ?? []) {
+    //   if (column.enabled) {
+    //     enabledColumnBadges[column.id] = latestSortValue;
+    //     latestSortValue++;
+    //   }
+    // }
+    // return enabledColumnBadges;
+    return [];
   });
 
   averageScores = false;
@@ -81,29 +83,29 @@ export class ConfigurationPanelComponent {
   updatedLabel = '';
   columns: Column[] = [];
 
-  constructor() {
-    effect(
-      () =>
-        (this.updatedDescription =
-          this.viewingConfiguration()?.description ?? '')
-    );
-    effect(
-      () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
-    );
-    effect(() => (this.columns = this.viewingColumns()));
-  }
+  // constructor() {
+  //   effect(
+  //     () =>
+  //       (this.updatedDescription =
+  //         this.viewingConfiguration()?.description ?? '')
+  //   );
+  //   effect(
+  //     () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
+  //   );
+  //   effect(() => (this.columns = this.viewingColumns()));
+  // }
 
   toggleGroupingType() {
     this.groupingByDivision = !this.groupingByDivision;
   }
 
   updateDescription() {
-    const configurationId = this.viewingConfiguration()?.id;
-    if (configurationId) {
-      // this.#classroomsService.updateConfiguration(configurationId, {
-      //   description: this.updatedDescription,
-      // });
-    }
+    // const configurationId = this.viewingConfiguration()?.id;
+    // if (configurationId) {
+    //   // this.#classroomsService.updateConfiguration(configurationId, {
+    //   //   description: this.updatedDescription,
+    //   // });
+    // }
   }
 
   updateLabel() {

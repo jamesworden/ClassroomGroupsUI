@@ -3,6 +3,7 @@ import {
   computed,
   ElementRef,
   inject,
+  input,
   Signal,
   signal,
   ViewChild,
@@ -19,7 +20,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { ClassroomsService, Configuration } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  Configuration,
+  ConfigurationViewModel,
+} from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -48,7 +53,13 @@ export class ConfigurationsPanelComponent {
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
 
-  readonly classrooms = this.#classroomsService.classrooms;
+  readonly configurationId = input<string>();
+  readonly classroomId = input<string>();
+
+  readonly configurationDetail = computed(() =>
+    this.#classroomsService.configurationDetail()
+  );
+
   readonly ResizableSide = ResizableSide;
   readonly searchQuery = signal('');
   readonly isLoggedIn = this.#accountsService.isLoggedIn;

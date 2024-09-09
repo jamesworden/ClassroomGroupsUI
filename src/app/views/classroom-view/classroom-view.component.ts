@@ -91,14 +91,11 @@ export class ClassroomViewComponent {
   });
   readonly classroomId = computed(() => this.queryParams().id);
   readonly classroom = computed(() =>
-    this.#classroomsService.classroom(this.classroomId())()
+    this.#classroomsService.classroomDetail(this.classroomId())()
   );
   readonly configurationId = signal<string | undefined>(undefined);
-  readonly configuration = computed(() =>
-    this.#classroomsService.configuration(this.configurationId())()
-  );
-  readonly groups = computed(() =>
-    this.#classroomsService.groups(this.configurationId())()
+  readonly configurationDetail = computed(() =>
+    this.#classroomsService.configurationDetail(this.configurationId())()
   );
 
   readonly theme = this.#themeService.theme;
@@ -127,13 +124,18 @@ export class ClassroomViewComponent {
         (this.updatedClassroomDescription = this.classroom()?.description ?? '')
     );
     effect(() => (this.updatedClassroomLabel = this.classroom()?.label ?? ''));
-    effect(() => (this.editingGroups = this.groups()));
+    effect(() => (this.editingGroups = []));
     effect(() => {
       localStorage.setItem(
         StorageKeys.CONFIG_PANEL,
         JSON.stringify(this.configPanelSettings())
       );
     });
+    effect(
+      () =>
+        this.configurationId() &&
+        this.#classroomsService.getConfigurationDetail(this.configurationId()!)
+    );
   }
 
   private loadConfigPanelSettings() {

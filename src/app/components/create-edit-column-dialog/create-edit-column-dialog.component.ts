@@ -62,8 +62,9 @@ export class CreateEditColumnDialogComponent {
   readonly viewingClassroom = input<ClassroomViewModel>();
   readonly viewingConfiguration = input<ConfigurationViewModel>();
 
-  readonly viewingColumns = computed(() =>
-    this.#classroomsService.columns(this.viewingConfiguration()?.id)
+  readonly viewingColumns = computed(
+    () => []
+    // this.#classroomsService.columns(this.viewingConfiguration()?.id)
   );
 
   readonly Type = FieldType;

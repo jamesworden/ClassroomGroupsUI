@@ -23,7 +23,10 @@
       class="flex flex-col border-r border-neutral-400 shadow-lg"
       resizingId="config-panel"
     >
-      <app-configurations-panel class="flex-1"></app-configurations-panel>
+      <app-configurations-panel
+        [configurationId]="configurationId()"
+        class="flex-1"
+      ></app-configurations-panel>
     </div>
     }
 
@@ -59,7 +62,7 @@
         <div class="flex flex-col gap-y-6 flex-1">
           <section class="sticky top-0 mx-4 z-10">
             <app-configuration-panel
-              [viewingConfiguration]="configuration()"
+              [configurationDetail]="configurationDetail()"
             ></app-configuration-panel>
           </section>
 
@@ -128,15 +131,14 @@
             class="mx-4 flex flex-col flex-1 gap-y-6"
           >
             @for(group of editingGroups; track group.id) {
-            <app-group-panel
+            <!-- <app-group-panel
               cdkDrag
               [group]="group"
-              [configuration]="configuration()"
+              [configuration]="configurationDetail()"
               [classroom]="classroom()"
             >
               <mat-icon class="cursor-move" cdkDragHandle>drag_handle</mat-icon>
-            </app-group-panel>
-
+            </app-group-panel> -->
             }
           </section>
           }

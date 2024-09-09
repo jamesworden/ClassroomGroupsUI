@@ -1,6 +1,17 @@
-<div class="m-4">
+<mat-toolbar>
+  <span>Classrooms</span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button class="example-icon favorite-icon">
+    <mat-icon>add</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon">
+    <mat-icon>delete</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="mx-4">
   <section class="example-container mat-elevation-z8" tabindex="0">
-    <table mat-table [dataSource]="classrooms()">
+    <table mat-table [dataSource]="classroomDetails()">
       <ng-container matColumnDef="label">
         <th mat-header-cell *matHeaderCellDef>Name.</th>
         <td mat-cell *matCellDef="let element">{{ element.label }}</td>

@@ -10,10 +10,11 @@ export class AppService {
   readonly #accountsService = inject(AccountsService);
 
   readonly isLoggedIn = this.#accountsService.isLoggedIn;
+  readonly accountLoading = this.#accountsService.accountLoading;
 
   constructor() {
     effect(() => {
-      if (!this.isLoggedIn()) {
+      if (!this.isLoggedIn() && !this.accountLoading()) {
         this.#router.navigate(['/']);
       }
     });
