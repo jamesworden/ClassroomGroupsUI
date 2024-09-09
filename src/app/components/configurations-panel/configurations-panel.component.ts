@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  effect,
   ElementRef,
   inject,
   input,
@@ -74,6 +75,7 @@ export class ConfigurationsPanelComponent {
   );
 
   constructor() {
+    effect(() => console.log(this.filteredConfigurations()));
     // this.#classroomsService.addedConfiguration$
     //   .pipe(takeUntilDestroyed())
     //   .subscribe(() => {

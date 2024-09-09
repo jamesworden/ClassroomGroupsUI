@@ -79,16 +79,21 @@ export class ClassroomsService {
 
   public getConfigurationDetail(classroomId: string, configurationId: string) {
     return this.#httpClient
-      .get<ConfigurationDetail[]>(
+      .get<ConfigurationDetail>(
         `/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
         {
           withCredentials: true,
         }
       )
-      .subscribe((configurationDetails) => {
-        console.log('[Classrooms]', configurationDetails);
-        this.patchState(() => ({
-          configurationDetails,
+      .subscribe((configurationDetail) => {
+        console.log('[Classrooms]', configurationDetail);
+        this.patchState((state) => ({
+          configurationDetails: [
+            ...state.configurationDetails.filter(
+              (c) => c.id !== configurationDetail.id
+            ),
+            configurationDetail,
+          ],
         }));
       });
   }
