@@ -12,6 +12,14 @@
       theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
     }}</mat-icon>
   </button>
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="accountMenu"
+    (menuOpened)="markMenuAsOpen()"
+    (menuClosed)="markMenuAsClosed()"
+  >
+    <mat-icon>account_circle</mat-icon>
+  </button>
 </mat-toolbar>
 
 <div class="mx-4">
@@ -37,3 +45,7 @@
     </table>
   </section>
 </div>
+
+<mat-menu #accountMenu="matMenu">
+  <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
+</mat-menu>

@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { AccountsService } from '@shared/accounts';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
+import { AccountMenuComponent } from '../account-menu/account-menu.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,6 +18,7 @@ import { GoogleSignInButtonComponent } from '@ui-inputs';
     MatButtonModule,
     MatMenuModule,
     GoogleSignInButtonComponent,
+    AccountMenuComponent,
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
@@ -40,10 +42,6 @@ export class SidebarComponent {
 
   toggleClassAndConfigPanel() {
     this.toggledClassAndConfigPanel.emit();
-  }
-
-  logout() {
-    this.#accountsService.logout();
   }
 
   markMenuAsOpen() {
