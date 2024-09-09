@@ -1,7 +1,11 @@
 <mat-toolbar>
   <span>Classrooms</span>
   <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon favorite-icon">
+  <button
+    mat-icon-button
+    class="example-icon favorite-icon"
+    (click)="openCreateClassroomModal()"
+  >
     <mat-icon>add</mat-icon>
   </button>
   <button mat-icon-button class="example-icon">
@@ -23,6 +27,9 @@
 </mat-toolbar>
 
 <div class="mx-4">
+  @if (classroomsLoading()) {
+  <mat-spinner></mat-spinner>
+  } @else if (classroomDetails().length > 0) {
   <section class="example-container mat-elevation-z8" tabindex="0">
     <table mat-table [dataSource]="classroomDetails()">
       <ng-container matColumnDef="label">
@@ -44,6 +51,9 @@
       ></tr>
     </table>
   </section>
+  } @else {
+  <h2>No classrooms!</h2>
+  }
 </div>
 
 <mat-menu #accountMenu="matMenu">

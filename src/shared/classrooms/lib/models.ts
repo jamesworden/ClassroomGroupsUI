@@ -63,6 +63,10 @@ export interface StudentGroup {
   ordinal: number;
 }
 
+export interface CreatedClassroomResponse {
+  createdClassroomDetail: ClassroomDetail;
+}
+
 export interface ClassroomDetail {
   id: string;
   accountId: string;

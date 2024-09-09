@@ -1,11 +1,16 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { ClassroomDetail, ConfigurationDetail } from './models';
+import {
+  ClassroomDetail,
+  ConfigurationDetail,
+  CreatedClassroomResponse,
+} from './models';
 
 import { HttpClient } from '@angular/common/http';
 
 interface ClassroomsState {
   classroomDetails: ClassroomDetail[];
   configurationDetails: ConfigurationDetail[];
+  classroomsLoading: boolean;
 }
 
 @Injectable({
@@ -17,6 +22,7 @@ export class ClassroomsService {
   private readonly _state = signal<ClassroomsState>({
     classroomDetails: [],
     configurationDetails: [],
+    classroomsLoading: false,
   });
 
   public readonly classroomDetails = computed(
@@ -31,17 +37,34 @@ export class ClassroomsService {
       this._state().configurationDetails.find((c) => c.id === configurationId)
     );
 
+  public readonly classroomsLoading = computed(
+    () => this._state().classroomsLoading
+  );
+
+  public patchState(
+    strategy: (state: ClassroomsState) => Partial<ClassroomsState>
+  ) {
+    const state = this._state();
+    this._state.set({
+      ...state,
+      ...strategy(state),
+    });
+  }
+
   public getClassroomDetails() {
+    this.patchState(() => ({
+      classroomsLoading: true,
+    }));
     return this.#httpClient
       .get<ClassroomDetail[]>('/api/v1/classrooms/classroom-details', {
         withCredentials: true,
       })
       .subscribe((classroomDetails) => {
         console.log('[Classrooms]', classroomDetails);
-        this._state.set({
-          ...this._state(),
+        this.patchState(() => ({
           classroomDetails,
-        });
+          classroomsLoading: false,
+        }));
       });
   }
 
@@ -55,10 +78,33 @@ export class ClassroomsService {
       )
       .subscribe((configurationDetails) => {
         console.log('[Classrooms]', configurationDetails);
-        this._state.set({
-          ...this._state(),
+        this.patchState(() => ({
           configurationDetails,
-        });
+        }));
+      });
+  }
+
+  public createClassroom(label: string, description?: string) {
+    this.patchState(() => ({
+      classroomsLoading: true,
+    }));
+    return this.#httpClient
+      .post<CreatedClassroomResponse>(
+        `/api/v1/classrooms`,
+        {
+          label,
+          description,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(({ createdClassroomDetail }) => {
+        console.log('[Classroom]', createdClassroomDetail);
+        this.patchState((state) => ({
+          classroomDetails: [...state.classroomDetails, createdClassroomDetail],
+          classroomsLoading: false,
+        }));
       });
   }
 }
