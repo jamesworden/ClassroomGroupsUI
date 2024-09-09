@@ -24,9 +24,9 @@
     <mat-action-list>
       @for (configuration of filteredConfigurations(); track configuration.id) {
       <mat-list-item (click)="selectConfiguration(configuration.id)">
-        <!-- <mat-icon matListItemIcon>{{
-          configuration.id === viewingConfiguration()?.id ? 'group' : null
-        }}</mat-icon> -->
+        <mat-icon matListItemIcon>{{
+          configuration.id === configurationId() ? 'group' : null
+        }}</mat-icon>
         <div matListItemTitle>{{ configuration.label }}</div>
         <div matListItemLine>{{ configuration.description }}</div>
       </mat-list-item>

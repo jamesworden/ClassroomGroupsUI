@@ -56,8 +56,8 @@ export class ConfigurationsPanelComponent {
   readonly configurationId = input<string>();
   readonly classroomId = input<string>();
 
-  readonly configurationDetail = computed(() =>
-    this.#classroomsService.configurationDetail()
+  readonly configurationDetails = computed(() =>
+    this.#classroomsService.configurationDetails(this.classroomId())()
   );
 
   readonly ResizableSide = ResizableSide;
@@ -66,11 +66,11 @@ export class ConfigurationsPanelComponent {
 
   createConfigurationLabel = '';
 
-  readonly filteredConfigurations: Signal<Configuration[]> = computed(() =>
-    // this.viewingConfigurations().filter(({ label }) =>
-    //   label.toLowerCase().includes(this.searchQuery())
-    // ) ??
-    []
+  readonly filteredConfigurations: Signal<Configuration[]> = computed(
+    () =>
+      this.configurationDetails()?.filter(({ label }) =>
+        label.toLowerCase().includes(this.searchQuery())
+      ) ?? []
   );
 
   constructor() {

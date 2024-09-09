@@ -39,6 +39,13 @@ export class ClassroomsService {
       this._state().configurationDetails.find((c) => c.id === configurationId)
     );
 
+  public readonly configurationDetails = (classroomId?: string) =>
+    computed(() =>
+      this._state().configurationDetails.filter(
+        (c) => c.classroomId === classroomId
+      )
+    );
+
   public readonly classroomsLoading = computed(
     () => this._state().classroomsLoading
   );
