@@ -102,6 +102,4 @@ export class ClassroomsViewComponent {
       }
     });
   }
-
-  openRenameClassroomModal(classroomDetail: ClassroomDetail) {}
 }
