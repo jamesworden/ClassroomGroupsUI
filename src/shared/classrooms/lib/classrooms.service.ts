@@ -133,7 +133,7 @@ export class ClassroomsService {
   public createConfiguration(classroomId: string, label: string) {
     return this.#httpClient
       .post<CreatedConfigurationResponse>(
-        `/api/v1/classrooms/${classroomId}`,
+        `/api/v1/classrooms/${classroomId}/configurations`,
         {
           label,
         },
