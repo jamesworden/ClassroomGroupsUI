@@ -6,6 +6,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ClassroomsService } from '@shared/classrooms';
 import { Router } from '@angular/router';
+import { ThemeService } from 'app/themes/theme.service';
+import { Themes } from 'app/themes/theme.models';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -18,8 +20,11 @@ import { Router } from '@angular/router';
 export class ClassroomsViewComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #router = inject(Router);
+  readonly #themeService = inject(ThemeService);
 
   readonly classroomDetails = this.#classroomsService.classroomDetails;
+  readonly theme = this.#themeService.theme;
+  readonly Themes = Themes;
 
   displayedColumns = ['label', 'description'];
 
@@ -29,5 +34,9 @@ export class ClassroomsViewComponent {
 
   viewClassroom(id: string) {
     this.#router.navigate(['/classrooms', id]);
+  }
+
+  toggleTheme() {
+    this.#themeService.toggleTheme();
   }
 }
