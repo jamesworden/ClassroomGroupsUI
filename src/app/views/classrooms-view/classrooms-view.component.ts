@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { ClassroomsService } from '@shared/classrooms';
+import { ClassroomDetail, ClassroomsService } from '@shared/classrooms';
 import { Router } from '@angular/router';
 import { ThemeService } from 'app/themes/theme.service';
 import { Themes } from 'app/themes/theme.models';
@@ -16,6 +16,10 @@ import {
   CreateClassroomDialogResults,
 } from 'app/components/create-classroom-dialog/create-classroom-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from 'app/components/yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -46,7 +50,7 @@ export class ClassroomsViewComponent {
   readonly Themes = Themes;
   readonly menuIsOpen = signal(false);
 
-  displayedColumns = ['label', 'description'];
+  displayedColumns = ['label', 'description', 'actions'];
 
   constructor() {
     this.#classroomsService.getClassroomDetails();
@@ -84,4 +88,20 @@ export class ClassroomsViewComponent {
         }
       });
   }
+
+  openDeleteClassroomModal(classroomDetail: ClassroomDetail) {
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: `Are you sure you want to delete ${classroomDetail.label}?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success: boolean) => {
+      if (success) {
+        this.#classroomsService.deleteClassroom(classroomDetail.id);
+      }
+    });
+  }
+
+  openRenameClassroomModal(classroomDetail: ClassroomDetail) {}
 }

@@ -3,6 +3,7 @@ import {
   ClassroomDetail,
   ConfigurationDetail,
   CreatedClassroomResponse,
+  DeletedClassroomResponse,
 } from './models';
 
 import { HttpClient } from '@angular/common/http';
@@ -103,6 +104,29 @@ export class ClassroomsService {
         console.log('[Classroom]', createdClassroomDetail);
         this.patchState((state) => ({
           classroomDetails: [...state.classroomDetails, createdClassroomDetail],
+          classroomsLoading: false,
+        }));
+      });
+  }
+
+  public deleteClassroom(classroomId: string) {
+    this.patchState(() => ({
+      classroomsLoading: true,
+    }));
+    return this.#httpClient
+      .delete<DeletedClassroomResponse>(
+        `/api/v1/classrooms/classrooms/${classroomId}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(({ deletedClassroom }) => {
+        this.patchState((state) => ({
+          classroomDetails: [
+            ...state.classroomDetails.filter(
+              (c) => c.id !== deletedClassroom.id
+            ),
+          ],
           classroomsLoading: false,
         }));
       });
