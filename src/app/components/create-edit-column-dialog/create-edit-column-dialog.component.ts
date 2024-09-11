@@ -14,11 +14,11 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
+  Classroom,
   ClassroomsService,
-  ClassroomViewModel,
   Column,
   ColumnSort,
-  ConfigurationViewModel,
+  Configuration,
   Field,
   FieldType,
   generateUniqueId,
@@ -59,8 +59,8 @@ export class CreateEditColumnDialogComponent {
   readonly #data = inject<CreateEditColumnDialogInputs>(MAT_DIALOG_DATA);
   readonly #classroomsService = inject(ClassroomsService);
 
-  readonly viewingClassroom = input<ClassroomViewModel>();
-  readonly viewingConfiguration = input<ConfigurationViewModel>();
+  readonly viewingClassroom = input<Classroom>();
+  readonly viewingConfiguration = input<Configuration>();
 
   readonly viewingColumns = computed(
     () => []

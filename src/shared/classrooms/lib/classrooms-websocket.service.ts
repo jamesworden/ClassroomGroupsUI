@@ -29,11 +29,11 @@ export class ClassroomsWebsocketService {
   private connectAndRegisterEvents() {
     this.hubConnection.start().then(
       () => {
-        console.log('[Server] Connected');
+        console.log('[Server] Connected.');
         this._isConnectedToServer.set(true);
       },
       () => {
-        console.error('[Server] Unable to connect');
+        console.error('[Server] Failed to connect.');
         this._isConnectedToServer.set(false);
       }
     );

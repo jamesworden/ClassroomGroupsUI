@@ -24,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
-import { ClassroomsService, Group, GroupViewModel } from '@shared/classrooms';
+import { ClassroomsService, Group } from '@shared/classrooms';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
 import { ConfigurationPanelComponent } from 'app/components/configuration-panel/configuration-panel.component';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
@@ -121,7 +121,7 @@ export class ClassroomViewComponent {
 
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
-  editingGroups: GroupViewModel[] = [];
+  editingGroups: Group[] = [];
 
   constructor() {
     this.loadConfigPanelSettings();
@@ -138,7 +138,6 @@ export class ClassroomViewComponent {
         JSON.stringify(this.configPanelSettings())
       );
     });
-    effect(() => console.log(this.classroomId()));
     effect(
       () =>
         this.selectedConfigurationId() &&
@@ -225,7 +224,7 @@ export class ClassroomViewComponent {
     // }
   }
 
-  drop(event: CdkDragDrop<GroupViewModel[]>) {
+  drop(event: CdkDragDrop<Group[]>) {
     // moveItemInArray(
     //   this.editingGroups,
     //   event.previousIndex,

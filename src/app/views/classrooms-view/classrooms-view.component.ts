@@ -75,7 +75,6 @@ export class ClassroomsViewComponent {
     dialogRef
       .afterClosed()
       .subscribe((results?: CreateClassroomDialogResults) => {
-        console.log(results);
         if (results) {
           this.#classroomsService.createClassroom(
             results.label,

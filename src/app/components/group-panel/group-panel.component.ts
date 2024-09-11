@@ -22,13 +22,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   ClassroomsService,
-  ClassroomViewModel,
-  ConfigurationViewModel,
   Group,
-  GroupViewModel,
   Student,
   StudentField,
-  StudentViewModel,
 } from '@shared/classrooms';
 
 @Component({

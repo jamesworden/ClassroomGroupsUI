@@ -88,7 +88,7 @@ export class ClassroomsService {
         }
       )
       .subscribe(({ classroomDetails }) => {
-        console.log('[Get Classroom Details]', classroomDetails);
+        console.log('[Got Classroom Details]', classroomDetails);
         this.patchState(() => ({
           classroomDetails,
           classroomsLoading: false,
@@ -105,7 +105,7 @@ export class ClassroomsService {
         }
       )
       .subscribe(({ configurationDetail }) => {
-        console.log('[Get Configuration Detail]', configurationDetail);
+        console.log('[Got Configuration Detail]', configurationDetail);
         this.patchState((state) => ({
           configurationDetails: [
             ...state.configurationDetails.filter(
@@ -193,7 +193,6 @@ export class ClassroomsService {
   }
 
   public getConfigurations(classroomId: string) {
-    console.log('get configurations');
     this.patchState(() => ({
       configurationsLoading: true,
     }));
@@ -205,7 +204,7 @@ export class ClassroomsService {
         }
       )
       .subscribe(({ configurations }) => {
-        console.log('[Get Configurations]', configurations);
+        console.log('[Got Configurations]', configurations);
         this.patchState(() => ({
           configurations,
           configurationsLoading: false,

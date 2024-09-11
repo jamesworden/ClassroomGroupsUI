@@ -20,11 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  ClassroomsService,
-  Configuration,
-  ConfigurationViewModel,
-} from '@shared/classrooms';
+import { ClassroomsService, Configuration } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
