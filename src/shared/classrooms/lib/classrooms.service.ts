@@ -12,7 +12,7 @@ import {
 } from './models';
 
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { catchError, finalize, of, Subject, take, tap } from 'rxjs';
 import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 
 interface ClassroomsState {
@@ -88,13 +88,21 @@ export class ClassroomsService {
           withCredentials: true,
         }
       )
-      .subscribe(({ classroomDetails }) => {
-        console.log('[Got Classroom Details]', classroomDetails);
-        this.patchState(() => ({
-          classroomDetails,
-          classroomsLoading: false,
-        }));
-      });
+      .pipe(
+        tap(({ classroomDetails }) => {
+          console.log('[Got Classroom Details]', classroomDetails);
+          this.patchState(() => ({ classroomDetails }));
+        }),
+        catchError((error) => {
+          console.log('[Get Classroom Details Failed]', error);
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState(() => ({ classroomsLoading: false }));
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 
   public getConfigurationDetail(classroomId: string, configurationId: string) {
@@ -105,17 +113,25 @@ export class ClassroomsService {
           withCredentials: true,
         }
       )
-      .subscribe(({ configurationDetail }) => {
-        console.log('[Got Configuration Detail]', configurationDetail);
-        this.patchState((state) => ({
-          configurationDetails: [
-            ...state.configurationDetails.filter(
-              (c) => c.id !== configurationDetail.id
-            ),
-            configurationDetail,
-          ],
-        }));
-      });
+      .pipe(
+        tap(({ configurationDetail }) => {
+          console.log('[Got Configuration Detail]', configurationDetail);
+          this.patchState((state) => ({
+            configurationDetails: [
+              ...state.configurationDetails.filter(
+                (c) => c.id !== configurationDetail.id
+              ),
+              configurationDetail,
+            ],
+          }));
+        }),
+        catchError((error) => {
+          console.log('[Get Configuration Detail Failed]', error);
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 
   public createClassroom(label: string, description?: string) {
@@ -133,13 +149,29 @@ export class ClassroomsService {
           withCredentials: true,
         }
       )
-      .subscribe(({ createdClassroomDetail }) => {
-        console.log('[Created Classroom Detail]', createdClassroomDetail);
-        this.patchState((state) => ({
-          classroomDetails: [...state.classroomDetails, createdClassroomDetail],
-          classroomsLoading: false,
-        }));
-      });
+      .pipe(
+        tap(({ createdClassroomDetail }) => {
+          console.log('[Created Classroom Detail]', createdClassroomDetail);
+          this.patchState((state) => ({
+            classroomDetails: [
+              ...state.classroomDetails,
+              createdClassroomDetail,
+            ],
+            classroomsLoading: false,
+          }));
+        }),
+        catchError((error) => {
+          console.log('[Create Classroom Failed]', error);
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState(() => ({
+            classroomsLoading: false,
+          }));
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 
   public deleteClassroom(classroomId: string) {
@@ -150,17 +182,30 @@ export class ClassroomsService {
       .delete<DeletedClassroomResponse>(`/api/v1/classrooms/${classroomId}`, {
         withCredentials: true,
       })
-      .subscribe(({ deletedClassroom }) => {
-        console.log('[Deleted Classroom]', deletedClassroom);
-        this.patchState((state) => ({
-          classroomDetails: [
-            ...state.classroomDetails.filter(
-              (c) => c.id !== deletedClassroom.id
-            ),
-          ],
-          classroomsLoading: false,
-        }));
-      });
+      .pipe(
+        tap(({ deletedClassroom }) => {
+          console.log('[Deleted Classroom]', deletedClassroom);
+          this.patchState((state) => ({
+            classroomDetails: [
+              ...state.classroomDetails.filter(
+                (c) => c.id !== deletedClassroom.id
+              ),
+            ],
+            classroomsLoading: false,
+          }));
+        }),
+        catchError((error) => {
+          console.log('[Delete Classroom Failed]', error);
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState(() => ({
+            classroomsLoading: false,
+          }));
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 
   public createConfiguration(classroomId: string, label: string) {
@@ -174,23 +219,31 @@ export class ClassroomsService {
           withCredentials: true,
         }
       )
-      .subscribe(({ createdConfigurationDetail }) => {
-        console.log(
-          '[Created Configuration Detail]',
-          createdConfigurationDetail
-        );
-        this.patchState((state) => ({
-          configurationDetails: [
-            ...state.configurationDetails,
-            createdConfigurationDetail,
-          ],
-          configurations: [
-            ...state.configurations,
-            getConfigurationFromDetail(createdConfigurationDetail),
-          ],
-        }));
-        this.createdConfiguration$.next();
-      });
+      .pipe(
+        tap(({ createdConfigurationDetail }) => {
+          console.log(
+            '[Created Configuration Detail]',
+            createdConfigurationDetail
+          );
+          this.patchState((state) => ({
+            configurationDetails: [
+              ...state.configurationDetails,
+              createdConfigurationDetail,
+            ],
+            configurations: [
+              ...state.configurations,
+              getConfigurationFromDetail(createdConfigurationDetail),
+            ],
+          }));
+          this.createdConfiguration$.next();
+        }),
+        catchError((error) => {
+          console.log('[Create Configuration Failed]', error);
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 
   public getConfigurations(classroomId: string) {
@@ -204,12 +257,25 @@ export class ClassroomsService {
           withCredentials: true,
         }
       )
-      .subscribe(({ configurations }) => {
-        console.log('[Got Configurations]', configurations);
-        this.patchState(() => ({
-          configurations,
-          configurationsLoading: false,
-        }));
-      });
+      .pipe(
+        tap(({ configurations }) => {
+          console.log('[Got Configurations]', configurations);
+          this.patchState(() => ({
+            configurations,
+            configurationsLoading: false,
+          }));
+        }),
+        catchError((error) => {
+          console.log('[Get Configurations Failed]', error);
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState(() => ({
+            configurationsLoading: false,
+          }));
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 }

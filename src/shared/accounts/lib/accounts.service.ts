@@ -32,7 +32,7 @@ export class AccountsService {
         }),
         catchError((error: HttpErrorResponse) => {
           if (error.status !== 403) {
-            console.error('Error fetching account:', error);
+            console.error('[Failed to Get Account]', error);
           }
           return of(null);
         }),
@@ -43,7 +43,7 @@ export class AccountsService {
       .subscribe((account) => {
         if (account) {
           this._account.set(account);
-          console.log('[Account]:', account);
+          console.log('[Got Account]', account);
         }
       });
   }
@@ -54,12 +54,8 @@ export class AccountsService {
         withCredentials: true,
       })
       .subscribe(() => {
-        this.reset();
+        this._account.set(undefined);
+        this._accountLoading.set(false);
       });
-  }
-
-  reset() {
-    this._account.set(undefined);
-    this._accountLoading.set(false);
   }
 }
