@@ -6,6 +6,7 @@ import {
   CreatedClassroomResponse,
   CreatedConfigurationResponse,
   DeletedClassroomResponse,
+  GetConfigurationDetailResponse,
   GetConfigurationsResponse,
 } from './models';
 
@@ -93,13 +94,13 @@ export class ClassroomsService {
 
   public getConfigurationDetail(classroomId: string, configurationId: string) {
     return this.#httpClient
-      .get<ConfigurationDetail>(
+      .get<GetConfigurationDetailResponse>(
         `/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
         {
           withCredentials: true,
         }
       )
-      .subscribe((configurationDetail) => {
+      .subscribe(({ configurationDetail }) => {
         console.log('[Get Configuration Detail]', configurationDetail);
         this.patchState((state) => ({
           configurationDetails: [
