@@ -13,6 +13,7 @@ import {
 
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 
 interface ClassroomsState {
   classroomDetails: ClassroomDetail[];
@@ -211,15 +212,4 @@ export class ClassroomsService {
         }));
       });
   }
-}
-
-function getConfigurationFromDetail(
-  detail: ConfigurationDetail
-): Configuration {
-  return {
-    classroomId: detail.classroomId,
-    id: detail.id,
-    label: detail.label,
-    description: detail.description,
-  };
 }
