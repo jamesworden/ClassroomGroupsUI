@@ -6,6 +6,7 @@ import {
   CreatedClassroomResponse,
   CreatedConfigurationResponse,
   DeletedClassroomResponse,
+  GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
 } from './models';
@@ -80,10 +81,13 @@ export class ClassroomsService {
       classroomsLoading: true,
     }));
     return this.#httpClient
-      .get<ClassroomDetail[]>('/api/v1/classrooms/classroom-details', {
-        withCredentials: true,
-      })
-      .subscribe((classroomDetails) => {
+      .get<GetClassroomDetailsResponse>(
+        '/api/v1/classrooms/classroom-details',
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(({ classroomDetails }) => {
         console.log('[Get Classroom Details]', classroomDetails);
         this.patchState(() => ({
           classroomDetails,

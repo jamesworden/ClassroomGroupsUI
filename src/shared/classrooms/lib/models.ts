@@ -63,6 +63,10 @@ export interface StudentGroup {
   ordinal: number;
 }
 
+export interface GetClassroomDetailsResponse {
+  classroomDetails: ClassroomDetail[];
+}
+
 export interface GetConfigurationDetailResponse {
   configurationDetail: ConfigurationDetail;
 }
