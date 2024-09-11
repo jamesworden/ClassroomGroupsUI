@@ -52,10 +52,6 @@ export class ClassroomsViewComponent {
 
   displayedColumns = ['label', 'description', 'actions'];
 
-  constructor() {
-    this.#classroomsService.getClassroomDetails();
-  }
-
   viewClassroom(id: string) {
     this.#router.navigate(['/classrooms', id]);
   }

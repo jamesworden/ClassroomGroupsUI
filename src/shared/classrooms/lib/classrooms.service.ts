@@ -1,18 +1,23 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   ClassroomDetail,
+  Configuration,
   ConfigurationDetail,
   CreatedClassroomResponse,
   CreatedConfigurationResponse,
   DeletedClassroomResponse,
+  GetConfigurationsResponse,
 } from './models';
 
 import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 interface ClassroomsState {
   classroomDetails: ClassroomDetail[];
   configurationDetails: ConfigurationDetail[];
+  configurations: Configuration[];
   classroomsLoading: boolean;
+  configurationsLoading: boolean;
 }
 
 @Injectable({
@@ -24,7 +29,9 @@ export class ClassroomsService {
   private readonly _state = signal<ClassroomsState>({
     classroomDetails: [],
     configurationDetails: [],
+    configurations: [],
     classroomsLoading: false,
+    configurationsLoading: false,
   });
 
   public readonly classroomDetails = computed(
@@ -46,9 +53,16 @@ export class ClassroomsService {
       )
     );
 
+  public readonly configurations = (classroomId?: string) =>
+    computed(() =>
+      this._state().configurations.filter((c) => c.classroomId === classroomId)
+    );
+
   public readonly classroomsLoading = computed(
     () => this._state().classroomsLoading
   );
+
+  public readonly createdConfiguration$ = new Subject<void>();
 
   public patchState(
     strategy: (state: ClassroomsState) => Partial<ClassroomsState>
@@ -69,7 +83,7 @@ export class ClassroomsService {
         withCredentials: true,
       })
       .subscribe((classroomDetails) => {
-        console.log('[Classrooms]', classroomDetails);
+        console.log('[Get Classroom Details]', classroomDetails);
         this.patchState(() => ({
           classroomDetails,
           classroomsLoading: false,
@@ -86,7 +100,7 @@ export class ClassroomsService {
         }
       )
       .subscribe((configurationDetail) => {
-        console.log('[Classrooms]', configurationDetail);
+        console.log('[Get Configuration Detail]', configurationDetail);
         this.patchState((state) => ({
           configurationDetails: [
             ...state.configurationDetails.filter(
@@ -131,6 +145,7 @@ export class ClassroomsService {
         withCredentials: true,
       })
       .subscribe(({ deletedClassroom }) => {
+        console.log('[Deleted Classroom]', deletedClassroom);
         this.patchState((state) => ({
           classroomDetails: [
             ...state.classroomDetails.filter(
@@ -163,7 +178,44 @@ export class ClassroomsService {
             ...state.configurationDetails,
             createdConfigurationDetail,
           ],
+          configurations: [
+            ...state.configurations,
+            getConfigurationFromDetail(createdConfigurationDetail),
+          ],
+        }));
+        this.createdConfiguration$.next();
+      });
+  }
+
+  public getConfigurations(classroomId: string) {
+    console.log('get configurations');
+    this.patchState(() => ({
+      configurationsLoading: true,
+    }));
+    return this.#httpClient
+      .get<GetConfigurationsResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations`,
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(({ configurations }) => {
+        console.log('[Get Configurations]', configurations);
+        this.patchState(() => ({
+          configurations,
+          configurationsLoading: false,
         }));
       });
   }
+}
+
+function getConfigurationFromDetail(
+  detail: ConfigurationDetail
+): Configuration {
+  return {
+    classroomId: detail.classroomId,
+    id: detail.id,
+    label: detail.label,
+    description: detail.description,
+  };
 }

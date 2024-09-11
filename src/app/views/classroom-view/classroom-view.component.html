@@ -25,7 +25,8 @@
     >
       <app-configurations-panel
         [classroomId]="classroomId()"
-        [configurationId]="configurationId()"
+        [selectedConfigurationId]="selectedConfigurationId()"
+        (configurationIdSelected)="selectConfigurationId($event)"
         class="flex-1"
       ></app-configurations-panel>
     </div>

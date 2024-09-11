@@ -1,10 +1,10 @@
 import {
   Component,
   computed,
-  effect,
   ElementRef,
   inject,
   input,
+  output,
   Signal,
   signal,
   ViewChild,
@@ -16,7 +16,6 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +27,7 @@ import {
 } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -54,11 +54,13 @@ export class ConfigurationsPanelComponent {
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
 
-  readonly configurationId = input<string>();
+  readonly selectedConfigurationId = input<string>();
   readonly classroomId = input<string>();
 
-  readonly configurationDetails = computed(() =>
-    this.#classroomsService.configurationDetails(this.classroomId())()
+  readonly configurationIdSelected = output<string>();
+
+  readonly configurations = computed(() =>
+    this.#classroomsService.configurations(this.classroomId())()
   );
 
   readonly ResizableSide = ResizableSide;
@@ -69,30 +71,29 @@ export class ConfigurationsPanelComponent {
 
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
     () =>
-      this.configurationDetails()?.filter(({ label }) =>
+      this.configurations()?.filter(({ label }) =>
         label.toLowerCase().includes(this.searchQuery())
       ) ?? []
   );
 
   constructor() {
-    effect(() => console.log(this.filteredConfigurations()));
-    // this.#classroomsService.addedConfiguration$
-    //   .pipe(takeUntilDestroyed())
-    //   .subscribe(() => {
-    //     setTimeout(() => {
-    //       this.scrollContainer.nativeElement.scrollTo({
-    //         top: this.scrollContainer.nativeElement.scrollHeight,
-    //         behavior: 'smooth',
-    //       });
-    //       this.#matSnackBar.open('Configuration created', 'Hide', {
-    //         duration: 3000,
-    //       });
-    //     });
-    //   });
+    this.#classroomsService.createdConfiguration$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        setTimeout(() => {
+          this.scrollContainer.nativeElement.scrollTo({
+            top: this.scrollContainer.nativeElement.scrollHeight,
+            behavior: 'smooth',
+          });
+          this.#matSnackBar.open('Configuration created', 'Hide', {
+            duration: 3000,
+          });
+        });
+      });
   }
 
   selectConfiguration(configurationId: string) {
-    // this.#classroomsService.viewConfiguration(configurationId);
+    this.configurationIdSelected.emit(configurationId);
   }
 
   createConfiguration() {

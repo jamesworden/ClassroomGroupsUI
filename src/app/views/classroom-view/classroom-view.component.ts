@@ -7,7 +7,11 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  takeUntilDestroyed,
+  toObservable,
+  toSignal,
+} from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -90,12 +94,15 @@ export class ClassroomViewComponent {
     },
   });
   readonly classroomId = computed(() => this.queryParams().id);
+  readonly classroomId$ = toObservable(this.classroomId);
   readonly classroom = computed(() =>
     this.#classroomsService.classroomDetail(this.classroomId())()
   );
-  readonly configurationId = signal<string | undefined>(undefined);
+  readonly selectedConfigurationId = signal<string | undefined>(undefined);
   readonly configurationDetail = computed(() =>
-    this.#classroomsService.configurationDetail(this.configurationId())()
+    this.#classroomsService.configurationDetail(
+      this.selectedConfigurationId()
+    )()
   );
 
   readonly theme = this.#themeService.theme;
@@ -131,14 +138,20 @@ export class ClassroomViewComponent {
         JSON.stringify(this.configPanelSettings())
       );
     });
+    effect(() => console.log(this.classroomId()));
     effect(
       () =>
-        this.configurationId() &&
+        this.selectedConfigurationId() &&
         this.#classroomsService.getConfigurationDetail(
           this.classroomId(),
-          this.configurationId()!
+          this.selectedConfigurationId()!
         )
     );
+    this.classroomId$
+      .pipe(takeUntilDestroyed())
+      .subscribe((classroomId) =>
+        this.#classroomsService.getConfigurations(classroomId)
+      );
   }
 
   private loadConfigPanelSettings() {
@@ -228,5 +241,9 @@ export class ClassroomViewComponent {
     this.#matSnackBar.open('Under construction!', 'Hide', {
       duration: 3000,
     });
+  }
+
+  selectConfigurationId(configurationId: string) {
+    this.selectedConfigurationId.set(configurationId);
   }
 }
