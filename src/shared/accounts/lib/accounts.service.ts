@@ -1,14 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import {
-  catchError,
-  finalize,
-  map,
-  Observable,
-  of,
-  tap,
-  throwError,
-} from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { catchError, finalize, of, tap } from 'rxjs';
 import { Account } from './models';
 
 @Injectable({
