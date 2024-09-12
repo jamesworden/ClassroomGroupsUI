@@ -41,7 +41,9 @@ class ClassroomSelectors {
 
   public readonly configurations = (classroomId?: string) =>
     computed(() =>
-      this._state().configurations.filter((c) => c.classroomId === classroomId)
+      this._state()
+        .configurations.filter((c) => c.classroomId === classroomId)
+        .sort((a, b) => a.label.localeCompare(b.label))
     );
 
   public readonly classroomsLoading = computed(
