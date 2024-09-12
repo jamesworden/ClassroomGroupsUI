@@ -40,6 +40,7 @@ import {
   ResizeableDirective,
 } from 'app/directives/resizeable.directive';
 import { ThemeService } from 'app/themes/theme.service';
+import { combineLatest } from 'rxjs';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -100,6 +101,9 @@ export class ClassroomViewComponent {
     this.#classroomsService.select.classroomDetail(this.classroomId())()
   );
   readonly selectedConfigurationId = signal<string | undefined>(undefined);
+  readonly selectedConfigurationId$ = toObservable(
+    this.selectedConfigurationId
+  );
   readonly configurationDetail = computed(() =>
     this.#classroomsService.select.configurationDetail(
       this.selectedConfigurationId()
@@ -139,14 +143,16 @@ export class ClassroomViewComponent {
         JSON.stringify(this.configPanelSettings())
       );
     });
-    effect(
-      () =>
-        this.selectedConfigurationId() &&
-        this.#classroomsService.getConfigurationDetail(
-          this.classroomId(),
-          this.selectedConfigurationId()!
-        )
-    );
+    combineLatest([this.classroomId$, this.selectedConfigurationId$])
+      .pipe(takeUntilDestroyed())
+      .subscribe(([classroomId, configurationId]) => {
+        if (configurationId) {
+          this.#classroomsService.getConfigurationDetail(
+            classroomId,
+            configurationId
+          );
+        }
+      });
     this.classroomId$
       .pipe(takeUntilDestroyed())
       .subscribe((classroomId) =>
