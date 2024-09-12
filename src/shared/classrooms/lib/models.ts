@@ -108,6 +108,17 @@ export interface ConfigurationDetail {
   label: string;
   description: string;
   groupDetails: GroupDetail[];
+  columnDetails: ColumnDetail[];
+}
+
+export interface ColumnDetail {
+  id: string;
+  configurationId: string;
+  fieldId: string;
+  ordinal: number;
+  sort: ColumnSort;
+  enabled: boolean;
+  fieldType: FieldType;
 }
 
 export interface GroupDetail {

@@ -61,6 +61,10 @@ export class ConfigurationPanelComponent {
 
   readonly configurationDetail = input<ConfigurationDetail>();
 
+  readonly viewingColumns = computed(
+    () => this.configurationDetail()?.columnDetails ?? []
+  );
+
   readonly enabledColumnBadges = computed(() => {
     // const enabledColumnBadges: {
     //   [columnId: string]: number;
@@ -83,17 +87,15 @@ export class ConfigurationPanelComponent {
   updatedLabel = '';
   columns: Column[] = [];
 
-  // constructor() {
-  //   effect(
-  //     () =>
-  //       (this.updatedDescription =
-  //         this.viewingConfiguration()?.description ?? '')
-  //   );
-  //   effect(
-  //     () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
-  //   );
-  //   effect(() => (this.columns = this.viewingColumns()));
-  // }
+  constructor() {
+    effect(
+      () =>
+        (this.updatedDescription =
+          this.configurationDetail()?.description ?? '')
+    );
+    effect(() => (this.updatedLabel = this.configurationDetail()?.label ?? ''));
+    effect(() => (this.columns = this.viewingColumns()));
+  }
 
   toggleGroupingType() {
     this.groupingByDivision = !this.groupingByDivision;
