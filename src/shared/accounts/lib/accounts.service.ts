@@ -43,7 +43,7 @@ export class AccountsService {
       accountLoading: true,
     }));
     return this.#httpClient
-      .get<GetAccountResponse>('/api/v1/authentication/get-account', {
+      .get<GetAccountResponse>('/api/v1/authentication/account', {
         withCredentials: true,
       })
       .pipe(
