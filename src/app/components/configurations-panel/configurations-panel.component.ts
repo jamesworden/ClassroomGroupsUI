@@ -56,7 +56,7 @@ export class ConfigurationsPanelComponent {
   readonly configurationIdSelected = output<string>();
 
   readonly configurations = computed(() =>
-    this.#classroomsService.configurations(this.classroomId())()
+    this.#classroomsService.select.configurations(this.classroomId())()
   );
 
   readonly ResizableSide = ResizableSide;
@@ -73,7 +73,7 @@ export class ConfigurationsPanelComponent {
   );
 
   constructor() {
-    this.#classroomsService.createdConfiguration$
+    this.#classroomsService.events.createdConfiguration$
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
         setTimeout(() => {

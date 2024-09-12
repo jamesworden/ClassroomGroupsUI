@@ -44,8 +44,8 @@ export class ClassroomsViewComponent {
   readonly #themeService = inject(ThemeService);
   readonly #matDialog = inject(MatDialog);
 
-  readonly classroomDetails = this.#classroomsService.classroomDetails;
-  readonly classroomsLoading = this.#classroomsService.classroomsLoading;
+  readonly classroomDetails = this.#classroomsService.select.classroomDetails;
+  readonly classroomsLoading = this.#classroomsService.select.classroomsLoading;
   readonly theme = this.#themeService.theme;
   readonly Themes = Themes;
   readonly menuIsOpen = signal(false);

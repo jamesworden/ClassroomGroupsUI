@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import {
   ClassroomDetail,
   Configuration,
@@ -16,28 +16,8 @@ import { catchError, finalize, of, Subject, take, tap } from 'rxjs';
 import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-interface ClassroomsState {
-  classroomDetails: ClassroomDetail[];
-  configurationDetails: ConfigurationDetail[];
-  configurations: Configuration[];
-  classroomsLoading: boolean;
-  configurationsLoading: boolean;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class ClassroomsService {
-  readonly #httpClient = inject(HttpClient);
-  readonly #matSnackBar = inject(MatSnackBar);
-
-  private readonly _state = signal<ClassroomsState>({
-    classroomDetails: [],
-    configurationDetails: [],
-    configurations: [],
-    classroomsLoading: false,
-    configurationsLoading: false,
-  });
+class ClassroomSelectors {
+  constructor(private _state: Signal<ClassroomsState>) {}
 
   public readonly classroomDetails = computed(
     () => this._state().classroomDetails
@@ -67,7 +47,45 @@ export class ClassroomsService {
     () => this._state().classroomsLoading
   );
 
-  public readonly createdConfiguration$ = new Subject<void>();
+  public readonly loadingConfigurationDetailIds = computed(
+    () => this._state().loadingConfigurationDetailIds
+  );
+}
+
+interface ClassroomsState {
+  classroomDetails: ClassroomDetail[];
+  configurationDetails: ConfigurationDetail[];
+  configurations: Configuration[];
+  classroomsLoading: boolean;
+  configurationsLoading: boolean;
+  loadingConfigurationDetailIds: string[];
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ClassroomsService {
+  readonly #httpClient = inject(HttpClient);
+  readonly #matSnackBar = inject(MatSnackBar);
+
+  private readonly _state = signal<ClassroomsState>({
+    classroomDetails: [],
+    configurationDetails: [],
+    configurations: [],
+    classroomsLoading: false,
+    configurationsLoading: false,
+    loadingConfigurationDetailIds: [],
+  });
+
+  public readonly select = new ClassroomSelectors(this._state.asReadonly());
+
+  private readonly _events = {
+    createdConfiguration$: new Subject<void>(),
+  };
+
+  public readonly events = {
+    createdConfiguration$: this._events.createdConfiguration$.asObservable(),
+  };
 
   public patchState(
     strategy: (state: ClassroomsState) => Partial<ClassroomsState>
@@ -115,6 +133,12 @@ export class ClassroomsService {
   }
 
   public getConfigurationDetail(classroomId: string, configurationId: string) {
+    this.patchState((state) => ({
+      loadingConfigurationDetailIds: [
+        ...state.loadingConfigurationDetailIds,
+        configurationId,
+      ],
+    }));
     return this.#httpClient
       .get<GetConfigurationDetailResponse>(
         `/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
@@ -144,6 +168,14 @@ export class ClassroomsService {
             }
           );
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((state) => ({
+            loadingConfigurationDetailIds:
+              state.loadingConfigurationDetailIds.filter(
+                (id) => id !== configurationId
+              ),
+          }));
         }),
         take(1)
       )
@@ -263,7 +295,7 @@ export class ClassroomsService {
           this.#matSnackBar.open('Configuration created', undefined, {
             duration: 3000,
           });
-          this.createdConfiguration$.next();
+          this._events.createdConfiguration$.next();
         }),
         catchError((error) => {
           console.log('[Create Configuration Failed]', error);

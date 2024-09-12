@@ -97,11 +97,11 @@ export class ClassroomViewComponent {
   readonly classroomId = computed(() => this.queryParams().id);
   readonly classroomId$ = toObservable(this.classroomId);
   readonly classroom = computed(() =>
-    this.#classroomsService.classroomDetail(this.classroomId())()
+    this.#classroomsService.select.classroomDetail(this.classroomId())()
   );
   readonly selectedConfigurationId = signal<string | undefined>(undefined);
   readonly configurationDetail = computed(() =>
-    this.#classroomsService.configurationDetail(
+    this.#classroomsService.select.configurationDetail(
       this.selectedConfigurationId()
     )()
   );
