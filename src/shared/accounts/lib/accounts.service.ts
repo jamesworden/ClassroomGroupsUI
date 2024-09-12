@@ -1,7 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, finalize, of, tap } from 'rxjs';
-import { Account } from './models';
+import { catchError, finalize, of, take, tap } from 'rxjs';
+import { Account, GetAccountResponse } from './models';
+
+interface AccountsState {
+  accountLoading: boolean;
+  account?: Account;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -9,26 +14,46 @@ import { Account } from './models';
 export class AccountsService {
   readonly #httpClient = inject(HttpClient);
 
-  private _accountLoading = signal(true);
-  public accountLoading = this._accountLoading.asReadonly();
+  private readonly _state = signal<AccountsState>({
+    accountLoading: true,
+  });
 
-  private _account = signal<Account | undefined>(undefined);
-  public account = this._account.asReadonly();
+  public readonly account = computed(() => this._state().account);
 
-  public isLoggedIn = computed(() => !!this._account());
+  public readonly isLoggedIn = computed(() => !!this._state().account);
+
+  public readonly accountLoading = computed(() => this._state().accountLoading);
 
   constructor() {
     this.getAccount();
   }
 
+  public patchState(
+    strategy: (state: AccountsState) => Partial<AccountsState>
+  ) {
+    const state = this._state();
+    this._state.set({
+      ...state,
+      ...strategy(state),
+    });
+  }
+
   getAccount() {
+    this.patchState(() => ({
+      accountLoading: true,
+    }));
     return this.#httpClient
-      .get<Account>('/api/v1/authentication/get-account', {
+      .get<GetAccountResponse>('/api/v1/authentication/get-account', {
         withCredentials: true,
       })
       .pipe(
-        tap(() => {
-          this._accountLoading.set(true);
+        tap(({ account }) => {
+          if (account) {
+            console.log('[Got Account]', account);
+            this.patchState(() => ({
+              account,
+            }));
+          }
         }),
         catchError((error: HttpErrorResponse) => {
           if (error.status !== 403) {
@@ -37,15 +62,13 @@ export class AccountsService {
           return of(null);
         }),
         finalize(() => {
-          this._accountLoading.set(false);
-        })
+          this.patchState(() => ({
+            accountLoading: false,
+          }));
+        }),
+        take(1)
       )
-      .subscribe((account) => {
-        if (account) {
-          this._account.set(account);
-          console.log('[Got Account]', account);
-        }
-      });
+      .subscribe();
   }
 
   logout() {
@@ -53,9 +76,15 @@ export class AccountsService {
       .post('/api/v1/authentication/logout', {
         withCredentials: true,
       })
-      .subscribe(() => {
-        this._account.set(undefined);
-        this._accountLoading.set(false);
-      });
+      .pipe(
+        finalize(() => {
+          this.patchState(() => ({
+            accountLoading: false,
+            account: undefined,
+          }));
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 }
