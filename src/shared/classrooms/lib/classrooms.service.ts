@@ -50,6 +50,10 @@ class ClassroomSelectors {
   public readonly loadingConfigurationDetailIds = computed(
     () => this._state().loadingConfigurationDetailIds
   );
+
+  public readonly configurationsLoading = computed(
+    () => this._state().configurationsLoading
+  );
 }
 
 interface ClassroomsState {

@@ -22,7 +22,10 @@
     </div>
 
     <mat-action-list>
-      @for (configuration of filteredConfigurations(); track configuration.id) {
+      @if (configurationsLoading()) {
+      <mat-spinner></mat-spinner>
+      } @else { @for (configuration of filteredConfigurations(); track
+      configuration.id) {
       <mat-list-item (click)="selectConfiguration(configuration.id)">
         <mat-icon matListItemIcon>{{
           configuration.id === selectedConfigurationId() ? 'group' : null
@@ -30,7 +33,7 @@
         <div matListItemTitle>{{ configuration.label }}</div>
         <div matListItemLine>{{ configuration.description }}</div>
       </mat-list-item>
-      }
+      } }
     </mat-action-list>
 
     <div class="ml-4 flex gap-x-2 mb-2">

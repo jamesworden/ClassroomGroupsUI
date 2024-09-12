@@ -24,6 +24,7 @@ import { ClassroomsService, Configuration } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -38,6 +39,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatInputModule,
     MatButtonModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './configurations-panel.component.html',
   styleUrl: './configurations-panel.component.scss',
@@ -62,6 +64,8 @@ export class ConfigurationsPanelComponent {
   readonly ResizableSide = ResizableSide;
   readonly searchQuery = signal('');
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
+  readonly configurationsLoading =
+    this.#classroomsService.select.configurationsLoading;
 
   createConfigurationLabel = '';
 
