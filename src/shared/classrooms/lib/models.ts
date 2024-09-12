@@ -138,3 +138,7 @@ export interface StudentDetail {
 export interface PatchedConfigurationResponse {
   patchedConfigurationDetail: ConfigurationDetail;
 }
+
+export interface PatchClassroomResponse {
+  patchedClassroomDetail: ClassroomDetail;
+}

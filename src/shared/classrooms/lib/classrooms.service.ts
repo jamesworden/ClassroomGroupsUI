@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import {
+  Classroom,
   ClassroomDetail,
   Configuration,
   ConfigurationDetail,
@@ -9,6 +10,7 @@ import {
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
+  PatchClassroomResponse,
   PatchedConfigurationResponse,
 } from './models';
 
@@ -20,8 +22,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
 
-  public readonly classroomDetails = computed(
-    () => this._state().classroomDetails
+  public readonly classroomDetails = computed(() =>
+    this._state().classroomDetails.sort((a, b) =>
+      a.label.localeCompare(b.label)
+    )
   );
 
   public readonly classroomDetail = (classroomId?: string) =>
@@ -398,10 +402,51 @@ export class ClassroomsService {
           this.#matSnackBar.open(successMessage, undefined, {
             duration: 3000,
           });
-          this._events.createdConfiguration$.next();
         }),
         catchError((error) => {
           console.log('[Patch Configuration Failed]', error);
+          this.#matSnackBar.open(failureMessage, undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public patchClassroom(
+    classroom: Classroom,
+    successMessage = 'Classroom updated',
+    failureMessage = 'Error updating classroom'
+  ) {
+    return this.#httpClient
+      .post<PatchClassroomResponse>(
+        `/api/v1/classrooms/${classroom.id}`,
+        {
+          classroom,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ patchedClassroomDetail }) => {
+          console.log('[Patched Classroom Detail]', patchedClassroomDetail);
+          this.patchState((state) => ({
+            classroomDetails: [
+              ...state.classroomDetails.filter(
+                (c) => c.id !== patchedClassroomDetail.id
+              ),
+              patchedClassroomDetail,
+            ],
+          }));
+          this.#matSnackBar.open(successMessage, undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Patch Classroom Failed]', error);
           this.#matSnackBar.open(failureMessage, undefined, {
             duration: 3000,
           });

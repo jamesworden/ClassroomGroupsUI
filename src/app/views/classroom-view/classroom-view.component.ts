@@ -214,23 +214,29 @@ export class ClassroomViewComponent {
   }
 
   updateClassroomDescription() {
-    // const classroomId = this.classroomId();
-    // if (classroomId) {
-    //   this.#classroomsService.updateClassroom(classroomId, {
-    //     description: this.updatedClassroomDescription,
-    //   });
-    // }
+    const classroom = this.classroom();
+    if (classroom) {
+      this.#classroomsService.patchClassroom(
+        {
+          ...classroom,
+          description: this.updatedClassroomDescription,
+        },
+        'Updated classroom description'
+      );
+    }
   }
 
   updateClassroomLabel() {
-    // const classroomId = this.classroomId();
-    // if (this.updatedClassroomLabel.trim().length === 0) {
-    //   this.updatedClassroomLabel = this.classroomId()?.label ?? '';
-    // } else if (classroomId) {
-    //   this.#classroomsService.updateClassroom(classroomId, {
-    //     label: this.updatedClassroomLabel,
-    //   });
-    // }
+    const classroom = this.classroom();
+    if (classroom) {
+      this.#classroomsService.patchClassroom(
+        {
+          ...classroom,
+          label: this.updatedClassroomLabel,
+        },
+        'Renamed classroom'
+      );
+    }
   }
 
   toggleClassAndConfigPanel() {
