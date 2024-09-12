@@ -272,8 +272,9 @@ export class ClassroomViewComponent {
 
   updateConfigurationLabel(label: string) {
     const configuration = this.selectedConfiguration();
-    if (configuration) {
-      this.#classroomsService.patchConfiguration(configuration.id, {
+    const classroom = this.classroom();
+    if (classroom && configuration) {
+      this.#classroomsService.patchConfiguration(classroom.id, {
         ...configuration,
         label,
       });
@@ -282,8 +283,9 @@ export class ClassroomViewComponent {
 
   updateConfigurationDescription(description: string) {
     const configuration = this.selectedConfiguration();
-    if (configuration) {
-      this.#classroomsService.patchConfiguration(configuration.id, {
+    const classroom = this.classroom();
+    if (classroom && configuration) {
+      this.#classroomsService.patchConfiguration(classroom.id, {
         ...configuration,
         description,
       });
