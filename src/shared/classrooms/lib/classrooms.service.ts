@@ -14,6 +14,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, of, Subject, take, tap } from 'rxjs';
 import { getConfigurationFromDetail } from './logic/get-model-from-detail';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface ClassroomsState {
   classroomDetails: ClassroomDetail[];
@@ -28,6 +29,7 @@ interface ClassroomsState {
 })
 export class ClassroomsService {
   readonly #httpClient = inject(HttpClient);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   private readonly _state = signal<ClassroomsState>({
     classroomDetails: [],
@@ -95,6 +97,13 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Get Classroom Details Failed]', error);
+          this.#matSnackBar.open(
+            'Error fetching classroom details',
+            undefined,
+            {
+              duration: 3000,
+            }
+          );
           return of(null);
         }),
         finalize(() => {
@@ -127,6 +136,13 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Get Configuration Detail Failed]', error);
+          this.#matSnackBar.open(
+            'Error fetching configuration detail',
+            undefined,
+            {
+              duration: 3000,
+            }
+          );
           return of(null);
         }),
         take(1)
@@ -159,6 +175,9 @@ export class ClassroomsService {
             ],
             classroomsLoading: false,
           }));
+          this.#matSnackBar.open('Classroom created', undefined, {
+            duration: 3000,
+          });
         }),
         catchError((error) => {
           console.log('[Create Classroom Failed]', error);
@@ -193,9 +212,15 @@ export class ClassroomsService {
             ],
             classroomsLoading: false,
           }));
+          this.#matSnackBar.open('Classroom deleted', undefined, {
+            duration: 3000,
+          });
         }),
         catchError((error) => {
           console.log('[Delete Classroom Failed]', error);
+          this.#matSnackBar.open('Error deleting classroom', undefined, {
+            duration: 3000,
+          });
           return of(null);
         }),
         finalize(() => {
@@ -235,10 +260,16 @@ export class ClassroomsService {
               getConfigurationFromDetail(createdConfigurationDetail),
             ],
           }));
+          this.#matSnackBar.open('Configuration created', undefined, {
+            duration: 3000,
+          });
           this.createdConfiguration$.next();
         }),
         catchError((error) => {
           console.log('[Create Configuration Failed]', error);
+          this.#matSnackBar.open('Error creating configuration', undefined, {
+            duration: 3000,
+          });
           return of(null);
         }),
         take(1)
@@ -267,6 +298,9 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Get Configurations Failed]', error);
+          this.#matSnackBar.open('Error fetching configurations', undefined, {
+            duration: 3000,
+          });
           return of(null);
         }),
         finalize(() => {
