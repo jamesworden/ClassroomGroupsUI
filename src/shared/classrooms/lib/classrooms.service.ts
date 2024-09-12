@@ -97,14 +97,6 @@ export class ClassroomsService {
 
   public readonly select = new ClassroomSelectors(this._state.asReadonly());
 
-  private readonly _events = {
-    createdConfiguration$: new Subject<void>(),
-  };
-
-  public readonly events = {
-    createdConfiguration$: this._events.createdConfiguration$.asObservable(),
-  };
-
   public patchState(
     strategy: (state: ClassroomsState) => Partial<ClassroomsState>
   ) {
@@ -313,7 +305,6 @@ export class ClassroomsService {
           this.#matSnackBar.open('Configuration created', undefined, {
             duration: 3000,
           });
-          this._events.createdConfiguration$.next();
         }),
         catchError((error) => {
           console.log('[Create Configuration Failed]', error);

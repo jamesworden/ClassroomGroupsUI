@@ -23,7 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { ClassroomsService, Configuration } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -75,19 +74,6 @@ export class ConfigurationsPanelComponent {
         label.toLowerCase().includes(this.searchQuery())
       ) ?? []
   );
-
-  constructor() {
-    this.#classroomsService.events.createdConfiguration$
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => {
-        setTimeout(() => {
-          this.scrollContainer.nativeElement.scrollTo({
-            top: this.scrollContainer.nativeElement.scrollHeight,
-            behavior: 'smooth',
-          });
-        });
-      });
-  }
 
   selectConfiguration(configurationId: string) {
     this.configurationIdSelected.emit(configurationId);
