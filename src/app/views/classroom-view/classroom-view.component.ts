@@ -274,10 +274,14 @@ export class ClassroomViewComponent {
     const configuration = this.selectedConfiguration();
     const classroom = this.classroom();
     if (classroom && configuration) {
-      this.#classroomsService.patchConfiguration(classroom.id, {
-        ...configuration,
-        label,
-      });
+      this.#classroomsService.patchConfiguration(
+        classroom.id,
+        {
+          ...configuration,
+          label,
+        },
+        'Renamed configuration'
+      );
     }
   }
 
@@ -285,10 +289,14 @@ export class ClassroomViewComponent {
     const configuration = this.selectedConfiguration();
     const classroom = this.classroom();
     if (classroom && configuration) {
-      this.#classroomsService.patchConfiguration(classroom.id, {
-        ...configuration,
-        description,
-      });
+      this.#classroomsService.patchConfiguration(
+        classroom.id,
+        {
+          ...configuration,
+          description,
+        },
+        'Updated configuration description'
+      );
     }
   }
 }
