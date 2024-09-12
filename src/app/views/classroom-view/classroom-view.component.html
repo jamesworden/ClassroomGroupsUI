@@ -66,6 +66,8 @@
           <section class="sticky top-0 mx-4 z-10">
             <app-configuration-panel
               [configurationDetail]="configurationDetail()"
+              (labelUpdated)="updateConfigurationLabel($event)"
+              (descriptionUpdated)="updateConfigurationDescription($event)"
             ></app-configuration-panel>
           </section>
 

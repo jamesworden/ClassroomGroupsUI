@@ -42,6 +42,7 @@ import {
 } from 'app/directives/resizeable.directive';
 import { ThemeService } from 'app/themes/theme.service';
 import { combineLatest } from 'rxjs';
+import { getConfigurationFromDetail } from 'shared/classrooms/lib/logic/get-model-from-detail';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -102,7 +103,9 @@ export class ClassroomViewComponent {
       id: null,
     },
   });
-  readonly classroomId = computed(() => this.queryParams().id);
+  readonly classroomId = computed(
+    () => this.queryParams().id as string | undefined
+  );
   readonly classroomId$ = toObservable(this.classroomId);
   readonly classroom = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
@@ -121,6 +124,12 @@ export class ClassroomViewComponent {
       this.selectedConfigurationId()
     )()
   );
+  readonly selectedConfiguration = computed(() => {
+    const detail = this.#classroomsService.select.configurationDetail(
+      this.selectedConfigurationId()
+    )();
+    return detail ? getConfigurationFromDetail(detail) : undefined;
+  });
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -152,7 +161,7 @@ export class ClassroomViewComponent {
     combineLatest([this.classroomId$, this.selectedConfigurationId$])
       .pipe(takeUntilDestroyed())
       .subscribe(([classroomId, configurationId]) => {
-        if (configurationId) {
+        if (classroomId && configurationId) {
           this.#classroomsService.getConfigurationDetail(
             classroomId,
             configurationId
@@ -161,8 +170,9 @@ export class ClassroomViewComponent {
       });
     this.classroomId$
       .pipe(takeUntilDestroyed())
-      .subscribe((classroomId) =>
-        this.#classroomsService.getConfigurations(classroomId)
+      .subscribe(
+        (classroomId) =>
+          classroomId && this.#classroomsService.getConfigurations(classroomId)
       );
   }
 
@@ -258,5 +268,25 @@ export class ClassroomViewComponent {
 
   selectConfigurationId(configurationId: string) {
     this.selectedConfigurationId.set(configurationId);
+  }
+
+  updateConfigurationLabel(label: string) {
+    const configuration = this.selectedConfiguration();
+    if (configuration) {
+      this.#classroomsService.patchConfiguration(configuration.id, {
+        ...configuration,
+        label,
+      });
+    }
+  }
+
+  updateConfigurationDescription(description: string) {
+    const configuration = this.selectedConfiguration();
+    if (configuration) {
+      this.#classroomsService.patchConfiguration(configuration.id, {
+        ...configuration,
+        description,
+      });
+    }
   }
 }

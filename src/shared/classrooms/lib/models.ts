@@ -134,3 +134,7 @@ export interface StudentDetail {
   groupId: string;
   studentGroupOrdinal: number;
 }
+
+export interface PatchedConfigurationResponse {
+  patchedConfigurationDetail: ConfigurationDetail;
+}

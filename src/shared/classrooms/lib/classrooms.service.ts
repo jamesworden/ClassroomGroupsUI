@@ -9,6 +9,7 @@ import {
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
+  PatchedConfigurationResponse,
 } from './models';
 
 import { HttpClient } from '@angular/common/http';
@@ -350,6 +351,55 @@ export class ClassroomsService {
           this.patchState(() => ({
             configurationsLoading: false,
           }));
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public patchConfiguration(
+    classroomId: string,
+    configuration: Configuration,
+    successMessage = 'Configuration updated',
+    failureMessage = 'Error updating configuration'
+  ) {
+    return this.#httpClient
+      .post<PatchedConfigurationResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configuration.id}`,
+        {
+          configuration,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ patchedConfigurationDetail }) => {
+          console.log(
+            '[Patched Configuration Detail]',
+            patchedConfigurationDetail
+          );
+          this.patchState((state) => ({
+            configurationDetails: [
+              ...state.configurationDetails,
+              patchedConfigurationDetail,
+            ],
+            configurations: [
+              ...state.configurations,
+              getConfigurationFromDetail(patchedConfigurationDetail),
+            ],
+          }));
+          this.#matSnackBar.open(successMessage, undefined, {
+            duration: 3000,
+          });
+          this._events.createdConfiguration$.next();
+        }),
+        catchError((error) => {
+          console.log('[Patch Configuration Failed]', error);
+          this.#matSnackBar.open(failureMessage, undefined, {
+            duration: 3000,
+          });
+          return of(null);
         }),
         take(1)
       )

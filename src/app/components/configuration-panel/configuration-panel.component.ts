@@ -1,4 +1,11 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -61,6 +68,9 @@ export class ConfigurationPanelComponent {
 
   readonly configurationDetail = input<ConfigurationDetail>();
 
+  readonly labelUpdated = output<string>();
+  readonly descriptionUpdated = output<string>();
+
   readonly viewingColumns = computed(
     () => this.configurationDetail()?.columnDetails ?? []
   );
@@ -102,6 +112,7 @@ export class ConfigurationPanelComponent {
   }
 
   updateDescription() {
+    this.descriptionUpdated.emit(this.updatedDescription);
     // const configurationId = this.viewingConfiguration()?.id;
     // if (configurationId) {
     //   // this.#classroomsService.updateConfiguration(configurationId, {
@@ -111,13 +122,7 @@ export class ConfigurationPanelComponent {
   }
 
   updateLabel() {
-    // const classroomId = this.viewingClassroomId();
-    // const configurationId = this.viewingConfigurationId();
-    // if (classroomId && configurationId) {
-    //   this.#classroomsService.updateConfiguration(classroomId, {
-    //     label: this.updatedLabel,
-    //   });
-    // }
+    this.labelUpdated.emit(this.updatedLabel);
   }
 
   openDeleteConfigurationModal() {
