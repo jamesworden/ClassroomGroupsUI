@@ -19,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -76,6 +77,7 @@ interface ConfigPanelSettings {
     CdkDrag,
     CdkDragHandle,
     GoogleSignInButtonComponent,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
@@ -89,6 +91,11 @@ export class ClassroomViewComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #activatedRoute = inject(ActivatedRoute);
   readonly #router = inject(Router);
+
+  readonly theme = this.#themeService.theme;
+  readonly isResizing = this.#resizableService.isResizing;
+  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
+  readonly accountLoading = this.#accountsService.select.accountLoading;
 
   readonly queryParams = toSignal(this.#activatedRoute.params, {
     initialValue: {
@@ -109,16 +116,15 @@ export class ClassroomViewComponent {
       this.selectedConfigurationId()
     )()
   );
-
-  readonly theme = this.#themeService.theme;
-  readonly isResizing = this.#resizableService.isResizing;
-  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
-  readonly accountLoading = this.#accountsService.select.accountLoading;
+  readonly configurationLoading = computed(() =>
+    this.#classroomsService.select.configurationLoading(
+      this.selectedConfigurationId()
+    )()
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
   readonly minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
-
   readonly configPanelSettings = signal<ConfigPanelSettings>({
     width: DEFAULT_PANEL_WIDTH,
     isOpen: true,

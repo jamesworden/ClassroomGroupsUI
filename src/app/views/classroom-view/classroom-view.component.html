@@ -146,9 +146,11 @@
           </section>
           }
         </div>
+        } @else if (configurationLoading()) {
+        <mat-spinner></mat-spinner>
         }
       </div>
-      } @else if (!isLoggedIn()) { } @else { }
+      }
     </div>
   </div>
 </div>
