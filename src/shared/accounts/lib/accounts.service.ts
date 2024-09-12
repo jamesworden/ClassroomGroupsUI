@@ -1,7 +1,17 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { catchError, finalize, of, take, tap } from 'rxjs';
 import { Account, GetAccountResponse } from './models';
+
+class AccountSelectors {
+  constructor(private _state: Signal<AccountsState>) {}
+
+  public readonly account = computed(() => this._state().account);
+
+  public readonly isLoggedIn = computed(() => !!this._state().account);
+
+  public readonly accountLoading = computed(() => this._state().accountLoading);
+}
 
 interface AccountsState {
   accountLoading: boolean;
@@ -18,11 +28,7 @@ export class AccountsService {
     accountLoading: true,
   });
 
-  public readonly account = computed(() => this._state().account);
-
-  public readonly isLoggedIn = computed(() => !!this._state().account);
-
-  public readonly accountLoading = computed(() => this._state().accountLoading);
+  public readonly select = new AccountSelectors(this._state.asReadonly());
 
   constructor() {
     this.getAccount();

@@ -25,8 +25,10 @@ export class AppComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #classroomsService = inject(ClassroomsService);
 
-  readonly isLoggedIn$ = toObservable(this.#accountsService.isLoggedIn);
-  readonly accountLoading$ = toObservable(this.#accountsService.accountLoading);
+  readonly isLoggedIn$ = toObservable(this.#accountsService.select.isLoggedIn);
+  readonly accountLoading$ = toObservable(
+    this.#accountsService.select.accountLoading
+  );
 
   constructor() {
     combineLatest([this.isLoggedIn$, this.accountLoading$])

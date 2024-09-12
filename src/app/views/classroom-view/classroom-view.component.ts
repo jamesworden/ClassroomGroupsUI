@@ -108,8 +108,8 @@ export class ClassroomViewComponent {
 
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
-  readonly isLoggedIn = this.#accountsService.isLoggedIn;
-  readonly accountLoading = this.#accountsService.accountLoading;
+  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
+  readonly accountLoading = this.#accountsService.select.accountLoading;
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);

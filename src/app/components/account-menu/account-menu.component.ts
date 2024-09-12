@@ -12,8 +12,8 @@ import { GoogleSignInButtonComponent } from '@ui-inputs';
 export class AccountMenuComponent {
   readonly #accountsService = inject(AccountsService);
 
-  readonly isLoggedIn = this.#accountsService.isLoggedIn;
-  readonly account = this.#accountsService.account;
+  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
+  readonly account = this.#accountsService.select.account;
 
   readonly menuIsOpen = input(false);
 

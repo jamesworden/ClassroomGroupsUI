@@ -30,8 +30,8 @@ export class SidebarComponent {
   readonly toggledClassAndConfigPanel = output();
 
   readonly theme = this.#themeService.theme;
-  readonly isLoggedIn = this.#accountsService.isLoggedIn;
-  readonly account = this.#accountsService.account;
+  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
+  readonly account = this.#accountsService.select.account;
 
   readonly Themes = Themes;
   readonly menuIsOpen = signal(false);

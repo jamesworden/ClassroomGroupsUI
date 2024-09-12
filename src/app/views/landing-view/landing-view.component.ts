@@ -14,7 +14,7 @@ export class LandingViewComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #router = inject(Router);
 
-  readonly isLoggedIn = this.#accountsService.isLoggedIn;
+  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
 
   constructor() {
     effect(() => {

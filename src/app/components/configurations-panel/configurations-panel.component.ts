@@ -61,7 +61,7 @@ export class ConfigurationsPanelComponent {
 
   readonly ResizableSide = ResizableSide;
   readonly searchQuery = signal('');
-  readonly isLoggedIn = this.#accountsService.isLoggedIn;
+  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
 
   createConfigurationLabel = '';
 
