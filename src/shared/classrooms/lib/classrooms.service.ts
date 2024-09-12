@@ -381,11 +381,15 @@ export class ClassroomsService {
           );
           this.patchState((state) => ({
             configurationDetails: [
-              ...state.configurationDetails,
+              ...state.configurationDetails.filter(
+                (c) => c.id !== patchedConfigurationDetail.id
+              ),
               patchedConfigurationDetail,
             ],
             configurations: [
-              ...state.configurations,
+              ...state.configurations.filter(
+                (c) => c.id !== patchedConfigurationDetail.id
+              ),
               getConfigurationFromDetail(patchedConfigurationDetail),
             ],
           }));
