@@ -71,9 +71,13 @@ export class ConfigurationPanelComponent {
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
 
-  readonly viewingColumns = computed(
+  readonly columnDetails = computed(
     () => this.configurationDetail()?.columnDetails ?? []
   );
+  readonly classroomId = computed(
+    () => this.configurationDetail()?.classroomId
+  );
+  readonly configurationId = computed(() => this.configurationDetail()?.id);
 
   readonly enabledColumnBadges = computed(() => {
     // const enabledColumnBadges: {
@@ -104,7 +108,7 @@ export class ConfigurationPanelComponent {
           this.configurationDetail()?.description ?? '')
     );
     effect(() => (this.updatedLabel = this.configurationDetail()?.label ?? ''));
-    effect(() => (this.columns = this.viewingColumns()));
+    effect(() => (this.columns = this.columnDetails()));
   }
 
   toggleGroupingType() {
@@ -229,9 +233,10 @@ export class ConfigurationPanelComponent {
   }
 
   createGroup() {
-    // this.#classroomsService.createGroup(this.viewingConfigurationId() ?? '');
-    // this.#matSnackBar.open('Group created', 'Hide', {
-    //   duration: 3000,
-    // });
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createGroup(classroomId, configurationId);
+    }
   }
 }
