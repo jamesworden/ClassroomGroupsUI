@@ -34,7 +34,7 @@ export class AccountsService {
     this.getAccount();
   }
 
-  public patchState(
+  private patchState(
     strategy: (state: AccountsState) => Partial<AccountsState>
   ) {
     const state = this._state();
