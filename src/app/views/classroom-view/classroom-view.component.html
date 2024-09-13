@@ -126,7 +126,8 @@
             <app-group-panel
               cdkDrag
               [groupDetail]="group"
-              (groupDeleted)="deleteGroup($event)"
+              (groupDeleted)="deleteGroup(group.id)"
+              (studentCreated)="createStudent(group.id)"
             >
               <mat-icon class="cursor-move" cdkDragHandle>drag_handle</mat-icon>
             </app-group-panel>

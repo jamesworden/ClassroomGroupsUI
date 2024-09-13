@@ -59,7 +59,8 @@ export class GroupPanelComponent {
 
   readonly groupDetail = input<GroupDetail>();
 
-  readonly groupDeleted = output<string>();
+  readonly groupDeleted = output<void>();
+  readonly studentCreated = output<void>();
 
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
 
@@ -90,12 +91,14 @@ export class GroupPanelComponent {
     });
   }
 
-  addStudent() {}
+  createStudent() {
+    this.studentCreated.emit();
+  }
 
   deleteGroup() {
     const groupDetail = this.groupDetail();
     if (groupDetail) {
-      this.groupDeleted.emit(groupDetail.id);
+      this.groupDeleted.emit();
     }
   }
 

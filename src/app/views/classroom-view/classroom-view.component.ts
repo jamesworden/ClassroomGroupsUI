@@ -323,4 +323,16 @@ export class ClassroomViewComponent {
       );
     }
   }
+
+  createStudent(groupId: string) {
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createStudent(
+        classroomId,
+        configurationId,
+        groupId
+      );
+    }
+  }
 }

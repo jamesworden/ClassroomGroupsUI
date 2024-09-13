@@ -109,6 +109,15 @@ export interface ConfigurationDetail {
   description: string;
   groupDetails: GroupDetail[];
   columnDetails: ColumnDetail[];
+  unassignedStudents: StudentWithFields[];
+}
+
+export interface StudentWithFields {
+  id: string;
+  classroomId: string;
+  fieldIdsToValues: {
+    [id: string]: string;
+  };
 }
 
 export interface ColumnDetail {
@@ -148,5 +157,9 @@ export interface CreateGroupResponse {
 }
 
 export interface DeleteGroupResponse {
+  updatedConfigurationDetail: ConfigurationDetail;
+}
+
+export interface CreateStudentResponse {
   updatedConfigurationDetail: ConfigurationDetail;
 }
