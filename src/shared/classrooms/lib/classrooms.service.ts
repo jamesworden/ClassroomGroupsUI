@@ -14,7 +14,6 @@ import {
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
   Group,
-  GroupDetail,
   PatchClassroomResponse,
   PatchConfigurationResponse,
   PatchGroupResponse,
