@@ -609,22 +609,28 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedConfigurationDetail }) => {
-          console.log('[Patched Group]', updatedConfigurationDetail);
-          this.patchState((state) => ({
-            configurationDetails: [
-              ...state.configurationDetails.filter(
-                (c) => c.id !== updatedConfigurationDetail.id
-              ),
-              updatedConfigurationDetail,
-            ],
-            configurations: [
-              ...state.configurations.filter(
-                (c) => c.id !== updatedConfigurationDetail.id
-              ),
-              getConfigurationFromDetail(updatedConfigurationDetail),
-            ],
-          }));
+        tap(({ updatedGroupDetail }) => {
+          console.log('[Patched Group]', updatedGroupDetail);
+          this.patchState((state) => {
+            const configurationDetails = state.configurationDetails.map(
+              (configuration) => {
+                if (configuration.id === configurationId) {
+                  const updatedGroups = configuration.groupDetails.map((g) =>
+                    g.id === groupId ? updatedGroupDetail : g
+                  );
+                  return {
+                    ...configuration,
+                    groupDetails: updatedGroups,
+                  };
+                }
+                return configuration;
+              }
+            );
+            return {
+              ...state,
+              configurationDetails,
+            };
+          });
           this.#matSnackBar.open(successMessage, undefined, {
             duration: 3000,
           });
