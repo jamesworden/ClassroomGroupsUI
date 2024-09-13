@@ -6,6 +6,7 @@ import {
   ConfigurationDetail,
   CreatedClassroomResponse,
   CreatedConfigurationResponse,
+  CreateGroupResponse,
   DeletedClassroomResponse,
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
@@ -439,6 +440,48 @@ export class ClassroomsService {
         catchError((error) => {
           console.log('[Patch Classroom Failed]', error);
           this.#matSnackBar.open(failureMessage, undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public createGroup(
+    classroomId: string,
+    configurationId: string,
+    label?: string
+  ) {
+    return this.#httpClient
+      .post<CreateGroupResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
+        {
+          label,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedConfigurationDetail }) => {
+          console.log('[Create Group]', updatedConfigurationDetail);
+          this.patchState((state) => ({
+            configurationDetails: [
+              ...state.configurationDetails.filter(
+                (c) => c.id !== configurationId
+              ),
+              updatedConfigurationDetail,
+            ],
+          }));
+          this.#matSnackBar.open('Created group', undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Create Group Failed]', error);
+          this.#matSnackBar.open('Error creating group', undefined, {
             duration: 3000,
           });
           return of(null);

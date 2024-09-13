@@ -248,10 +248,11 @@ export class ClassroomViewComponent {
   }
 
   createGroup() {
-    // const configurationId = this.configurationId();
-    // if (configurationId) {
-    //   this.#classroomsService.createGroup(configurationId);
-    // }
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createGroup(classroomId, configurationId);
+    }
   }
 
   drop(event: CdkDragDrop<Group[]>) {

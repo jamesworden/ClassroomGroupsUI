@@ -142,3 +142,7 @@ export interface PatchedConfigurationResponse {
 export interface PatchClassroomResponse {
   patchedClassroomDetail: ClassroomDetail;
 }
+
+export interface CreateGroupResponse {
+  updatedConfigurationDetail: ConfigurationDetail;
+}
