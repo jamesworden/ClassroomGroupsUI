@@ -61,9 +61,9 @@ export class GroupPanelComponent {
 
   readonly groupDeleted = output<void>();
   readonly studentCreated = output<void>();
+  readonly labelUpdated = output<string>();
 
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
-
   readonly columnDetails = computed(() =>
     this.#classroomsService.select.columnDetails(
       this.groupDetail()?.configurationId
@@ -84,10 +84,14 @@ export class GroupPanelComponent {
   editingStudentId?: string;
   editingField?: string | number;
   editingStudents: StudentDetail[] = [];
+  updatedLabel?: string;
 
   constructor() {
     effect(() => {
       this.editingStudents = this.studentsInGroup();
+    });
+    effect(() => {
+      this.updatedLabel = this.groupDetail()?.label;
     });
   }
 
@@ -99,6 +103,14 @@ export class GroupPanelComponent {
     const groupDetail = this.groupDetail();
     if (groupDetail) {
       this.groupDeleted.emit();
+    }
+  }
+
+  updateLabel() {
+    if (this.updatedLabel) {
+      this.labelUpdated.emit(this.updatedLabel);
+    } else {
+      this.updatedLabel = this.groupDetail()?.label;
     }
   }
 

@@ -42,7 +42,10 @@ import {
 } from 'app/directives/resizeable.directive';
 import { ThemeService } from 'app/themes/theme.service';
 import { combineLatest } from 'rxjs';
-import { getConfigurationFromDetail } from 'shared/classrooms/lib/logic/get-model-from-detail';
+import {
+  getConfigurationFromDetail,
+  getGroupFromDetail,
+} from 'shared/classrooms/lib/logic/get-model-from-detail';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -332,6 +335,20 @@ export class ClassroomViewComponent {
         classroomId,
         configurationId,
         groupId
+      );
+    }
+  }
+
+  updateGroupLabel(group: GroupDetail, label: string) {
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (classroomId && configurationId) {
+      group.label = label;
+      this.#classroomsService.patchGroup(
+        classroomId,
+        configurationId,
+        group.id,
+        getGroupFromDetail(group)
       );
     }
   }

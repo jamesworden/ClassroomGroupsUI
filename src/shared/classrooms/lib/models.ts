@@ -133,18 +133,18 @@ export interface ColumnDetail {
 export interface GroupDetail {
   id: string;
   configurationId: string;
-  groupOrdinal: number;
-  label: number;
+  ordinal: number;
+  label: string;
   studentDetails: StudentDetail[];
 }
 
 export interface StudentDetail {
   id: string;
   groupId: string;
-  studentGroupOrdinal: number;
+  ordinal: number;
 }
 
-export interface PatchedConfigurationResponse {
+export interface PatchConfigurationResponse {
   patchedConfigurationDetail: ConfigurationDetail;
 }
 
@@ -161,5 +161,9 @@ export interface DeleteGroupResponse {
 }
 
 export interface CreateStudentResponse {
+  updatedConfigurationDetail: ConfigurationDetail;
+}
+
+export interface PatchGroupResponse {
   updatedConfigurationDetail: ConfigurationDetail;
 }

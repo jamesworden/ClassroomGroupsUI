@@ -1,6 +1,6 @@
 <div class="panel rounded-lg flex-col gap-y-2 p-2 shadow-lg">
   <div class="flex justify-between">
-    <div class="flex gap-x-2">
+    <div class="flex gap-x-2 flex-1">
       <div class="flex flex-col justify-around">
         <ng-content></ng-content>
       </div>
@@ -9,8 +9,14 @@
         <mat-checkbox color="primary"></mat-checkbox>
       </div>
 
-      <div class="flex flex-col justify-around">
-        <span class="text-xl">{{ groupDetail()?.label }}</span>
+      <div class="flex flex-col justify-around flex-1 mr-2">
+        <input
+          class="text-ellipsis text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          maxlength="120"
+          [(ngModel)]="updatedLabel"
+          (change)="updateLabel()"
+        />
       </div>
     </div>
 

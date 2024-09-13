@@ -13,8 +13,11 @@ import {
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
+  Group,
+  GroupDetail,
   PatchClassroomResponse,
-  PatchedConfigurationResponse,
+  PatchConfigurationResponse,
+  PatchGroupResponse,
 } from './models';
 
 import { HttpClient } from '@angular/common/http';
@@ -377,7 +380,7 @@ export class ClassroomsService {
     failureMessage = 'Error updating configuration'
   ) {
     return this.#httpClient
-      .post<PatchedConfigurationResponse>(
+      .post<PatchConfigurationResponse>(
         `/api/v1/classrooms/${classroomId}/configurations/${configuration.id}`,
         {
           configuration,
@@ -579,6 +582,57 @@ export class ClassroomsService {
         catchError((error) => {
           console.log('[Create Student Failed]', error);
           this.#matSnackBar.open('Error creating student', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  patchGroup(
+    classroomId: string,
+    configurationId: string,
+    groupId: string,
+    group: Group,
+    successMessage = 'Group updated',
+    failureMessage = 'Error updating group'
+  ) {
+    return this.#httpClient
+      .post<PatchGroupResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
+        {
+          group,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedConfigurationDetail }) => {
+          console.log('[Patched Group]', updatedConfigurationDetail);
+          this.patchState((state) => ({
+            configurationDetails: [
+              ...state.configurationDetails.filter(
+                (c) => c.id !== updatedConfigurationDetail.id
+              ),
+              updatedConfigurationDetail,
+            ],
+            configurations: [
+              ...state.configurations.filter(
+                (c) => c.id !== updatedConfigurationDetail.id
+              ),
+              getConfigurationFromDetail(updatedConfigurationDetail),
+            ],
+          }));
+          this.#matSnackBar.open(successMessage, undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Patch Group Failed]', error);
+          this.#matSnackBar.open(failureMessage, undefined, {
             duration: 3000,
           });
           return of(null);
