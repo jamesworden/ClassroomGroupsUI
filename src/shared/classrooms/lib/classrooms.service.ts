@@ -170,7 +170,7 @@ export class ClassroomsService {
     }));
     return this.#httpClient
       .get<GetConfigurationDetailResponse>(
-        `/api/v1/configurations/${classroomId}/configuration-detail/${configurationId}`,
+        `/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
         {
           withCredentials: true,
         }
@@ -297,7 +297,7 @@ export class ClassroomsService {
   public createConfiguration(classroomId: string, label: string) {
     return this.#httpClient
       .post<CreatedConfigurationResponse>(
-        `/api/v1/configurations/${classroomId}/configurations`,
+        `/api/v1/classrooms/${classroomId}/configurations`,
         {
           label,
         },
@@ -343,7 +343,7 @@ export class ClassroomsService {
     }));
     return this.#httpClient
       .get<GetConfigurationsResponse>(
-        `/api/v1/configurations/${classroomId}/configurations`,
+        `/api/v1/classrooms/${classroomId}/configurations`,
         {
           withCredentials: true,
         }
@@ -381,7 +381,7 @@ export class ClassroomsService {
   ) {
     return this.#httpClient
       .post<PatchConfigurationResponse>(
-        `/api/v1/configurations/${classroomId}/configurations/${configuration.id}`,
+        `/api/v1/classrooms/${classroomId}/configurations/${configuration.id}`,
         {
           configuration,
         },
@@ -474,7 +474,7 @@ export class ClassroomsService {
   ) {
     return this.#httpClient
       .post<CreateGroupResponse>(
-        `/api/v1/groups/${classroomId}/configurations/${configurationId}/groups`,
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
         {
           label,
         },
