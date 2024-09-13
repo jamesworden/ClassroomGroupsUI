@@ -75,12 +75,7 @@
           <section
             class="mx-4 border border-4 border-dashed border-gray-300 flex-1 flex flex-col justify-around"
           >
-            <div
-              class="flex flex-col"
-              [ngClass]="{
-                'gap-y-4': !isLoggedIn()
-              }"
-            >
+            <div class="flex flex-col">
               <div class="flex flex-col gap-y-1">
                 <div class="flex justify-around">
                   <h5 class="opacity-50" style="margin: 0">
@@ -94,14 +89,6 @@
               </div>
 
               <div class="flex flex-col gap-y-2">
-                <div class="flex justify-around">
-                  @if (!isLoggedIn()) {
-                  <div>
-                    <app-google-sign-in-button></app-google-sign-in-button>
-                  </div>
-                  }
-                </div>
-
                 <div class="flex justify-around">
                   <div class="flex gap-x-2">
                     <div class="flex justify-around">
