@@ -123,7 +123,11 @@
             class="mx-4 flex flex-col flex-1 gap-y-6"
           >
             @for(group of editingGroups; track group.id) {
-            <app-group-panel cdkDrag [groupDetail]="group">
+            <app-group-panel
+              cdkDrag
+              [groupDetail]="group"
+              (groupDeleted)="deleteGroup($event)"
+            >
               <mat-icon class="cursor-move" cdkDragHandle>drag_handle</mat-icon>
             </app-group-panel>
             }

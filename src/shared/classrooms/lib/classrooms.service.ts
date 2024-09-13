@@ -8,6 +8,7 @@ import {
   CreatedConfigurationResponse,
   CreateGroupResponse,
   DeletedClassroomResponse,
+  DeleteGroupResponse,
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
@@ -495,6 +496,45 @@ export class ClassroomsService {
         catchError((error) => {
           console.log('[Create Group Failed]', error);
           this.#matSnackBar.open('Error creating group', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public deleteGroup(
+    classroomId: string,
+    configurationId: string,
+    groupId: string
+  ) {
+    return this.#httpClient
+      .delete<DeleteGroupResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedConfigurationDetail }) => {
+          console.log('[Deleted Group]', updatedConfigurationDetail);
+          this.patchState((state) => ({
+            configurationDetails: [
+              ...state.configurationDetails.filter(
+                (c) => c.id !== configurationId
+              ),
+              updatedConfigurationDetail,
+            ],
+          }));
+          this.#matSnackBar.open('Deleted group', undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Delete Group Failed]', error);
+          this.#matSnackBar.open('Error deleting group', undefined, {
             duration: 3000,
           });
           return of(null);

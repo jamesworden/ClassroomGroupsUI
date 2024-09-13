@@ -260,6 +260,18 @@ export class ClassroomViewComponent {
     }
   }
 
+  deleteGroup(groupId: string) {
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.deleteGroup(
+        classroomId,
+        configurationId,
+        groupId
+      );
+    }
+  }
+
   drop(event: CdkDragDrop<Group[]>) {
     // moveItemInArray(
     //   this.editingGroups,

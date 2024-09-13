@@ -5,6 +5,7 @@ import {
   ElementRef,
   inject,
   input,
+  output,
   ViewChild,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -58,6 +59,8 @@ export class GroupPanelComponent {
 
   readonly groupDetail = input<GroupDetail>();
 
+  readonly groupDeleted = output<string>();
+
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
 
   readonly columnDetails = computed(() =>
@@ -89,7 +92,12 @@ export class GroupPanelComponent {
 
   addStudent() {}
 
-  deleteGroup() {}
+  deleteGroup() {
+    const groupDetail = this.groupDetail();
+    if (groupDetail) {
+      this.groupDeleted.emit(groupDetail.id);
+    }
+  }
 
   drop(event: CdkDragDrop<Student[]>) {
     // const ontoSameGroup = event.container === event.previousContainer;
