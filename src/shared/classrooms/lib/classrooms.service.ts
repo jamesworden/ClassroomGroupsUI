@@ -69,6 +69,19 @@ class ClassroomSelectors {
         ? this._state().loadingConfigurationDetailIds.includes(configurationId)
         : false
     );
+
+  public readonly columnDetails = (configurationId?: string) =>
+    computed(
+      () => this.configurationDetail(configurationId)()?.columnDetails
+    )() ?? [];
+
+  public readonly groupDetails = (configurationId?: string) =>
+    computed(
+      () => this.configurationDetail(configurationId)()?.groupDetails ?? []
+    );
+
+  public readonly groupIds = (configurationId?: string) =>
+    computed(() => this.groupDetails(configurationId)().map(({ id }) => id));
 }
 
 interface ClassroomsState {

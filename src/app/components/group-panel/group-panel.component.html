@@ -1,4 +1,4 @@
-<!-- <div class="panel rounded-lg flex-col gap-y-2 p-2 shadow-lg">
+<div class="panel rounded-lg flex-col gap-y-2 p-2 shadow-lg">
   <div class="flex justify-between">
     <div class="flex gap-x-2">
       <div class="flex flex-col justify-around">
@@ -10,7 +10,7 @@
       </div>
 
       <div class="flex flex-col justify-around">
-        <span class="text-xl">{{ group()?.label }}</span>
+        <span class="text-xl">{{ groupDetail()?.label }}</span>
       </div>
     </div>
 
@@ -39,14 +39,14 @@
 
   <div
     cdkDropList
-    [id]="group()?.id ?? ''"
-    [cdkDropListConnectedTo]="viewingGroupIds()"
+    [id]="groupDetail()?.id ?? ''"
+    [cdkDropListConnectedTo]="groupIds()"
     class="grid-row example-list min-h-16 w-full mt-2"
     (cdkDropListDropped)="drop($event)"
   >
     @for (student of editingStudents; track student.id) {
     <div class="grid-row example-box flex" cdkDrag>
-      @for(field of student.fields; track i; let i = $index) {
+      <!-- @for(field of student.fields; track i; let i = $index) {
       <div class="flex-1">
         <div>
           @if(editingFieldId === field.fieldId && editingStudentId ===
@@ -67,13 +67,13 @@
             }"
             (click)="startEditing(field)"
           >
-            {{ field.value || "Add value" }}
+            {{ field.value || 'Add value' }}
           </span>
           }
         </div>
       </div>
-      }
+      } -->
     </div>
     }
   </div>
-</div> -->
+</div>

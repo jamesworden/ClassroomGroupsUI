@@ -21,9 +21,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
+  Classroom,
   ClassroomsService,
   Group,
+  GroupDetail,
   Student,
+  StudentDetail,
   StudentField,
 } from '@shared/classrooms';
 
@@ -47,89 +50,100 @@ import {
   styleUrl: './group-panel.component.scss',
 })
 export class GroupPanelComponent {
-  // readonly #classroomsService = inject(ClassroomsService);
-  // readonly #matSnackBar = inject(MatSnackBar);
-  // @ViewChild('valueInput', { read: ElementRef })
-  // valueInput!: ElementRef<HTMLInputElement>;
-  // readonly classroom = input<ClassroomViewModel>();
-  // readonly configuration = input<ConfigurationViewModel>();
-  // readonly group = input<GroupViewModel>();
-  // readonly students = computed(() =>
-  //   this.#classroomsService.students(this.classroom()?.id)()
-  // );
-  // readonly columns = computed(() =>
-  //   this.#classroomsService.columns(this.configuration()?.id)
-  // );
-  // readonly studentsInGroup = computed(() =>
-  //   this.students().filter((student) => student.groupId === this.group()?.id)
-  // );
-  // readonly viewingGroupIds = computed(() =>
-  //   (this.#classroomsService.groups(this.configuration()?.id)() ?? []).map(
-  //     ({ id }) => id
-  //   )
-  // );
-  // editingFieldId?: string;
-  // editingStudentId?: string;
-  // editingField?: string | number;
-  // editingStudents: StudentViewModel[] = [];
-  // constructor() {
-  //   effect(() => {
-  //     this.editingStudents = this.studentsInGroup();
-  //   });
-  // }
-  // addStudent() {}
-  // deleteGroup() {}
-  // drop(event: CdkDragDrop<Student[]>) {
-  //   // const ontoSameGroup = event.container === event.previousContainer;
-  //   // if (ontoSameGroup) {
-  //   //   // Order editingStudents
-  //   //   moveItemInArray(
-  //   //     this.editingStudents,
-  //   //     event.previousIndex,
-  //   //     event.currentIndex
-  //   //   );
-  //   //   // Assign ordinals according to the order
-  //   //   this.editingStudents = this.editingStudents.map(
-  //   //     (editingStudent, ordinal) => ({ ...editingStudent, ordinal })
-  //   //   );
-  //   //   // Create correct student group updates
-  //   //   const studentGroups = this.#classroomsService
-  //   //     .studentGroups()
-  //   //     .map((studentGroup) => {
-  //   //       const updatedStudent = this.editingStudents.find(
-  //   //         ({ id }) => id === studentGroup.studentId
-  //   //       );
-  //   //       if (updatedStudent) {
-  //   //         studentGroup.ordinal = updatedStudent.ordinal;
-  //   //       }
-  //   //       return studentGroup;
-  //   //     });
-  //   //   // Persist updates
-  //   //   this.#classroomsService.updateStudentGroups(studentGroups);
-  //   //   return;
-  //   // }
-  //   // Recalculate ordinals
-  // }
-  // startEditing(studentField: StudentField) {
-  //   this.editingField = studentField.value;
-  //   this.editingFieldId = studentField.fieldId;
-  //   this.editingStudentId = studentField.studentId;
-  //   setTimeout(() => this.valueInput.nativeElement.focus());
-  // }
-  // saveEdits() {
-  //   // if (
-  //   //   this.editingStudentId !== undefined &&
-  //   //   this.editingFieldId !== undefined &&
-  //   //   this.editingField !== undefined
-  //   // ) {
-  //   //   this.#classroomsService.setStudentValue(
-  //   //     this.editingStudentId,
-  //   //     this.editingFieldId,
-  //   //     this.editingField
-  //   //   );
-  //   // }
-  //   // this.editingField = undefined;
-  //   // this.editingFieldId = undefined;
-  //   // this.editingStudentId = undefined;
-  // }
+  readonly #classroomsService = inject(ClassroomsService);
+  readonly #matSnackBar = inject(MatSnackBar);
+
+  @ViewChild('valueInput', { read: ElementRef })
+  valueInput!: ElementRef<HTMLInputElement>;
+
+  readonly groupDetail = input<GroupDetail>();
+
+  readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
+
+  readonly columnDetails = computed(() =>
+    this.#classroomsService.select.columnDetails(
+      this.groupDetail()?.configurationId
+    )
+  );
+  readonly studentsInGroup = computed(() =>
+    this.students().filter(
+      (student) => student.groupId === this.groupDetail()?.id
+    )
+  );
+  readonly groupIds = computed(() =>
+    this.#classroomsService.select.groupIds(
+      this.groupDetail()?.configurationId
+    )()
+  );
+
+  editingFieldId?: string;
+  editingStudentId?: string;
+  editingField?: string | number;
+  editingStudents: StudentDetail[] = [];
+
+  constructor() {
+    effect(() => {
+      this.editingStudents = this.studentsInGroup();
+    });
+  }
+
+  addStudent() {}
+
+  deleteGroup() {}
+
+  drop(event: CdkDragDrop<Student[]>) {
+    // const ontoSameGroup = event.container === event.previousContainer;
+    // if (ontoSameGroup) {
+    //   // Order editingStudents
+    //   moveItemInArray(
+    //     this.editingStudents,
+    //     event.previousIndex,
+    //     event.currentIndex
+    //   );
+    //   // Assign ordinals according to the order
+    //   this.editingStudents = this.editingStudents.map(
+    //     (editingStudent, ordinal) => ({ ...editingStudent, ordinal })
+    //   );
+    //   // Create correct student group updates
+    //   const studentGroups = this.#classroomsService
+    //     .studentGroups()
+    //     .map((studentGroup) => {
+    //       const updatedStudent = this.editingStudents.find(
+    //         ({ id }) => id === studentGroup.studentId
+    //       );
+    //       if (updatedStudent) {
+    //         studentGroup.ordinal = updatedStudent.ordinal;
+    //       }
+    //       return studentGroup;
+    //     });
+    //   // Persist updates
+    //   this.#classroomsService.updateStudentGroups(studentGroups);
+    //   return;
+    // }
+    // Recalculate ordinals
+  }
+
+  startEditing(studentField: StudentField) {
+    this.editingField = studentField.value;
+    this.editingFieldId = studentField.fieldId;
+    this.editingStudentId = studentField.studentId;
+    setTimeout(() => this.valueInput.nativeElement.focus());
+  }
+
+  saveEdits() {
+    // if (
+    //   this.editingStudentId !== undefined &&
+    //   this.editingFieldId !== undefined &&
+    //   this.editingField !== undefined
+    // ) {
+    //   this.#classroomsService.setStudentValue(
+    //     this.editingStudentId,
+    //     this.editingFieldId,
+    //     this.editingField
+    //   );
+    // }
+    // this.editingField = undefined;
+    // this.editingFieldId = undefined;
+    // this.editingStudentId = undefined;
+  }
 }

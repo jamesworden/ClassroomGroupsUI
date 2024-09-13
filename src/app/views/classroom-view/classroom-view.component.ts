@@ -25,7 +25,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
-import { ClassroomsService, Group } from '@shared/classrooms';
+import { ClassroomsService, Group, GroupDetail } from '@shared/classrooms';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
 import { ConfigurationPanelComponent } from 'app/components/configuration-panel/configuration-panel.component';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
@@ -130,6 +130,11 @@ export class ClassroomViewComponent {
     )();
     return detail ? getConfigurationFromDetail(detail) : undefined;
   });
+  readonly groupDetails = computed(() =>
+    this.#classroomsService.select.groupDetails(
+      this.selectedConfigurationId()
+    )()
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -141,7 +146,7 @@ export class ClassroomViewComponent {
 
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
-  editingGroups: Group[] = [];
+  editingGroups: GroupDetail[] = [];
 
   constructor() {
     this.loadConfigPanelSettings();
@@ -151,7 +156,7 @@ export class ClassroomViewComponent {
         (this.updatedClassroomDescription = this.classroom()?.description ?? '')
     );
     effect(() => (this.updatedClassroomLabel = this.classroom()?.label ?? ''));
-    effect(() => (this.editingGroups = []));
+    effect(() => (this.editingGroups = this.groupDetails()));
     effect(() => {
       localStorage.setItem(
         StorageKeys.CONFIG_PANEL,

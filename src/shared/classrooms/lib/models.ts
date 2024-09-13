@@ -126,7 +126,7 @@ export interface GroupDetail {
   configurationId: string;
   groupOrdinal: number;
   label: number;
-  studentDetail: StudentDetail[];
+  studentDetails: StudentDetail[];
 }
 
 export interface StudentDetail {
