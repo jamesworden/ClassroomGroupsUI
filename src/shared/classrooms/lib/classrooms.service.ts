@@ -73,7 +73,7 @@ class ClassroomSelectors {
   public readonly configurationLoading = (configurationId?: string) =>
     computed(() =>
       configurationId
-        ? this._state().loadingConfigurationDetailIds.includes(configurationId)
+        ? this._state().loadingConfigurationDetailIds.has(configurationId)
         : false
     );
 
@@ -109,7 +109,7 @@ interface ClassroomsState {
   configurations: Configuration[];
   classroomsLoading: boolean;
   configurationsLoading: boolean;
-  loadingConfigurationDetailIds: string[];
+  loadingConfigurationDetailIds: Set<string>;
   updatingConfigurationIds: Set<string>;
   updatingClassroomIds: Set<string>;
 }
@@ -127,7 +127,7 @@ export class ClassroomsService {
     configurations: [],
     classroomsLoading: false,
     configurationsLoading: false,
-    loadingConfigurationDetailIds: [],
+    loadingConfigurationDetailIds: new Set<string>(),
     updatingConfigurationIds: new Set<string>(),
     updatingClassroomIds: new Set<string>(),
   });
@@ -183,7 +183,7 @@ export class ClassroomsService {
 
   public getConfigurationDetail(classroomId: string, configurationId: string) {
     this.patchState((draft) => {
-      draft.loadingConfigurationDetailIds.push(configurationId);
+      draft.loadingConfigurationDetailIds.add(configurationId);
     });
     return this.#httpClient
       .get<GetConfigurationDetailResponse>(
@@ -217,10 +217,7 @@ export class ClassroomsService {
         }),
         finalize(() => {
           this.patchState((draft) => {
-            draft.loadingConfigurationDetailIds =
-              draft.loadingConfigurationDetailIds.filter(
-                (id) => id !== configurationId
-              );
+            draft.loadingConfigurationDetailIds.delete(configurationId);
           });
         }),
         take(1)
