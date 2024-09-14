@@ -3,6 +3,7 @@ import {
   ClassroomDetail,
   Configuration,
   ConfigurationDetail,
+  Group,
   GroupDetail,
   StudentDetail,
 } from '../models';
@@ -20,7 +21,7 @@ export interface CreateGroupResponse {
 }
 
 export interface DeleteGroupResponse {
-  updatedConfigurationDetail: ConfigurationDetail;
+  deletedGroup: Group;
 }
 
 export interface CreateStudentResponse {

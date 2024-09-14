@@ -500,13 +500,17 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedConfigurationDetail }) => {
-          console.log('[Deleted Group]', updatedConfigurationDetail);
+        tap(({ deletedGroup }) => {
+          console.log('[Deleted Group]', deletedGroup);
           this.patchState((draft) => {
-            draft.configurationDetails = draft.configurationDetails.filter(
-              ({ id }) => updatedConfigurationDetail.id !== id
-            );
-            draft.configurationDetails.push(updatedConfigurationDetail);
+            draft.configurationDetails.forEach((configurationDetail) => {
+              if (configurationDetail.id === configurationId) {
+                configurationDetail.groupDetails =
+                  configurationDetail.groupDetails.filter(
+                    (g) => g.id !== deletedGroup.id
+                  );
+              }
+            });
           });
           this.#matSnackBar.open('Deleted group', undefined, {
             duration: 3000,
