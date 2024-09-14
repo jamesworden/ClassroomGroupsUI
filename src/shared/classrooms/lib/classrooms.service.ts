@@ -302,6 +302,9 @@ export class ClassroomsService {
   }
 
   public createConfiguration(classroomId: string, label: string) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
     return this.#httpClient
       .post<CreatedConfigurationResponse>(
         `/api/v1/classrooms/${classroomId}/configurations`,
@@ -334,6 +337,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
         }),
         take(1)
       )
