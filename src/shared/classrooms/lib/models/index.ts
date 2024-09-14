@@ -106,6 +106,7 @@ export interface ColumnDetail {
   sort: ColumnSort;
   enabled: boolean;
   fieldType: FieldType;
+  label: string;
 }
 
 export interface GroupDetail {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -13,16 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  Classroom,
-  ClassroomsService,
-  Column,
-  ColumnSort,
-  Configuration,
-  Field,
-  FieldType,
-  generateUniqueId,
-} from '@shared/classrooms';
+import { Column, Field, FieldType } from '@shared/classrooms';
 
 export interface CreateEditColumnDialogOutputs {
   type: FieldType;

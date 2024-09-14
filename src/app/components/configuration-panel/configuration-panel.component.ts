@@ -35,7 +35,7 @@ import { CommonModule } from '@angular/common';
 import {
   ClassroomsService,
   Column,
-  Configuration,
+  ColumnDetail,
   ConfigurationDetail,
 } from '@shared/classrooms';
 
@@ -80,18 +80,17 @@ export class ConfigurationPanelComponent {
   readonly configurationId = computed(() => this.configurationDetail()?.id);
 
   readonly enabledColumnBadges = computed(() => {
-    // const enabledColumnBadges: {
-    //   [columnId: string]: number;
-    // } = {};
-    // let latestSortValue = 1;
-    // for (const column of this.viewingColumns() ?? []) {
-    //   if (column.enabled) {
-    //     enabledColumnBadges[column.id] = latestSortValue;
-    //     latestSortValue++;
-    //   }
-    // }
-    // return enabledColumnBadges;
-    return [];
+    const enabledColumnBadges: {
+      [columnId: string]: number;
+    } = {};
+    let latestSortValue = 1;
+    for (const column of this.columnDetails() ?? []) {
+      if (column.enabled) {
+        enabledColumnBadges[column.id] = latestSortValue;
+        latestSortValue++;
+      }
+    }
+    return enabledColumnBadges;
   });
 
   averageScores = false;
@@ -99,7 +98,7 @@ export class ConfigurationPanelComponent {
   groupingValue = 0;
   updatedDescription = '';
   updatedLabel = '';
-  columns: Column[] = [];
+  columns: ColumnDetail[] = [];
 
   constructor() {
     effect(
