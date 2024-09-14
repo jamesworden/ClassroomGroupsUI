@@ -475,6 +475,9 @@ export class ClassroomsService {
     configurationId: string,
     label?: string
   ) {
+    this.patchState((draft) => {
+      draft.updatingConfigurationIds.add(configurationId);
+    });
     return this.#httpClient
       .post<CreateGroupResponse>(
         `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
@@ -505,6 +508,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingConfigurationIds.delete(configurationId);
+          });
         }),
         take(1)
       )
@@ -557,6 +565,9 @@ export class ClassroomsService {
     configurationId: string,
     groupId: string
   ) {
+    this.patchState((draft) => {
+      draft.updatingConfigurationIds.add(configurationId);
+    });
     return this.#httpClient
       .post<CreateStudentResponse>(
         `/api/v1/classrooms/${classroomId}/students`,
@@ -592,6 +603,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingConfigurationIds.delete(configurationId);
+          });
         }),
         take(1)
       )
