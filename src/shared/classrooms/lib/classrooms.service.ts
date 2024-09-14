@@ -297,11 +297,16 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ createdConfigurationDetail: detail }) => {
-          console.log('[Created Configuration Detail]', detail);
+        tap(({ createdConfigurationDetail }) => {
+          console.log(
+            '[Created Configuration Detail]',
+            createdConfigurationDetail
+          );
           this.patchState((draft) => {
-            draft.configurationDetails.push(detail);
-            draft.configurations.push(getConfigurationFromDetail(detail));
+            draft.configurationDetails.push(createdConfigurationDetail);
+            draft.configurations.push(
+              getConfigurationFromDetail(createdConfigurationDetail)
+            );
           });
           this.#matSnackBar.open('Configuration created', undefined, {
             duration: 3000,
@@ -371,14 +376,19 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ patchedConfigurationDetail: detail }) => {
-          console.log('[Patched Configuration Detail]', detail);
+        tap(({ patchedConfigurationDetail }) => {
+          console.log(
+            '[Patched Configuration Detail]',
+            patchedConfigurationDetail
+          );
           this.patchState((draft) => {
             draft.configurationDetails = draft.configurationDetails.map((cd) =>
-              cd.id === configuration.id ? detail : cd
+              cd.id === configuration.id ? patchedConfigurationDetail : cd
             );
             draft.configurations = draft.configurations.map((c) =>
-              c.id === configuration.id ? getConfigurationFromDetail(detail) : c
+              c.id === configuration.id
+                ? getConfigurationFromDetail(patchedConfigurationDetail)
+                : c
             );
           });
           this.#matSnackBar.open(successMessage, undefined, {
@@ -413,11 +423,11 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ patchedClassroomDetail: detail }) => {
-          console.log('[Patched Classroom Detail]', detail);
+        tap(({ patchedClassroomDetail }) => {
+          console.log('[Patched Classroom Detail]', patchedClassroomDetail);
           this.patchState((draft) => {
             draft.classroomDetails = draft.classroomDetails.filter(
-              ({ id }) => detail.id !== id
+              ({ id }) => patchedClassroomDetail.id !== id
             );
           });
           this.#matSnackBar.open(successMessage, undefined, {
@@ -452,13 +462,13 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedConfigurationDetail: detail }) => {
-          console.log('[Create Group]', detail);
+        tap(({ updatedConfigurationDetail }) => {
+          console.log('[Create Group]', updatedConfigurationDetail);
           this.patchState((draft) => {
             draft.configurationDetails = draft.configurationDetails.filter(
-              ({ id }) => detail.id !== id
+              ({ id }) => updatedConfigurationDetail.id !== id
             );
-            draft.configurationDetails.push(detail);
+            draft.configurationDetails.push(updatedConfigurationDetail);
           });
           this.#matSnackBar.open('Created group', undefined, {
             duration: 3000,
@@ -489,13 +499,13 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedConfigurationDetail: detail }) => {
-          console.log('[Deleted Group]', detail);
+        tap(({ updatedConfigurationDetail }) => {
+          console.log('[Deleted Group]', updatedConfigurationDetail);
           this.patchState((draft) => {
             draft.configurationDetails = draft.configurationDetails.filter(
-              ({ id }) => detail.id !== id
+              ({ id }) => updatedConfigurationDetail.id !== id
             );
-            draft.configurationDetails.push(detail);
+            draft.configurationDetails.push(updatedConfigurationDetail);
           });
           this.#matSnackBar.open('Deleted group', undefined, {
             duration: 3000,
