@@ -145,6 +145,9 @@ export class ClassroomViewComponent {
       this.selectedConfigurationId()
     )()
   );
+  readonly classroomUpdating = computed(() =>
+    this.#classroomsService.select.classroomUpdating(this.classroomId())()
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -231,26 +234,20 @@ export class ClassroomViewComponent {
   updateClassroomDescription() {
     const classroom = this.classroom();
     if (classroom) {
-      this.#classroomsService.patchClassroom(
-        {
-          ...classroom,
-          description: this.updatedClassroomDescription,
-        },
-        'Updated classroom description'
-      );
+      this.#classroomsService.patchClassroom({
+        ...classroom,
+        description: this.updatedClassroomDescription,
+      });
     }
   }
 
   updateClassroomLabel() {
     const classroom = this.classroom();
     if (classroom) {
-      this.#classroomsService.patchClassroom(
-        {
-          ...classroom,
-          label: this.updatedClassroomLabel,
-        },
-        'Renamed classroom'
-      );
+      this.#classroomsService.patchClassroom({
+        ...classroom,
+        label: this.updatedClassroomLabel,
+      });
     }
   }
 

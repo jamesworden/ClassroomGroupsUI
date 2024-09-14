@@ -93,6 +93,11 @@ class ClassroomSelectors {
         ? this._state().updatingConfigurationIds.has(configurationId)
         : false
     );
+
+  public readonly classroomUpdating = (classroomId?: string) =>
+    computed(() =>
+      classroomId ? this._state().updatingClassroomIds.has(classroomId) : false
+    );
 }
 
 interface ClassroomsState {
@@ -103,6 +108,7 @@ interface ClassroomsState {
   configurationsLoading: boolean;
   loadingConfigurationDetailIds: string[];
   updatingConfigurationIds: Set<string>;
+  updatingClassroomIds: Set<string>;
 }
 
 @Injectable({
@@ -120,6 +126,7 @@ export class ClassroomsService {
     configurationsLoading: false,
     loadingConfigurationDetailIds: [],
     updatingConfigurationIds: new Set<string>(),
+    updatingClassroomIds: new Set<string>(),
   });
 
   public readonly select = new ClassroomSelectors(this._state.asReadonly());
@@ -422,9 +429,11 @@ export class ClassroomsService {
 
   public patchClassroom(
     classroom: Classroom,
-    successMessage = 'Classroom updated',
     failureMessage = 'Error updating classroom'
   ) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroom.id);
+    });
     return this.#httpClient
       .post<PatchClassroomResponse>(
         `/api/v1/classrooms/${classroom.id}`,
@@ -439,12 +448,9 @@ export class ClassroomsService {
         tap(({ patchedClassroomDetail }) => {
           console.log('[Patched Classroom Detail]', patchedClassroomDetail);
           this.patchState((draft) => {
-            draft.classroomDetails = draft.classroomDetails.filter(
-              ({ id }) => patchedClassroomDetail.id !== id
+            draft.classroomDetails = draft.classroomDetails.map((cd) =>
+              cd.id === patchedClassroomDetail.id ? patchedClassroomDetail : cd
             );
-          });
-          this.#matSnackBar.open(successMessage, undefined, {
-            duration: 3000,
           });
         }),
         catchError((error) => {
@@ -453,6 +459,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroom.id);
+          });
         }),
         take(1)
       )

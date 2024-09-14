@@ -61,8 +61,8 @@
           </div>
         </section>
 
-        @if (configurationDetail()) {
         <div class="flex flex-col gap-y-6 flex-1">
+          @if (configurationDetail()) {
           <section class="sticky top-0 mx-4 z-10">
             <app-configuration-panel
               [configurationDetail]="configurationDetail()"
@@ -134,18 +134,18 @@
             </app-group-panel>
             }
           </section>
-
-          <section class="sticky bottom-0 flex">
-            <mat-progress-bar
-              class="flex-1"
-              [mode]="configurationUpdating() ? 'indeterminate' : 'determinate'"
-            ></mat-progress-bar>
-          </section>
-          }
+          } }
         </div>
-        } @else if (configurationLoading()) {
-        <mat-spinner></mat-spinner>
-        }
+        <section class="sticky bottom-0 flex">
+          <mat-progress-bar
+            class="flex-1"
+            [mode]="
+              configurationUpdating() || classroomUpdating()
+                ? 'indeterminate'
+                : 'determinate'
+            "
+          ></mat-progress-bar>
+        </section>
       </div>
       }
     </div>
