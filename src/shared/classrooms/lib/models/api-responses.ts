@@ -16,7 +16,7 @@ export interface PatchClassroomResponse {
 }
 
 export interface CreateGroupResponse {
-  updatedConfigurationDetail: ConfigurationDetail;
+  createdGroupDetail: GroupDetail;
 }
 
 export interface DeleteGroupResponse {

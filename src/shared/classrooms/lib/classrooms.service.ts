@@ -462,13 +462,14 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedConfigurationDetail }) => {
-          console.log('[Create Group]', updatedConfigurationDetail);
+        tap(({ createdGroupDetail }) => {
+          console.log('[Create Group]', createdGroupDetail);
           this.patchState((draft) => {
-            draft.configurationDetails = draft.configurationDetails.filter(
-              ({ id }) => updatedConfigurationDetail.id !== id
-            );
-            draft.configurationDetails.push(updatedConfigurationDetail);
+            draft.configurationDetails.forEach((configurationDetail) => {
+              if (configurationDetail.id === configurationId) {
+                configurationDetail.groupDetails.push(createdGroupDetail);
+              }
+            });
           });
           this.#matSnackBar.open('Created group', undefined, {
             duration: 3000,
