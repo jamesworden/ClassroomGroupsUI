@@ -115,7 +115,7 @@ export class ClassroomsService {
 
   public readonly select = new ClassroomSelectors(this._state.asReadonly());
 
-  public patchDraft(strategy: (draft: ClassroomsState) => void) {
+  public patchState(strategy: (draft: ClassroomsState) => void) {
     this._state.set(
       create(this._state(), (draft) => {
         strategy(draft);
@@ -124,7 +124,7 @@ export class ClassroomsService {
   }
 
   public getClassroomDetails() {
-    this.patchDraft((draft) => {
+    this.patchState((draft) => {
       draft.classroomsLoading = true;
     });
     return this.#httpClient
@@ -137,7 +137,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ classroomDetails }) => {
           console.log('[Got Classroom Details]', classroomDetails);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.classroomDetails = classroomDetails;
           });
         }),
@@ -153,7 +153,7 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.classroomsLoading = false;
           });
         }),
@@ -163,7 +163,7 @@ export class ClassroomsService {
   }
 
   public getConfigurationDetail(classroomId: string, configurationId: string) {
-    this.patchDraft((draft) => {
+    this.patchState((draft) => {
       draft.loadingConfigurationDetailIds.push(configurationId);
     });
     return this.#httpClient
@@ -176,7 +176,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ configurationDetail }) => {
           console.log('[Got Configuration Detail]', configurationDetail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurationDetails = [
               ...draft.configurationDetails.filter(
                 (c) => c.id !== configurationDetail.id
@@ -197,7 +197,7 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.loadingConfigurationDetailIds =
               draft.loadingConfigurationDetailIds.filter(
                 (id) => id !== configurationId
@@ -210,7 +210,7 @@ export class ClassroomsService {
   }
 
   public createClassroom(label: string, description?: string) {
-    this.patchDraft((draft) => {
+    this.patchState((draft) => {
       draft.classroomsLoading = true;
     });
     return this.#httpClient
@@ -227,7 +227,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ createdClassroomDetail }) => {
           console.log('[Created Classroom Detail]', createdClassroomDetail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.classroomDetails.push(createdClassroomDetail);
           });
           this.#matSnackBar.open('Classroom created', undefined, {
@@ -239,7 +239,7 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.classroomsLoading = false;
           });
         }),
@@ -249,7 +249,7 @@ export class ClassroomsService {
   }
 
   public deleteClassroom(classroomId: string) {
-    this.patchDraft((draft) => {
+    this.patchState((draft) => {
       draft.classroomsLoading = true;
     });
     return this.#httpClient
@@ -259,7 +259,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ deletedClassroom }) => {
           console.log('[Deleted Classroom]', deletedClassroom);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.classroomDetails = draft.classroomDetails.filter(
               ({ id }) => id !== deletedClassroom.id
             );
@@ -276,7 +276,7 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.classroomsLoading = false;
           });
         }),
@@ -299,7 +299,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ createdConfigurationDetail: detail }) => {
           console.log('[Created Configuration Detail]', detail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurationDetails.push(detail);
             draft.configurations.push(getConfigurationFromDetail(detail));
           });
@@ -320,7 +320,7 @@ export class ClassroomsService {
   }
 
   public getConfigurations(classroomId: string) {
-    this.patchDraft((draft) => {
+    this.patchState((draft) => {
       draft.configurationsLoading = true;
     });
     return this.#httpClient
@@ -333,7 +333,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ configurations }) => {
           console.log('[Got Configurations]', configurations);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurations = configurations;
           });
         }),
@@ -345,7 +345,7 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurationsLoading = false;
           });
         }),
@@ -373,7 +373,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ patchedConfigurationDetail: detail }) => {
           console.log('[Patched Configuration Detail]', detail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurationDetails = draft.configurationDetails.map((cd) =>
               cd.id === configuration.id ? detail : cd
             );
@@ -415,7 +415,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ patchedClassroomDetail: detail }) => {
           console.log('[Patched Classroom Detail]', detail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.classroomDetails = draft.classroomDetails.filter(
               ({ id }) => detail.id !== id
             );
@@ -454,7 +454,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ updatedConfigurationDetail: detail }) => {
           console.log('[Create Group]', detail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurationDetails = draft.configurationDetails.filter(
               ({ id }) => detail.id !== id
             );
@@ -491,7 +491,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ updatedConfigurationDetail: detail }) => {
           console.log('[Deleted Group]', detail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurationDetails = draft.configurationDetails.filter(
               ({ id }) => detail.id !== id
             );
@@ -532,7 +532,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ createdStudentDetail }) => {
           console.log('[Created Student]', createdStudentDetail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurationDetails.forEach((configurationDetail) => {
               if (configurationDetail.id === configurationId) {
                 configurationDetail.groupDetails.forEach((groupDetail) => {
@@ -580,7 +580,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ updatedGroupDetail }) => {
           console.log('[Patched Group]', updatedGroupDetail);
-          this.patchDraft((draft) => {
+          this.patchState((draft) => {
             draft.configurationDetails.forEach((configurationDetail) => {
               if (configurationDetail.id === configurationId) {
                 configurationDetail.groupDetails =
