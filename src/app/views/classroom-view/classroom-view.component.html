@@ -34,7 +34,7 @@
 
     <div class="flex flex-col flex-1 overflow-auto">
       @if (classroom()) {
-      <div class="my-4 flex-1 flex flex-col">
+      <div class="flex-1 flex flex-col flex-grow">
         <section class="flex justify-between m-4">
           <div class="flex flex-col flex-1">
             <input
@@ -73,7 +73,7 @@
 
           @if(editingGroups.length === 0) {
           <section
-            class="mx-4 border border-4 border-dashed border-gray-300 flex-1 flex flex-col justify-around"
+            class="mx-4 border border-4 border-dashed border-gray-300 flex-1 flex flex-col justify-around mb-4"
           >
             <div class="flex flex-col">
               <div class="flex flex-col gap-y-1">
@@ -133,6 +133,13 @@
               <mat-icon class="cursor-move" cdkDragHandle>drag_handle</mat-icon>
             </app-group-panel>
             }
+          </section>
+
+          <section class="sticky bottom-0 flex">
+            <mat-progress-bar
+              class="flex-1"
+              [mode]="configurationUpdating() ? 'indeterminate' : 'determinate'"
+            ></mat-progress-bar>
           </section>
           }
         </div>

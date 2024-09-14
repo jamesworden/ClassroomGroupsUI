@@ -46,6 +46,7 @@ import {
   getConfigurationFromDetail,
   getGroupFromDetail,
 } from 'shared/classrooms/lib/logic/get-model-from-detail';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -82,6 +83,7 @@ interface ConfigPanelSettings {
     CdkDragHandle,
     GoogleSignInButtonComponent,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
@@ -135,6 +137,11 @@ export class ClassroomViewComponent {
   });
   readonly groupDetails = computed(() =>
     this.#classroomsService.select.groupDetails(
+      this.selectedConfigurationId()
+    )()
+  );
+  readonly configurationUpdating = computed(() =>
+    this.#classroomsService.select.configurationUpdating(
       this.selectedConfigurationId()
     )()
   );
@@ -301,14 +308,10 @@ export class ClassroomViewComponent {
     const configuration = this.selectedConfiguration();
     const classroom = this.classroom();
     if (classroom && configuration) {
-      this.#classroomsService.patchConfiguration(
-        classroom.id,
-        {
-          ...configuration,
-          label,
-        },
-        'Renamed configuration'
-      );
+      this.#classroomsService.patchConfiguration(classroom.id, {
+        ...configuration,
+        label,
+      });
     }
   }
 
@@ -316,14 +319,10 @@ export class ClassroomViewComponent {
     const configuration = this.selectedConfiguration();
     const classroom = this.classroom();
     if (classroom && configuration) {
-      this.#classroomsService.patchConfiguration(
-        classroom.id,
-        {
-          ...configuration,
-          description,
-        },
-        'Updated configuration description'
-      );
+      this.#classroomsService.patchConfiguration(classroom.id, {
+        ...configuration,
+        description,
+      });
     }
   }
 

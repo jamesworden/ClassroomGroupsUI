@@ -86,6 +86,13 @@ class ClassroomSelectors {
 
   public readonly groupIds = (configurationId?: string) =>
     computed(() => this.groupDetails(configurationId)().map(({ id }) => id));
+
+  public readonly configurationUpdating = (configurationId?: string) =>
+    computed(() =>
+      configurationId
+        ? this._state().updatingConfigurationIds.has(configurationId)
+        : false
+    );
 }
 
 interface ClassroomsState {
@@ -95,6 +102,7 @@ interface ClassroomsState {
   classroomsLoading: boolean;
   configurationsLoading: boolean;
   loadingConfigurationDetailIds: string[];
+  updatingConfigurationIds: Set<string>;
 }
 
 @Injectable({
@@ -111,6 +119,7 @@ export class ClassroomsService {
     classroomsLoading: false,
     configurationsLoading: false,
     loadingConfigurationDetailIds: [],
+    updatingConfigurationIds: new Set<string>(),
   });
 
   public readonly select = new ClassroomSelectors(this._state.asReadonly());
@@ -362,9 +371,11 @@ export class ClassroomsService {
   public patchConfiguration(
     classroomId: string,
     configuration: Configuration,
-    successMessage = 'Configuration updated',
     failureMessage = 'Error updating configuration'
   ) {
+    this.patchState((draft) => {
+      draft.updatingConfigurationIds.add(configuration.id);
+    });
     return this.#httpClient
       .post<PatchConfigurationResponse>(
         `/api/v1/classrooms/${classroomId}/configurations/${configuration.id}`,
@@ -391,9 +402,6 @@ export class ClassroomsService {
                 : c
             );
           });
-          this.#matSnackBar.open(successMessage, undefined, {
-            duration: 3000,
-          });
         }),
         catchError((error) => {
           console.log('[Patch Configuration Failed]', error);
@@ -401,6 +409,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingConfigurationIds.delete(configuration.id);
+          });
         }),
         take(1)
       )
