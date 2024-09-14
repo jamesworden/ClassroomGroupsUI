@@ -533,6 +533,9 @@ export class ClassroomsService {
     configurationId: string,
     groupId: string
   ) {
+    this.patchState((draft) => {
+      draft.updatingConfigurationIds.add(configurationId);
+    });
     return this.#httpClient
       .delete<DeleteGroupResponse>(
         `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
@@ -563,6 +566,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingConfigurationIds.delete(configurationId);
+          });
         }),
         take(1)
       )
