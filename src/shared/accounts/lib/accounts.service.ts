@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { catchError, finalize, of, take, tap } from 'rxjs';
 import { Account, GetAccountResponse } from './models';
+import { create } from 'mutative';
 
 class AccountSelectors {
   constructor(private _state: Signal<AccountsState>) {}
@@ -34,20 +35,18 @@ export class AccountsService {
     this.getAccount();
   }
 
-  private patchState(
-    strategy: (state: AccountsState) => Partial<AccountsState>
-  ) {
-    const state = this._state();
-    this._state.set({
-      ...state,
-      ...strategy(state),
-    });
+  public patchState(strategy: (draft: AccountsState) => void) {
+    this._state.set(
+      create(this._state(), (draft) => {
+        strategy(draft);
+      })
+    );
   }
 
   getAccount() {
-    this.patchState(() => ({
-      accountLoading: true,
-    }));
+    this.patchState((draft) => {
+      draft.accountLoading = true;
+    });
     return this.#httpClient
       .get<GetAccountResponse>('/api/v1/authentication/account', {
         withCredentials: true,
@@ -56,9 +55,9 @@ export class AccountsService {
         tap(({ account }) => {
           if (account) {
             console.log('[Got Account]', account);
-            this.patchState(() => ({
-              account,
-            }));
+            this.patchState((draft) => {
+              draft.account = account;
+            });
           }
         }),
         catchError((error: HttpErrorResponse) => {
@@ -68,9 +67,9 @@ export class AccountsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchState(() => ({
-            accountLoading: false,
-          }));
+          this.patchState((draft) => {
+            draft.accountLoading = false;
+          });
         }),
         take(1)
       )
@@ -84,10 +83,10 @@ export class AccountsService {
       })
       .pipe(
         finalize(() => {
-          this.patchState(() => ({
-            accountLoading: false,
-            account: undefined,
-          }));
+          this.patchState((draft) => {
+            draft.account = undefined;
+            draft.accountLoading = false;
+          });
         }),
         take(1)
       )
