@@ -9,6 +9,7 @@ import {
   CreateGroupResponse,
   CreateStudentResponse,
   DeletedClassroomResponse,
+  DeletedConfigurationResponse,
   DeleteGroupResponse,
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
@@ -662,6 +663,49 @@ export class ClassroomsService {
         catchError((error) => {
           console.log('[Patch Group Failed]', error);
           this.#matSnackBar.open(failureMessage, undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingConfigurationIds.delete(configurationId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public deleteConfiguration(classroomId: string, configurationId: string) {
+    this.patchState((draft) => {
+      draft.updatingConfigurationIds.add(configurationId);
+    });
+    return this.#httpClient
+      .delete<DeletedConfigurationResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ deletedConfiguration }) => {
+          console.log('[Deleted Configuration]', deletedConfiguration);
+          this.patchState((draft) => {
+            draft.configurationDetails = draft.configurationDetails.filter(
+              ({ id }) => id !== deletedConfiguration.id
+            );
+            draft.configurations = draft.configurations.filter(
+              ({ id }) => id !== deletedConfiguration.id
+            );
+          });
+          this.#matSnackBar.open('Configuration deleted', undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Delete Configuration Failed]', error);
+          this.#matSnackBar.open('Error deleting configuration', undefined, {
             duration: 3000,
           });
           return of(null);

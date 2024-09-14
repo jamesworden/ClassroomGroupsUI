@@ -130,22 +130,25 @@ export class ConfigurationPanelComponent {
   }
 
   openDeleteConfigurationModal() {
-    // const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-    //   restoreFocus: false,
-    //   data: <YesNoDialogInputs>{
-    //     title: 'Delete configuration',
-    //     subtitle: `Are you sure you want to delete the configuration ${
-    //       this.viewingConfiguration()?.label
-    //     } and all of it's data?`,
-    //   },
-    // });
-    // dialogRef.afterClosed().subscribe((success) => {
-    //   const classroomId = this.viewingClassroomId();
-    //   const configurationId = this.viewingConfigurationId();
-    //   if (success && classroomId && configurationId) {
-    //     this.#classroomsService.deleteConfiguration(configurationId);
-    //   }
-    // });
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete configuration',
+        subtitle: `Are you sure you want to delete the configuration ${
+          this.configurationDetail()?.label
+        } and all of it's data?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success) => {
+      const classroomId = this.classroomId();
+      const configurationId = this.configurationId();
+      if (success && classroomId && configurationId) {
+        this.#classroomsService.deleteConfiguration(
+          classroomId,
+          configurationId
+        );
+      }
+    });
   }
 
   drop(event: CdkDragDrop<Column>) {
