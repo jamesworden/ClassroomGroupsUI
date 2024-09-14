@@ -71,48 +71,20 @@
             ></app-configuration-panel>
           </section>
 
-          @if(editingGroups.length === 0) {
+          <!-- TODO: It's still possible to have unassigned students. -->
+          @if (editingGroups.length === 0) {
           <section
             class="mx-4 border border-4 border-dashed border-gray-300 flex-1 flex flex-col justify-around mb-4"
           >
             <div class="flex flex-col">
-              <div class="flex flex-col gap-y-1">
-                <div class="flex justify-around">
-                  <h5 class="opacity-50" style="margin: 0">
-                    Drag spreadsheet here
-                  </h5>
-                </div>
-
-                <div class="flex justify-around">
-                  <span class="opacity-50">Or if you prefer...</span>
-                </div>
-              </div>
-
-              <div class="flex flex-col gap-y-2">
-                <div class="flex justify-around">
-                  <div class="flex gap-x-2">
-                    <div class="flex justify-around">
-                      <button
-                        class="max-h-8 text-sm"
-                        mat-button
-                        (click)="createGroup()"
-                      >
-                        Create a new group
-                      </button>
-                    </div>
-
-                    <div class="flex justify-around">
-                      <button
-                        class="max-h-8 text-sm"
-                        appearance="outline"
-                        mat-button
-                        (click)="chooseFileToUpload()"
-                      >
-                        Choose file to upload
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              <div class="flex justify-around">
+                <button
+                  class="max-h-8 text-sm"
+                  mat-button
+                  (click)="createGroup()"
+                >
+                  Create a new group
+                </button>
               </div>
             </div>
           </section>
