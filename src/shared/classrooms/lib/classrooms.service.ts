@@ -592,9 +592,11 @@ export class ClassroomsService {
     configurationId: string,
     groupId: string,
     group: Group,
-    successMessage = 'Group updated',
     failureMessage = 'Error updating group'
   ) {
+    this.patchState((draft) => {
+      draft.updatingConfigurationIds.add(configurationId);
+    });
     return this.#httpClient
       .post<PatchGroupResponse>(
         `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
@@ -621,9 +623,6 @@ export class ClassroomsService {
               }
             });
           });
-          this.#matSnackBar.open(successMessage, undefined, {
-            duration: 3000,
-          });
         }),
         catchError((error) => {
           console.log('[Patch Group Failed]', error);
@@ -631,6 +630,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingConfigurationIds.delete(configurationId);
+          });
         }),
         take(1)
       )
