@@ -4,6 +4,7 @@ import {
   Configuration,
   ConfigurationDetail,
   GroupDetail,
+  StudentDetail,
 } from '../models';
 
 export interface PatchConfigurationResponse {
@@ -23,7 +24,7 @@ export interface DeleteGroupResponse {
 }
 
 export interface CreateStudentResponse {
-  updatedConfigurationDetail: ConfigurationDetail;
+  createdStudentDetail: StudentDetail;
 }
 
 export interface PatchGroupResponse {

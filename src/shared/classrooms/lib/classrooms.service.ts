@@ -18,11 +18,11 @@ import {
   PatchConfigurationResponse,
   PatchGroupResponse,
 } from './models';
-
 import { HttpClient } from '@angular/common/http';
-import { catchError, finalize, of, Subject, take, tap } from 'rxjs';
+import { catchError, finalize, of, take, tap } from 'rxjs';
 import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { create } from 'mutative';
 
 class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
@@ -115,20 +115,18 @@ export class ClassroomsService {
 
   public readonly select = new ClassroomSelectors(this._state.asReadonly());
 
-  private patchState(
-    strategy: (state: ClassroomsState) => Partial<ClassroomsState>
-  ) {
-    const state = this._state();
-    this._state.set({
-      ...state,
-      ...strategy(state),
-    });
+  public patchDraft(strategy: (draft: ClassroomsState) => void) {
+    this._state.set(
+      create(this._state(), (draft) => {
+        strategy(draft);
+      })
+    );
   }
 
   public getClassroomDetails() {
-    this.patchState(() => ({
-      classroomsLoading: true,
-    }));
+    this.patchDraft((draft) => {
+      draft.classroomsLoading = true;
+    });
     return this.#httpClient
       .get<GetClassroomDetailsResponse>(
         '/api/v1/classrooms/classroom-details',
@@ -139,7 +137,9 @@ export class ClassroomsService {
       .pipe(
         tap(({ classroomDetails }) => {
           console.log('[Got Classroom Details]', classroomDetails);
-          this.patchState(() => ({ classroomDetails }));
+          this.patchDraft((draft) => {
+            draft.classroomDetails = classroomDetails;
+          });
         }),
         catchError((error) => {
           console.log('[Get Classroom Details Failed]', error);
@@ -153,7 +153,9 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchState(() => ({ classroomsLoading: false }));
+          this.patchDraft((draft) => {
+            draft.classroomsLoading = false;
+          });
         }),
         take(1)
       )
@@ -161,12 +163,9 @@ export class ClassroomsService {
   }
 
   public getConfigurationDetail(classroomId: string, configurationId: string) {
-    this.patchState((state) => ({
-      loadingConfigurationDetailIds: [
-        ...state.loadingConfigurationDetailIds,
-        configurationId,
-      ],
-    }));
+    this.patchDraft((draft) => {
+      draft.loadingConfigurationDetailIds.push(configurationId);
+    });
     return this.#httpClient
       .get<GetConfigurationDetailResponse>(
         `/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
@@ -177,14 +176,14 @@ export class ClassroomsService {
       .pipe(
         tap(({ configurationDetail }) => {
           console.log('[Got Configuration Detail]', configurationDetail);
-          this.patchState((state) => ({
-            configurationDetails: [
-              ...state.configurationDetails.filter(
+          this.patchDraft((draft) => {
+            draft.configurationDetails = [
+              ...draft.configurationDetails.filter(
                 (c) => c.id !== configurationDetail.id
               ),
               configurationDetail,
-            ],
-          }));
+            ];
+          });
         }),
         catchError((error) => {
           console.log('[Get Configuration Detail Failed]', error);
@@ -198,12 +197,12 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchState((state) => ({
-            loadingConfigurationDetailIds:
-              state.loadingConfigurationDetailIds.filter(
+          this.patchDraft((draft) => {
+            draft.loadingConfigurationDetailIds =
+              draft.loadingConfigurationDetailIds.filter(
                 (id) => id !== configurationId
-              ),
-          }));
+              );
+          });
         }),
         take(1)
       )
@@ -211,9 +210,9 @@ export class ClassroomsService {
   }
 
   public createClassroom(label: string, description?: string) {
-    this.patchState(() => ({
-      classroomsLoading: true,
-    }));
+    this.patchDraft((draft) => {
+      draft.classroomsLoading = true;
+    });
     return this.#httpClient
       .post<CreatedClassroomResponse>(
         `/api/v1/classrooms`,
@@ -228,13 +227,9 @@ export class ClassroomsService {
       .pipe(
         tap(({ createdClassroomDetail }) => {
           console.log('[Created Classroom Detail]', createdClassroomDetail);
-          this.patchState((state) => ({
-            classroomDetails: [
-              ...state.classroomDetails,
-              createdClassroomDetail,
-            ],
-            classroomsLoading: false,
-          }));
+          this.patchDraft((draft) => {
+            draft.classroomDetails.push(createdClassroomDetail);
+          });
           this.#matSnackBar.open('Classroom created', undefined, {
             duration: 3000,
           });
@@ -244,9 +239,9 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchState(() => ({
-            classroomsLoading: false,
-          }));
+          this.patchDraft((draft) => {
+            draft.classroomsLoading = false;
+          });
         }),
         take(1)
       )
@@ -254,9 +249,9 @@ export class ClassroomsService {
   }
 
   public deleteClassroom(classroomId: string) {
-    this.patchState(() => ({
-      classroomsLoading: true,
-    }));
+    this.patchDraft((draft) => {
+      draft.classroomsLoading = true;
+    });
     return this.#httpClient
       .delete<DeletedClassroomResponse>(`/api/v1/classrooms/${classroomId}`, {
         withCredentials: true,
@@ -264,14 +259,11 @@ export class ClassroomsService {
       .pipe(
         tap(({ deletedClassroom }) => {
           console.log('[Deleted Classroom]', deletedClassroom);
-          this.patchState((state) => ({
-            classroomDetails: [
-              ...state.classroomDetails.filter(
-                (c) => c.id !== deletedClassroom.id
-              ),
-            ],
-            classroomsLoading: false,
-          }));
+          this.patchDraft((draft) => {
+            draft.classroomDetails = draft.classroomDetails.filter(
+              ({ id }) => id !== deletedClassroom.id
+            );
+          });
           this.#matSnackBar.open('Classroom deleted', undefined, {
             duration: 3000,
           });
@@ -284,9 +276,9 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchState(() => ({
-            classroomsLoading: false,
-          }));
+          this.patchDraft((draft) => {
+            draft.classroomsLoading = false;
+          });
         }),
         take(1)
       )
@@ -305,21 +297,12 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ createdConfigurationDetail }) => {
-          console.log(
-            '[Created Configuration Detail]',
-            createdConfigurationDetail
-          );
-          this.patchState((state) => ({
-            configurationDetails: [
-              ...state.configurationDetails,
-              createdConfigurationDetail,
-            ],
-            configurations: [
-              ...state.configurations,
-              getConfigurationFromDetail(createdConfigurationDetail),
-            ],
-          }));
+        tap(({ createdConfigurationDetail: detail }) => {
+          console.log('[Created Configuration Detail]', detail);
+          this.patchDraft((draft) => {
+            draft.configurationDetails.push(detail);
+            draft.configurations.push(getConfigurationFromDetail(detail));
+          });
           this.#matSnackBar.open('Configuration created', undefined, {
             duration: 3000,
           });
@@ -337,9 +320,9 @@ export class ClassroomsService {
   }
 
   public getConfigurations(classroomId: string) {
-    this.patchState(() => ({
-      configurationsLoading: true,
-    }));
+    this.patchDraft((draft) => {
+      draft.configurationsLoading = true;
+    });
     return this.#httpClient
       .get<GetConfigurationsResponse>(
         `/api/v1/classrooms/${classroomId}/configurations`,
@@ -350,10 +333,9 @@ export class ClassroomsService {
       .pipe(
         tap(({ configurations }) => {
           console.log('[Got Configurations]', configurations);
-          this.patchState(() => ({
-            configurations,
-            configurationsLoading: false,
-          }));
+          this.patchDraft((draft) => {
+            draft.configurations = configurations;
+          });
         }),
         catchError((error) => {
           console.log('[Get Configurations Failed]', error);
@@ -363,9 +345,9 @@ export class ClassroomsService {
           return of(null);
         }),
         finalize(() => {
-          this.patchState(() => ({
-            configurationsLoading: false,
-          }));
+          this.patchDraft((draft) => {
+            draft.configurationsLoading = false;
+          });
         }),
         take(1)
       )
@@ -389,25 +371,16 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ patchedConfigurationDetail }) => {
-          console.log(
-            '[Patched Configuration Detail]',
-            patchedConfigurationDetail
-          );
-          this.patchState((state) => ({
-            configurationDetails: [
-              ...state.configurationDetails.filter(
-                (c) => c.id !== patchedConfigurationDetail.id
-              ),
-              patchedConfigurationDetail,
-            ],
-            configurations: [
-              ...state.configurations.filter(
-                (c) => c.id !== patchedConfigurationDetail.id
-              ),
-              getConfigurationFromDetail(patchedConfigurationDetail),
-            ],
-          }));
+        tap(({ patchedConfigurationDetail: detail }) => {
+          console.log('[Patched Configuration Detail]', detail);
+          this.patchDraft((draft) => {
+            draft.configurationDetails = draft.configurationDetails.map((cd) =>
+              cd.id === configuration.id ? detail : cd
+            );
+            draft.configurations = draft.configurations.map((c) =>
+              c.id === configuration.id ? getConfigurationFromDetail(detail) : c
+            );
+          });
           this.#matSnackBar.open(successMessage, undefined, {
             duration: 3000,
           });
@@ -440,16 +413,13 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ patchedClassroomDetail }) => {
-          console.log('[Patched Classroom Detail]', patchedClassroomDetail);
-          this.patchState((state) => ({
-            classroomDetails: [
-              ...state.classroomDetails.filter(
-                (c) => c.id !== patchedClassroomDetail.id
-              ),
-              patchedClassroomDetail,
-            ],
-          }));
+        tap(({ patchedClassroomDetail: detail }) => {
+          console.log('[Patched Classroom Detail]', detail);
+          this.patchDraft((draft) => {
+            draft.classroomDetails = draft.classroomDetails.filter(
+              ({ id }) => detail.id !== id
+            );
+          });
           this.#matSnackBar.open(successMessage, undefined, {
             duration: 3000,
           });
@@ -482,16 +452,14 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedConfigurationDetail }) => {
-          console.log('[Create Group]', updatedConfigurationDetail);
-          this.patchState((state) => ({
-            configurationDetails: [
-              ...state.configurationDetails.filter(
-                (c) => c.id !== configurationId
-              ),
-              updatedConfigurationDetail,
-            ],
-          }));
+        tap(({ updatedConfigurationDetail: detail }) => {
+          console.log('[Create Group]', detail);
+          this.patchDraft((draft) => {
+            draft.configurationDetails = draft.configurationDetails.filter(
+              ({ id }) => detail.id !== id
+            );
+            draft.configurationDetails.push(detail);
+          });
           this.#matSnackBar.open('Created group', undefined, {
             duration: 3000,
           });
@@ -521,16 +489,14 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedConfigurationDetail }) => {
-          console.log('[Deleted Group]', updatedConfigurationDetail);
-          this.patchState((state) => ({
-            configurationDetails: [
-              ...state.configurationDetails.filter(
-                (c) => c.id !== configurationId
-              ),
-              updatedConfigurationDetail,
-            ],
-          }));
+        tap(({ updatedConfigurationDetail: detail }) => {
+          console.log('[Deleted Group]', detail);
+          this.patchDraft((draft) => {
+            draft.configurationDetails = draft.configurationDetails.filter(
+              ({ id }) => detail.id !== id
+            );
+            draft.configurationDetails.push(detail);
+          });
           this.#matSnackBar.open('Deleted group', undefined, {
             duration: 3000,
           });
@@ -564,16 +530,19 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedConfigurationDetail }) => {
-          console.log('[Created Student]', updatedConfigurationDetail);
-          this.patchState((state) => ({
-            configurationDetails: [
-              ...state.configurationDetails.filter(
-                (c) => c.id !== configurationId
-              ),
-              updatedConfigurationDetail,
-            ],
-          }));
+        tap(({ createdStudentDetail }) => {
+          console.log('[Created Student]', createdStudentDetail);
+          this.patchDraft((draft) => {
+            draft.configurationDetails.forEach((configurationDetail) => {
+              if (configurationDetail.id === configurationId) {
+                configurationDetail.groupDetails.forEach((groupDetail) => {
+                  if (groupDetail.id === groupId) {
+                    groupDetail.studentDetails.push(createdStudentDetail);
+                  }
+                });
+              }
+            });
+          });
           this.#matSnackBar.open('Created student', undefined, {
             duration: 3000,
           });
@@ -611,25 +580,18 @@ export class ClassroomsService {
       .pipe(
         tap(({ updatedGroupDetail }) => {
           console.log('[Patched Group]', updatedGroupDetail);
-          this.patchState((state) => {
-            const configurationDetails = state.configurationDetails.map(
-              (configuration) => {
-                if (configuration.id === configurationId) {
-                  const updatedGroups = configuration.groupDetails.map((g) =>
-                    g.id === groupId ? updatedGroupDetail : g
-                  );
-                  return {
-                    ...configuration,
-                    groupDetails: updatedGroups,
-                  };
-                }
-                return configuration;
+          this.patchDraft((draft) => {
+            draft.configurationDetails.forEach((configurationDetail) => {
+              if (configurationDetail.id === configurationId) {
+                configurationDetail.groupDetails =
+                  configurationDetail.groupDetails.map((g) => {
+                    if (g.id === updatedGroupDetail.id) {
+                      return updatedGroupDetail;
+                    }
+                    return g;
+                  });
               }
-            );
-            return {
-              ...state,
-              configurationDetails,
-            };
+            });
           });
           this.#matSnackBar.open(successMessage, undefined, {
             duration: 3000,
