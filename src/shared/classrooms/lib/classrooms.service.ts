@@ -4,6 +4,7 @@ import {
   ClassroomDetail,
   Configuration,
   ConfigurationDetail,
+  CreateColumnResponse,
   CreatedClassroomResponse,
   CreatedConfigurationResponse,
   CreateGroupResponse,
@@ -11,6 +12,7 @@ import {
   DeletedClassroomResponse,
   DeletedConfigurationResponse,
   DeleteGroupResponse,
+  FieldType,
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
@@ -721,6 +723,63 @@ export class ClassroomsService {
         finalize(() => {
           this.patchState((draft) => {
             draft.updatingConfigurationIds.delete(configurationId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public createColumn(
+    classroomId: string,
+    configurationId: string,
+    label: string,
+    type: FieldType
+  ) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
+    return this.#httpClient
+      .post<CreateColumnResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns`,
+        {
+          label,
+          type,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ createdColumnDetail, createdFieldDetail }) => {
+          console.log('[Created Column]', createdColumnDetail);
+          console.log('[Created Field]', createdFieldDetail);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((configurationDetail) => {
+              if (configurationDetail.id === configurationId) {
+                configurationDetail.columnDetails.push(createdColumnDetail);
+              }
+            });
+            draft.classroomDetails.forEach((classroomDetail) => {
+              if (classroomDetail.id === classroomId) {
+                classroomDetail.fieldDetails.push(createdFieldDetail);
+              }
+            });
+          });
+          this.#matSnackBar.open('Column created', undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Create Column Failed]', error);
+          this.#matSnackBar.open('Error creating column', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
           });
         }),
         take(1)

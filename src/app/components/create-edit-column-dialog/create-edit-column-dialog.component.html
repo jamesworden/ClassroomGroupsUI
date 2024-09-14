@@ -5,18 +5,18 @@
     <mat-label>Column name</mat-label>
     <input
       (change)="setFieldNameIsValid()"
-      [(ngModel)]="field.label"
+      [(ngModel)]="label"
       type="text"
       matInput
     />
   </mat-form-field>
 
-  <mat-radio-group [(ngModel)]="field.type">
-    <mat-radio-button color="primary" [value]="Type.TEXT"
-      >Text</mat-radio-button
-    >
+  <mat-radio-group [(ngModel)]="type">
     <mat-radio-button color="primary" [value]="Type.NUMBER"
       >Number</mat-radio-button
+    >
+    <mat-radio-button color="primary" [value]="Type.TEXT"
+      >Text</mat-radio-button
     >
   </mat-radio-group>
 </div>

@@ -1,8 +1,10 @@
 import {
   Classroom,
   ClassroomDetail,
+  ColumnDetail,
   Configuration,
   ConfigurationDetail,
+  FieldDetail,
   Group,
   GroupDetail,
   StudentDetail,
@@ -58,4 +60,9 @@ export interface CreatedClassroomResponse {
 
 export interface DeletedConfigurationResponse {
   deletedConfiguration: Configuration;
+}
+
+export interface CreateColumnResponse {
+  createdColumnDetail: ColumnDetail;
+  createdFieldDetail: FieldDetail;
 }

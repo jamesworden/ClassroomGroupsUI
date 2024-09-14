@@ -161,22 +161,26 @@ export class ConfigurationPanelComponent {
   }
 
   openCreateColumnDialog() {
-    // const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-    //   restoreFocus: false,
-    //   data: <CreateEditColumnDialogInputs>{
-    //     title: 'Create Column',
-    //   },
-    // });
-    // dialogRef
-    //   .afterClosed()
-    //   .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-    //     if (outputs) {
-    //       this.#classroomsService.createField(outputs.field);
-    //       this.#matSnackBar.open('Column created', 'Hide', {
-    //         duration: 3000,
-    //       });
-    //     }
-    //   });
+    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+      restoreFocus: false,
+      data: <CreateEditColumnDialogInputs>{
+        title: 'Create Column',
+      },
+    });
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        const classroomId = this.classroomId();
+        const configurationId = this.configurationId();
+        if (outputs && classroomId && configurationId) {
+          this.#classroomsService.createColumn(
+            classroomId,
+            configurationId,
+            outputs.label,
+            outputs.type
+          );
+        }
+      });
   }
 
   toggleColumn(columnId: string) {
