@@ -146,10 +146,10 @@ export class GroupPanelComponent {
     // Recalculate ordinals
   }
 
-  startEditing(studentField: StudentField) {
-    this.editingField = studentField.value;
-    this.editingFieldId = studentField.fieldId;
-    this.editingStudentId = studentField.studentId;
+  startEditing(fieldId: string, value: string, studentId: string) {
+    this.editingField = value;
+    this.editingFieldId = fieldId;
+    this.editingStudentId = studentId;
     setTimeout(() => this.valueInput.nativeElement.focus());
   }
 

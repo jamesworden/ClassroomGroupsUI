@@ -48,10 +48,10 @@
   >
     @for (student of editingStudents; track student.id) {
     <div class="grid-row example-box flex" cdkDrag>
-      <!-- @for(field of student.fields; track i; let i = $index) {
+      @for(columnDetail of columnDetails(); track i; let i = $index) {
       <div class="flex-1">
         <div>
-          @if(editingFieldId === field.fieldId && editingStudentId ===
+          @if(editingFieldId === columnDetail.fieldId && editingStudentId ===
           student.id) {
           <input
             #valueInput
@@ -65,16 +65,23 @@
           <span
             class="cursor-text"
             [ngClass]="{
-              'opacity-50': !field.value
+              'opacity-50':
+                student.fieldIdsToValues[columnDetail.fieldId] === undefined
             }"
-            (click)="startEditing(field)"
+            (click)="
+              startEditing(
+                columnDetail.fieldId,
+                student.fieldIdsToValues[columnDetail.fieldId],
+                student.id
+              )
+            "
           >
-            {{ field.value || 'Add value' }}
+            {{ student.fieldIdsToValues[columnDetail.fieldId] || 'Add value' }}
           </span>
           }
         </div>
       </div>
-      } -->
+      }
     </div>
     }
   </div>

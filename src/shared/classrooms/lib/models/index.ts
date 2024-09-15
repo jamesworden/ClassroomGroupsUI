@@ -121,4 +121,7 @@ export interface StudentDetail {
   id: string;
   groupId: string;
   ordinal: number;
+  fieldIdsToValues: {
+    [id: string]: string;
+  };
 }
