@@ -12,6 +12,7 @@ import {
   DeletedClassroomResponse,
   DeletedConfigurationResponse,
   DeleteGroupResponse,
+  FieldDetail,
   FieldType,
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
@@ -20,6 +21,7 @@ import {
   PatchClassroomResponse,
   PatchConfigurationResponse,
   PatchGroupResponse,
+  UpsertStudentFieldResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, of, take, tap } from 'rxjs';
@@ -770,6 +772,55 @@ export class ClassroomsService {
         catchError((error) => {
           console.log('[Create Column Failed]', error);
           this.#matSnackBar.open('Error creating column', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public upsertStudentField(
+    classroomId: string,
+    studentId: string,
+    fieldId: string,
+    value: string
+  ) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
+    return this.#httpClient
+      .put<UpsertStudentFieldResponse>(
+        `/api/v1/classrooms/${classroomId}/students/${studentId}/fields/${fieldId}`,
+        { value },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ upsertedValue }) => {
+          console.log('[Updated Value]', upsertedValue);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((configurationDetail) => {
+              configurationDetail.groupDetails.forEach((groupDetail) => {
+                groupDetail.studentDetails.forEach((studentDetail) => {
+                  if (studentDetail.id === studentId) {
+                    studentDetail.fieldIdsToValues[fieldId] = upsertedValue;
+                  }
+                });
+              });
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Update Student Field Failed]', error);
+          this.#matSnackBar.open('Error updating student field', undefined, {
             duration: 3000,
           });
           return of(null);

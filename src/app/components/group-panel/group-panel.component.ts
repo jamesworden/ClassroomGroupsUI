@@ -22,13 +22,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  Classroom,
   ClassroomsService,
-  Group,
   GroupDetail,
   Student,
   StudentDetail,
-  StudentField,
 } from '@shared/classrooms';
 
 @Component({
@@ -57,6 +54,7 @@ export class GroupPanelComponent {
   @ViewChild('valueInput', { read: ElementRef })
   valueInput!: ElementRef<HTMLInputElement>;
 
+  readonly classroomId = input<string>();
   readonly groupDetail = input<GroupDetail>();
 
   readonly groupDeleted = output<void>();
@@ -82,7 +80,7 @@ export class GroupPanelComponent {
 
   editingFieldId?: string;
   editingStudentId?: string;
-  editingField?: string | number;
+  editingField?: string;
   editingStudents: StudentDetail[] = [];
   updatedLabel?: string;
 
@@ -154,19 +152,28 @@ export class GroupPanelComponent {
   }
 
   saveEdits() {
-    // if (
-    //   this.editingStudentId !== undefined &&
-    //   this.editingFieldId !== undefined &&
-    //   this.editingField !== undefined
-    // ) {
-    //   this.#classroomsService.setStudentValue(
-    //     this.editingStudentId,
-    //     this.editingFieldId,
-    //     this.editingField
-    //   );
-    // }
-    // this.editingField = undefined;
-    // this.editingFieldId = undefined;
-    // this.editingStudentId = undefined;
+    const classroomId = this.classroomId();
+    console.log(
+      classroomId,
+      this.editingStudentId,
+      this.editingFieldId,
+      this.editingField
+    );
+    if (
+      classroomId &&
+      this.editingStudentId !== undefined &&
+      this.editingFieldId !== undefined &&
+      this.editingField !== undefined
+    ) {
+      this.#classroomsService.upsertStudentField(
+        classroomId,
+        this.editingStudentId,
+        this.editingFieldId,
+        this.editingField
+      );
+    }
+    this.editingField = undefined;
+    this.editingFieldId = undefined;
+    this.editingStudentId = undefined;
   }
 }

@@ -66,3 +66,7 @@ export interface CreateColumnResponse {
   createdColumnDetail: ColumnDetail;
   createdFieldDetail: FieldDetail;
 }
+
+export interface UpsertStudentFieldResponse {
+  upsertedValue: string;
+}

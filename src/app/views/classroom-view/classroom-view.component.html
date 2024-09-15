@@ -98,6 +98,7 @@
             @for(group of editingGroups; track group.id) {
             <app-group-panel
               cdkDrag
+              [classroomId]="classroomId()"
               [groupDetail]="group"
               (groupDeleted)="deleteGroup(group.id)"
               (studentCreated)="createStudent(group.id)"
