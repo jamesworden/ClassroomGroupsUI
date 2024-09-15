@@ -149,7 +149,12 @@
     <button
       mat-menu-item
       (click)="openDeleteConfigurationModal()"
-      matTooltip="Delete Configuration"
+      [matTooltip]="
+        configurations().length <= 1
+          ? 'You can\'t delete the last configuration'
+          : ''
+      "
+      [disabled]="configurations().length <= 1"
     >
       <mat-icon>delete</mat-icon>
       <span>Delete configuration</span>

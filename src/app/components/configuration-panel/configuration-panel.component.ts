@@ -78,6 +78,9 @@ export class ConfigurationPanelComponent {
     () => this.configurationDetail()?.classroomId
   );
   readonly configurationId = computed(() => this.configurationDetail()?.id);
+  readonly configurations = computed(() =>
+    this.#classroomsService.select.configurations(this.classroomId())()
+  );
 
   readonly enabledColumnBadges = computed(() => {
     const enabledColumnBadges: {
