@@ -239,7 +239,7 @@ export class ClassroomsService {
     this.patchState((draft) => {
       draft.classroomsLoading = true;
     });
-    const observable = this.#httpClient
+    const classroomDetail$ = this.#httpClient
       .post<CreatedClassroomResponse>(
         `/api/v1/classrooms`,
         {
@@ -272,8 +272,11 @@ export class ClassroomsService {
         map((res) => res?.createdClassroomDetail),
         take(1)
       );
-    observable.subscribe();
-    return observable;
+    const value$ = new BehaviorSubject<ClassroomDetail | undefined>(undefined);
+    classroomDetail$.subscribe((classroomDetail) =>
+      value$.next(classroomDetail)
+    );
+    return value$.asObservable();
   }
 
   public deleteClassroom(classroomId: string) {
@@ -281,7 +284,7 @@ export class ClassroomsService {
       draft.classroomsLoading = true;
       draft.updatingClassroomIds.add(classroomId);
     });
-    const observable = this.#httpClient
+    const deletedClassroom$ = this.#httpClient
       .delete<DeletedClassroomResponse>(`/api/v1/classrooms/${classroomId}`, {
         withCredentials: true,
       })
@@ -310,10 +313,14 @@ export class ClassroomsService {
             draft.updatingClassroomIds.delete(classroomId);
           });
         }),
+        map((res) => res?.deletedClassroom),
         take(1)
       );
-    observable.subscribe();
-    return observable;
+    const value$ = new BehaviorSubject<Classroom | undefined>(undefined);
+    deletedClassroom$.subscribe((deletedClassroom) =>
+      value$.next(deletedClassroom)
+    );
+    return value$.asObservable();
   }
 
   public createConfiguration(classroomId: string, label: string) {
