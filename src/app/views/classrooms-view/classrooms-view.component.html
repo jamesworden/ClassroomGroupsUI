@@ -2,15 +2,11 @@
   <section>
     <mat-toolbar>
       <span>Classrooms</span>
-      <span class="example-spacer"></span>
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="classroomMenu"
-        class="example-icon favorite-icon"
-      >
+      <span class="flex-auto"></span>
+      <button mat-icon-button [matMenuTriggerFor]="classroomMenu">
         <mat-icon>add</mat-icon>
       </button>
-      <button mat-icon-button class="example-icon" (click)="toggleTheme()">
+      <button mat-icon-button (click)="toggleTheme()">
         <mat-icon>{{
           theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
         }}</mat-icon>
@@ -27,7 +23,7 @@
 
     <div class="mx-4">
       @if (classroomDetails().length > 0) {
-      <section class="example-container mat-elevation-z8" tabindex="0">
+      <section class="mat-elevation-z8" tabindex="0">
         <table mat-table [dataSource]="classroomDetails()">
           <ng-container matColumnDef="label">
             <th mat-header-cell *matHeaderCellDef>Name</th>
