@@ -48,6 +48,7 @@ import {
 } from 'shared/classrooms/lib/logic/get-model-from-detail';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
+import { UngroupedStudentsPanelComponent } from 'app/components/ungrouped-students-panel/ungrouped-students-panel.component';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -85,6 +86,7 @@ interface ConfigPanelSettings {
     GoogleSignInButtonComponent,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    UngroupedStudentsPanelComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',

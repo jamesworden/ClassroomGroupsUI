@@ -1,5 +1,7 @@
 export * from './api-responses';
 
+export const UNGROUPED_STUDENTS_ID = 'ungrouped-students';
+
 export interface Classroom {
   label: string;
   id: string;

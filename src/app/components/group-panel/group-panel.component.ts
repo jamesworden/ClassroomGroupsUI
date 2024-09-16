@@ -40,7 +40,6 @@ import {
     CdkDrag,
     MatIconModule,
     CdkDropList,
-    CdkDrag,
     CommonModule,
     FormsModule,
   ],
@@ -72,8 +71,8 @@ export class GroupPanelComponent {
       (student) => student.groupId === this.groupDetail()?.id
     )
   );
-  readonly groupIds = computed(() =>
-    this.#classroomsService.select.groupIds(
+  readonly groupIdsWithUngroupedId = computed(() =>
+    this.#classroomsService.select.groupIdsWithUngroupedId(
       this.groupDetail()?.configurationId
     )()
   );

@@ -21,6 +21,7 @@ import {
   PatchClassroomResponse,
   PatchConfigurationResponse,
   PatchGroupResponse,
+  UNGROUPED_STUDENTS_ID,
   UpsertStudentFieldResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
@@ -99,6 +100,12 @@ class ClassroomSelectors {
 
   public readonly groupIds = (configurationId?: string) =>
     computed(() => this.groupDetails(configurationId)().map(({ id }) => id));
+
+  public readonly groupIdsWithUngroupedId = (configurationId?: string) =>
+    computed(() => [
+      ...this.groupIds(configurationId)(),
+      UNGROUPED_STUDENTS_ID,
+    ]);
 
   public readonly configurationUpdating = (configurationId?: string) =>
     computed(() =>
@@ -820,6 +827,11 @@ export class ClassroomsService {
               studentDetail.fieldIdsToValues[fieldId] = value;
             }
           });
+        });
+        configurationDetail.ungroupedStudents.forEach((student) => {
+          if (student.id === studentId) {
+            student.fieldIdsToValues[fieldId] = value;
+          }
         });
       });
     };

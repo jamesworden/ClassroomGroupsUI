@@ -71,7 +71,11 @@
             ></app-configuration-panel>
           </section>
 
-          <!-- Ungrouped Students Panel -->
+          <app-ungrouped-students-panel
+            [classroomId]="classroomId()"
+            [configurationId]="selectedConfigurationId()"
+            [students]="configurationDetail()?.ungroupedStudents ?? []"
+          ></app-ungrouped-students-panel>
 
           @if (editingGroups.length === 0) {
           <section
