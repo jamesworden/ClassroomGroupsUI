@@ -240,8 +240,9 @@ export class ClassroomViewComponent {
     dialogRef.afterClosed().subscribe((success) => {
       const classroomId = this.classroomId();
       if (success && classroomId) {
-        this.#classroomsService.deleteClassroom(classroomId);
-        this.#router.navigate(['classrooms']);
+        this.#classroomsService.deleteClassroom(classroomId).subscribe(() => {
+          this.#router.navigate(['/']);
+        });
       }
     });
   }

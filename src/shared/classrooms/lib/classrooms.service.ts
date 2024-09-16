@@ -279,8 +279,9 @@ export class ClassroomsService {
   public deleteClassroom(classroomId: string) {
     this.patchState((draft) => {
       draft.classroomsLoading = true;
+      draft.updatingClassroomIds.add(classroomId);
     });
-    return this.#httpClient
+    const observable = this.#httpClient
       .delete<DeletedClassroomResponse>(`/api/v1/classrooms/${classroomId}`, {
         withCredentials: true,
       })
@@ -306,11 +307,13 @@ export class ClassroomsService {
         finalize(() => {
           this.patchState((draft) => {
             draft.classroomsLoading = false;
+            draft.updatingClassroomIds.delete(classroomId);
           });
         }),
         take(1)
-      )
-      .subscribe();
+      );
+    observable.subscribe();
+    return observable;
   }
 
   public createConfiguration(classroomId: string, label: string) {
