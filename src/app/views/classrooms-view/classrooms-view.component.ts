@@ -66,7 +66,11 @@ export class ClassroomsViewComponent {
   }
 
   createClassroom() {
-    this.#classroomsService.createClassroom();
+    this.#classroomsService.createClassroom().subscribe((classroomDetail) => {
+      if (classroomDetail) {
+        this.viewClassroom(classroomDetail.id);
+      }
+    });
   }
 
   openDeleteClassroomModal(classroomDetail: ClassroomDetail) {

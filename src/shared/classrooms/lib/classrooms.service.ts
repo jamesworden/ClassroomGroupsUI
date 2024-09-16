@@ -24,7 +24,15 @@ import {
   UpsertStudentFieldResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
-import { catchError, finalize, of, take, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  finalize,
+  map,
+  of,
+  take,
+  tap,
+} from 'rxjs';
 import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { create } from 'mutative';
@@ -231,7 +239,7 @@ export class ClassroomsService {
     this.patchState((draft) => {
       draft.classroomsLoading = true;
     });
-    return this.#httpClient
+    const observable = this.#httpClient
       .post<CreatedClassroomResponse>(
         `/api/v1/classrooms`,
         {
@@ -261,9 +269,11 @@ export class ClassroomsService {
             draft.classroomsLoading = false;
           });
         }),
+        map((res) => res?.createdClassroomDetail),
         take(1)
-      )
-      .subscribe();
+      );
+    observable.subscribe();
+    return observable;
   }
 
   public deleteClassroom(classroomId: string) {
