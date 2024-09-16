@@ -20,6 +20,7 @@ import {
   YesNoDialogComponent,
   YesNoDialogInputs,
 } from 'app/components/yes-no-dialog/yes-no-dialog.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -33,6 +34,7 @@ import {
     AccountMenuComponent,
     CreateClassroomDialogComponent,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
