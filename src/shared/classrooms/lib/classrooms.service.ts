@@ -802,8 +802,20 @@ export class ClassroomsService {
     fieldId: string,
     value: string
   ) {
+    const bufferUpdate = (draft: ClassroomsState) => {
+      draft.configurationDetails.forEach((configurationDetail) => {
+        configurationDetail.groupDetails.forEach((groupDetail) => {
+          groupDetail.studentDetails.forEach((studentDetail) => {
+            if (studentDetail.id === studentId) {
+              studentDetail.fieldIdsToValues[fieldId] = value;
+            }
+          });
+        });
+      });
+    };
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroomId);
+      bufferUpdate(draft);
     });
     return this.#httpClient
       .put<UpsertStudentFieldResponse>(
@@ -815,22 +827,12 @@ export class ClassroomsService {
       )
       .pipe(
         tap(({ upsertedValue }) => {
-          console.log('[Updated Value]', upsertedValue);
-          this.patchState((draft) => {
-            draft.configurationDetails.forEach((configurationDetail) => {
-              configurationDetail.groupDetails.forEach((groupDetail) => {
-                groupDetail.studentDetails.forEach((studentDetail) => {
-                  if (studentDetail.id === studentId) {
-                    studentDetail.fieldIdsToValues[fieldId] = upsertedValue;
-                  }
-                });
-              });
-            });
-          });
+          console.log('[Upserted Value]', upsertedValue);
+          this.patchState(bufferUpdate);
         }),
         catchError((error) => {
-          console.log('[Update Student Field Failed]', error);
-          this.#matSnackBar.open('Error updating student field', undefined, {
+          console.log('[Upsert Student Field Failed]', error);
+          this.#matSnackBar.open('Error upserting student field', undefined, {
             duration: 3000,
           });
           return of(null);
