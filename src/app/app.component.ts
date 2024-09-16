@@ -5,7 +5,7 @@ import { ResizableService } from './directives/resizable.service';
 import { ClassroomsService } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { combineLatest } from 'rxjs';
+import { combineLatest, filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -32,13 +32,14 @@ export class AppComponent {
 
   constructor() {
     combineLatest([this.isLoggedIn$, this.accountLoading$])
-      .pipe(takeUntilDestroyed())
-      .subscribe(([isLoggedIn, accountLoading]) => {
-        if (!isLoggedIn && !accountLoading) {
-          this.#router.navigate(['/']);
-        } else if (isLoggedIn) {
-          this.#classroomsService.getClassroomDetails();
-        }
-      });
+      .pipe(
+        takeUntilDestroyed(),
+        filter(([_, accountLoading]) => !accountLoading)
+      )
+      .subscribe(([isLoggedIn]) =>
+        isLoggedIn
+          ? this.#classroomsService.getClassroomDetails()
+          : this.#router.navigate(['/'])
+      );
   }
 }
