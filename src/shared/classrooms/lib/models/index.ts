@@ -87,7 +87,7 @@ export interface ConfigurationDetail {
   description: string;
   groupDetails: GroupDetail[];
   columnDetails: ColumnDetail[];
-  unassignedStudents: StudentWithFields[];
+  ungroupedStudents: StudentWithFields[];
 }
 
 export interface StudentWithFields {
