@@ -43,11 +43,14 @@
     cdkDropList
     [id]="groupDetail()?.id ?? ''"
     [cdkDropListConnectedTo]="groupIds()"
-    class="grid-row example-list min-h-16 w-full mt-2"
+    class="grid-row rounded-md overflow-hidden min-h-16 w-full mt-2"
     (cdkDropListDropped)="drop($event)"
   >
     @for (student of editingStudents; track student.id) {
-    <div class="grid-row example-box flex" cdkDrag>
+    <div
+      class="grid-row student-row text-sm cursor-move flex border-b border-gray-200 dark:border-gray-400 p-2 flex"
+      cdkDrag
+    >
       @for(columnDetail of columnDetails(); track i; let i = $index) {
       <div class="flex-1">
         <div>
@@ -66,7 +69,8 @@
             class="cursor-text"
             [ngClass]="{
               'opacity-50':
-                student.fieldIdsToValues[columnDetail.fieldId] === undefined
+                student.fieldIdsToValues[columnDetail.fieldId] === undefined ||
+                student.fieldIdsToValues[columnDetail.fieldId] === ''
             }"
             (click)="
               startEditing(
