@@ -11,10 +11,6 @@ import { Themes } from 'app/themes/theme.models';
 import { MatMenuModule } from '@angular/material/menu';
 import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  CreateClassroomDialogComponent,
-  CreateClassroomDialogResults,
-} from 'app/components/create-classroom-dialog/create-classroom-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   YesNoDialogComponent,
@@ -32,7 +28,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatToolbarModule,
     MatMenuModule,
     AccountMenuComponent,
-    CreateClassroomDialogComponent,
     MatProgressSpinnerModule,
     MatProgressBarModule,
   ],
@@ -70,20 +65,8 @@ export class ClassroomsViewComponent {
     this.menuIsOpen.set(false);
   }
 
-  openCreateClassroomModal() {
-    const dialogRef = this.#matDialog.open(CreateClassroomDialogComponent, {
-      restoreFocus: false,
-    });
-    dialogRef
-      .afterClosed()
-      .subscribe((results?: CreateClassroomDialogResults) => {
-        if (results) {
-          this.#classroomsService.createClassroom(
-            results.label,
-            results.description
-          );
-        }
-      });
+  createClassroom() {
+    this.#classroomsService.createClassroom();
   }
 
   openDeleteClassroomModal(classroomDetail: ClassroomDetail) {

@@ -227,7 +227,7 @@ export class ClassroomsService {
       .subscribe();
   }
 
-  public createClassroom(label: string, description?: string) {
+  public createClassroom(label?: string, description?: string) {
     this.patchState((draft) => {
       draft.classroomsLoading = true;
     });
