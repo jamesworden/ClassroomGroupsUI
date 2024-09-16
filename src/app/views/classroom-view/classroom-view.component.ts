@@ -41,12 +41,13 @@ import {
   ResizeableDirective,
 } from 'app/directives/resizeable.directive';
 import { ThemeService } from 'app/themes/theme.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, filter, take, withLatestFrom } from 'rxjs';
 import {
   getConfigurationFromDetail,
   getGroupFromDetail,
 } from 'shared/classrooms/lib/logic/get-model-from-detail';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { Subject } from '@microsoft/signalr';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -160,6 +161,7 @@ export class ClassroomViewComponent {
     width: DEFAULT_PANEL_WIDTH,
     isOpen: true,
   });
+  readonly classroomViewInitialized$ = new Subject<void>();
 
   updatedClassroomDescription = '';
   updatedClassroomLabel = '';
@@ -181,13 +183,14 @@ export class ClassroomViewComponent {
       );
     });
     this.configurations$
-      .pipe(takeUntilDestroyed())
-      .subscribe((configurations) => {
-        const first = configurations[0];
-        if (first) {
-          this.selectedConfigurationId.set(first.id);
-        }
-      });
+      .pipe(
+        takeUntilDestroyed(),
+        filter((configurations) => configurations.length > 0),
+        take(1)
+      )
+      .subscribe(([firstConfiguration]) =>
+        this.selectedConfigurationId.set(firstConfiguration.id)
+      );
     combineLatest([this.classroomId$, this.selectedConfigurationId$])
       .pipe(takeUntilDestroyed())
       .subscribe(([classroomId, configurationId]) => {
