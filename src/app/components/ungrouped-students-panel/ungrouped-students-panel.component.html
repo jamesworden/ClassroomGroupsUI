@@ -1,52 +1,50 @@
-<div class="panel rounded-lg flex-col gap-y-2 p-2 pt-1 shadow-lg">
+<div
+  cdkDropList
+  [id]="UNGROUPED_STUDENTS_ID"
+  [cdkDropListConnectedTo]="groupIdsWithUngroupedId()"
+  class="grid-row student-list rounded-md overflow-hidden w-full"
+  (cdkDropListDropped)="drop($event)"
+>
+  @for (student of students(); track student.id) {
   <div
-    cdkDropList
-    [id]="UNGROUPED_STUDENTS_ID"
-    [cdkDropListConnectedTo]="groupIdsWithUngroupedId()"
-    class="grid-row student-list rounded-md overflow-hidden w-full mt-2"
-    (cdkDropListDropped)="drop($event)"
+    class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 p-2 flex"
+    cdkDrag
   >
-    @for (student of students(); track student.id) {
-    <div
-      class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 p-2 flex"
-      cdkDrag
-    >
-      @for(columnDetail of columnDetails(); track i; let i = $index) {
-      <div class="flex-1">
-        <div>
-          @if(editingFieldId === columnDetail.fieldId && editingStudentId ===
-          student.id) {
-          <input
-            #valueInput
-            type="text"
-            [(ngModel)]="editingField"
-            placeholder="Add value"
-            class="outline-none bg-transparent border-none w-full text-ellipsis"
-            (change)="saveEdits()"
-          />
-          } @else {
-          <span
-            class="cursor-text"
-            [ngClass]="{
-              'opacity-50':
-                student.fieldIdsToValues[columnDetail.fieldId] === undefined ||
-                student.fieldIdsToValues[columnDetail.fieldId] === ''
-            }"
-            (click)="
-              startEditing(
-                columnDetail.fieldId,
-                student.fieldIdsToValues[columnDetail.fieldId],
-                student.id
-              )
-            "
-          >
-            {{ student.fieldIdsToValues[columnDetail.fieldId] || 'Add value' }}
-          </span>
-          }
-        </div>
+    @for(columnDetail of columnDetails(); track i; let i = $index) {
+    <div class="flex-1">
+      <div>
+        @if(editingFieldId === columnDetail.fieldId && editingStudentId ===
+        student.id) {
+        <input
+          #valueInput
+          type="text"
+          [(ngModel)]="editingField"
+          placeholder="Add value"
+          class="outline-none bg-transparent border-none w-full text-ellipsis"
+          (change)="saveEdits()"
+        />
+        } @else {
+        <span
+          class="cursor-text"
+          [ngClass]="{
+            'opacity-50':
+              student.fieldIdsToValues[columnDetail.fieldId] === undefined ||
+              student.fieldIdsToValues[columnDetail.fieldId] === ''
+          }"
+          (click)="
+            startEditing(
+              columnDetail.fieldId,
+              student.fieldIdsToValues[columnDetail.fieldId],
+              student.id
+            )
+          "
+        >
+          {{ student.fieldIdsToValues[columnDetail.fieldId] || 'Add value' }}
+        </span>
+        }
       </div>
-      }
     </div>
     }
   </div>
+  }
 </div>
