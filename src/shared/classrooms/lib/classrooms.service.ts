@@ -721,7 +721,7 @@ export class ClassroomsService {
       getUpdateStrategy(groupDetail)(draft);
     });
     return this.#httpClient
-      .post<PatchGroupResponse>(
+      .patch<PatchGroupResponse>(
         `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
         {
           label,
