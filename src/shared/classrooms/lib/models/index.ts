@@ -10,7 +10,7 @@ export interface Classroom {
 
 export interface Configuration {
   label: string;
-  description?: string;
+  description: string;
   id: string;
   classroomId: string;
 }
@@ -71,7 +71,7 @@ export interface ClassroomDetail {
   id: string;
   accountId: string;
   label: string;
-  description?: string;
+  description: string;
   fieldDetails: FieldDetail[];
 }
 

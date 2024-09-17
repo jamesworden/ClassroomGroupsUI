@@ -417,34 +417,39 @@ export class ClassroomsService {
 
   public patchConfiguration(
     classroomId: string,
-    configuration: Configuration,
+    configurationId: string,
+    label: string,
+    description: string,
     failureMessage = 'Error updating configuration'
   ) {
     const getUpdateStrategy =
       (configurationDetail: ConfigurationDetail) =>
       (draft: ClassroomsState) => {
         draft.configurationDetails = draft.configurationDetails.map((cd) =>
-          cd.id === configuration.id ? configurationDetail : cd
+          cd.id === configurationId ? configurationDetail : cd
         );
         draft.configurations = draft.configurations.map((c) =>
-          c.id === configuration.id
+          c.id === configurationId
             ? getConfigurationFromDetail(configurationDetail)
             : c
         );
       };
     this.patchState((draft) => {
-      draft.updatingConfigurationIds.add(configuration.id);
+      draft.updatingConfigurationIds.add(configurationId);
       const configurationDetail = this.getPatchedConfigurationDetail(
         draft,
-        configuration
+        configurationId,
+        label,
+        description
       );
       getUpdateStrategy(configurationDetail)(draft);
     });
     return this.#httpClient
-      .post<PatchConfigurationResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configuration.id}`,
+      .patch<PatchConfigurationResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
         {
-          configuration,
+          label,
+          description,
         },
         {
           withCredentials: true,
@@ -467,7 +472,7 @@ export class ClassroomsService {
         }),
         finalize(() => {
           this.patchState((draft) => {
-            draft.updatingConfigurationIds.delete(configuration.id);
+            draft.updatingConfigurationIds.delete(configurationId);
           });
         }),
         take(1)
@@ -476,7 +481,9 @@ export class ClassroomsService {
   }
 
   public patchClassroom(
-    classroom: Classroom,
+    classroomId: string,
+    label: string,
+    description: string,
     failureMessage = 'Error updating classroom'
   ) {
     const getUpdateStrategy =
@@ -486,15 +493,21 @@ export class ClassroomsService {
         );
       };
     this.patchState((draft) => {
-      draft.updatingClassroomIds.add(classroom.id);
-      const classroomDetail = this.getPatchedClassroomDetail(draft, classroom);
+      draft.updatingClassroomIds.add(classroomId);
+      const classroomDetail = this.getPatchedClassroomDetail(
+        draft,
+        classroomId,
+        label,
+        description
+      );
       getUpdateStrategy(classroomDetail)(draft);
     });
     return this.#httpClient
-      .post<PatchClassroomResponse>(
-        `/api/v1/classrooms/${classroom.id}`,
+      .patch<PatchClassroomResponse>(
+        `/api/v1/classrooms/${classroomId}`,
         {
-          classroom,
+          label,
+          description,
         },
         {
           withCredentials: true,
@@ -514,7 +527,7 @@ export class ClassroomsService {
         }),
         finalize(() => {
           this.patchState((draft) => {
-            draft.updatingClassroomIds.delete(classroom.id);
+            draft.updatingClassroomIds.delete(classroomId);
           });
         }),
         take(1)
@@ -891,37 +904,43 @@ export class ClassroomsService {
 
   getPatchedConfigurationDetail(
     draft: ClassroomsState,
-    configuration: Configuration
+    configurationId: string,
+    label: string,
+    description: string
   ): ConfigurationDetail {
     const existingDetail = draft.configurationDetails.find(
-      (c) => c.id === configuration.id
+      (c) => c.id === configurationId
     );
     if (!existingDetail) {
       throw new Error(
-        `Could not find existing configuration with id ${configuration.id}`
+        `Could not find existing configuration with id ${configurationId}`
       );
     }
     return {
       ...existingDetail,
-      ...configuration,
+      label,
+      description,
     };
   }
 
   getPatchedClassroomDetail(
     draft: ClassroomsState,
-    classroom: Classroom
+    classroomId: string,
+    label: string,
+    description: string
   ): ClassroomDetail {
     const existingDetail = draft.classroomDetails.find(
-      (c) => c.id === classroom.id
+      (c) => c.id === classroomId
     );
     if (!existingDetail) {
       throw new Error(
-        `Could not find existing classroom with id ${classroom.id}`
+        `Could not find existing classroom with id ${classroomId}`
       );
     }
     return {
       ...existingDetail,
-      ...classroom,
+      label,
+      description,
     };
   }
 }

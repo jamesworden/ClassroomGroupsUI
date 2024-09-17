@@ -253,10 +253,11 @@ export class ClassroomViewComponent {
     const description = (event.target as HTMLInputElement)?.value;
     const classroom = this.classroom();
     if (classroom) {
-      this.#classroomsService.patchClassroom({
-        ...classroom,
-        description,
-      });
+      this.#classroomsService.patchClassroom(
+        classroom.id,
+        classroom.label,
+        description
+      );
     }
   }
 
@@ -264,10 +265,11 @@ export class ClassroomViewComponent {
     const label = (event.target as HTMLInputElement)?.value;
     const classroom = this.classroom();
     if (classroom) {
-      this.#classroomsService.patchClassroom({
-        ...classroom,
+      this.#classroomsService.patchClassroom(
+        classroom.id,
         label,
-      });
+        classroom.description
+      );
     }
   }
 
@@ -325,10 +327,12 @@ export class ClassroomViewComponent {
     const configuration = this.selectedConfiguration();
     const classroom = this.classroom();
     if (classroom && configuration) {
-      this.#classroomsService.patchConfiguration(classroom.id, {
-        ...configuration,
+      this.#classroomsService.patchConfiguration(
+        classroom.id,
+        configuration.id,
         label,
-      });
+        configuration.description
+      );
     }
   }
 
@@ -336,10 +340,12 @@ export class ClassroomViewComponent {
     const configuration = this.selectedConfiguration();
     const classroom = this.classroom();
     if (classroom && configuration) {
-      this.#classroomsService.patchConfiguration(classroom.id, {
-        ...configuration,
-        description,
-      });
+      this.#classroomsService.patchConfiguration(
+        classroom.id,
+        configuration.id,
+        configuration.label,
+        description
+      );
     }
   }
 
