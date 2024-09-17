@@ -30,8 +30,17 @@
         <mat-icon matListItemIcon>{{
           configuration.id === selectedConfigurationId() ? 'group' : null
         }}</mat-icon>
-        <div matListItemTitle>{{ configuration.label }}</div>
-        <div matListItemLine>{{ configuration.description }}</div>
+        <div
+          matListItemTitle
+          [ngClass]="{
+            'opacity-50': !configuration.label
+          }"
+        >
+          {{ configuration.label || 'Untitled' }}
+        </div>
+        <div matListItemLine>
+          {{ configuration.description }}
+        </div>
       </mat-list-item>
       } }
     </mat-action-list>
