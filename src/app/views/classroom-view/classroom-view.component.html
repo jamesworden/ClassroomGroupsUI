@@ -68,6 +68,7 @@
               [configurationDetail]="configurationDetail()"
               (labelUpdated)="updateConfigurationLabel($event)"
               (descriptionUpdated)="updateConfigurationDescription($event)"
+              (deletedConfiguration)="selectFirstConfiguration()"
             ></app-configuration-panel>
           </section>
 

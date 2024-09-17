@@ -72,6 +72,7 @@ export class ConfigurationPanelComponent {
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
+  readonly deletedConfiguration = output();
 
   readonly columnDetails = computed(
     () => this.configurationDetail()?.columnDetails ?? []
@@ -147,10 +148,11 @@ export class ConfigurationPanelComponent {
       const classroomId = this.classroomId();
       const configurationId = this.configurationId();
       if (success && classroomId && configurationId) {
-        this.#classroomsService.deleteConfiguration(
-          classroomId,
-          configurationId
-        );
+        this.#classroomsService
+          .deleteConfiguration(classroomId, configurationId)
+          .subscribe((deletedConfiguration) =>
+            this.deletedConfiguration.emit()
+          );
       }
     });
   }

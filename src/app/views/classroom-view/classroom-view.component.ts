@@ -155,6 +155,9 @@ export class ClassroomViewComponent {
     this.#classroomsService.select.configurations(this.classroomId())()
   );
   readonly configurations$ = toObservable(this.configurations);
+  readonly configurationIds = computed(() =>
+    this.#classroomsService.select.configurationIds(this.classroomId())()
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -364,6 +367,13 @@ export class ClassroomViewComponent {
         group.id,
         getGroupFromDetail(group)
       );
+    }
+  }
+
+  selectFirstConfiguration() {
+    const [firstConfigurationId] = this.configurationIds();
+    if (firstConfigurationId) {
+      this.selectConfigurationId(firstConfigurationId);
     }
   }
 }

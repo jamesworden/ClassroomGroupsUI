@@ -118,6 +118,9 @@ class ClassroomSelectors {
     computed(() =>
       classroomId ? this._state().updatingClassroomIds.has(classroomId) : false
     );
+
+  public readonly configurationIds = (classroomId?: string) =>
+    computed(() => this.configurations(classroomId)().map(({ id }) => id));
 }
 
 interface ClassroomsState {
@@ -717,7 +720,7 @@ export class ClassroomsService {
     this.patchState((draft) => {
       draft.updatingConfigurationIds.add(configurationId);
     });
-    return this.#httpClient
+    const deletedConfiguration$ = this.#httpClient
       .delete<DeletedConfigurationResponse>(
         `/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
         {
@@ -751,9 +754,14 @@ export class ClassroomsService {
             draft.updatingConfigurationIds.delete(configurationId);
           });
         }),
+        map((res) => res?.deletedConfiguration),
         take(1)
-      )
-      .subscribe();
+      );
+    const value$ = new BehaviorSubject<Configuration | undefined>(undefined);
+    deletedConfiguration$.subscribe((classroomDetail) =>
+      value$.next(classroomDetail)
+    );
+    return value$.asObservable();
   }
 
   public createColumn(
