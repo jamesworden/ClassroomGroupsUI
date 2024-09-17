@@ -365,12 +365,11 @@ export class ClassroomViewComponent {
     const classroomId = this.classroomId();
     const configurationId = this.selectedConfigurationId();
     if (classroomId && configurationId) {
-      group.label = label;
       this.#classroomsService.patchGroup(
         classroomId,
         configurationId,
         group.id,
-        getGroupFromDetail(group)
+        label
       );
     }
   }

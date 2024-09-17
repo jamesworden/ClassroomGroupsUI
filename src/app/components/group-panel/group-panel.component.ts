@@ -81,14 +81,10 @@ export class GroupPanelComponent {
   editingStudentId?: string;
   editingField?: string;
   editingStudents: StudentDetail[] = [];
-  updatedLabel?: string;
 
   constructor() {
     effect(() => {
       this.editingStudents = this.studentsInGroup();
-    });
-    effect(() => {
-      this.updatedLabel = this.groupDetail()?.label;
     });
   }
 
@@ -103,12 +99,9 @@ export class GroupPanelComponent {
     }
   }
 
-  updateLabel() {
-    if (this.updatedLabel) {
-      this.labelUpdated.emit(this.updatedLabel);
-    } else {
-      this.updatedLabel = this.groupDetail()?.label;
-    }
+  updateLabel(event: Event) {
+    const label = (event.target as HTMLInputElement)?.value;
+    this.labelUpdated.emit(label);
   }
 
   drop(event: CdkDragDrop<Student[]>) {

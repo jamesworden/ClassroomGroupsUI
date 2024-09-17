@@ -18,6 +18,7 @@ import {
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
   Group,
+  GroupDetail,
   PatchClassroomResponse,
   PatchConfigurationResponse,
   PatchGroupResponse,
@@ -691,17 +692,39 @@ export class ClassroomsService {
     classroomId: string,
     configurationId: string,
     groupId: string,
-    group: Group,
+    label: string,
     failureMessage = 'Error updating group'
   ) {
+    const getUpdateStrategy =
+      (groupDetail: GroupDetail) => (draft: ClassroomsState) => {
+        draft.configurationDetails.forEach((configurationDetail) => {
+          if (configurationDetail.id === configurationId) {
+            configurationDetail.groupDetails =
+              configurationDetail.groupDetails.map((g) => {
+                if (g.id === groupDetail.id) {
+                  return groupDetail;
+                }
+                return g;
+              });
+          }
+        });
+      };
     this.patchState((draft) => {
       draft.updatingConfigurationIds.add(configurationId);
+      const groupDetail = this.getPatchedGroupDetail(
+        draft,
+        classroomId,
+        configurationId,
+        groupId,
+        label
+      );
+      getUpdateStrategy(groupDetail)(draft);
     });
     return this.#httpClient
       .post<PatchGroupResponse>(
         `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
         {
-          group,
+          label,
         },
         {
           withCredentials: true,
@@ -710,19 +733,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ updatedGroupDetail }) => {
           console.log('[Patched Group]', updatedGroupDetail);
-          this.patchState((draft) => {
-            draft.configurationDetails.forEach((configurationDetail) => {
-              if (configurationDetail.id === configurationId) {
-                configurationDetail.groupDetails =
-                  configurationDetail.groupDetails.map((g) => {
-                    if (g.id === updatedGroupDetail.id) {
-                      return updatedGroupDetail;
-                    }
-                    return g;
-                  });
-              }
-            });
-          });
+          this.patchState(getUpdateStrategy(updatedGroupDetail));
         }),
         catchError((error) => {
           console.log('[Patch Group Failed]', error);
@@ -941,6 +952,25 @@ export class ClassroomsService {
       ...existingDetail,
       label,
       description,
+    };
+  }
+
+  getPatchedGroupDetail(
+    draft: ClassroomsState,
+    classroomId: string,
+    configurationId: string,
+    groupId: string,
+    label: string
+  ): GroupDetail {
+    const existingDetail = draft.configurationDetails
+      .find((c) => c.classroomId === classroomId && c.id === configurationId)
+      ?.groupDetails.find((g) => g.id === groupId);
+    if (!existingDetail) {
+      throw new Error(`Could not find existing group with id ${groupId}`);
+    }
+    return {
+      ...existingDetail,
+      label,
     };
   }
 }
