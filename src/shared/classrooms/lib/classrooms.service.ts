@@ -273,6 +273,9 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Create Classroom Failed]', error);
+          this.#matSnackBar.open('Error creating classroom', undefined, {
+            duration: 3000,
+          });
           return of(null);
         }),
         finalize(() => {
