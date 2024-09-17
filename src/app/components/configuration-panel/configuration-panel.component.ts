@@ -252,4 +252,12 @@ export class ConfigurationPanelComponent {
       this.#classroomsService.createGroup(classroomId, configurationId);
     }
   }
+
+  createStudent() {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createStudent(classroomId, configurationId);
+    }
+  }
 }

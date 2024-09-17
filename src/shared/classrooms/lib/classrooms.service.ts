@@ -611,7 +611,7 @@ export class ClassroomsService {
   public createStudent(
     classroomId: string,
     configurationId: string,
-    groupId: string
+    groupId?: string
   ) {
     this.patchState((draft) => {
       draft.updatingConfigurationIds.add(configurationId);

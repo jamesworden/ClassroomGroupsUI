@@ -144,6 +144,10 @@
 
 <mat-menu #configurationMenu="matMenu">
   <ng-template matMenuContent>
+    <button mat-menu-item (click)="createStudent()">
+      <mat-icon>add_person</mat-icon>
+      <span>Create student</span>
+    </button>
     <button mat-menu-item (click)="createGroup()">
       <mat-icon>add</mat-icon>
       <span>Create group</span>
