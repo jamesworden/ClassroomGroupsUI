@@ -420,8 +420,25 @@ export class ClassroomsService {
     configuration: Configuration,
     failureMessage = 'Error updating configuration'
   ) {
+    const getBufferUpdate =
+      (configurationDetail: ConfigurationDetail) =>
+      (draft: ClassroomsState) => {
+        draft.configurationDetails = draft.configurationDetails.map((cd) =>
+          cd.id === configuration.id ? configurationDetail : cd
+        );
+        draft.configurations = draft.configurations.map((c) =>
+          c.id === configuration.id
+            ? getConfigurationFromDetail(configurationDetail)
+            : c
+        );
+      };
     this.patchState((draft) => {
       draft.updatingConfigurationIds.add(configuration.id);
+      const configurationDetail = this.getPatchedConfigurationDetail(
+        draft,
+        configuration
+      );
+      getBufferUpdate(configurationDetail)(draft);
     });
     return this.#httpClient
       .post<PatchConfigurationResponse>(
@@ -439,16 +456,7 @@ export class ClassroomsService {
             '[Patched Configuration Detail]',
             patchedConfigurationDetail
           );
-          this.patchState((draft) => {
-            draft.configurationDetails = draft.configurationDetails.map((cd) =>
-              cd.id === configuration.id ? patchedConfigurationDetail : cd
-            );
-            draft.configurations = draft.configurations.map((c) =>
-              c.id === configuration.id
-                ? getConfigurationFromDetail(patchedConfigurationDetail)
-                : c
-            );
-          });
+          this.patchState(getBufferUpdate(patchedConfigurationDetail));
         }),
         catchError((error) => {
           console.log('[Patch Configuration Failed]', error);
@@ -471,8 +479,16 @@ export class ClassroomsService {
     classroom: Classroom,
     failureMessage = 'Error updating classroom'
   ) {
+    const getBufferUpdate =
+      (classroomDetail: ClassroomDetail) => (draft: ClassroomsState) => {
+        draft.classroomDetails = draft.classroomDetails.map((cd) =>
+          cd.id === classroomDetail.id ? classroomDetail : cd
+        );
+      };
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroom.id);
+      const classroomDetail = this.getPatchedClassroomDetail(draft, classroom);
+      getBufferUpdate(classroomDetail)(draft);
     });
     return this.#httpClient
       .post<PatchClassroomResponse>(
@@ -487,11 +503,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ patchedClassroomDetail }) => {
           console.log('[Patched Classroom Detail]', patchedClassroomDetail);
-          this.patchState((draft) => {
-            draft.classroomDetails = draft.classroomDetails.map((cd) =>
-              cd.id === patchedClassroomDetail.id ? patchedClassroomDetail : cd
-            );
-          });
+          this.patchState(getBufferUpdate(patchedClassroomDetail));
         }),
         catchError((error) => {
           console.log('[Patch Classroom Failed]', error);
@@ -827,7 +839,7 @@ export class ClassroomsService {
     fieldId: string,
     value: string
   ) {
-    const bufferUpdate = (draft: ClassroomsState) => {
+    const getBufferUpdate = (value: string) => (draft: ClassroomsState) => {
       draft.configurationDetails.forEach((configurationDetail) => {
         configurationDetail.groupDetails.forEach((groupDetail) => {
           groupDetail.studentDetails.forEach((studentDetail) => {
@@ -845,7 +857,7 @@ export class ClassroomsService {
     };
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroomId);
-      bufferUpdate(draft);
+      getBufferUpdate(value)(draft);
     });
     return this.#httpClient
       .put<UpsertStudentFieldResponse>(
@@ -858,7 +870,7 @@ export class ClassroomsService {
       .pipe(
         tap(({ upsertedValue }) => {
           console.log('[Upserted Value]', upsertedValue);
-          this.patchState(bufferUpdate);
+          this.patchState(getBufferUpdate(upsertedValue));
         }),
         catchError((error) => {
           console.log('[Upsert Student Field Failed]', error);
@@ -875,5 +887,41 @@ export class ClassroomsService {
         take(1)
       )
       .subscribe();
+  }
+
+  getPatchedConfigurationDetail(
+    draft: ClassroomsState,
+    configuration: Configuration
+  ): ConfigurationDetail {
+    const existingDetail = draft.configurationDetails.find(
+      (c) => c.id === configuration.id
+    );
+    if (!existingDetail) {
+      throw new Error(
+        `Could not find existing configuration with id ${configuration.id}`
+      );
+    }
+    return {
+      ...existingDetail,
+      ...configuration,
+    };
+  }
+
+  getPatchedClassroomDetail(
+    draft: ClassroomsState,
+    classroom: Classroom
+  ): ClassroomDetail {
+    const existingDetail = draft.classroomDetails.find(
+      (c) => c.id === classroom.id
+    );
+    if (!existingDetail) {
+      throw new Error(
+        `Could not find existing classroom with id ${classroom.id}`
+      );
+    }
+    return {
+      ...existingDetail,
+      ...classroom,
+    };
   }
 }

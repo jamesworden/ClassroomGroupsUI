@@ -84,6 +84,12 @@ export class ConfigurationPanelComponent {
   readonly configurations = computed(() =>
     this.#classroomsService.select.configurations(this.classroomId())()
   );
+  readonly configurationLabel = computed(
+    () => this.configurationDetail()?.label ?? ''
+  );
+  readonly configurationDescription = computed(
+    () => this.configurationDetail()?.description ?? ''
+  );
 
   readonly enabledColumnBadges = computed(() => {
     const enabledColumnBadges: {
@@ -102,17 +108,9 @@ export class ConfigurationPanelComponent {
   averageScores = false;
   groupingByDivision = false;
   groupingValue = 0;
-  updatedDescription = '';
-  updatedLabel = '';
   columns: ColumnDetail[] = [];
 
   constructor() {
-    effect(
-      () =>
-        (this.updatedDescription =
-          this.configurationDetail()?.description ?? '')
-    );
-    effect(() => (this.updatedLabel = this.configurationDetail()?.label ?? ''));
     effect(() => (this.columns = this.columnDetails()));
   }
 
@@ -120,18 +118,14 @@ export class ConfigurationPanelComponent {
     this.groupingByDivision = !this.groupingByDivision;
   }
 
-  updateDescription() {
-    this.descriptionUpdated.emit(this.updatedDescription);
-    // const configurationId = this.viewingConfiguration()?.id;
-    // if (configurationId) {
-    //   // this.#classroomsService.updateConfiguration(configurationId, {
-    //   //   description: this.updatedDescription,
-    //   // });
-    // }
+  updateDescription(event: Event) {
+    const description = (event.target as HTMLInputElement).value;
+    this.descriptionUpdated.emit(description);
   }
 
-  updateLabel() {
-    this.labelUpdated.emit(this.updatedLabel);
+  updateLabel(event: Event) {
+    const label = (event.target as HTMLInputElement).value;
+    this.labelUpdated.emit(label);
   }
 
   openDeleteConfigurationModal() {

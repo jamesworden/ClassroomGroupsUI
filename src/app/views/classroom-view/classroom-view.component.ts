@@ -158,6 +158,10 @@ export class ClassroomViewComponent {
   readonly configurationIds = computed(() =>
     this.#classroomsService.select.configurationIds(this.classroomId())()
   );
+  readonly classroomLabel = computed(() => this.classroom()?.label ?? '');
+  readonly classroomDescription = computed(
+    () => this.classroom()?.description ?? ''
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -168,18 +172,11 @@ export class ClassroomViewComponent {
   });
   readonly classroomViewInitialized$ = new Subject<void>();
 
-  updatedClassroomDescription = '';
-  updatedClassroomLabel = '';
   editingGroups: GroupDetail[] = [];
 
   constructor() {
     this.loadConfigPanelSettings();
 
-    effect(
-      () =>
-        (this.updatedClassroomDescription = this.classroom()?.description ?? '')
-    );
-    effect(() => (this.updatedClassroomLabel = this.classroom()?.label ?? ''));
     effect(() => (this.editingGroups = this.groupDetails()));
     effect(() => {
       localStorage.setItem(
@@ -252,22 +249,24 @@ export class ClassroomViewComponent {
     });
   }
 
-  updateClassroomDescription() {
+  updateClassroomDescription(event: Event) {
+    const description = (event.target as HTMLInputElement)?.value;
     const classroom = this.classroom();
     if (classroom) {
       this.#classroomsService.patchClassroom({
         ...classroom,
-        description: this.updatedClassroomDescription,
+        description,
       });
     }
   }
 
-  updateClassroomLabel() {
+  updateClassroomLabel(event: Event) {
+    const label = (event.target as HTMLInputElement)?.value;
     const classroom = this.classroom();
     if (classroom) {
       this.#classroomsService.patchClassroom({
         ...classroom,
-        label: this.updatedClassroomLabel,
+        label,
       });
     }
   }

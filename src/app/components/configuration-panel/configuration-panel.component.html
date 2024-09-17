@@ -7,15 +7,15 @@
           class="text-ellipsis text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
           maxlength="120"
-          [(ngModel)]="updatedLabel"
-          (change)="updateLabel()"
+          [value]="configurationLabel()"
+          (change)="updateLabel($event)"
         />
         <input
           class="text-ellipsis text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
           maxlength="150"
-          [(ngModel)]="updatedDescription"
-          (change)="updateDescription()"
+          [value]="configurationDescription()"
+          (change)="updateDescription($event)"
           placeholder="Add a description for your configuration"
         />
       </div>

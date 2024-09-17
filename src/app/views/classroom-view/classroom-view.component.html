@@ -41,15 +41,15 @@
               class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               maxlength="150"
-              [(ngModel)]="updatedClassroomLabel"
-              (change)="updateClassroomLabel()"
+              [value]="classroomLabel()"
+              (change)="updateClassroomLabel($event)"
             />
             <input
               class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               maxlength="150"
-              [(ngModel)]="updatedClassroomDescription"
-              (change)="updateClassroomDescription()"
+              [value]="classroomDescription()"
+              (change)="updateClassroomDescription($event)"
               placeholder="Add a description for your classroom"
             />
           </div>
