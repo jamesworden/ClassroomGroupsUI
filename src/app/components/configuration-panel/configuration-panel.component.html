@@ -79,43 +79,48 @@
       [ngClass]="{
         'rounded-tr-lg':
           columns.length > 0 &&
-          enabledColumnBadges()[columns[columns.length - 1].id]
+          enabledColumnBadges()[columns[columns.length - 1].id],
       }"
       (cdkDropListDropped)="drop($event)"
     >
       @for (column of columns; track column.id) {
-      <div
-        class="draggable-field grid-row rounded-b-lg rounded-l-lg p-2 border-r border-neutral-200 dark:border-neutral-600"
-        cdkDrag
-        [matBadge]="enabledColumnBadges()[column.id]"
-        matBadgeOverlap="true"
-        matBadgeColor="primary"
-      >
-        <div class="flex justify-between w-full">
-          <div class="flex flex-col justify-around">
-            <div class="text-ellipsis">
-              {{ column.label }}
+        <div
+          class="draggable-field grid-row rounded-b-lg rounded-l-lg p-2 border-r border-neutral-200 dark:border-neutral-600"
+          cdkDrag
+          [matBadge]="enabledColumnBadges()[column.id]"
+          matBadgeOverlap="true"
+          matBadgeColor="primary"
+        >
+          <div class="flex justify-between w-full">
+            <div class="flex flex-col justify-around">
+              <div class="text-ellipsis">
+                {{ column.label }}
+              </div>
+            </div>
+            <div class="flex">
+              <button
+                matSuffix
+                mat-icon-button
+                [matMenuTriggerFor]="fieldMenu"
+                [matMenuTriggerData]="{
+                  column: column,
+                }"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
             </div>
           </div>
-          <div class="flex">
-            <button
-              matSuffix
-              mat-icon-button
-              [matMenuTriggerFor]="fieldMenu"
-              [matMenuTriggerData]="{
-                column: column
-              }"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
-          </div>
         </div>
-      </div>
       }
     </div>
   </div>
 
-  <!-- TODO: Default Group List -->
+  <app-student-list
+    [classroomId]="classroomId()"
+    [configurationId]="configurationId()"
+    [groupId]="defaultGroup()?.id"
+    [studentDetails]="defaultGroup()?.studentDetails"
+  ></app-student-list>
 </div>
 
 <mat-menu #fieldMenu="matMenu">

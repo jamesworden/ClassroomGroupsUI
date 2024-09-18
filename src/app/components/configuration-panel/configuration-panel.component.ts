@@ -38,6 +38,7 @@ import {
   ColumnDetail,
   ConfigurationDetail,
 } from '@shared/classrooms';
+import { StudentListComponent } from '../student-list/student-list.component';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -57,6 +58,7 @@ import {
     MatBadgeModule,
     CommonModule,
     MatTooltipModule,
+    StudentListComponent,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',
@@ -87,6 +89,9 @@ export class ConfigurationPanelComponent {
   );
   readonly configurationDescription = computed(
     () => this.configurationDetail()?.description ?? ''
+  );
+  readonly defaultGroup = computed(() =>
+    this.#classroomsService.select.defaultGroup(this.configurationId())()
   );
 
   readonly enabledColumnBadges = computed(() => {

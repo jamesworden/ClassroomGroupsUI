@@ -113,6 +113,14 @@ class ClassroomSelectors {
 
   public readonly configurationIds = (classroomId?: string) =>
     computed(() => this.configurations(classroomId)().map(({ id }) => id));
+
+  public readonly defaultGroup = (configurationId?: string) =>
+    computed(() => {
+      const configurationDetail = this.configurationDetail(configurationId)();
+      return configurationDetail?.groupDetails.find(
+        (g) => g.id === configurationDetail.defaultGroupId
+      );
+    });
 }
 
 interface ClassroomsState {
