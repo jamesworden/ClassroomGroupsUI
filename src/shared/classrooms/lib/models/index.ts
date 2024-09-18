@@ -13,6 +13,7 @@ export interface Configuration {
   description: string;
   id: string;
   classroomId: string;
+  defaultGroupId: string;
 }
 
 export interface Field {
@@ -89,6 +90,7 @@ export interface ConfigurationDetail {
   description: string;
   groupDetails: GroupDetail[];
   columnDetails: ColumnDetail[];
+  defaultGroupId: string;
 }
 
 export interface ColumnDetail {

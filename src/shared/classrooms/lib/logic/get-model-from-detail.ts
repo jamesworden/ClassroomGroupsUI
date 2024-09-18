@@ -13,6 +13,7 @@ export function getConfigurationFromDetail(
     id: detail.id,
     label: detail.label,
     description: detail.description,
+    defaultGroupId: detail.defaultGroupId,
   };
 }
 
