@@ -117,12 +117,15 @@
       </div>
     </div>
 
-    <app-student-list
-      [classroomId]="classroomId()"
-      [configurationId]="configurationId()"
-      [groupId]="defaultGroup()?.id"
-      [studentDetails]="defaultGroup()?.studentDetails"
-    ></app-student-list>
+    @if (defaultGroup()?.studentDetails?.length ?? 0 > 0) {
+      <app-student-list
+        [classroomId]="classroomId()"
+        [configurationId]="configurationId()"
+        [groupId]="defaultGroup()?.id"
+        [studentDetails]="defaultGroup()?.studentDetails"
+        [roundedBottom]="true"
+      ></app-student-list>
+    }
   </div>
 </div>
 

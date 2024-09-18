@@ -31,6 +31,8 @@ export class StudentListComponent {
   readonly configurationId = input<string>();
   readonly groupId = input<string>();
   readonly studentDetails = input<StudentDetail[]>();
+  readonly roundedBottom = input<boolean>(false);
+  readonly roundedTop = input<boolean>(false);
 
   @ViewChild('valueInput', { read: ElementRef })
   valueInput!: ElementRef<HTMLInputElement>;
