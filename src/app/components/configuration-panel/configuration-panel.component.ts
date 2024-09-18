@@ -38,7 +38,6 @@ import {
   ColumnDetail,
   ConfigurationDetail,
 } from '@shared/classrooms';
-import { UngroupedStudentsPanelComponent } from '../ungrouped-students-panel/ungrouped-students-panel.component';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -58,7 +57,6 @@ import { UngroupedStudentsPanelComponent } from '../ungrouped-students-panel/ung
     MatBadgeModule,
     CommonModule,
     MatTooltipModule,
-    UngroupedStudentsPanelComponent,
   ],
   templateUrl: './configuration-panel.component.html',
   styleUrl: './configuration-panel.component.scss',

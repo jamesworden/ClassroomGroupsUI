@@ -89,15 +89,6 @@ export interface ConfigurationDetail {
   description: string;
   groupDetails: GroupDetail[];
   columnDetails: ColumnDetail[];
-  ungroupedStudents: StudentWithFields[];
-}
-
-export interface StudentWithFields {
-  id: string;
-  classroomId: string;
-  fieldIdsToValues: {
-    [id: string]: string;
-  };
 }
 
 export interface ColumnDetail {

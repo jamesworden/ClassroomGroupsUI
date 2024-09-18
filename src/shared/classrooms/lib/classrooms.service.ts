@@ -12,12 +12,10 @@ import {
   DeletedClassroomResponse,
   DeletedConfigurationResponse,
   DeleteGroupResponse,
-  FieldDetail,
   FieldType,
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
-  Group,
   GroupDetail,
   PatchClassroomResponse,
   PatchConfigurationResponse,
@@ -874,11 +872,6 @@ export class ClassroomsService {
               studentDetail.fieldIdsToValues[fieldId] = value;
             }
           });
-        });
-        configurationDetail.ungroupedStudents.forEach((student) => {
-          if (student.id === studentId) {
-            student.fieldIdsToValues[fieldId] = value;
-          }
         });
       });
     };
