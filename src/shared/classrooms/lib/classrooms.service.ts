@@ -829,7 +829,7 @@ export class ClassroomsService {
           console.log('[Created Field]', createdFieldDetail);
           this.patchState((draft) => {
             draft.configurationDetails.forEach((configurationDetail) => {
-              if (configurationDetail.id === configurationId) {
+              if (configurationDetail.classroomId === classroomId) {
                 configurationDetail.columnDetails.push(createdColumnDetail);
               }
             });
