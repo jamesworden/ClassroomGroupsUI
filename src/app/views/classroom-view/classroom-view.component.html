@@ -79,7 +79,7 @@
             [configurationId]="configurationDetail()?.id"
           ></app-configuration-panel-bottom>
 
-          <div class="flex flex-col gap-y-6 mt-6 flex-1">
+          <div class="flex flex-col gap-y-4 mt-4 flex-1">
             @if (configurationDetail()) {
               @if (editingGroups.length === 0) {
                 <section
@@ -101,7 +101,7 @@
                 <section
                   cdkDropList
                   (cdkDropListDropped)="drop($event)"
-                  class="mx-4 flex flex-col flex-1 gap-y-6"
+                  class="mx-4 flex flex-col flex-1 gap-y-4"
                 >
                   @for (group of editingGroups; track group.id) {
                     @if (group.id !== configurationDetail()?.defaultGroupId) {
