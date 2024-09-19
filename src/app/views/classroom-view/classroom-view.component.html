@@ -65,13 +65,13 @@
             </div>
           </section>
 
-          <app-configuration-panel
+          <app-configuration-panel-top
             class="sticky top-0 z-10 mx-4"
             [configurationDetail]="configurationDetail()"
             (labelUpdated)="updateConfigurationLabel($event)"
             (descriptionUpdated)="updateConfigurationDescription($event)"
             (deletedConfiguration)="selectFirstConfiguration()"
-          ></app-configuration-panel>
+          ></app-configuration-panel-top>
 
           <app-configuration-panel-bottom
             class="mx-4"

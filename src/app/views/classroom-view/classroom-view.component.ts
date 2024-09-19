@@ -27,7 +27,6 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { ClassroomsService, Group, GroupDetail } from '@shared/classrooms';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
-import { ConfigurationPanelComponent } from 'app/components/configuration-panel/configuration-panel.component';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
 import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
 import { SidebarComponent } from 'app/components/sidebar/sidebar.component';
@@ -49,6 +48,7 @@ import {
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
 import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
+import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -74,7 +74,6 @@ interface ConfigPanelSettings {
     ConfigurationsPanelComponent,
     MatMenuModule,
     MatTooltipModule,
-    ConfigurationPanelComponent,
     ResizeableDirective,
     MatFormFieldModule,
     MatInputModule,
@@ -87,6 +86,7 @@ interface ConfigPanelSettings {
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ConfigurationPanelBottomComponent,
+    ConfigurationPanelTopComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',

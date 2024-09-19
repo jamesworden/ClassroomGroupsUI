@@ -41,7 +41,7 @@ import {
 import { StudentListComponent } from '../student-list/student-list.component';
 
 @Component({
-  selector: 'app-configuration-panel',
+  selector: 'app-configuration-panel-top',
   standalone: true,
   imports: [
     MatSlideToggleModule,
@@ -60,10 +60,10 @@ import { StudentListComponent } from '../student-list/student-list.component';
     MatTooltipModule,
     StudentListComponent,
   ],
-  templateUrl: './configuration-panel.component.html',
-  styleUrl: './configuration-panel.component.scss',
+  templateUrl: './configuration-panel-top.component.html',
+  styleUrl: './configuration-panel-top.component.scss',
 })
-export class ConfigurationPanelComponent {
+export class ConfigurationPanelTopComponent {
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
