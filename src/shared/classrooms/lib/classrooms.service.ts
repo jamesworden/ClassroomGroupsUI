@@ -660,13 +660,14 @@ export class ClassroomsService {
           console.log('[Created Student]', createdStudentDetail);
           this.patchState((draft) => {
             draft.configurationDetails.forEach((configurationDetail) => {
-              if (configurationDetail.id === configurationId) {
-                configurationDetail.groupDetails.forEach((groupDetail) => {
-                  if (groupDetail.id === groupId) {
-                    groupDetail.studentDetails.push(createdStudentDetail);
-                  }
-                });
-              }
+              configurationDetail.groupDetails.forEach((groupDetail) => {
+                if (
+                  groupDetail.id ===
+                  (groupId || configurationDetail.defaultGroupId)
+                ) {
+                  groupDetail.studentDetails.push(createdStudentDetail);
+                }
+              });
             });
           });
           this.#matSnackBar.open('Created student', undefined, {
