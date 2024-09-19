@@ -40,11 +40,8 @@ import {
   ResizeableDirective,
 } from 'app/directives/resizeable.directive';
 import { ThemeService } from 'app/themes/theme.service';
-import { combineLatest, filter, take, withLatestFrom } from 'rxjs';
-import {
-  getConfigurationFromDetail,
-  getGroupFromDetail,
-} from 'shared/classrooms/lib/logic/get-model-from-detail';
+import { combineLatest, filter, take } from 'rxjs';
+import { getConfigurationFromDetail } from 'shared/classrooms/lib/logic/get-model-from-detail';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
 import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
