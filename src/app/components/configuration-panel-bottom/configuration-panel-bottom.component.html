@@ -1,4 +1,9 @@
-<div class="pb-2 px-2 panel rounded-b-md">
+<div
+  class="px-2 panel rounded-b-md"
+  [ngClass]="{
+    'pb-2': !anyAverageScore(),
+  }"
+>
   @if (defaultGroup()?.studentDetails?.length ?? 0 > 0) {
     <app-student-list
       [classroomId]="classroomId()"
@@ -7,5 +12,14 @@
       [studentDetails]="defaultGroup()?.studentDetails"
       [roundedBottom]="true"
     ></app-student-list>
+  }
+  @if (anyAverageScore()) {
+    <div class="flex justify-between px-2 py-1">
+      @for (column of columnDetails(); track i; let i = $index) {
+        <span class="flex-1 opacity-80 text-sm">{{
+          averageScores()[column.fieldId] | number: '1.2-2'
+        }}</span>
+      }
+    </div>
   }
 </div>

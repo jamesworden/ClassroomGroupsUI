@@ -1,4 +1,9 @@
-<div class="panel rounded-lg flex-col gap-y-2 p-2 pt-1 shadow-lg">
+<div
+  class="panel rounded-lg flex-col gap-y-2 px-2 pt-1 shadow-lg"
+  [ngClass]="{
+    'pb-2': !anyAverageScore(),
+  }"
+>
   <div class="flex justify-between">
     <div class="flex gap-x-2 flex-1">
       <div class="flex flex-col justify-around">
@@ -48,4 +53,14 @@
     [groupId]="groupDetail()?.id"
     [studentDetails]="groupDetail()?.studentDetails"
   ></app-student-list>
+
+  @if (anyAverageScore()) {
+    <div class="flex justify-between px-2 py-1">
+      @for (column of columnDetails(); track i; let i = $index) {
+        <span class="flex-1 opacity-80 text-sm">{{
+          averageScores()[column.fieldId] | number: '1.2-2'
+        }}</span>
+      }
+    </div>
+  }
 </div>

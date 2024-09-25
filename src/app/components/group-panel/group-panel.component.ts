@@ -6,8 +6,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ClassroomsService, GroupDetail } from '@shared/classrooms';
+import { ClassroomsService, FieldType, GroupDetail } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
+import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
 
 @Component({
   selector: 'app-group-panel',
@@ -37,11 +38,21 @@ export class GroupPanelComponent {
   readonly labelUpdated = output<string>();
 
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
-
   readonly studentsInGroup = computed(() =>
     this.students().filter(
       (student) => student.groupId === this.groupDetail()?.id
     )
+  );
+  readonly columnDetails = computed(() =>
+    this.#classroomsService.select.columnDetails(
+      this.groupDetail()?.configurationId
+    )
+  );
+  readonly averageScores = computed(() =>
+    calculateAverageScores(this.studentsInGroup(), this.columnDetails())
+  );
+  readonly anyAverageScore = computed(
+    () => !!Object.entries(this.averageScores()).length
   );
 
   createStudent() {
