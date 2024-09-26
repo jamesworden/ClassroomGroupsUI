@@ -29,7 +29,7 @@
                 [(ngModel)]="editingField"
                 placeholder="Add value"
                 class="outline-none bg-transparent border-none w-full text-ellipsis"
-                (change)="saveEdits()"
+                (change)="saveEdits(); $event.stopPropagation()"
               />
             } @else {
               <span

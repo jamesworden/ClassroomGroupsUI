@@ -112,7 +112,9 @@
                         'opacity-50':
                           column.label === undefined || column.label === '',
                       }"
-                      (click)="startEditing(column.fieldId)"
+                      (click)="
+                        startEditing(column.fieldId); $event.stopPropagation()
+                      "
                     >
                       {{ column.label || 'Add value' }}
                     </span>
