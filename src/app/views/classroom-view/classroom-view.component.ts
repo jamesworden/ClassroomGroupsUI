@@ -377,4 +377,8 @@ export class ClassroomViewComponent {
       this.selectConfigurationId(firstConfigurationId);
     }
   }
+
+  goToClassroomsView() {
+    this.#router.navigate(['classrooms']);
+  }
 }
