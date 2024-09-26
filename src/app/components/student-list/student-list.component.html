@@ -24,6 +24,7 @@
               editingStudentId === student.id
             ) {
               <input
+                (mousedown)="$event.stopPropagation()"
                 #valueInput
                 type="text"
                 [(ngModel)]="editingField"

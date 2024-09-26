@@ -98,6 +98,7 @@
                 <div class="flex">
                   @if (editingFieldId === column.fieldId) {
                     <input
+                      (mousedown)="$event.stopPropagation()"
                       #valueInput
                       type="text"
                       [(ngModel)]="editingField"
@@ -112,9 +113,7 @@
                         'opacity-50':
                           column.label === undefined || column.label === '',
                       }"
-                      (click)="
-                        startEditing(column.fieldId); $event.stopPropagation()
-                      "
+                      (click)="startEditing(column.fieldId)"
                     >
                       {{ column.label || 'Add value' }}
                     </span>
