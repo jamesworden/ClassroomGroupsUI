@@ -2,6 +2,7 @@ import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import {
   Classroom,
   ClassroomDetail,
+  ColumnDetail,
   Configuration,
   ConfigurationDetail,
   CreateColumnResponse,
@@ -12,6 +13,7 @@ import {
   DeletedClassroomResponse,
   DeletedConfigurationResponse,
   DeleteGroupResponse,
+  FieldDetail,
   FieldType,
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
@@ -19,6 +21,7 @@ import {
   GroupDetail,
   PatchClassroomResponse,
   PatchConfigurationResponse,
+  PatchFieldResponse,
   PatchGroupResponse,
   UpsertStudentFieldResponse,
 } from './models';
@@ -911,6 +914,74 @@ export class ClassroomsService {
       .subscribe();
   }
 
+  patchField(
+    classroomId: string,
+    fieldId: string,
+    label: string,
+    failureMessage = 'Error updating column'
+  ) {
+    const getUpdateStrategy =
+      (fieldDetail: FieldDetail) => (draft: ClassroomsState) => {
+        draft.configurationDetails.forEach((configurationDetail) => {
+          configurationDetail.columnDetails =
+            configurationDetail.columnDetails.map((c) => {
+              if (c.fieldId === fieldDetail.id) {
+                c.label = fieldDetail.label;
+              }
+              return c;
+            });
+        });
+        draft.classroomDetails.forEach((c) => {
+          c.fieldDetails = c.fieldDetails.map((f) => {
+            if (f.id === fieldDetail.id) {
+              return fieldDetail;
+            }
+            return f;
+          });
+        });
+      };
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+      const fieldDetail = this.getPatchedFieldDetail(
+        draft,
+        classroomId,
+        fieldId,
+        label
+      );
+      getUpdateStrategy(fieldDetail)(draft);
+    });
+    return this.#httpClient
+      .patch<PatchFieldResponse>(
+        `/api/v1/classrooms/${classroomId}/fields/${fieldId}`,
+        {
+          label,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedFieldDetail }) => {
+          console.log('[Patched Field]', updatedFieldDetail);
+          this.patchState(getUpdateStrategy(updatedFieldDetail));
+        }),
+        catchError((error) => {
+          console.log('[Patch Field Failed]', error);
+          this.#matSnackBar.open(failureMessage, undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
   getPatchedConfigurationDetail(
     draft: ClassroomsState,
     configurationId: string,
@@ -965,6 +1036,43 @@ export class ClassroomsService {
       ?.groupDetails.find((g) => g.id === groupId);
     if (!existingDetail) {
       throw new Error(`Could not find existing group with id ${groupId}`);
+    }
+    return {
+      ...existingDetail,
+      label,
+    };
+  }
+
+  getPatchedColumnDetail(
+    draft: ClassroomsState,
+    classroomId: string,
+    configurationId: string,
+    columnId: string,
+    label: string
+  ): ColumnDetail {
+    const existingDetail = draft.configurationDetails
+      .find((c) => c.classroomId === classroomId && c.id === configurationId)
+      ?.columnDetails.find((c) => c.id === columnId);
+    if (!existingDetail) {
+      throw new Error(`Could not find existing group with id ${columnId}`);
+    }
+    return {
+      ...existingDetail,
+      label,
+    };
+  }
+
+  getPatchedFieldDetail(
+    draft: ClassroomsState,
+    classroomId: string,
+    fieldId: string,
+    label: string
+  ): FieldDetail {
+    const existingDetail = draft.classroomDetails
+      .find((c) => c.id === classroomId)
+      ?.fieldDetails.find((f) => f.id === fieldId);
+    if (!existingDetail) {
+      throw new Error(`Could not find existing group with id ${fieldId}`);
     }
     return {
       ...existingDetail,

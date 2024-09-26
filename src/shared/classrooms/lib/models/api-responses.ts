@@ -70,3 +70,7 @@ export interface CreateColumnResponse {
 export interface UpsertStudentFieldResponse {
   upsertedValue: string;
 }
+
+export interface PatchFieldResponse {
+  updatedFieldDetail: FieldDetail;
+}

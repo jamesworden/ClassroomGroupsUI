@@ -93,7 +93,6 @@ export class ConfigurationPanelTopComponent {
   readonly defaultGroup = computed(() =>
     this.#classroomsService.select.defaultGroup(this.configurationId())()
   );
-
   readonly enabledColumnBadges = computed(() => {
     const enabledColumnBadges: {
       [columnId: string]: number;
@@ -112,6 +111,8 @@ export class ConfigurationPanelTopComponent {
   groupingByDivision = false;
   groupingValue = 0;
   columns: ColumnDetail[] = [];
+  editingFieldId?: string;
+  editingField = '';
 
   constructor() {
     effect(() => (this.columns = this.columnDetails()));
@@ -147,11 +148,31 @@ export class ConfigurationPanelTopComponent {
       if (success && classroomId && configurationId) {
         this.#classroomsService
           .deleteConfiguration(classroomId, configurationId)
-          .subscribe((deletedConfiguration) =>
-            this.deletedConfiguration.emit()
-          );
+          .subscribe(() => this.deletedConfiguration.emit());
       }
     });
+  }
+
+  startEditing(fieldId: string) {
+    this.editingFieldId = fieldId;
+    this.editingField =
+      this.columnDetails().find((c) => c.fieldId === fieldId)?.label ?? '';
+  }
+
+  saveEdits() {
+    const classroomId = this.classroomId();
+    const column = this.columnDetails().find(
+      (c) => c.fieldId === this.editingFieldId
+    );
+    if (classroomId && column) {
+      this.#classroomsService.patchField(
+        classroomId,
+        column.fieldId,
+        this.editingField
+      );
+    }
+    this.editingFieldId = undefined;
+    this.editingField = '';
   }
 
   drop(event: CdkDragDrop<Column>) {

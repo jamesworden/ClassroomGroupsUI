@@ -95,8 +95,28 @@
           >
             <div class="flex justify-between w-full">
               <div class="flex flex-col justify-around">
-                <div class="text-ellipsis">
-                  {{ column.label }}
+                <div>
+                  @if (editingFieldId === column.fieldId) {
+                    <input
+                      #valueInput
+                      type="text"
+                      [(ngModel)]="editingField"
+                      placeholder="Add value"
+                      class="outline-none bg-transparent border-none w-full text-ellipsis"
+                      (change)="saveEdits()"
+                    />
+                  } @else {
+                    <span
+                      class="cursor-text"
+                      [ngClass]="{
+                        'opacity-50':
+                          column.label === undefined || column.label === '',
+                      }"
+                      (click)="startEditing(column.fieldId)"
+                    >
+                      {{ column.label || 'Add value' }}
+                    </span>
+                  }
                 </div>
               </div>
               <div class="flex">
