@@ -100,7 +100,7 @@ export interface ColumnDetail {
   ordinal: number;
   sort: ColumnSort;
   enabled: boolean;
-  fieldType: FieldType;
+  type: FieldType;
   label: string;
 }
 

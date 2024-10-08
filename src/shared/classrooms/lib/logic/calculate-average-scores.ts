@@ -13,7 +13,8 @@ export function calculateAverageScores(
     for (const student of studentsInGroup) {
       const value = student.fieldIdsToValues[column.fieldId];
       const num = parseInt(value);
-      if (column.fieldType === forFieldType && !isNaN(num)) {
+      console.log(column.type, forFieldType);
+      if (column.type === forFieldType && !isNaN(num)) {
         if (scores[column.fieldId]) {
           scores[column.fieldId].total += num;
           scores[column.fieldId].count++;
