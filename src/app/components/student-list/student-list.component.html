@@ -13,7 +13,7 @@
 >
   @for (student of editingStudents; track student.id) {
     <div
-      class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 p-2 flex"
+      class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 flex"
       cdkDrag
     >
       @for (columnDetail of columnDetails(); track i; let i = $index) {
@@ -21,7 +21,8 @@
           <div class="flex">
             @if (
               selectedCell()?.fieldId === columnDetail.fieldId &&
-              selectedCell()?.studentId === student.id
+              selectedCell()?.studentId === student.id &&
+              selectedCell()?.isEditing
             ) {
               <input
                 (mousedown)="$event.stopPropagation()"
@@ -29,21 +30,24 @@
                 type="text"
                 [(ngModel)]="editingField"
                 placeholder="Add value"
-                class="outline-none bg-transparent border-none flex-1 text-ellipsis"
+                class="bg-transparent flex-1 text-ellipsis editing-input p-1"
                 (change)="saveEdits(); $event.stopPropagation()"
                 [attr.field-id]="columnDetail.fieldId"
                 [attr.student-id]="student.id"
               />
             } @else {
-              <span
-                class="cursor-text flex-1"
-                [attr.field-id]="columnDetail.fieldId"
-                [attr.student-id]="student.id"
+              <div
+                class="cursor-auto flex-1 p-1 flex"
                 [ngClass]="{
-                  'opacity-50':
-                    student.fieldIdsToValues[columnDetail.fieldId] ===
-                      undefined ||
-                    student.fieldIdsToValues[columnDetail.fieldId] === '',
+                  'selecting-input':
+                    selectedCell()?.fieldId === columnDetail.fieldId &&
+                    selectedCell()?.studentId === student.id &&
+                    !selectedCell()?.isEditing,
+                  'border border-transparent': !(
+                    selectedCell()?.fieldId === columnDetail.fieldId &&
+                    selectedCell()?.studentId === student.id &&
+                    !selectedCell()?.isEditing
+                  ),
                 }"
                 (click)="
                   startEditing(
@@ -53,10 +57,23 @@
                   )
                 "
               >
-                {{
-                  student.fieldIdsToValues[columnDetail.fieldId] || 'Add value'
-                }}
-              </span>
+                <span
+                  class="flex-1"
+                  [attr.field-id]="columnDetail.fieldId"
+                  [attr.student-id]="student.id"
+                  [ngClass]="{
+                    'opacity-50':
+                      student.fieldIdsToValues[columnDetail.fieldId] ===
+                        undefined ||
+                      student.fieldIdsToValues[columnDetail.fieldId] === '',
+                  }"
+                >
+                  {{
+                    student.fieldIdsToValues[columnDetail.fieldId] ||
+                      'Add value'
+                  }}
+                </span>
+              </div>
             }
           </div>
         </div>
