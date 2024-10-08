@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { ClassroomsService, FieldType, GroupDetail } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
+import { Cell } from 'app/models/cell';
 
 @Component({
   selector: 'app-group-panel',
@@ -32,10 +33,12 @@ export class GroupPanelComponent {
 
   readonly classroomId = input<string>();
   readonly groupDetail = input<GroupDetail>();
+  readonly selectedCell = input<Cell>();
 
   readonly groupDeleted = output<void>();
   readonly studentCreated = output<void>();
   readonly labelUpdated = output<string>();
+  readonly cellUnselected = output();
 
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
   readonly studentsInGroup = computed(() =>
@@ -69,5 +72,9 @@ export class GroupPanelComponent {
   updateLabel(event: Event) {
     const label = (event.target as HTMLInputElement)?.value;
     this.labelUpdated.emit(label);
+  }
+
+  unselectCell() {
+    this.cellUnselected.emit();
   }
 }

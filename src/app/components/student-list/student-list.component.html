@@ -20,8 +20,8 @@
         <div class="flex-1">
           <div class="flex">
             @if (
-              editingFieldId === columnDetail.fieldId &&
-              editingStudentId === student.id
+              selectedCell()?.fieldId === columnDetail.fieldId &&
+              selectedCell()?.studentId === student.id
             ) {
               <input
                 (mousedown)="$event.stopPropagation()"
@@ -31,10 +31,14 @@
                 placeholder="Add value"
                 class="outline-none bg-transparent border-none flex-1 text-ellipsis"
                 (change)="saveEdits(); $event.stopPropagation()"
+                [attr.field-id]="columnDetail.fieldId"
+                [attr.student-id]="student.id"
               />
             } @else {
               <span
                 class="cursor-text flex-1"
+                [attr.field-id]="columnDetail.fieldId"
+                [attr.student-id]="student.id"
                 [ngClass]="{
                   'opacity-50':
                     student.fieldIdsToValues[columnDetail.fieldId] ===

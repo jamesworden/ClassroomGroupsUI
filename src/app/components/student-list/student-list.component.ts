@@ -12,10 +12,12 @@ import {
   ElementRef,
   inject,
   input,
+  output,
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClassroomsService, StudentDetail } from '@shared/classrooms';
+import { Cell } from 'app/models/cell';
 
 @Component({
   selector: 'app-student-list',
@@ -33,9 +35,12 @@ export class StudentListComponent {
   readonly studentDetails = input<StudentDetail[]>();
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
+  readonly selectedCell = input<Cell>();
+
+  readonly cellUnselected = output();
 
   @ViewChild('valueInput', { read: ElementRef })
-  valueInput!: ElementRef<HTMLInputElement>;
+  valueInput?: ElementRef<HTMLInputElement>;
 
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
@@ -44,8 +49,6 @@ export class StudentListComponent {
     this.#classroomsService.select.columnDetails(this.configurationId())
   );
 
-  editingFieldId?: string;
-  editingStudentId?: string;
   editingField?: string;
   editingStudents: StudentDetail[] = [];
 
@@ -53,33 +56,38 @@ export class StudentListComponent {
     effect(() => {
       this.editingStudents = this.studentDetails() ?? [];
     });
+    effect(() => {
+      if (this.selectedCell()) {
+        setTimeout(() => {
+          this.valueInput?.nativeElement.focus();
+        });
+      }
+    });
   }
 
   startEditing(fieldId: string, value: string, studentId: string) {
     this.editingField = value;
-    this.editingFieldId = fieldId;
-    this.editingStudentId = studentId;
-    setTimeout(() => this.valueInput.nativeElement.focus());
+    // setTimeout(() => this.valueInput.nativeElement.focus());
   }
 
   saveEdits() {
     const classroomId = this.classroomId();
+    const selectedCell = this.selectedCell();
     if (
       classroomId &&
-      this.editingStudentId !== undefined &&
-      this.editingFieldId !== undefined &&
+      selectedCell?.studentId !== undefined &&
+      selectedCell?.fieldId !== undefined &&
       this.editingField !== undefined
     ) {
       this.#classroomsService.upsertStudentField(
         classroomId,
-        this.editingStudentId,
-        this.editingFieldId,
+        selectedCell.studentId,
+        selectedCell.fieldId,
         this.editingField
       );
     }
     this.editingField = undefined;
-    this.editingFieldId = undefined;
-    this.editingStudentId = undefined;
+    this.cellUnselected.emit();
   }
 
   drop(event: CdkDragDrop<StudentDetail[]>) {

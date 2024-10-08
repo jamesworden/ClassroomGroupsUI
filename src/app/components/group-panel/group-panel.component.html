@@ -46,12 +46,14 @@
   </div>
 
   <app-student-list
+    [selectedCell]="selectedCell()"
     [roundedTop]="true"
     [roundedBottom]="true"
     [classroomId]="classroomId()"
     [configurationId]="groupDetail()?.configurationId"
     [groupId]="groupDetail()?.id"
     [studentDetails]="groupDetail()?.studentDetails"
+    (cellUnselected)="unselectCell()"
   ></app-student-list>
 
   @if (anyAverageScore()) {

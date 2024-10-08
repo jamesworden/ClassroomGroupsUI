@@ -6,7 +6,14 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  HostListener,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -46,6 +53,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
 import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
 import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
+import { Cell } from 'app/models/cell';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -168,8 +176,48 @@ export class ClassroomViewComponent {
     isOpen: true,
   });
   readonly classroomViewInitialized$ = new Subject<void>();
+  readonly selectedCell = signal<Cell | undefined>(undefined);
 
   editingGroups: GroupDetail[] = [];
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement | null;
+    if (!target) {
+      this.selectedCell.set(undefined);
+      return;
+    }
+    const fieldId = target.getAttribute('field-id');
+    if (!fieldId) {
+      this.selectedCell.set(undefined);
+      return;
+    }
+    const studentId = target.getAttribute('student-id') || undefined;
+    this.selectedCell.set({
+      fieldId,
+      studentId,
+    });
+  }
+
+  @HostListener('document:dblclick', ['$event'])
+  onDoubleClick(event: MouseEvent) {
+    const target = event.target as HTMLElement | null;
+    if (!target) {
+      this.selectedCell.set(undefined);
+      return;
+    }
+    const fieldId = target.getAttribute('field-id');
+    if (!fieldId) {
+      this.selectedCell.set(undefined);
+      return;
+    }
+    const studentId = target.getAttribute('student-id') || undefined;
+    this.selectedCell.set({
+      fieldId,
+      studentId,
+      isEditing: true,
+    });
+  }
 
   constructor() {
     this.loadConfigPanelSettings();
@@ -380,5 +428,9 @@ export class ClassroomViewComponent {
 
   goToClassroomsView() {
     this.#router.navigate(['classrooms']);
+  }
+
+  unselectCell() {
+    this.selectedCell.set(undefined);
   }
 }

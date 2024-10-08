@@ -11,6 +11,8 @@
       [groupId]="defaultGroup()?.id"
       [studentDetails]="defaultGroup()?.studentDetails"
       [roundedBottom]="true"
+      [selectedCell]="selectedCell()"
+      (cellUnselected)="unselectCell()"
     ></app-student-list>
   }
   @if (anyAverageScore()) {
