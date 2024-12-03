@@ -1,9 +1,10 @@
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
 
-@use "./app/components/sidebar/_sidebar-theme" as sidebar;
-@use "./app/themes/shared/_panel-theme" as panel;
-@use "./app/directives/_resizable-theme" as resizable;
-@use "./app/material-utilties" as materialUtilities;
+@use './app/components/sidebar/_sidebar-theme' as sidebar;
+@use './app/themes/shared/_panel-theme' as panel;
+@use './app/themes/shared/_edit-input-theme' as editInput;
+@use './app/directives/_resizable-theme' as resizable;
+@use './app/material-utilties' as materialUtilities;
 
 @include mat.core();
 
@@ -35,6 +36,7 @@ html {
 .light {
   @include sidebar.theme($light-theme);
   @include panel.lightTheme($light-theme);
+  @include editInput.theme($light-theme);
   @include resizable.theme($light-theme);
   @include materialUtilities.theme($light-theme);
 }
@@ -42,6 +44,7 @@ html {
   @include mat.all-component-themes($dark-theme);
   @include sidebar.theme($dark-theme);
   @include panel.darkTheme($dark-theme);
+  @include editInput.theme($dark-theme);
   @include resizable.theme($dark-theme);
   @include materialUtilities.theme($dark-theme);
 }
@@ -69,6 +72,6 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }

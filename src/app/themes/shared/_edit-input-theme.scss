@@ -1,0 +1,22 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin color($theme) {
+  .editing-input {
+    border: 1px solid mat.get-theme-color($theme, primary, 60) !important;
+
+    &:focus {
+      outline: 3px solid mat.get-theme-color($theme, primary, 80) !important;
+    }
+  }
+
+  .selecting-input {
+    border: 1px solid mat.get-theme-color($theme, primary, 60) !important;
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+}

@@ -1,21 +1,29 @@
-<div class="panel rounded-lg flex-col gap-y-2 p-2 shadow-lg">
+<div
+  class="panel rounded-lg flex-col gap-y-2 px-2 pt-1 shadow-lg"
+  [ngClass]="{
+    'pb-2': !anyAverageScore(),
+  }"
+>
   <div class="flex justify-between">
-    <div class="flex gap-x-2">
+    <div class="flex gap-x-2 flex-1">
       <div class="flex flex-col justify-around">
         <ng-content></ng-content>
       </div>
 
-      <div class="flex flex-col justify-around">
-        <mat-checkbox color="primary"></mat-checkbox>
-      </div>
-
-      <div class="flex flex-col justify-around">
-        <span class="text-xl">{{ group()?.label }}</span>
+      <div class="flex flex-col justify-around flex-1 mr-2">
+        <input
+          class="text-ellipsis text-lg m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          maxlength="120"
+          [value]="groupDetail()?.label || ''"
+          (change)="updateLabel($event)"
+          placeholder="Untitled"
+        />
       </div>
     </div>
 
     <div class="flex gap-x-2">
-      <button mat-icon-button (click)="addStudent()">
+      <button mat-icon-button (click)="createStudent()">
         <mat-icon>person_add</mat-icon>
       </button>
 
@@ -37,43 +45,24 @@
     </div>
   </div>
 
-  <div
-    cdkDropList
-    [id]="group()?.id ?? ''"
-    [cdkDropListConnectedTo]="viewingGroupIds()"
-    class="grid-row example-list min-h-16 w-full mt-2"
-    (cdkDropListDropped)="drop($event)"
-  >
-    @for (student of editingStudents; track student.id) {
-    <div class="grid-row example-box flex" cdkDrag>
-      @for(field of student.fields; track i; let i = $index) {
-      <div class="flex-1">
-        <div>
-          @if(editingFieldId === field.fieldId && editingStudentId ===
-          student.id) {
-          <input
-            #valueInput
-            type="text"
-            [(ngModel)]="editingField"
-            placeholder="Add value"
-            class="outline-none bg-transparent border-none w-full text-ellipsis"
-            (change)="saveEdits()"
-          />
-          } @else {
-          <span
-            class="cursor-text"
-            [ngClass]="{
-              'opacity-50': !field.value
-            }"
-            (click)="startEditing(field)"
-          >
-            {{ field.value || "Add value" }}
-          </span>
-          }
-        </div>
-      </div>
+  <app-student-list
+    [selectedCell]="selectedCell()"
+    [roundedTop]="true"
+    [roundedBottom]="true"
+    [classroomId]="classroomId()"
+    [configurationId]="groupDetail()?.configurationId"
+    [groupId]="groupDetail()?.id"
+    [studentDetails]="groupDetail()?.studentDetails"
+    (cellUnselected)="unselectCell()"
+  ></app-student-list>
+
+  @if (anyAverageScore()) {
+    <div class="flex justify-between px-2 py-1">
+      @for (column of columnDetails(); track i; let i = $index) {
+        <span class="flex-1 opacity-80 text-sm">{{
+          averageScores()[column.fieldId] | number: '1.2-2'
+        }}</span>
       }
     </div>
-    }
-  </div>
+  }
 </div>

@@ -13,11 +13,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ClassroomsService, Column, ColumnSort, Field, FieldType, generateUniqueId } from '@shared/classrooms';
+import { Column, Field, FieldType } from '@shared/classrooms';
 
 export interface CreateEditColumnDialogOutputs {
-  column: Column;
-  field: Field;
+  type: FieldType;
+  label: string;
 }
 
 export interface CreateEditColumnDialogInputs {
@@ -48,10 +48,6 @@ export interface CreateEditColumnDialogInputs {
 })
 export class CreateEditColumnDialogComponent {
   readonly #data = inject<CreateEditColumnDialogInputs>(MAT_DIALOG_DATA);
-  readonly #classroomsService = inject(ClassroomsService);
-
-  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
-  readonly viewingColumns = this.#classroomsService.viewingColumns;
 
   readonly Type = FieldType;
 
@@ -61,52 +57,19 @@ export class CreateEditColumnDialogComponent {
 
   readonly title = signal(this.#data.title);
 
-  readonly column: Column = {
-    enabled: true,
-    fieldId: '',
-    id: '',
-    sort: ColumnSort.NONE,
-    configurationId: '',
-    ordinal: this.viewingColumns().length - 1,
-  };
-
-  readonly field: Field = {
-    id: '',
-    label: '',
-    type: FieldType.TEXT,
-    classroomId: this.viewingClassroomId() ?? '',
-  };
+  label?: string;
+  type = FieldType.NUMBER;
+  fieldNameIsValid = false;
 
   readonly saved = () =>
     signal<CreateEditColumnDialogOutputs>({
-      column: this.column,
-      field: this.field,
+      type: this.type,
+      label: this.label ?? '',
     });
 
   readonly canceled = signal(undefined);
 
-  fieldNameIsValid = false;
-
-  constructor() {
-    const fieldId = this.#data.existingData?.field?.id ?? generateUniqueId();
-
-    this.column = {
-      enabled: true,
-      id: this.#data.existingData?.column?.id ?? generateUniqueId(),
-      sort: this.#data.existingData?.column?.sort ?? ColumnSort.NONE,
-      fieldId,
-      configurationId: '',
-      ordinal: this.viewingColumns().length - 1,
-    };
-    this.field = {
-      id: fieldId,
-      label: this.#data.existingData?.field?.label ?? '',
-      type: this.#data.existingData?.field?.type ?? FieldType.TEXT,
-      classroomId: this.viewingClassroomId() ?? '',
-    };
-  }
-
   setFieldNameIsValid() {
-    this.fieldNameIsValid = this.field.label.trim().length > 0;
+    this.fieldNameIsValid = (this.label?.trim().length ?? 0) > 0;
   }
 }

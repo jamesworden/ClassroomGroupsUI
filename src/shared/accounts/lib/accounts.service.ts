@@ -1,51 +1,95 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { computed, inject, Injectable, signal } from "@angular/core";
-import { catchError, finalize, map, Observable, of, tap, throwError } from "rxjs";
-import { Account } from "./models";
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import { catchError, finalize, of, take, tap } from 'rxjs';
+import { Account, GetAccountResponse } from './models';
+import { create } from 'mutative';
+
+class AccountSelectors {
+  constructor(private _state: Signal<AccountsState>) {}
+
+  public readonly account = computed(() => this._state().account);
+
+  public readonly isLoggedIn = computed(() => !!this._state().account);
+
+  public readonly accountLoading = computed(() => this._state().accountLoading);
+}
+
+interface AccountsState {
+  accountLoading: boolean;
+  account?: Account;
+}
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class AccountsService {
-    readonly #httpClient = inject(HttpClient)
+  readonly #httpClient = inject(HttpClient);
 
-    private _accountLoading = signal(true)
-    public accountLoading = this._accountLoading.asReadonly()
+  private readonly _state = signal<AccountsState>({
+    accountLoading: true,
+  });
 
-    private _account = signal<Account | undefined>(undefined)
-    public account = this._account.asReadonly();
+  public readonly select = new AccountSelectors(this._state.asReadonly());
 
-    public isLoggedIn = computed(() => !!this._account())
+  constructor() {
+    this.getAccount();
+  }
 
-    getAccount() {
-        return this.#httpClient.get<Account>('/api/v1/authentication/get-account', {
-            withCredentials: true
-        }).pipe(
-            tap(() => {
-                this._accountLoading.set(true);
-            }),
-            catchError((error: HttpErrorResponse) => {
-                if (error.status !== 403) {
-                    console.error('Error fetching account:', error);
-                }
-                return of(null);
-            }),
-            finalize(() => {
-                this._accountLoading.set(false);
-            })
-        ).subscribe((account) => {
-            if (account) {
-                this._account.set(account);
-                console.log('[Logged In]', account);
-            }
-        });
-    }
+  public patchState(strategy: (draft: AccountsState) => void) {
+    this._state.set(
+      create(this._state(), (draft) => {
+        strategy(draft);
+      })
+    );
+  }
 
-    logout() {
-        return this.#httpClient.post('/api/v1/authentication/logout', {
-            withCredentials: true,
-        }).subscribe(() => {
-            this._account.set(undefined)
-        })
-    }
+  getAccount() {
+    this.patchState((draft) => {
+      draft.accountLoading = true;
+    });
+    return this.#httpClient
+      .get<GetAccountResponse>('/api/v1/authentication/account', {
+        withCredentials: true,
+      })
+      .pipe(
+        tap(({ account }) => {
+          if (account) {
+            console.log('[Got Account]', account);
+            this.patchState((draft) => {
+              draft.account = account;
+            });
+          }
+        }),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status !== 403) {
+            console.error('[Failed to Get Account]', error);
+          }
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.accountLoading = false;
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  logout() {
+    return this.#httpClient
+      .post('/api/v1/authentication/logout', {
+        withCredentials: true,
+      })
+      .pipe(
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.account = undefined;
+            draft.accountLoading = false;
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
 }

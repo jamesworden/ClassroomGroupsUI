@@ -3,6 +3,8 @@ import {
   computed,
   ElementRef,
   inject,
+  input,
+  output,
   Signal,
   signal,
   ViewChild,
@@ -14,12 +16,15 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ClassroomsService, Configuration } from '@shared/classrooms';
+import { AccountsService } from '@shared/accounts';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -33,6 +38,9 @@ import { ClassroomsService, Configuration } from '@shared/classrooms';
     FormsModule,
     MatInputModule,
     MatButtonModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    CommonModule,
   ],
   templateUrl: './configurations-panel.component.html',
   styleUrl: './configurations-panel.component.scss',
@@ -40,52 +48,41 @@ import { ClassroomsService, Configuration } from '@shared/classrooms';
 export class ConfigurationsPanelComponent {
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #accountsService = inject(AccountsService);
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
 
-  readonly classrooms = this.#classroomsService.classrooms;
-  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
-  readonly viewingClassroom = this.#classroomsService.viewingClassroom;
-  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
-  readonly viewingConfigurationId =
-    this.#classroomsService.viewingConfigurationId;
-  readonly viewingConfigurations =
-    this.#classroomsService.viewingConfigurations;
+  readonly selectedConfigurationId = input<string>();
+  readonly classroomId = input<string>();
+
+  readonly configurationIdSelected = output<string>();
+
+  readonly configurations = computed(() =>
+    this.#classroomsService.select.configurations(this.classroomId())()
+  );
+
   readonly ResizableSide = ResizableSide;
   readonly searchQuery = signal('');
+  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
+  readonly configurationsLoading =
+    this.#classroomsService.select.configurationsLoading;
 
-  addConfigurationLabel = '';
+  createConfigurationLabel = '';
 
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
     () =>
-      this.viewingConfigurations().filter(({ label }) =>
+      this.configurations()?.filter(({ label }) =>
         label.toLowerCase().includes(this.searchQuery())
       ) ?? []
   );
 
-  constructor() {
-    this.#classroomsService.addedConfiguration$
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => {
-        setTimeout(() => {
-          this.scrollContainer.nativeElement.scrollTo({
-            top: this.scrollContainer.nativeElement.scrollHeight,
-            behavior: 'smooth',
-          });
-          this.#matSnackBar.open('Configuration created', 'Hide', {
-            duration: 3000,
-          });
-        });
-      });
-  }
-
   selectConfiguration(configurationId: string) {
-    this.#classroomsService.viewConfiguration(configurationId);
+    this.configurationIdSelected.emit(configurationId);
   }
 
-  addConfiguration() {
-    if (this.addConfigurationLabel.trim().length <= 0) {
+  createConfiguration() {
+    if (this.createConfigurationLabel.trim().length <= 0) {
       this.#matSnackBar.open(
         'Please enter the name of the configuration.',
         'Hide',
@@ -95,10 +92,10 @@ export class ConfigurationsPanelComponent {
       );
       return;
     }
-    this.#classroomsService.addConfiguration(
-      this.viewingClassroomId() ?? '',
-      this.addConfigurationLabel
+    this.#classroomsService.createConfiguration(
+      this.classroomId()!,
+      this.createConfigurationLabel
     );
-    this.addConfigurationLabel = '';
+    this.createConfigurationLabel = '';
   }
 }

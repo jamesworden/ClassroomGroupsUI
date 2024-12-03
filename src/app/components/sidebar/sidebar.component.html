@@ -17,36 +17,15 @@
       <mat-icon>menu</mat-icon>
     </button>
   </div>
-
   <div class="flex flex-col">
     <button mat-icon-button class="sidebar-button" (click)="toggleTheme()">
       <mat-icon>{{
-        theme() === Themes.LIGHT ? "light_mode" : "dark_mode"
+        theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
       }}</mat-icon>
     </button>
   </div>
 </nav>
 
 <mat-menu #accountMenu="matMenu">
-  <div class="flex flex-col gap-y-2 py-2 px-4">
-    @if (isLoggedIn()) {
-      <div class="flex flex-col">
-        <h6 class="text-lg">Logged in</h6>
-        <div class="flex gap-x-2">
-          <div class="flex flex-col justify-around">
-            <span class="opacity-70">{{account()?.primaryEmail}}</span>
-          </div>
-        <button 
-          class="max-h-8 text-sm"
-          mat-button 
-          (click)="logout()"> Logout </button>
-        </div>
-      </div>
-    } @else {
-      <app-google-sign-in-button
-        [isVisible]="menuIsOpen()" 
-        data-size="medium"
-      ></app-google-sign-in-button>
-    }
-  </div>
+  <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
 </mat-menu>

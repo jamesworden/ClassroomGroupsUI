@@ -1,0 +1,163 @@
+<div
+  class="w-full h-full flex"
+  [ngClass]="{
+    'select-none': isResizing(),
+  }"
+>
+  <app-sidebar
+    (toggledClassAndConfigPanel)="toggleClassAndConfigPanel()"
+  ></app-sidebar>
+
+  <div class="flex-1 w-full h-full flex">
+    @if (configPanelSettings().isOpen) {
+      <div
+        appResizeable
+        [resizableSides]="[ResizableSide.RIGHT]"
+        [panelWidth]="configPanelSettings().width"
+        [maxWidth]="maxClassAndConfigPanelWidth"
+        [minWidth]="minClassAndConfigPanelWidth"
+        (resizedWidth)="setPanelWidth($event)"
+        [ngStyle]="{
+          'min-width': configPanelSettings().width + 'px',
+        }"
+        class="flex flex-col border-r border-neutral-400 shadow-lg"
+        resizingId="config-panel"
+      >
+        <app-configurations-panel
+          [classroomId]="classroomId()"
+          [selectedConfigurationId]="selectedConfigurationId()"
+          (configurationIdSelected)="selectConfigurationId($event)"
+          class="flex-1"
+        ></app-configurations-panel>
+      </div>
+    }
+
+    <div class="flex flex-col flex-1 overflow-auto">
+      @if (classroom()) {
+        <div class="flex-1 flex flex-col flex-grow">
+          <section class="flex justify-between m-4">
+            <div class="flex flex-col justify-around">
+              <button mat-icon-button (click)="goToClassroomsView()">
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+            </div>
+
+            <div class="flex flex-col flex-1">
+              <input
+                class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+                maxlength="150"
+                [value]="classroomLabel()"
+                (change)="updateClassroomLabel($event)"
+                placeholder="Untitled"
+              />
+              <input
+                class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+                maxlength="150"
+                [value]="classroomDescription()"
+                (change)="updateClassroomDescription($event)"
+                placeholder="Add a description for your classroom"
+              />
+            </div>
+
+            <div class="flex flex-col justify-around">
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="classroomSettingsMenu"
+              >
+                <mat-icon>settings</mat-icon>
+              </button>
+            </div>
+          </section>
+
+          <app-configuration-panel-top
+            class="sticky top-0 z-10 mx-4"
+            [configurationDetail]="configurationDetail()"
+            (labelUpdated)="updateConfigurationLabel($event)"
+            (descriptionUpdated)="updateConfigurationDescription($event)"
+            (deletedConfiguration)="selectFirstConfiguration()"
+          ></app-configuration-panel-top>
+
+          <app-configuration-panel-bottom
+            class="mx-4"
+            [classroomId]="classroomId()"
+            [configurationId]="configurationDetail()?.id"
+            [selectedCell]="selectedCell()"
+            (cellUnselected)="unselectCell()"
+          ></app-configuration-panel-bottom>
+
+          <div class="flex flex-col gap-y-4 mt-4 flex-1">
+            @if (configurationDetail()) {
+              @if (editingGroups.length === 0) {
+                <section
+                  class="mx-4 border border-4 border-dashed border-gray-300 flex-1 flex flex-col justify-around mb-4"
+                >
+                  <div class="flex flex-col">
+                    <div class="flex justify-around">
+                      <button
+                        class="max-h-8 text-sm"
+                        mat-button
+                        (click)="createGroup()"
+                      >
+                        Create a group
+                      </button>
+                    </div>
+                  </div>
+                </section>
+              } @else {
+                <section
+                  cdkDropList
+                  (cdkDropListDropped)="drop($event)"
+                  class="mx-4 flex flex-col flex-1 gap-y-4"
+                >
+                  @for (group of editingGroups; track group.id) {
+                    @if (group.id !== configurationDetail()?.defaultGroupId) {
+                      <app-group-panel
+                        cdkDrag
+                        [classroomId]="classroomId()"
+                        [groupDetail]="group"
+                        [selectedCell]="selectedCell()"
+                        (groupDeleted)="deleteGroup(group.id)"
+                        (studentCreated)="createStudent(group.id)"
+                        (labelUpdated)="updateGroupLabel(group, $event)"
+                        (cellUnselected)="unselectCell()"
+                      >
+                        <mat-icon class="cursor-move" cdkDragHandle
+                          >drag_handle</mat-icon
+                        >
+                      </app-group-panel>
+                    }
+                  }
+                </section>
+              }
+            } @else if (configurationLoading()) {
+              <mat-spinner></mat-spinner>
+            }
+          </div>
+          <section class="sticky bottom-0 flex">
+            <mat-progress-bar
+              class="flex-1"
+              [mode]="
+                configurationUpdating() || classroomUpdating()
+                  ? 'indeterminate'
+                  : 'determinate'
+              "
+            ></mat-progress-bar>
+          </section>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<mat-menu #classroomSettingsMenu="matMenu">
+  <button
+    mat-menu-item
+    (click)="openDeleteClassroomDialog()"
+    matTooltip="Delete Classroom"
+  >
+    <mat-icon>delete</mat-icon>
+    <span>Delete classroom</span>
+  </button>
+</mat-menu>

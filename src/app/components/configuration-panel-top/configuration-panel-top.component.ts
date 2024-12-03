@@ -1,4 +1,11 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,10 +32,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CommonModule } from '@angular/common';
-import { ClassroomsService, Column } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  Column,
+  ColumnDetail,
+  ConfigurationDetail,
+} from '@shared/classrooms';
+import { StudentListComponent } from '../student-list/student-list.component';
 
 @Component({
-  selector: 'app-configuration-panel',
+  selector: 'app-configuration-panel-top',
   standalone: true,
   imports: [
     MatSlideToggleModule,
@@ -44,32 +57,48 @@ import { ClassroomsService, Column } from '@shared/classrooms';
     MatMenuModule,
     MatBadgeModule,
     CommonModule,
+    MatTooltipModule,
+    StudentListComponent,
   ],
-  templateUrl: './configuration-panel.component.html',
-  styleUrl: './configuration-panel.component.scss',
+  templateUrl: './configuration-panel-top.component.html',
+  styleUrl: './configuration-panel-top.component.scss',
 })
-export class ConfigurationPanelComponent {
+export class ConfigurationPanelTopComponent {
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
 
-  readonly classrooms = this.#classroomsService.classrooms;
-  readonly viewingClassroomId = this.#classroomsService.viewingClassroomId;
-  readonly viewingClassroom = this.#classroomsService.viewingClassroom;
-  readonly viewingConfiguration = this.#classroomsService.viewingConfiguration;
-  readonly viewingConfigurationId =
-    this.#classroomsService.viewingConfigurationId;
-  readonly viewingColumns = this.#classroomsService.viewingColumns;
-  readonly viewingFieldsById = this.#classroomsService.viewingFieldsById;
-  readonly viewingConfigurations =
-    this.#classroomsService.viewingConfigurations;
+  readonly configurationDetail = input<ConfigurationDetail>();
 
+  readonly labelUpdated = output<string>();
+  readonly descriptionUpdated = output<string>();
+  readonly deletedConfiguration = output();
+
+  readonly columnDetails = computed(
+    () => this.configurationDetail()?.columnDetails ?? []
+  );
+  readonly classroomId = computed(
+    () => this.configurationDetail()?.classroomId
+  );
+  readonly configurationId = computed(() => this.configurationDetail()?.id);
+  readonly configurations = computed(() =>
+    this.#classroomsService.select.configurations(this.classroomId())()
+  );
+  readonly configurationLabel = computed(
+    () => this.configurationDetail()?.label ?? ''
+  );
+  readonly configurationDescription = computed(
+    () => this.configurationDetail()?.description ?? ''
+  );
+  readonly defaultGroup = computed(() =>
+    this.#classroomsService.select.defaultGroup(this.configurationId())()
+  );
   readonly enabledColumnBadges = computed(() => {
     const enabledColumnBadges: {
       [columnId: string]: number;
     } = {};
     let latestSortValue = 1;
-    for (const column of this.viewingColumns() ?? []) {
+    for (const column of this.columnDetails() ?? []) {
       if (column.enabled) {
         enabledColumnBadges[column.id] = latestSortValue;
         latestSortValue++;
@@ -81,43 +110,26 @@ export class ConfigurationPanelComponent {
   averageScores = false;
   groupingByDivision = false;
   groupingValue = 0;
-  updatedDescription = '';
-  updatedLabel = '';
-  columns: Column[] = [];
+  columns: ColumnDetail[] = [];
+  editingFieldId?: string;
+  editingField = '';
 
   constructor() {
-    effect(
-      () =>
-      (this.updatedDescription =
-        this.viewingConfiguration()?.description ?? '')
-    );
-    effect(
-      () => (this.updatedLabel = this.viewingConfiguration()?.label ?? '')
-    );
-    effect(() => (this.columns = this.viewingColumns()));
+    effect(() => (this.columns = this.columnDetails()));
   }
 
   toggleGroupingType() {
     this.groupingByDivision = !this.groupingByDivision;
   }
 
-  updateDescription() {
-    const configurationId = this.viewingConfigurationId();
-    if (configurationId) {
-      this.#classroomsService.updateConfiguration(configurationId, {
-        description: this.updatedDescription,
-      });
-    }
+  updateDescription(event: Event) {
+    const description = (event.target as HTMLInputElement).value;
+    this.descriptionUpdated.emit(description);
   }
 
-  updateLabel() {
-    const classroomId = this.viewingClassroomId();
-    const configurationId = this.viewingConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.updateConfiguration(classroomId, {
-        label: this.updatedLabel,
-      });
-    }
+  updateLabel(event: Event) {
+    const label = (event.target as HTMLInputElement).value;
+    this.labelUpdated.emit(label);
   }
 
   openDeleteConfigurationModal() {
@@ -125,26 +137,51 @@ export class ConfigurationPanelComponent {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete configuration',
-        subtitle: `Are you sure you want to delete the configuration ${this.viewingConfiguration()?.label
-          } and all of it's data?`,
+        subtitle: `Are you sure you want to delete the configuration ${
+          this.configurationDetail()?.label
+        } and all of it's data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success) => {
-      const classroomId = this.viewingClassroomId();
-      const configurationId = this.viewingConfigurationId();
+      const classroomId = this.classroomId();
+      const configurationId = this.configurationId();
       if (success && classroomId && configurationId) {
-        this.#classroomsService.deleteConfiguration(configurationId);
+        this.#classroomsService
+          .deleteConfiguration(classroomId, configurationId)
+          .subscribe(() => this.deletedConfiguration.emit());
       }
     });
   }
 
-  drop(event: CdkDragDrop<Column>) {
-    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
-    const classroomId = this.viewingClassroomId();
-    const configurationId = this.viewingConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.updateColumns(configurationId, this.columns);
+  startEditing(fieldId: string) {
+    this.editingFieldId = fieldId;
+    this.editingField =
+      this.columnDetails().find((c) => c.fieldId === fieldId)?.label ?? '';
+  }
+
+  saveEdits() {
+    const classroomId = this.classroomId();
+    const column = this.columnDetails().find(
+      (c) => c.fieldId === this.editingFieldId
+    );
+    if (classroomId && column) {
+      this.#classroomsService.patchField(
+        classroomId,
+        column.fieldId,
+        this.editingField
+      );
     }
+    this.editingFieldId = undefined;
+    this.editingField = '';
+  }
+
+  drop(event: CdkDragDrop<Column>) {
+    // moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+    // const classroomId = this.viewingClassroomId();
+    // const configurationId = this.viewingConfigurationId();
+    // if (classroomId && configurationId) {
+    //   this.#classroomsService.updateColumns(configurationId, this.columns);
+    // }
   }
 
   openCreateColumnDialog() {
@@ -157,17 +194,21 @@ export class ConfigurationPanelComponent {
     dialogRef
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.createField(outputs.field);
-          this.#matSnackBar.open('Column created', 'Hide', {
-            duration: 3000,
-          });
+        const classroomId = this.classroomId();
+        const configurationId = this.configurationId();
+        if (outputs && classroomId && configurationId) {
+          this.#classroomsService.createColumn(
+            classroomId,
+            configurationId,
+            outputs.label,
+            outputs.type
+          );
         }
       });
   }
 
   toggleColumn(columnId: string) {
-    this.#classroomsService.toggleColumn(columnId);
+    // this.#classroomsService.toggleColumn(columnId);
   }
 
   setSortAscending(columnId: string) {
@@ -223,9 +264,18 @@ export class ConfigurationPanelComponent {
   }
 
   createGroup() {
-    this.#classroomsService.createGroup(this.viewingConfigurationId() ?? '');
-    this.#matSnackBar.open('Group created', 'Hide', {
-      duration: 3000,
-    });
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createGroup(classroomId, configurationId);
+    }
+  }
+
+  createStudent() {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createStudent(classroomId, configurationId);
+    }
   }
 }
