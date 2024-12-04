@@ -83,7 +83,6 @@
             class="mx-4"
             [classroomId]="classroomId()"
             [configurationId]="configurationDetail()?.id"
-            [selectedCell]="selectedCell()"
           ></app-configuration-panel-bottom>
 
           <div class="flex flex-col gap-y-4 mt-4 flex-1">
@@ -116,7 +115,6 @@
                         cdkDrag
                         [classroomId]="classroomId()"
                         [groupDetail]="group"
-                        [selectedCell]="selectedCell()"
                         (groupDeleted)="deleteGroup(group.id)"
                         (studentCreated)="createStudent(group.id)"
                         (labelUpdated)="updateGroupLabel(group, $event)"

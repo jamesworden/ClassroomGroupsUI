@@ -16,7 +16,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClassroomsService, StudentDetail } from '@shared/classrooms';
-import { Cell } from 'app/models/cell';
 import { CellSelectionService } from 'app/views/classroom-view/cell-selection.service';
 
 @Component({
@@ -36,7 +35,8 @@ export class StudentListComponent {
   readonly studentDetails = input<StudentDetail[]>();
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
-  readonly selectedCell = input<Cell>();
+
+  readonly selectedCell = this.#cellSelectionService.selectedCell;
 
   @ViewChild('valueInput', { read: ElementRef })
   valueInput?: ElementRef<HTMLInputElement>;
@@ -49,12 +49,11 @@ export class StudentListComponent {
   );
 
   editCellValue = '';
-
   editingStudents: StudentDetail[] = [];
 
   constructor() {
     effect(() => {
-      this.editingStudents = this.studentDetails() ?? [];
+      this.editingStudents = this.studentDetails() || [];
       this.editCellValue = this.#cellSelectionService.editCellValue() || '';
     });
     effect(() => {

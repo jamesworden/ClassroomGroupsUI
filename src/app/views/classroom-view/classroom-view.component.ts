@@ -71,7 +71,6 @@ interface ConfigPanelSettings {
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
     MatButtonModule,
     MatSidenavModule,
     SidebarComponent,
@@ -87,7 +86,6 @@ interface ConfigPanelSettings {
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    GoogleSignInButtonComponent,
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ConfigurationPanelBottomComponent,
@@ -105,7 +103,6 @@ export class ClassroomViewComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #activatedRoute = inject(ActivatedRoute);
   readonly #router = inject(Router);
-  readonly #cellSelectionService = inject(CellSelectionService);
 
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
@@ -177,7 +174,6 @@ export class ClassroomViewComponent {
     isOpen: true,
   });
   readonly classroomViewInitialized$ = new Subject<void>();
-  readonly selectedCell = this.#cellSelectionService.selectedCell;
 
   editingGroups: GroupDetail[] = [];
 

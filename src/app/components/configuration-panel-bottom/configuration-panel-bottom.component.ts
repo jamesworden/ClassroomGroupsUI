@@ -17,7 +17,6 @@ export class ConfigurationPanelBottomComponent {
 
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
-  readonly selectedCell = input<Cell | undefined>();
 
   readonly defaultGroup = computed(() =>
     this.#classroomsService.select.defaultGroup(this.configurationId())()

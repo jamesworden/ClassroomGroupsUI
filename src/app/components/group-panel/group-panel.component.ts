@@ -33,7 +33,6 @@ export class GroupPanelComponent {
 
   readonly classroomId = input<string>();
   readonly groupDetail = input<GroupDetail>();
-  readonly selectedCell = input<Cell>();
 
   readonly groupDeleted = output<void>();
   readonly studentCreated = output<void>();
