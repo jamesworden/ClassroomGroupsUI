@@ -67,7 +67,6 @@ export class StudentListComponent {
 
   startEditing(fieldId: string, value: string, studentId: string) {
     this.editingField = value;
-    // setTimeout(() => this.valueInput.nativeElement.focus());
   }
 
   saveEdits() {
@@ -91,34 +90,6 @@ export class StudentListComponent {
   }
 
   drop(event: CdkDragDrop<StudentDetail[]>) {
-    // const ontoSameGroup = event.container === event.previousContainer;
-    // if (ontoSameGroup) {
-    //   // Order editingStudents
-    //   moveItemInArray(
-    //     this.editingStudents,
-    //     event.previousIndex,
-    //     event.currentIndex
-    //   );
-    //   // Assign ordinals according to the order
-    //   this.editingStudents = this.editingStudents.map(
-    //     (editingStudent, ordinal) => ({ ...editingStudent, ordinal })
-    //   );
-    //   // Create correct student group updates
-    //   const studentGroups = this.#classroomsService
-    //     .studentGroups()
-    //     .map((studentGroup) => {
-    //       const updatedStudent = this.editingStudents.find(
-    //         ({ id }) => id === studentGroup.studentId
-    //       );
-    //       if (updatedStudent) {
-    //         studentGroup.ordinal = updatedStudent.ordinal;
-    //       }
-    //       return studentGroup;
-    //     });
-    //   // Persist updates
-    //   this.#classroomsService.updateStudentGroups(studentGroups);
-    //   return;
-    // }
-    // Recalculate ordinals
+    // TODO
   }
 }
