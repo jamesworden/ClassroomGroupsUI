@@ -12,12 +12,12 @@ import {
   ElementRef,
   inject,
   input,
-  output,
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClassroomsService, StudentDetail } from '@shared/classrooms';
 import { Cell } from 'app/models/cell';
+import { CellSelectionService } from 'app/views/classroom-view/cell-selection.service';
 
 @Component({
   selector: 'app-student-list',
@@ -28,6 +28,7 @@ import { Cell } from 'app/models/cell';
 })
 export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #cellSelectionService = inject(CellSelectionService);
 
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
@@ -36,8 +37,6 @@ export class StudentListComponent {
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
   readonly selectedCell = input<Cell>();
-
-  readonly cellUnselected = output();
 
   @ViewChild('valueInput', { read: ElementRef })
   valueInput?: ElementRef<HTMLInputElement>;
@@ -49,12 +48,14 @@ export class StudentListComponent {
     this.#classroomsService.select.columnDetails(this.configurationId())
   );
 
-  editingField?: string;
+  editCellValue = '';
+
   editingStudents: StudentDetail[] = [];
 
   constructor() {
     effect(() => {
       this.editingStudents = this.studentDetails() ?? [];
+      this.editCellValue = this.#cellSelectionService.editCellValue() || '';
     });
     effect(() => {
       if (this.selectedCell()) {
@@ -66,8 +67,7 @@ export class StudentListComponent {
   }
 
   startEditing(fieldId: string, value: string, studentId: string) {
-    this.editingField = value;
-    // setTimeout(() => this.valueInput.nativeElement.focus());
+    this.#cellSelectionService.setEditCellValue(value);
   }
 
   saveEdits() {
@@ -77,48 +77,19 @@ export class StudentListComponent {
       classroomId &&
       selectedCell?.studentId !== undefined &&
       selectedCell?.fieldId !== undefined &&
-      this.editingField !== undefined
+      this.editCellValue !== undefined
     ) {
       this.#classroomsService.upsertStudentField(
         classroomId,
         selectedCell.studentId,
         selectedCell.fieldId,
-        this.editingField
+        this.editCellValue
       );
     }
-    this.editingField = undefined;
-    this.cellUnselected.emit();
+    this.#cellSelectionService.unselectCell();
   }
 
   drop(event: CdkDragDrop<StudentDetail[]>) {
-    // const ontoSameGroup = event.container === event.previousContainer;
-    // if (ontoSameGroup) {
-    //   // Order editingStudents
-    //   moveItemInArray(
-    //     this.editingStudents,
-    //     event.previousIndex,
-    //     event.currentIndex
-    //   );
-    //   // Assign ordinals according to the order
-    //   this.editingStudents = this.editingStudents.map(
-    //     (editingStudent, ordinal) => ({ ...editingStudent, ordinal })
-    //   );
-    //   // Create correct student group updates
-    //   const studentGroups = this.#classroomsService
-    //     .studentGroups()
-    //     .map((studentGroup) => {
-    //       const updatedStudent = this.editingStudents.find(
-    //         ({ id }) => id === studentGroup.studentId
-    //       );
-    //       if (updatedStudent) {
-    //         studentGroup.ordinal = updatedStudent.ordinal;
-    //       }
-    //       return studentGroup;
-    //     });
-    //   // Persist updates
-    //   this.#classroomsService.updateStudentGroups(studentGroups);
-    //   return;
-    // }
-    // Recalculate ordinals
+    // TODO
   }
 }

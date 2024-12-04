@@ -28,7 +28,7 @@
                 (mousedown)="$event.stopPropagation()"
                 #valueInput
                 type="text"
-                [(ngModel)]="editingField"
+                [(ngModel)]="editCellValue"
                 placeholder="Add value"
                 class="bg-transparent flex-1 text-ellipsis editing-input p-1"
                 (change)="saveEdits(); $event.stopPropagation()"
