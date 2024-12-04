@@ -17,9 +17,7 @@ export class ConfigurationPanelBottomComponent {
 
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
-  readonly selectedCell = input<Cell>();
-
-  readonly cellUnselected = output();
+  readonly selectedCell = input<Cell | undefined>();
 
   readonly defaultGroup = computed(() =>
     this.#classroomsService.select.defaultGroup(this.configurationId())()
@@ -38,8 +36,4 @@ export class ConfigurationPanelBottomComponent {
   readonly anyAverageScore = computed(
     () => !!Object.entries(this.averageScores()).length
   );
-
-  unselectCell() {
-    this.cellUnselected.emit();
-  }
 }

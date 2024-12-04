@@ -38,7 +38,6 @@ export class GroupPanelComponent {
   readonly groupDeleted = output<void>();
   readonly studentCreated = output<void>();
   readonly labelUpdated = output<string>();
-  readonly cellUnselected = output();
 
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
   readonly studentsInGroup = computed(() =>
@@ -72,9 +71,5 @@ export class GroupPanelComponent {
   updateLabel(event: Event) {
     const label = (event.target as HTMLInputElement)?.value;
     this.labelUpdated.emit(label);
-  }
-
-  unselectCell() {
-    this.cellUnselected.emit();
   }
 }
