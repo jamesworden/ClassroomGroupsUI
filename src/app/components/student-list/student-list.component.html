@@ -43,7 +43,7 @@
               />
             } @else {
               <div
-                class="cursor-auto flex-1 p-1 flex"
+                class="cursor-auto flex-1 flex"
                 [ngClass]="{
                   'selecting-input':
                     selectedCell()?.fieldId === columnDetail.fieldId &&
@@ -64,7 +64,7 @@
                 "
               >
                 <span
-                  class="flex-1"
+                  class="flex-1 p-1"
                   [attr.field-id]="columnDetail.fieldId"
                   [attr.student-id]="student.id"
                   [ngClass]="{
