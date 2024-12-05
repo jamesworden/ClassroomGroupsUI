@@ -83,7 +83,8 @@ export class CellSelectionService {
       });
     }
 
-    if (key.length > 1) {
+    const validCharacters = /^[a-zA-Z0-9!@#$%^&*(),.?":{}|<>_\-+=]*$/;
+    if (!validCharacters.test(key)) {
       return;
     }
 
