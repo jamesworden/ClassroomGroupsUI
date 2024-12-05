@@ -76,7 +76,14 @@ export class CellSelectionService {
       return;
     }
 
-    // TODO: When key is 'enter', set the editing value to that of whatever was last persisted.
+    console.log(key);
+
+    if (key === 'Enter') {
+      this._selectedCell.set({
+        ...selectedCell,
+        isEditing: true,
+      });
+    }
 
     if (key.length > 1) {
       return;
