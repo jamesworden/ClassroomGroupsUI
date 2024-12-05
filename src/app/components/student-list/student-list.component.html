@@ -31,7 +31,10 @@
                 [(ngModel)]="editCellValue"
                 placeholder="Add value"
                 class="bg-transparent flex-1 text-ellipsis editing-input p-1"
-                (change)="saveEdits(); $event.stopPropagation()"
+                (blur)="
+                  saveEdits(student.fieldIdsToValues[columnDetail.fieldId]);
+                  $event.stopPropagation()
+                "
                 [attr.field-id]="columnDetail.fieldId"
                 [attr.student-id]="student.id"
               />

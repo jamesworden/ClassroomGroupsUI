@@ -69,14 +69,15 @@ export class StudentListComponent {
     this.#cellSelectionService.setEditCellValue(value);
   }
 
-  saveEdits() {
+  saveEdits(originalValue: string) {
     const classroomId = this.classroomId();
     const selectedCell = this.selectedCell();
     if (
       classroomId &&
       selectedCell?.studentId !== undefined &&
       selectedCell?.fieldId !== undefined &&
-      this.editCellValue !== undefined
+      this.editCellValue !== undefined &&
+      this.editCellValue !== originalValue
     ) {
       this.#classroomsService.upsertStudentField(
         classroomId,
