@@ -78,7 +78,6 @@ export class StudentListComponent {
       selectedCell?.studentId !== undefined &&
       selectedCell?.fieldId !== undefined &&
       this.editCellValue !== undefined &&
-      this.editCellValue.trim() &&
       this.editCellValue !== originalValue
     ) {
       this.#classroomsService.upsertStudentField(

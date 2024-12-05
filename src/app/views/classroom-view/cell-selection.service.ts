@@ -76,9 +76,7 @@ export class CellSelectionService {
       return;
     }
 
-    console.log(key);
-
-    if (key === 'Enter') {
+    if (key === 'Enter' && !selectedCell.isEditing) {
       this._selectedCell.set({
         ...selectedCell,
         isEditing: true,
