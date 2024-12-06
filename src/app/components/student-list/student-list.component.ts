@@ -15,7 +15,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ClassroomsService, StudentDetail } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  FieldType,
+  StudentDetail,
+} from '@shared/classrooms';
 import { CellSelectionService } from 'app/views/classroom-view/cell-selection.service';
 
 @Component({
@@ -48,6 +52,8 @@ export class StudentListComponent {
     this.#classroomsService.select.columnDetails(this.configurationId())
   );
 
+  readonly FieldType = FieldType;
+
   editCellValue = '';
   editingStudents: StudentDetail[] = [];
 
@@ -65,8 +71,9 @@ export class StudentListComponent {
     });
   }
 
-  startEditing(fieldId: string, value: string, studentId: string) {
+  startEditing(value: string, type: FieldType) {
     this.#cellSelectionService.setEditCellValue(value);
+    this.#cellSelectionService.setEditCellType(type);
   }
 
   saveEdits(originalValue: string) {

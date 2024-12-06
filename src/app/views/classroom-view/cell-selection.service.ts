@@ -6,6 +6,7 @@ import {
   RendererFactory2,
   signal,
 } from '@angular/core';
+import { FieldType } from '@shared/classrooms';
 import { Cell } from 'app/models/cell';
 
 @Injectable({
@@ -19,6 +20,8 @@ export class CellSelectionService {
 
   private readonly _editCellValue = signal<string | undefined>(undefined);
   public readonly editCellValue = this._editCellValue.asReadonly();
+
+  private readonly _editCellType = signal<FieldType>(FieldType.TEXT);
 
   private renderer: Renderer2;
 
@@ -88,6 +91,10 @@ export class CellSelectionService {
       return;
     }
 
+    if (!isValidInput(key, this._editCellType())) {
+      return;
+    }
+
     this._editCellValue.set(key);
     this._selectedCell.set({
       ...selectedCell,
@@ -98,9 +105,26 @@ export class CellSelectionService {
   unselectCell() {
     this._selectedCell.set(undefined);
     this._editCellValue.set(undefined);
+    this._editCellType.set(FieldType.TEXT);
   }
 
   public setEditCellValue(value: string) {
     this._editCellValue.set(value);
   }
+
+  public setEditCellType(type: FieldType) {
+    this._editCellType.set(type);
+  }
+}
+
+function isValidInput(value: string, type: FieldType) {
+  if (type === FieldType.TEXT) {
+    return true;
+  }
+
+  if (type === FieldType.NUMBER) {
+    return !isNaN(Number(value)) && value.trim() !== '';
+  }
+
+  return false;
 }

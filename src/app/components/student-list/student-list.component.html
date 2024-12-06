@@ -40,6 +40,9 @@
                 (keydown.enter)="
                   saveEdits(student.fieldIdsToValues[columnDetail.fieldId])
                 "
+                [type]="
+                  columnDetail.type === FieldType.TEXT ? 'text' : 'number'
+                "
               />
             } @else {
               <div
@@ -57,9 +60,8 @@
                 }"
                 (click)="
                   startEditing(
-                    columnDetail.fieldId,
                     student.fieldIdsToValues[columnDetail.fieldId],
-                    student.id
+                    columnDetail.type
                   )
                 "
               >
