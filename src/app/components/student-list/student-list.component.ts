@@ -39,6 +39,7 @@ export class StudentListComponent {
   readonly studentDetails = input<StudentDetail[]>();
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
+  readonly groupIndex = input<number>();
 
   readonly selectedCell = this.#cellSelectionService.selectedCell;
 
@@ -71,12 +72,28 @@ export class StudentListComponent {
     });
   }
 
-  startEditing(value: string, type: FieldType) {
+  startEditing(
+    value: string,
+    type: FieldType,
+    rowIndex: number,
+    columnIndex: number
+  ) {
     this.#cellSelectionService.setEditCellValue(value);
-    this.#cellSelectionService.setEditCellType(type);
+    this.#cellSelectionService.setEditCellDetails({
+      type,
+      rowIndex,
+      columnIndex,
+      groupIndex: this.groupIndex()!,
+    });
   }
 
-  saveEdits(originalValue: string) {
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+    }
+  }
+
+  saveEdits(originalValue: string, selectNextCell = false) {
     const classroomId = this.classroomId();
     const selectedCell = this.selectedCell();
 
@@ -94,7 +111,9 @@ export class StudentListComponent {
         this.editCellValue
       );
     }
-    this.#cellSelectionService.unselectCell();
+    selectNextCell
+      ? setTimeout(() => this.#cellSelectionService.selectRightCell())
+      : this.#cellSelectionService.unselectCell();
   }
 
   drop(event: CdkDragDrop<StudentDetail[]>) {

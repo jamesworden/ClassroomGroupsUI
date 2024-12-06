@@ -11,12 +11,16 @@
   }"
   (cdkDropListDropped)="drop($event)"
 >
-  @for (student of editingStudents; track student.id) {
+  @for (student of editingStudents; track student.id; let rowIndex = $index) {
     <div
       class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 flex"
       cdkDrag
     >
-      @for (columnDetail of columnDetails(); track i; let i = $index) {
+      @for (
+        columnDetail of columnDetails();
+        track columnIndex;
+        let columnIndex = $index
+      ) {
         <div class="flex-1">
           <div class="flex">
             @if (
@@ -31,14 +35,19 @@
                 [(ngModel)]="editCellValue"
                 placeholder="Add value"
                 class="bg-transparent flex-1 text-ellipsis editing-input p-1"
+                (keydown)="onKeyDown($event)"
                 (blur)="
                   saveEdits(student.fieldIdsToValues[columnDetail.fieldId]);
                   $event.stopPropagation()
                 "
-                [attr.field-id]="columnDetail.fieldId"
-                [attr.student-id]="student.id"
                 (keydown.enter)="
                   saveEdits(student.fieldIdsToValues[columnDetail.fieldId])
+                "
+                (keydown.tab)="
+                  saveEdits(
+                    student.fieldIdsToValues[columnDetail.fieldId],
+                    true
+                  )
                 "
                 [type]="
                   columnDetail.type === FieldType.TEXT ? 'text' : 'number'
@@ -61,20 +70,25 @@
                 (click)="
                   startEditing(
                     student.fieldIdsToValues[columnDetail.fieldId],
-                    columnDetail.type
+                    columnDetail.type,
+                    rowIndex,
+                    columnIndex
                   )
                 "
               >
                 <span
                   class="flex-1 p-1"
-                  [attr.field-id]="columnDetail.fieldId"
-                  [attr.student-id]="student.id"
                   [ngClass]="{
                     'opacity-50':
                       student.fieldIdsToValues[columnDetail.fieldId] ===
                         undefined ||
                       student.fieldIdsToValues[columnDetail.fieldId] === '',
                   }"
+                  [attr.field-id]="columnDetail.fieldId"
+                  [attr.student-id]="student.id"
+                  [attr.group-index]="groupIndex()"
+                  [attr.row-index]="rowIndex"
+                  [attr.column-index]="columnIndex"
                 >
                   {{
                     student.fieldIdsToValues[columnDetail.fieldId] ||

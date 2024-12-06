@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { FieldType } from '@shared/classrooms';
-import { Cell } from 'app/models/cell';
+import { Cell, CellDetails } from 'app/models/cell';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,9 @@ export class CellSelectionService {
   private readonly _editCellValue = signal<string | undefined>(undefined);
   public readonly editCellValue = this._editCellValue.asReadonly();
 
-  private readonly _editCellType = signal<FieldType>(FieldType.TEXT);
+  private readonly _editCellDetails = signal<CellDetails | undefined>(
+    undefined
+  );
 
   private renderer: Renderer2;
 
@@ -31,7 +33,7 @@ export class CellSelectionService {
     this.renderer.listen('document', 'dblclick', (event) =>
       this.onDoubleClick(event)
     );
-    this.renderer.listen('document', 'keypress', (event) =>
+    this.renderer.listen('document', 'keydown', (event) =>
       this.onKeyPress(event)
     );
   }
@@ -73,7 +75,9 @@ export class CellSelectionService {
     });
   }
 
-  private onKeyPress({ key }: KeyboardEvent) {
+  private onKeyPress(event: KeyboardEvent) {
+    const { key } = event;
+
     const selectedCell = this._selectedCell();
     if (!selectedCell || selectedCell.isEditing) {
       return;
@@ -86,12 +90,19 @@ export class CellSelectionService {
       });
     }
 
-    const validCharacters = /^[a-zA-Z0-9!@#$%^&*(),.?":{}|<>_\-+=]*$/;
-    if (!validCharacters.test(key)) {
+    if (key === 'Tab' && selectedCell) {
+      event.preventDefault();
+      this.selectRightCell();
       return;
     }
 
-    if (!isValidInput(key, this._editCellType())) {
+    const validCharacters = /^[a-zA-Z0-9!@#$%^&*(),.?":{}|<>_\-+=]*$/;
+    if (!validCharacters.test(key) || key.length > 1) {
+      return;
+    }
+
+    const cellDetails = this._editCellDetails();
+    if (cellDetails && !isValidInput(key, cellDetails.type)) {
       return;
     }
 
@@ -105,15 +116,46 @@ export class CellSelectionService {
   unselectCell() {
     this._selectedCell.set(undefined);
     this._editCellValue.set(undefined);
-    this._editCellType.set(FieldType.TEXT);
+    this._editCellDetails.set(undefined);
   }
 
   public setEditCellValue(value: string) {
     this._editCellValue.set(value);
   }
 
-  public setEditCellType(type: FieldType) {
-    this._editCellType.set(type);
+  public setEditCellDetails(details: CellDetails | undefined) {
+    this._editCellDetails.set(details);
+  }
+
+  public selectRightCell() {
+    const details = this._editCellDetails();
+    if (!details) {
+      return;
+    }
+
+    const { groupIndex, rowIndex, columnIndex } = details;
+    const nextColumnIndex = columnIndex + 1;
+
+    const rightCellElement = document.querySelector(
+      `span[column-index="${nextColumnIndex}"][group-index="${groupIndex}"][row-index="${rowIndex}"]`
+    );
+    if (!rightCellElement) {
+      return;
+    }
+
+    const studentId = rightCellElement.getAttribute('student-id') || undefined;
+    const fieldId = rightCellElement.getAttribute('field-id');
+    if (fieldId) {
+      this.setEditCellDetails({
+        ...details,
+        columnIndex: nextColumnIndex,
+      });
+      this._selectedCell.set({
+        fieldId,
+        studentId,
+        isEditing: false,
+      });
+    }
   }
 }
 

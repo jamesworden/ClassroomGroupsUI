@@ -109,7 +109,11 @@
                   (cdkDropListDropped)="drop($event)"
                   class="mx-4 flex flex-col flex-1 gap-y-4"
                 >
-                  @for (group of editingGroups; track group.id) {
+                  @for (
+                    group of editingGroups;
+                    track group.id;
+                    let i = $index
+                  ) {
                     @if (group.id !== configurationDetail()?.defaultGroupId) {
                       <app-group-panel
                         cdkDrag
@@ -118,6 +122,7 @@
                         (groupDeleted)="deleteGroup(group.id)"
                         (studentCreated)="createStudent(group.id)"
                         (labelUpdated)="updateGroupLabel(group, $event)"
+                        [groupIndex]="i"
                       >
                         <mat-icon class="cursor-move" cdkDragHandle
                           >drag_handle</mat-icon
