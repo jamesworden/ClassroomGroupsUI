@@ -3,6 +3,7 @@ import {
   CdkDragDrop,
   CdkDragHandle,
   CdkDropList,
+  moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
@@ -137,8 +138,8 @@ export class ClassroomViewComponent {
     )();
     return detail ? getConfigurationFromDetail(detail) : undefined;
   });
-  readonly groupDetails = computed(() =>
-    this.#classroomsService.select.groupDetails(
+  readonly listGroupDetails = computed(() =>
+    this.#classroomsService.select.listGroupDetails(
       this.selectedConfigurationId()
     )()
   );
@@ -176,7 +177,7 @@ export class ClassroomViewComponent {
   constructor() {
     this.loadConfigPanelSettings();
 
-    effect(() => (this.editingGroups = this.groupDetails()));
+    effect(() => (this.editingGroups = this.listGroupDetails()));
     effect(() => {
       localStorage.setItem(
         StorageKeys.CONFIG_PANEL,
@@ -300,16 +301,23 @@ export class ClassroomViewComponent {
     }
   }
 
-  drop(event: CdkDragDrop<Group[]>) {
-    // moveItemInArray(
-    //   this.editingGroups,
-    //   event.previousIndex,
-    //   event.currentIndex
-    // );
-    // this.#classroomsService.updateGroups(
-    //   this.configurationId() ?? '',
-    //   this.editingGroups
-    // );
+  dropGroup(event: CdkDragDrop<Group[]>) {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationDetail()?.id;
+    if (!classroomId || !configurationId) {
+      return;
+    }
+    moveItemInArray(
+      this.editingGroups,
+      event.previousIndex,
+      event.currentIndex
+    );
+    const sortedGroupIds = this.editingGroups.map(({ id }) => id);
+    this.#classroomsService.sortGroups(
+      classroomId,
+      configurationId,
+      sortedGroupIds
+    );
   }
 
   chooseFileToUpload() {

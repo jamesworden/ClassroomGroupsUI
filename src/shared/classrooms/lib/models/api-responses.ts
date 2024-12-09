@@ -77,5 +77,9 @@ export interface PatchFieldResponse {
 
 export interface DeleteStudentResponse {
   deletedStudent: StudentDetail;
-  updatedGroups: GroupDetail[];
+  updatedGroupDetails: GroupDetail[];
+}
+
+export interface SortGroupsResponse {
+  sortedGroupDetails: GroupDetail[];
 }
