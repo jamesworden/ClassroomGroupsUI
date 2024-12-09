@@ -913,6 +913,9 @@ export class ClassroomsService {
   }
 
   public deleteStudent(classroomId: string, studentId: string) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
     this.#httpClient
       .delete<DeleteStudentResponse>(
         `/api/v1/classrooms/${classroomId}/students/${studentId}`,
@@ -948,6 +951,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
         }),
         map((res) => res?.deletedStudent),
         take(1)
