@@ -12,11 +12,18 @@
       [studentDetails]="defaultGroup()?.studentDetails"
       [roundedBottom]="true"
       [groupIndex]="0"
+      (studentFieldUpdated)="updateStudentField($event)"
     ></app-student-list>
   }
   @if (anyAverageScore()) {
-    <div class="flex justify-between px-2 py-1">
+    <div class="flex justify-between py-1">
       @for (column of columnDetails(); track i; let i = $index) {
+        @if (i === 0) {
+          <div class="flex flex-col justify-around">
+            <mat-icon class="opacity-80">functions</mat-icon>
+          </div>
+        }
+
         <span class="flex-1 opacity-80 text-sm">{{
           averageScores()[column.fieldId] | number: '1.2-2'
         }}</span>

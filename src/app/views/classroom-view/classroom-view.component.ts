@@ -3,17 +3,9 @@ import {
   CdkDragDrop,
   CdkDragHandle,
   CdkDropList,
-  moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  HostListener,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -32,8 +24,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
-import { ClassroomsService, Group, GroupDetail } from '@shared/classrooms';
-import { GoogleSignInButtonComponent } from '@ui-inputs';
+import {
+  ClassroomsService,
+  Group,
+  GroupDetail,
+  StudentField,
+} from '@shared/classrooms';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
 import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
 import { SidebarComponent } from 'app/components/sidebar/sidebar.component';
@@ -53,7 +49,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
 import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
 import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
-import { CellSelectionService } from './cell-selection.service';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -386,5 +381,13 @@ export class ClassroomViewComponent {
 
   goToClassroomsView() {
     this.#router.navigate(['classrooms']);
+  }
+
+  updateStudentField(studentField: StudentField) {
+    const classroomId = this.classroomId();
+    if (!classroomId) {
+      return;
+    }
+    this.#classroomsService.upsertStudentField(classroomId, studentField);
   }
 }

@@ -23,80 +23,26 @@
       ) {
         <div class="flex-1">
           <div class="flex">
-            @if (
-              selectedCell()?.fieldId === columnDetail.fieldId &&
-              selectedCell()?.studentId === student.id &&
-              selectedCell()?.isEditing
-            ) {
-              <input
-                (mousedown)="$event.stopPropagation()"
-                #valueInput
-                type="text"
-                [(ngModel)]="editCellValue"
-                placeholder="Add value"
-                class="bg-transparent flex-1 text-ellipsis editing-input p-1"
-                (keydown)="onKeyDown($event)"
-                (blur)="
-                  saveEdits(student.fieldIdsToValues[columnDetail.fieldId]);
-                  $event.stopPropagation()
-                "
-                (keydown.enter)="
-                  saveEdits(student.fieldIdsToValues[columnDetail.fieldId])
-                "
-                (keydown.tab)="
-                  saveEdits(
-                    student.fieldIdsToValues[columnDetail.fieldId],
-                    true
-                  )
-                "
-                [type]="
-                  columnDetail.type === FieldType.TEXT ? 'text' : 'number'
-                "
-              />
-            } @else {
-              <div
-                class="cursor-auto flex-1 flex"
-                [ngClass]="{
-                  'selecting-input':
-                    selectedCell()?.fieldId === columnDetail.fieldId &&
-                    selectedCell()?.studentId === student.id &&
-                    !selectedCell()?.isEditing,
-                  'border border-transparent': !(
-                    selectedCell()?.fieldId === columnDetail.fieldId &&
-                    selectedCell()?.studentId === student.id &&
-                    !selectedCell()?.isEditing
-                  ),
-                }"
-                (click)="
-                  startEditing(
-                    student.fieldIdsToValues[columnDetail.fieldId],
-                    columnDetail.type,
-                    rowIndex,
-                    columnIndex
-                  )
-                "
-              >
-                <span
-                  class="flex-1 p-1"
-                  [ngClass]="{
-                    'opacity-50':
-                      student.fieldIdsToValues[columnDetail.fieldId] ===
-                        undefined ||
-                      student.fieldIdsToValues[columnDetail.fieldId] === '',
-                  }"
-                  [attr.field-id]="columnDetail.fieldId"
-                  [attr.student-id]="student.id"
-                  [attr.group-index]="groupIndex()"
-                  [attr.row-index]="rowIndex"
-                  [attr.column-index]="columnIndex"
+            @if (columnIndex === 0) {
+              <div class="flex flex-col justify-around">
+                <mat-icon class="cursor-move opacity-80" cdkDragHandle
+                  >drag_indicator</mat-icon
                 >
-                  {{
-                    student.fieldIdsToValues[columnDetail.fieldId] ||
-                      'Add value'
-                  }}
-                </span>
               </div>
             }
+
+            <input
+              #valueInput
+              [value]="
+                student.fieldIdsToValues[columnDetail.fieldId] === undefined
+                  ? ''
+                  : student.fieldIdsToValues[columnDetail.fieldId]
+              "
+              placeholder="Add value"
+              class="bg-transparent flex-1 text-ellipsis p-1 student-field-input"
+              [type]="columnDetail.type === FieldType.TEXT ? 'text' : 'number'"
+              (change)="saveEdits(student.id, columnDetail.fieldId, $event)"
+            />
           </div>
         </div>
       }

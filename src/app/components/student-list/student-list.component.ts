@@ -9,29 +9,35 @@ import {
   Component,
   computed,
   effect,
-  ElementRef,
   inject,
   input,
-  ViewChild,
+  output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import {
   ClassroomsService,
   FieldType,
   StudentDetail,
+  StudentField,
 } from '@shared/classrooms';
-import { CellSelectionService } from 'app/views/classroom-view/cell-selection.service';
 
 @Component({
   selector: 'app-student-list',
   standalone: true,
-  imports: [CommonModule, DragDropModule, FormsModule, CdkDrag, CdkDropList],
+  imports: [
+    CommonModule,
+    DragDropModule,
+    FormsModule,
+    CdkDrag,
+    CdkDropList,
+    MatIconModule,
+  ],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss',
 })
 export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #cellSelectionService = inject(CellSelectionService);
 
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
@@ -41,10 +47,7 @@ export class StudentListComponent {
   readonly roundedTop = input<boolean>(false);
   readonly groupIndex = input<number>();
 
-  readonly selectedCell = this.#cellSelectionService.selectedCell;
-
-  @ViewChild('valueInput', { read: ElementRef })
-  valueInput?: ElementRef<HTMLInputElement>;
+  readonly studentFieldUpdated = output<StudentField>();
 
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
@@ -55,65 +58,22 @@ export class StudentListComponent {
 
   readonly FieldType = FieldType;
 
-  editCellValue = '';
   editingStudents: StudentDetail[] = [];
 
   constructor() {
     effect(() => {
       this.editingStudents = this.studentDetails() || [];
-      this.editCellValue = this.#cellSelectionService.editCellValue() || '';
-    });
-    effect(() => {
-      if (this.selectedCell()) {
-        setTimeout(() => {
-          this.valueInput?.nativeElement.focus();
-        });
-      }
     });
   }
 
-  startEditing(
-    value: string,
-    type: FieldType,
-    rowIndex: number,
-    columnIndex: number
-  ) {
-    this.#cellSelectionService.setEditCellValue(value);
-    this.#cellSelectionService.setEditCellDetails({
-      type,
-      rowIndex,
-      columnIndex,
-      groupIndex: this.groupIndex()!,
-    });
-  }
-
-  onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-    }
-  }
-
-  saveEdits(originalValue: string, selectNextCell = false) {
-    const classroomId = this.classroomId();
-    const selectedCell = this.selectedCell();
-
-    if (
-      classroomId &&
-      selectedCell?.studentId !== undefined &&
-      selectedCell?.fieldId !== undefined &&
-      this.editCellValue !== undefined &&
-      this.editCellValue !== originalValue
-    ) {
-      this.#classroomsService.upsertStudentField(
-        classroomId,
-        selectedCell.studentId,
-        selectedCell.fieldId,
-        this.editCellValue
-      );
-    }
-    selectNextCell
-      ? setTimeout(() => this.#cellSelectionService.selectRightCell())
-      : this.#cellSelectionService.unselectCell();
+  saveEdits(studentId: string, fieldId: string, event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    const studentField: StudentField = {
+      studentId,
+      fieldId,
+      value,
+    };
+    this.studentFieldUpdated.emit(studentField);
   }
 
   drop(event: CdkDragDrop<StudentDetail[]>) {

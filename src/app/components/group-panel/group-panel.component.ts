@@ -6,10 +6,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ClassroomsService, FieldType, GroupDetail } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  GroupDetail,
+  StudentField,
+} from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
-import { Cell } from 'app/models/cell';
 
 @Component({
   selector: 'app-group-panel',
@@ -38,6 +41,7 @@ export class GroupPanelComponent {
   readonly groupDeleted = output<void>();
   readonly studentCreated = output<void>();
   readonly labelUpdated = output<string>();
+  readonly studentFieldUpdated = output<StudentField>();
 
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
   readonly studentsInGroup = computed(() =>
@@ -71,5 +75,9 @@ export class GroupPanelComponent {
   updateLabel(event: Event) {
     const label = (event.target as HTMLInputElement)?.value;
     this.labelUpdated.emit(label);
+  }
+
+  updateStudentField(studentField: StudentField) {
+    this.studentFieldUpdated.emit(studentField);
   }
 }

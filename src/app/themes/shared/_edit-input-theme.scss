@@ -2,16 +2,10 @@
 @use '@angular/material' as mat;
 
 @mixin color($theme) {
-  .editing-input {
-    border: 1px solid mat.get-theme-color($theme, primary, 60) !important;
-
+  .student-field-input {
     &:focus {
       outline: 3px solid mat.get-theme-color($theme, primary, 80) !important;
     }
-  }
-
-  .selecting-input {
-    border: 1px solid mat.get-theme-color($theme, primary, 60) !important;
   }
 }
 

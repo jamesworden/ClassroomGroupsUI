@@ -23,6 +23,7 @@ import {
   PatchConfigurationResponse,
   PatchFieldResponse,
   PatchGroupResponse,
+  StudentField,
   UpsertStudentFieldResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
@@ -863,18 +864,13 @@ export class ClassroomsService {
       .subscribe();
   }
 
-  public upsertStudentField(
-    classroomId: string,
-    studentId: string,
-    fieldId: string,
-    value: string
-  ) {
+  public upsertStudentField(classroomId: string, studentField: StudentField) {
     const getUpdateStrategy = (value: string) => (draft: ClassroomsState) => {
       draft.configurationDetails.forEach((configurationDetail) => {
         configurationDetail.groupDetails.forEach((groupDetail) => {
           groupDetail.studentDetails.forEach((studentDetail) => {
-            if (studentDetail.id === studentId) {
-              studentDetail.fieldIdsToValues[fieldId] = value;
+            if (studentDetail.id === studentField.studentId) {
+              studentDetail.fieldIdsToValues[studentField.fieldId] = value;
             }
           });
         });
@@ -882,12 +878,12 @@ export class ClassroomsService {
     };
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroomId);
-      getUpdateStrategy(value)(draft);
+      getUpdateStrategy(studentField.value)(draft);
     });
     return this.#httpClient
       .put<UpsertStudentFieldResponse>(
-        `/api/v1/classrooms/${classroomId}/students/${studentId}/fields/${fieldId}`,
-        { value },
+        `/api/v1/classrooms/${classroomId}/students/${studentField.studentId}/fields/${studentField.fieldId}`,
+        { value: studentField.value },
         {
           withCredentials: true,
         }

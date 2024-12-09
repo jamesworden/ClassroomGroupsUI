@@ -58,7 +58,7 @@ export interface Student {
 export interface StudentField {
   studentId: string;
   fieldId: string;
-  value: number | string;
+  value: string;
 }
 
 export interface StudentGroup {
