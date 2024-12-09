@@ -38,7 +38,9 @@
                   ? ''
                   : student.fieldIdsToValues[columnDetail.fieldId]
               "
-              placeholder="Add value"
+              [placeholder]="
+                columnDetail.type === FieldType.TEXT ? 'Add text' : 'Add number'
+              "
               class="bg-transparent flex-1 text-ellipsis p-1 student-field-input"
               [type]="columnDetail.type === FieldType.TEXT ? 'text' : 'number'"
               (change)="saveEdits(student.id, columnDetail.fieldId, $event)"
