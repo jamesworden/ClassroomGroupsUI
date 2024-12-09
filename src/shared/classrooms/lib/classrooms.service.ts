@@ -941,7 +941,7 @@ export class ClassroomsService {
               );
             });
           });
-          this.#matSnackBar.open('Student deleted', undefined, {
+          this.#matSnackBar.open('Deleted student', undefined, {
             duration: 3000,
           });
         }),
