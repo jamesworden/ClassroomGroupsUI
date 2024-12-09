@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import {
   ClassroomsService,
   GroupDetail,
+  StudentDetail,
   StudentField,
 } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
@@ -42,6 +43,7 @@ export class GroupPanelComponent {
   readonly studentCreated = output<void>();
   readonly labelUpdated = output<string>();
   readonly studentFieldUpdated = output<StudentField>();
+  readonly studentDeleted = output<StudentDetail>();
 
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
   readonly studentsInGroup = computed(() =>
@@ -79,5 +81,9 @@ export class GroupPanelComponent {
 
   updateStudentField(studentField: StudentField) {
     this.studentFieldUpdated.emit(studentField);
+  }
+
+  deleteStudent(studentDetail: StudentDetail) {
+    this.studentDeleted.emit(studentDetail);
   }
 }

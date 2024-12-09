@@ -74,3 +74,8 @@ export interface UpsertStudentFieldResponse {
 export interface PatchFieldResponse {
   updatedFieldDetail: FieldDetail;
 }
+
+export interface DeleteStudentResponse {
+  deletedStudent: StudentDetail;
+  updatedGroups: GroupDetail[];
+}

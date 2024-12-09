@@ -28,6 +28,7 @@ import {
   ClassroomsService,
   Group,
   GroupDetail,
+  StudentDetail,
   StudentField,
 } from '@shared/classrooms';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
@@ -389,5 +390,13 @@ export class ClassroomViewComponent {
       return;
     }
     this.#classroomsService.upsertStudentField(classroomId, studentField);
+  }
+
+  deleteStudent(studentDetail: StudentDetail) {
+    const classroomId = this.classroomId();
+    if (!classroomId) {
+      return;
+    }
+    this.#classroomsService.deleteStudent(classroomId, studentDetail.id);
   }
 }

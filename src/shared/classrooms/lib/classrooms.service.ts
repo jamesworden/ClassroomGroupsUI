@@ -13,6 +13,7 @@ import {
   DeletedClassroomResponse,
   DeletedConfigurationResponse,
   DeleteGroupResponse,
+  DeleteStudentResponse,
   FieldDetail,
   FieldType,
   GetClassroomDetailsResponse,
@@ -23,6 +24,7 @@ import {
   PatchConfigurationResponse,
   PatchFieldResponse,
   PatchGroupResponse,
+  StudentDetail,
   StudentField,
   UpsertStudentFieldResponse,
 } from './models';
@@ -905,6 +907,49 @@ export class ClassroomsService {
             draft.updatingClassroomIds.delete(classroomId);
           });
         }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public deleteStudent(classroomId: string, studentId: string) {
+    this.#httpClient
+      .delete<DeleteStudentResponse>(
+        `/api/v1/classrooms/${classroomId}/students/${studentId}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ deletedStudent, updatedGroups }) => {
+          console.log('[Deleted Student]', deletedStudent);
+          console.log('[Updated Groups]', updatedGroups);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((configuration) => {
+              configuration.groupDetails = configuration.groupDetails.map(
+                (groupDetail) => {
+                  for (const updatedGroup of updatedGroups) {
+                    if (updatedGroup.id === groupDetail.id) {
+                      return updatedGroup;
+                    }
+                  }
+                  return groupDetail;
+                }
+              );
+            });
+          });
+          this.#matSnackBar.open('Student deleted', undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Delete Student Failed]', error);
+          this.#matSnackBar.open('Error deleting student', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        map((res) => res?.deletedStudent),
         take(1)
       )
       .subscribe();

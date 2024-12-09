@@ -1,0 +1,59 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin sharedStyles() {
+  .context-menu {
+    display: inline-flex;
+    flex-direction: column;
+    min-width: 180px;
+    max-width: 280px;
+    padding: 6px 0;
+    padding-right: 3px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+
+    .context-menu-item {
+      background-color: transparent;
+      cursor: pointer;
+      border: none;
+
+      user-select: none;
+      min-width: 64px;
+      line-height: 36px;
+      padding: 0 16px;
+
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      justify-content: space-between;
+      flex: 1;
+    }
+  }
+}
+
+@mixin lightColor($theme) {
+  .context-menu {
+    background-color: mat.get-theme-color($theme, neutral, 90);
+  }
+}
+
+@mixin lightTheme($theme) {
+  @include sharedStyles();
+
+  @if mat.theme-has($theme, color) {
+    @include lightColor($theme);
+  }
+}
+
+@mixin darkColor($theme) {
+  .context-menu {
+    background-color: mat.get-theme-color($theme, neutral, 20);
+  }
+}
+
+@mixin darkTheme($theme) {
+  @include sharedStyles();
+
+  @if mat.theme-has($theme, color) {
+    @include darkColor($theme);
+  }
+}

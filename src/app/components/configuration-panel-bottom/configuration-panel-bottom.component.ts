@@ -1,5 +1,9 @@
 import { Component, computed, inject, input, output } from '@angular/core';
-import { ClassroomsService, StudentField } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  StudentDetail,
+  StudentField,
+} from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
 import { CommonModule } from '@angular/common';
@@ -19,6 +23,7 @@ export class ConfigurationPanelBottomComponent {
   readonly configurationId = input<string>();
 
   readonly studentFieldUpdated = output<StudentField>();
+  readonly studentDeleted = output<StudentDetail>();
 
   readonly defaultGroup = computed(() =>
     this.#classroomsService.select.defaultGroup(this.configurationId())()
@@ -40,5 +45,9 @@ export class ConfigurationPanelBottomComponent {
 
   updateStudentField(studentField: StudentField) {
     this.studentFieldUpdated.emit(studentField);
+  }
+
+  deleteStudent(studentDetail: StudentDetail) {
+    this.studentDeleted.emit(studentDetail);
   }
 }

@@ -15,7 +15,20 @@
     <div
       class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 flex"
       cdkDrag
+      [cdkContextMenuTriggerFor]="studentMenu"
     >
+      <ng-template #studentMenu>
+        <div class="context-menu" cdkMenu>
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="deleteStudent(student)"
+          >
+            <mat-icon>person_remove</mat-icon> <span>Delete student</span>
+          </button>
+        </div>
+      </ng-template>
+
       @for (
         columnDetail of columnDetails();
         track columnIndex;

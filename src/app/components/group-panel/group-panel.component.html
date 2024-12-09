@@ -55,6 +55,7 @@
     [studentDetails]="groupDetail()?.studentDetails"
     [groupIndex]="groupIndex()"
     (studentFieldUpdated)="updateStudentField($event)"
+    (studentDeleted)="deleteStudent($event)"
   ></app-student-list>
 
   @if (anyAverageScore()) {

@@ -13,6 +13,7 @@
       [roundedBottom]="true"
       [groupIndex]="0"
       (studentFieldUpdated)="updateStudentField($event)"
+      (studentDeleted)="deleteStudent($event)"
     ></app-student-list>
   }
   @if (anyAverageScore()) {
