@@ -4,77 +4,61 @@
   [cdkDropListConnectedTo]="groupIds()"
   class="grid-row student-list overflow-hidden w-full"
   [ngClass]="{
-    'min-h-12 border-4 border-dashed border-gray-300':
+    'min-h-8 border-4 border-dashed border-gray-300':
       editingStudents.length <= 0,
     'rounded-b-md': roundedBottom(),
     'rounded-t-md': roundedTop(),
   }"
   (cdkDropListDropped)="drop($event)"
 >
-  @for (student of editingStudents; track student.id) {
+  @for (student of editingStudents; track student.id; let rowIndex = $index) {
     <div
       class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 flex"
       cdkDrag
+      [cdkDragData]="student"
+      [cdkContextMenuTriggerFor]="studentMenu"
     >
-      @for (columnDetail of columnDetails(); track i; let i = $index) {
+      <ng-template #studentMenu>
+        <div class="context-menu" cdkMenu>
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="deleteStudent(student)"
+          >
+            <mat-icon>person_remove</mat-icon> <span>Delete student</span>
+          </button>
+        </div>
+      </ng-template>
+
+      @for (
+        columnDetail of columnDetails();
+        track columnIndex;
+        let columnIndex = $index
+      ) {
         <div class="flex-1">
           <div class="flex">
-            @if (
-              selectedCell()?.fieldId === columnDetail.fieldId &&
-              selectedCell()?.studentId === student.id &&
-              selectedCell()?.isEditing
-            ) {
-              <input
-                (mousedown)="$event.stopPropagation()"
-                #valueInput
-                type="text"
-                [(ngModel)]="editCellValue"
-                placeholder="Add value"
-                class="bg-transparent flex-1 text-ellipsis editing-input p-1"
-                (change)="saveEdits(); $event.stopPropagation()"
-                [attr.field-id]="columnDetail.fieldId"
-                [attr.student-id]="student.id"
-              />
-            } @else {
-              <div
-                class="cursor-auto flex-1 p-1 flex"
-                [ngClass]="{
-                  'selecting-input':
-                    selectedCell()?.fieldId === columnDetail.fieldId &&
-                    selectedCell()?.studentId === student.id &&
-                    !selectedCell()?.isEditing,
-                  'border border-transparent': !(
-                    selectedCell()?.fieldId === columnDetail.fieldId &&
-                    selectedCell()?.studentId === student.id &&
-                    !selectedCell()?.isEditing
-                  ),
-                }"
-                (click)="
-                  startEditing(
-                    columnDetail.fieldId,
-                    student.fieldIdsToValues[columnDetail.fieldId],
-                    student.id
-                  )
-                "
-              >
-                <span
-                  class="flex-1"
-                  [attr.field-id]="columnDetail.fieldId"
-                  [attr.student-id]="student.id"
-                  [ngClass]="{
-                    'opacity-50':
-                      student.fieldIdsToValues[columnDetail.fieldId] ===
-                        undefined ||
-                      student.fieldIdsToValues[columnDetail.fieldId] === '',
-                  }"
+            @if (columnIndex === 0) {
+              <div class="flex flex-col justify-around">
+                <mat-icon class="cursor-move opacity-80" cdkDragHandle
+                  >drag_indicator</mat-icon
                 >
-                  {{
-                    student.fieldIdsToValues[columnDetail.fieldId] ||
-                      'Add value'
-                  }}
-                </span>
               </div>
             }
+
+            <input
+              #valueInput
+              [value]="
+                student.fieldIdsToValues[columnDetail.fieldId] === undefined
+                  ? ''
+                  : student.fieldIdsToValues[columnDetail.fieldId]
+              "
+              [placeholder]="
+                columnDetail.type === FieldType.TEXT ? 'Add text' : 'Add number'
+              "
+              class="bg-transparent flex-1 text-ellipsis p-1 student-field-input"
+              [type]="columnDetail.type === FieldType.TEXT ? 'text' : 'number'"
+              (change)="saveEdits(student.id, columnDetail.fieldId, $event)"
+            />
           </div>
         </div>
       }

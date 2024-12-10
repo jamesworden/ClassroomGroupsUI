@@ -9,26 +9,40 @@ import {
   Component,
   computed,
   effect,
-  ElementRef,
   inject,
   input,
-  ViewChild,
+  output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ClassroomsService, StudentDetail } from '@shared/classrooms';
-import { Cell } from 'app/models/cell';
-import { CellSelectionService } from 'app/views/classroom-view/cell-selection.service';
+import { MatIconModule } from '@angular/material/icon';
+import {
+  ClassroomsService,
+  FieldType,
+  StudentDetail,
+  StudentField,
+} from '@shared/classrooms';
+import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
+import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 
 @Component({
   selector: 'app-student-list',
   standalone: true,
-  imports: [CommonModule, DragDropModule, FormsModule, CdkDrag, CdkDropList],
+  imports: [
+    CommonModule,
+    DragDropModule,
+    FormsModule,
+    CdkDrag,
+    CdkDropList,
+    MatIconModule,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+  ],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss',
 })
 export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #cellSelectionService = inject(CellSelectionService);
 
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
@@ -36,10 +50,11 @@ export class StudentListComponent {
   readonly studentDetails = input<StudentDetail[]>();
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
-  readonly selectedCell = input<Cell>();
+  readonly groupIndex = input<number>();
 
-  @ViewChild('valueInput', { read: ElementRef })
-  valueInput?: ElementRef<HTMLInputElement>;
+  readonly studentFieldUpdated = output<StudentField>();
+  readonly studentDeleted = output<StudentDetail>();
+  readonly studentPositionUpdated = output<MoveStudentDetail>();
 
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
@@ -48,48 +63,44 @@ export class StudentListComponent {
     this.#classroomsService.select.columnDetails(this.configurationId())
   );
 
-  editCellValue = '';
+  readonly FieldType = FieldType;
 
   editingStudents: StudentDetail[] = [];
 
   constructor() {
     effect(() => {
-      this.editingStudents = this.studentDetails() ?? [];
-      this.editCellValue = this.#cellSelectionService.editCellValue() || '';
-    });
-    effect(() => {
-      if (this.selectedCell()) {
-        setTimeout(() => {
-          this.valueInput?.nativeElement.focus();
-        });
-      }
+      this.editingStudents = this.studentDetails() || [];
     });
   }
 
-  startEditing(fieldId: string, value: string, studentId: string) {
-    this.#cellSelectionService.setEditCellValue(value);
-  }
-
-  saveEdits() {
-    const classroomId = this.classroomId();
-    const selectedCell = this.selectedCell();
-    if (
-      classroomId &&
-      selectedCell?.studentId !== undefined &&
-      selectedCell?.fieldId !== undefined &&
-      this.editCellValue !== undefined
-    ) {
-      this.#classroomsService.upsertStudentField(
-        classroomId,
-        selectedCell.studentId,
-        selectedCell.fieldId,
-        this.editCellValue
-      );
-    }
-    this.#cellSelectionService.unselectCell();
+  saveEdits(studentId: string, fieldId: string, event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    const studentField: StudentField = {
+      studentId,
+      fieldId,
+      value,
+    };
+    this.studentFieldUpdated.emit(studentField);
   }
 
   drop(event: CdkDragDrop<StudentDetail[]>) {
-    // TODO
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (!classroomId || !configurationId) {
+      return;
+    }
+    const studentDetail = event.item.data as StudentDetail;
+    const updatedStudentPosition: MoveStudentDetail = {
+      prevIndex: event.previousIndex,
+      prevGroupId: event.previousContainer.id,
+      currIndex: event.currentIndex,
+      currGroupId: event.container.id,
+      studentId: studentDetail.id,
+    };
+    this.studentPositionUpdated.emit(updatedStudentPosition);
+  }
+
+  deleteStudent(studentDetail: StudentDetail) {
+    this.studentDeleted.emit(studentDetail);
   }
 }

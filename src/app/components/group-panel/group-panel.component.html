@@ -18,12 +18,13 @@
           [value]="groupDetail()?.label || ''"
           (change)="updateLabel($event)"
           placeholder="Untitled"
+          tabindex="-1"
         />
       </div>
     </div>
 
     <div class="flex gap-x-2">
-      <button mat-icon-button (click)="createStudent()">
+      <button mat-icon-button (click)="createStudent()" tabindex="-1">
         <mat-icon>person_add</mat-icon>
       </button>
 
@@ -46,13 +47,16 @@
   </div>
 
   <app-student-list
-    [selectedCell]="selectedCell()"
     [roundedTop]="true"
     [roundedBottom]="true"
     [classroomId]="classroomId()"
     [configurationId]="groupDetail()?.configurationId"
     [groupId]="groupDetail()?.id"
     [studentDetails]="groupDetail()?.studentDetails"
+    [groupIndex]="groupIndex()"
+    (studentFieldUpdated)="updateStudentField($event)"
+    (studentDeleted)="deleteStudent($event)"
+    (studentPositionUpdated)="updateStudentPosition($event)"
   ></app-student-list>
 
   @if (anyAverageScore()) {

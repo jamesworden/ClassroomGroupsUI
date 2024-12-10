@@ -4,16 +4,10 @@ import {
   CdkDragHandle,
   CdkDropList,
   moveItemInArray,
+  transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  HostListener,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -32,8 +26,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
-import { ClassroomsService, Group, GroupDetail } from '@shared/classrooms';
-import { GoogleSignInButtonComponent } from '@ui-inputs';
+import {
+  ClassroomsService,
+  Group,
+  GroupDetail,
+  StudentDetail,
+  StudentField,
+} from '@shared/classrooms';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
 import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
 import { SidebarComponent } from 'app/components/sidebar/sidebar.component';
@@ -53,7 +52,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
 import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
 import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
-import { CellSelectionService } from './cell-selection.service';
+import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -71,7 +70,6 @@ interface ConfigPanelSettings {
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
     MatButtonModule,
     MatSidenavModule,
     SidebarComponent,
@@ -87,7 +85,6 @@ interface ConfigPanelSettings {
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    GoogleSignInButtonComponent,
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ConfigurationPanelBottomComponent,
@@ -105,7 +102,6 @@ export class ClassroomViewComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #activatedRoute = inject(ActivatedRoute);
   readonly #router = inject(Router);
-  readonly #cellSelectionService = inject(CellSelectionService);
 
   readonly theme = this.#themeService.theme;
   readonly isResizing = this.#resizableService.isResizing;
@@ -144,8 +140,8 @@ export class ClassroomViewComponent {
     )();
     return detail ? getConfigurationFromDetail(detail) : undefined;
   });
-  readonly groupDetails = computed(() =>
-    this.#classroomsService.select.groupDetails(
+  readonly listGroupDetails = computed(() =>
+    this.#classroomsService.select.listGroupDetails(
       this.selectedConfigurationId()
     )()
   );
@@ -168,6 +164,11 @@ export class ClassroomViewComponent {
   readonly classroomDescription = computed(
     () => this.classroom()?.description ?? ''
   );
+  readonly defaultGroup = computed(() =>
+    this.#classroomsService.select.defaultGroup(
+      this.selectedConfigurationId()
+    )()
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -177,14 +178,16 @@ export class ClassroomViewComponent {
     isOpen: true,
   });
   readonly classroomViewInitialized$ = new Subject<void>();
-  readonly selectedCell = this.#cellSelectionService.selectedCell;
 
+  editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
 
   constructor() {
     this.loadConfigPanelSettings();
 
-    effect(() => (this.editingGroups = this.groupDetails()));
+    effect(() => (this.editingGroups = this.listGroupDetails()));
+    effect(() => (this.editingDefaultGroup = this.defaultGroup()));
+
     effect(() => {
       localStorage.setItem(
         StorageKeys.CONFIG_PANEL,
@@ -308,16 +311,23 @@ export class ClassroomViewComponent {
     }
   }
 
-  drop(event: CdkDragDrop<Group[]>) {
-    // moveItemInArray(
-    //   this.editingGroups,
-    //   event.previousIndex,
-    //   event.currentIndex
-    // );
-    // this.#classroomsService.updateGroups(
-    //   this.configurationId() ?? '',
-    //   this.editingGroups
-    // );
+  dropGroup(event: CdkDragDrop<Group[]>) {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationDetail()?.id;
+    if (!classroomId || !configurationId) {
+      return;
+    }
+    moveItemInArray(
+      this.editingGroups,
+      event.previousIndex,
+      event.currentIndex
+    );
+    const sortedGroupIds = this.editingGroups.map(({ id }) => id);
+    this.#classroomsService.sortGroups(
+      classroomId,
+      configurationId,
+      sortedGroupIds
+    );
   }
 
   chooseFileToUpload() {
@@ -390,5 +400,87 @@ export class ClassroomViewComponent {
 
   goToClassroomsView() {
     this.#router.navigate(['classrooms']);
+  }
+
+  updateStudentField(studentField: StudentField) {
+    const classroomId = this.classroomId();
+    if (!classroomId) {
+      return;
+    }
+    this.#classroomsService.upsertStudentField(classroomId, studentField);
+  }
+
+  deleteStudent(studentDetail: StudentDetail) {
+    const classroomId = this.classroomId();
+    if (!classroomId) {
+      return;
+    }
+    this.#classroomsService.deleteStudent(classroomId, studentDetail.id);
+  }
+
+  updateStudentPosition(position: MoveStudentDetail) {
+    position.prevGroupId === position.currGroupId
+      ? this.moveStudentInGroup(position)
+      : this.moveStudentToGroup(position);
+  }
+
+  moveStudentInGroup(position: MoveStudentDetail) {
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (!classroomId || !configurationId) {
+      return;
+    }
+
+    const allGroups = this.editingGroups.concat(this.defaultGroup() || []);
+
+    for (const group of allGroups) {
+      if (group.id === position.prevGroupId && group.studentDetails) {
+        moveItemInArray(
+          group.studentDetails,
+          position.prevIndex,
+          position.currIndex
+        );
+      }
+    }
+
+    this.#classroomsService.moveStudent(classroomId, configurationId, position);
+  }
+
+  moveStudentToGroup(position: MoveStudentDetail) {
+    let fromGroup: GroupDetail | undefined;
+    let toGroup: GroupDetail | undefined;
+
+    const allGroups = this.editingGroups.concat(this.defaultGroup() || []);
+
+    for (const group of allGroups) {
+      if (group.id === position.prevGroupId) {
+        fromGroup = group;
+      }
+      if (group.id === position.currGroupId) {
+        toGroup = group;
+      }
+    }
+
+    const fromStudentDetails = fromGroup?.studentDetails;
+    const toStudentDetails = toGroup?.studentDetails;
+
+    if (!fromStudentDetails || !toStudentDetails) {
+      return;
+    }
+
+    transferArrayItem(
+      fromStudentDetails,
+      toStudentDetails,
+      position.prevIndex,
+      position.currIndex
+    );
+
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (!classroomId || !configurationId) {
+      return;
+    }
+
+    this.#classroomsService.moveStudent(classroomId, configurationId, position);
   }
 }

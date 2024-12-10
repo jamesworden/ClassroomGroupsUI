@@ -13,16 +13,20 @@ import {
   DeletedClassroomResponse,
   DeletedConfigurationResponse,
   DeleteGroupResponse,
+  DeleteStudentResponse,
   FieldDetail,
   FieldType,
   GetClassroomDetailsResponse,
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
   GroupDetail,
+  MoveStudentResponse,
   PatchClassroomResponse,
   PatchConfigurationResponse,
   PatchFieldResponse,
   PatchGroupResponse,
+  SortGroupsResponse,
+  StudentField,
   UpsertStudentFieldResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
@@ -38,6 +42,7 @@ import {
 import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { create } from 'mutative';
+import { MoveStudentDetail } from './models/move-student-detail';
 
 class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
@@ -97,6 +102,14 @@ class ClassroomSelectors {
   public readonly groupDetails = (configurationId?: string) =>
     computed(
       () => this.configurationDetail(configurationId)()?.groupDetails ?? []
+    );
+
+  public readonly listGroupDetails = (configurationId?: string) =>
+    computed(() =>
+      this.groupDetails(configurationId)().filter(
+        (g) =>
+          g.id !== this.configurationDetail(configurationId)()?.defaultGroupId
+      )
     );
 
   public readonly groupIds = (configurationId?: string) =>
@@ -863,18 +876,13 @@ export class ClassroomsService {
       .subscribe();
   }
 
-  public upsertStudentField(
-    classroomId: string,
-    studentId: string,
-    fieldId: string,
-    value: string
-  ) {
+  public upsertStudentField(classroomId: string, studentField: StudentField) {
     const getUpdateStrategy = (value: string) => (draft: ClassroomsState) => {
       draft.configurationDetails.forEach((configurationDetail) => {
         configurationDetail.groupDetails.forEach((groupDetail) => {
           groupDetail.studentDetails.forEach((studentDetail) => {
-            if (studentDetail.id === studentId) {
-              studentDetail.fieldIdsToValues[fieldId] = value;
+            if (studentDetail.id === studentField.studentId) {
+              studentDetail.fieldIdsToValues[studentField.fieldId] = value;
             }
           });
         });
@@ -882,12 +890,12 @@ export class ClassroomsService {
     };
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroomId);
-      getUpdateStrategy(value)(draft);
+      getUpdateStrategy(studentField.value)(draft);
     });
     return this.#httpClient
       .put<UpsertStudentFieldResponse>(
-        `/api/v1/classrooms/${classroomId}/students/${studentId}/fields/${fieldId}`,
-        { value },
+        `/api/v1/classrooms/${classroomId}/students/${studentField.studentId}/fields/${studentField.fieldId}`,
+        { value: studentField.value },
         {
           withCredentials: true,
         }
@@ -900,6 +908,150 @@ export class ClassroomsService {
         catchError((error) => {
           console.log('[Upsert Student Field Failed]', error);
           this.#matSnackBar.open('Error upserting student field', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public deleteStudent(classroomId: string, studentId: string) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
+    this.#httpClient
+      .delete<DeleteStudentResponse>(
+        `/api/v1/classrooms/${classroomId}/students/${studentId}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ deletedStudent, updatedGroupDetails: updatedGroups }) => {
+          console.log('[Deleted Student]', deletedStudent);
+          console.log('[Updated Groups]', updatedGroups);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((configuration) => {
+              configuration.groupDetails = configuration.groupDetails.map(
+                (groupDetail) => {
+                  for (const updatedGroup of updatedGroups) {
+                    if (updatedGroup.id === groupDetail.id) {
+                      return updatedGroup;
+                    }
+                  }
+                  return groupDetail;
+                }
+              );
+            });
+          });
+          this.#matSnackBar.open('Deleted student', undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Delete Student Failed]', error);
+          this.#matSnackBar.open('Error deleting student', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        map((res) => res?.deletedStudent),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  sortGroups(
+    classroomId: string,
+    configurationId: string,
+    sortedGroupIds: string[]
+  ) {
+    return this.#httpClient
+      .post<SortGroupsResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/sort-groups`,
+        {
+          sortedGroupIds,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ sortedGroupDetails }) => {
+          console.log('[Sorted Groups]', sortedGroupDetails);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                detail.groupDetails = sortedGroupDetails;
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Sort Groups Failed]', error);
+          this.#matSnackBar.open('Error sorting groups', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  moveStudent(
+    classroomId: string,
+    configurationId: string,
+    moveStudentDetail: MoveStudentDetail
+  ) {
+    return this.#httpClient
+      .post<MoveStudentResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/move-student`,
+        {
+          moveStudentDetail,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedGroupDetails }) => {
+          console.log('[Updated Group Details]', updatedGroupDetails);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                detail.groupDetails = detail.groupDetails.map((groupDetail) => {
+                  for (const updatedGroupDetail of updatedGroupDetails) {
+                    if (groupDetail.id === updatedGroupDetail.id) {
+                      return updatedGroupDetail;
+                    }
+                  }
+                  return groupDetail;
+                });
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Sort Students Failed]', error);
+          this.#matSnackBar.open('Error sorting students', undefined, {
             duration: 3000,
           });
           return of(null);

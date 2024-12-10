@@ -38,7 +38,6 @@ import {
   ColumnDetail,
   ConfigurationDetail,
 } from '@shared/classrooms';
-import { StudentListComponent } from '../student-list/student-list.component';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -58,7 +57,6 @@ import { StudentListComponent } from '../student-list/student-list.component';
     MatBadgeModule,
     CommonModule,
     MatTooltipModule,
-    StudentListComponent,
   ],
   templateUrl: './configuration-panel-top.component.html',
   styleUrl: './configuration-panel-top.component.scss',

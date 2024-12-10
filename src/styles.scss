@@ -2,6 +2,7 @@
 
 @use './app/components/sidebar/_sidebar-theme' as sidebar;
 @use './app/themes/shared/_panel-theme' as panel;
+@use './app/themes/shared/_context-menu-theme' as contextMenu;
 @use './app/themes/shared/_edit-input-theme' as editInput;
 @use './app/directives/_resizable-theme' as resizable;
 @use './app/material-utilties' as materialUtilities;
@@ -39,6 +40,7 @@ html {
   @include editInput.theme($light-theme);
   @include resizable.theme($light-theme);
   @include materialUtilities.theme($light-theme);
+  @include contextMenu.lightTheme($light-theme);
 }
 .dark {
   @include mat.all-component-themes($dark-theme);
@@ -47,6 +49,7 @@ html {
   @include editInput.theme($dark-theme);
   @include resizable.theme($dark-theme);
   @include materialUtilities.theme($dark-theme);
+  @include contextMenu.darkTheme($dark-theme);
 }
 
 @tailwind base;

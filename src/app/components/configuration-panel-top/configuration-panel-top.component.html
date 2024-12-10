@@ -87,7 +87,7 @@
       >
         @for (column of columns; track column.id) {
           <div
-            class="draggable-field grid-row p-2 border-r border-neutral-200 dark:border-neutral-600"
+            class="draggable-field grid-row p-2 border-r border-neutral-200 dark:border-neutral-600 rounded-t-md"
             cdkDrag
             [matBadge]="enabledColumnBadges()[column.id]"
             matBadgeOverlap="true"
