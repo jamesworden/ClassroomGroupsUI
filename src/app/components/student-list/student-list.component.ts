@@ -22,6 +22,7 @@ import {
   StudentField,
 } from '@shared/classrooms';
 import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
+import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 
 @Component({
   selector: 'app-student-list',
@@ -53,6 +54,7 @@ export class StudentListComponent {
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();
+  readonly studentPositionUpdated = output<MoveStudentDetail>();
 
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
@@ -82,7 +84,20 @@ export class StudentListComponent {
   }
 
   drop(event: CdkDragDrop<StudentDetail[]>) {
-    // TODO
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (!classroomId || !configurationId) {
+      return;
+    }
+    const studentDetail = event.item.data as StudentDetail;
+    const updatedStudentPosition: MoveStudentDetail = {
+      prevIndex: event.previousIndex,
+      prevGroupId: event.previousContainer.id,
+      currIndex: event.currentIndex,
+      currGroupId: event.container.id,
+      studentId: studentDetail.id,
+    };
+    this.studentPositionUpdated.emit(updatedStudentPosition);
   }
 
   deleteStudent(studentDetail: StudentDetail) {

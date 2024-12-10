@@ -14,6 +14,7 @@ import {
 } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
+import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 
 @Component({
   selector: 'app-group-panel',
@@ -44,6 +45,7 @@ export class GroupPanelComponent {
   readonly labelUpdated = output<string>();
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();
+  readonly studentPositionUpdated = output<MoveStudentDetail>();
 
   readonly students = computed(() => this.groupDetail()?.studentDetails ?? []);
   readonly studentsInGroup = computed(() =>
@@ -85,5 +87,9 @@ export class GroupPanelComponent {
 
   deleteStudent(studentDetail: StudentDetail) {
     this.studentDeleted.emit(studentDetail);
+  }
+
+  updateStudentPosition(studentPosition: MoveStudentDetail) {
+    this.studentPositionUpdated.emit(studentPosition);
   }
 }

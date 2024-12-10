@@ -1,6 +1,7 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import {
   ClassroomsService,
+  GroupDetail,
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
@@ -8,6 +9,7 @@ import { StudentListComponent } from '../student-list/student-list.component';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 
 @Component({
   selector: 'app-configuration-panel-bottom',
@@ -21,13 +23,12 @@ export class ConfigurationPanelBottomComponent {
 
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
+  readonly defaultGroup = input<GroupDetail>();
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();
+  readonly studentPositionUpdated = output<MoveStudentDetail>();
 
-  readonly defaultGroup = computed(() =>
-    this.#classroomsService.select.defaultGroup(this.configurationId())()
-  );
   readonly columnDetails = computed(() =>
     this.#classroomsService.select.columnDetails(
       this.defaultGroup()?.configurationId
@@ -49,5 +50,9 @@ export class ConfigurationPanelBottomComponent {
 
   deleteStudent(studentDetail: StudentDetail) {
     this.studentDeleted.emit(studentDetail);
+  }
+
+  updateStudentPosition(studentPosition: MoveStudentDetail) {
+    this.studentPositionUpdated.emit(studentPosition);
   }
 }

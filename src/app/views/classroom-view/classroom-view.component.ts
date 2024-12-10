@@ -4,6 +4,7 @@ import {
   CdkDragHandle,
   CdkDropList,
   moveItemInArray,
+  transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
@@ -51,6 +52,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
 import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
 import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
+import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -162,6 +164,11 @@ export class ClassroomViewComponent {
   readonly classroomDescription = computed(
     () => this.classroom()?.description ?? ''
   );
+  readonly defaultGroup = computed(() =>
+    this.#classroomsService.select.defaultGroup(
+      this.selectedConfigurationId()
+    )()
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -172,12 +179,15 @@ export class ClassroomViewComponent {
   });
   readonly classroomViewInitialized$ = new Subject<void>();
 
+  editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
 
   constructor() {
     this.loadConfigPanelSettings();
 
     effect(() => (this.editingGroups = this.listGroupDetails()));
+    effect(() => (this.editingDefaultGroup = this.defaultGroup()));
+
     effect(() => {
       localStorage.setItem(
         StorageKeys.CONFIG_PANEL,
@@ -406,5 +416,71 @@ export class ClassroomViewComponent {
       return;
     }
     this.#classroomsService.deleteStudent(classroomId, studentDetail.id);
+  }
+
+  updateStudentPosition(position: MoveStudentDetail) {
+    position.prevGroupId === position.currGroupId
+      ? this.moveStudentInGroup(position)
+      : this.moveStudentToGroup(position);
+  }
+
+  moveStudentInGroup(position: MoveStudentDetail) {
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (!classroomId || !configurationId) {
+      return;
+    }
+
+    const allGroups = this.editingGroups.concat(this.defaultGroup() || []);
+
+    for (const group of allGroups) {
+      if (group.id === position.prevGroupId && group.studentDetails) {
+        moveItemInArray(
+          group.studentDetails,
+          position.prevIndex,
+          position.currIndex
+        );
+      }
+    }
+
+    this.#classroomsService.moveStudent(classroomId, configurationId, position);
+  }
+
+  moveStudentToGroup(position: MoveStudentDetail) {
+    let fromGroup: GroupDetail | undefined;
+    let toGroup: GroupDetail | undefined;
+
+    const allGroups = this.editingGroups.concat(this.defaultGroup() || []);
+
+    for (const group of allGroups) {
+      if (group.id === position.prevGroupId) {
+        fromGroup = group;
+      }
+      if (group.id === position.currGroupId) {
+        toGroup = group;
+      }
+    }
+
+    const fromStudentDetails = fromGroup?.studentDetails;
+    const toStudentDetails = toGroup?.studentDetails;
+
+    if (!fromStudentDetails || !toStudentDetails) {
+      return;
+    }
+
+    transferArrayItem(
+      fromStudentDetails,
+      toStudentDetails,
+      position.prevIndex,
+      position.currIndex
+    );
+
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (!classroomId || !configurationId) {
+      return;
+    }
+
+    this.#classroomsService.moveStudent(classroomId, configurationId, position);
   }
 }

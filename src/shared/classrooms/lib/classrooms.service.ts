@@ -20,6 +20,7 @@ import {
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
   GroupDetail,
+  MoveStudentResponse,
   PatchClassroomResponse,
   PatchConfigurationResponse,
   PatchFieldResponse,
@@ -41,6 +42,7 @@ import {
 import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { create } from 'mutative';
+import { MoveStudentDetail } from './models/move-student-detail';
 
 class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
@@ -1000,6 +1002,56 @@ export class ClassroomsService {
         catchError((error) => {
           console.log('[Sort Groups Failed]', error);
           this.#matSnackBar.open('Error sorting groups', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  moveStudent(
+    classroomId: string,
+    configurationId: string,
+    moveStudentDetail: MoveStudentDetail
+  ) {
+    return this.#httpClient
+      .post<MoveStudentResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/move-student`,
+        {
+          moveStudentDetail,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedGroupDetails }) => {
+          console.log('[Updated Group Details]', updatedGroupDetails);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                detail.groupDetails = detail.groupDetails.map((groupDetail) => {
+                  for (const updatedGroupDetail of updatedGroupDetails) {
+                    if (groupDetail.id === updatedGroupDetail.id) {
+                      return updatedGroupDetail;
+                    }
+                  }
+                  return groupDetail;
+                });
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Sort Students Failed]', error);
+          this.#matSnackBar.open('Error sorting students', undefined, {
             duration: 3000,
           });
           return of(null);

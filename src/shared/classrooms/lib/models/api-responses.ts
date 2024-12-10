@@ -83,3 +83,7 @@ export interface DeleteStudentResponse {
 export interface SortGroupsResponse {
   sortedGroupDetails: GroupDetail[];
 }
+
+export interface MoveStudentResponse {
+  updatedGroupDetails: GroupDetail[];
+}
