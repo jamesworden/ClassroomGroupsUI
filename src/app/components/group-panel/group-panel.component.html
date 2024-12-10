@@ -27,22 +27,9 @@
       <button mat-icon-button (click)="createStudent()" tabindex="-1">
         <mat-icon>person_add</mat-icon>
       </button>
-
-      <div
-        [matTooltip]="
-          studentsInGroup().length > 0
-            ? 'You can\'t delete group that contains students'
-            : ''
-        "
-      >
-        <button
-          mat-icon-button
-          (click)="deleteGroup()"
-          [disabled]="studentsInGroup().length > 0"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
+      <button mat-icon-button (click)="deleteGroup()">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
   </div>
 

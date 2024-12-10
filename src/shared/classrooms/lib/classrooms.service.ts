@@ -619,15 +619,19 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ deletedGroup }) => {
+        tap(({ deletedGroup, updatedDefaultGroup }) => {
           console.log('[Deleted Group]', deletedGroup);
           this.patchState((draft) => {
             draft.configurationDetails.forEach((configurationDetail) => {
               if (configurationDetail.id === configurationId) {
                 configurationDetail.groupDetails =
-                  configurationDetail.groupDetails.filter(
-                    (g) => g.id !== deletedGroup.id
-                  );
+                  configurationDetail.groupDetails
+                    .filter((g) => g.id !== deletedGroup.id)
+                    .map((groupDetail) =>
+                      groupDetail.id === updatedDefaultGroup.id
+                        ? updatedDefaultGroup
+                        : groupDetail
+                    );
               }
             });
           });

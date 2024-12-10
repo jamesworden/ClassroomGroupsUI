@@ -24,6 +24,7 @@ export interface CreateGroupResponse {
 
 export interface DeleteGroupResponse {
   deletedGroup: Group;
+  updatedDefaultGroup: GroupDetail;
 }
 
 export interface CreateStudentResponse {
