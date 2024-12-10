@@ -978,7 +978,7 @@ export class ClassroomsService {
   ) {
     return this.#httpClient
       .post<SortGroupsResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/sort-groups`,
         {
           sortedGroupIds,
         },
