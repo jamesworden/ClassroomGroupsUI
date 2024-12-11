@@ -519,4 +519,12 @@ export class ClassroomViewComponent {
 
     this.#classroomsService.moveStudent(classroomId, configurationId, position);
   }
+
+  addGroup() {
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createGroup(classroomId, configurationId);
+    }
+  }
 }
