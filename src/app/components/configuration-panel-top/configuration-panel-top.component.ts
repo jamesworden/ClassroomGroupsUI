@@ -1,10 +1,14 @@
 import {
+  AfterViewInit,
   Component,
   computed,
   effect,
+  ElementRef,
   inject,
   input,
   output,
+  signal,
+  ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -62,10 +66,13 @@ import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detai
   templateUrl: './configuration-panel-top.component.html',
   styleUrl: './configuration-panel-top.component.scss',
 })
-export class ConfigurationPanelTopComponent {
+export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
+
+  @ViewChild('toolbar')
+  toolbar!: ElementRef<HTMLDivElement>;
 
   readonly configurationDetail = input<ConfigurationDetail>();
   readonly columnDetails = input<ColumnDetail[]>([]);
@@ -109,9 +116,19 @@ export class ConfigurationPanelTopComponent {
   columns: ColumnDetail[] = [];
   editingFieldId?: string;
   editingField = '';
+  readonly toolbarHeight = signal<number>(0);
 
   constructor() {
     effect(() => (this.columns = this.columnDetails()));
+  }
+
+  ngAfterViewInit() {
+    const observer = new ResizeObserver(() => {
+      if (this.toolbar) {
+        this.toolbarHeight.set(this.toolbar.nativeElement.offsetHeight);
+      }
+    });
+    observer.observe(this.toolbar.nativeElement);
   }
 
   toggleGroupingType() {

@@ -24,7 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import {
   ClassroomsService,
@@ -184,6 +184,7 @@ export class ClassroomViewComponent {
     isOpen: true,
   });
   readonly classroomViewInitialized$ = new Subject<void>();
+  readonly spreadsheetContainerWidth = signal<number>(0);
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
