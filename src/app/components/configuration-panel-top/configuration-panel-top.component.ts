@@ -34,7 +34,6 @@ import {
 } from '../create-edit-column-dialog/create-edit-column-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatBadgeModule } from '@angular/material/badge';
 import { CommonModule } from '@angular/common';
 import {
   ClassroomsService,
@@ -59,7 +58,6 @@ import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detai
     CdkDropList,
     MatSlideToggleModule,
     MatMenuModule,
-    MatBadgeModule,
     CommonModule,
     MatTooltipModule,
   ],
@@ -98,19 +96,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly defaultGroup = computed(() =>
     this.#classroomsService.select.defaultGroup(this.configurationId())()
   );
-  readonly enabledColumnBadges = computed(() => {
-    const enabledColumnBadges: {
-      [columnId: string]: number;
-    } = {};
-    let latestSortValue = 1;
-    for (const column of this.columnDetails() ?? []) {
-      if (column.enabled) {
-        enabledColumnBadges[column.id] = latestSortValue;
-        latestSortValue++;
-      }
-    }
-    return enabledColumnBadges;
-  });
 
   groupingByDivision = false;
   groupingValue = 0;
