@@ -20,6 +20,7 @@ import {
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
   GroupDetail,
+  MoveColumnResponse,
   MoveStudentResponse,
   PatchClassroomResponse,
   PatchConfigurationResponse,
@@ -43,6 +44,7 @@ import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { create } from 'mutative';
 import { MoveStudentDetail } from './models/move-student-detail';
+import { MoveColumnDetail } from './models/move-column-detail';
 
 class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
@@ -1054,8 +1056,51 @@ export class ClassroomsService {
           });
         }),
         catchError((error) => {
-          console.log('[Sort Students Failed]', error);
-          this.#matSnackBar.open('Error sorting students', undefined, {
+          console.log('[Move Student Failed]', error);
+          this.#matSnackBar.open('Error moving student', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  moveColumn(
+    classroomId: string,
+    configurationId: string,
+    moveColumnDetail: MoveColumnDetail
+  ) {
+    return this.#httpClient
+      .post<MoveColumnResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/move-column`,
+        {
+          moveColumnDetail,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedColumnDetails }) => {
+          console.log('[Updated Column Details]', updatedColumnDetails);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                detail.columnDetails = updatedColumnDetails;
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Move Column Failed]', error);
+          this.#matSnackBar.open('Error moving column', undefined, {
             duration: 3000,
           });
           return of(null);

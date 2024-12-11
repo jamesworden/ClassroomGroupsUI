@@ -38,6 +38,7 @@ import {
   ColumnDetail,
   ConfigurationDetail,
 } from '@shared/classrooms';
+import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detail';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -67,14 +68,12 @@ export class ConfigurationPanelTopComponent {
   readonly #classroomsService = inject(ClassroomsService);
 
   readonly configurationDetail = input<ConfigurationDetail>();
+  readonly columnDetails = input<ColumnDetail[]>([]);
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
   readonly deletedConfiguration = output();
 
-  readonly columnDetails = computed(
-    () => this.configurationDetail()?.columnDetails ?? []
-  );
   readonly classroomId = computed(
     () => this.configurationDetail()?.classroomId
   );
@@ -105,7 +104,6 @@ export class ConfigurationPanelTopComponent {
     return enabledColumnBadges;
   });
 
-  averageScores = false;
   groupingByDivision = false;
   groupingValue = 0;
   columns: ColumnDetail[] = [];
@@ -174,12 +172,26 @@ export class ConfigurationPanelTopComponent {
   }
 
   drop(event: CdkDragDrop<Column>) {
-    // moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
-    // const classroomId = this.viewingClassroomId();
-    // const configurationId = this.viewingConfigurationId();
-    // if (classroomId && configurationId) {
-    //   this.#classroomsService.updateColumns(configurationId, this.columns);
-    // }
+    const column = event.item.data as ColumnDetail;
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (!classroomId || !configurationId || !column) {
+      return;
+    }
+
+    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+
+    const moveColumnDetail: MoveColumnDetail = {
+      columnId: column.id,
+      currIndex: event.currentIndex,
+      prevIndex: event.previousIndex,
+    };
+
+    this.#classroomsService.moveColumn(
+      classroomId,
+      configurationId,
+      moveColumnDetail
+    );
   }
 
   openCreateColumnDialog() {

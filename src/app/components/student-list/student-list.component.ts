@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import {
   ClassroomsService,
+  ColumnDetail,
   FieldType,
   StudentDetail,
   StudentField,
@@ -51,6 +52,7 @@ export class StudentListComponent {
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
   readonly groupIndex = input<number>();
+  readonly columnDetails = input<ColumnDetail[]>([]);
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();
@@ -58,9 +60,6 @@ export class StudentListComponent {
 
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
-  );
-  readonly columnDetails = computed(() =>
-    this.#classroomsService.select.columnDetails(this.configurationId())
   );
 
   readonly FieldType = FieldType;

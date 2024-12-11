@@ -2,10 +2,11 @@
   cdkDropList
   [id]="groupId()!"
   [cdkDropListConnectedTo]="groupIds()"
-  class="grid-row student-list overflow-hidden w-full"
+  class="grid-row student-list overflow-hidden w-full border"
   [ngClass]="{
     'min-h-8 border-4 border-dashed border-gray-300':
       editingStudents.length <= 0,
+    'border-neutral-200 dark:border-neutral-600': editingStudents.length > 0,
     'rounded-b-md': roundedBottom(),
     'rounded-t-md': roundedTop(),
   }"
@@ -35,7 +36,7 @@
         track columnIndex;
         let columnIndex = $index
       ) {
-        <div class="flex-1">
+        <div class="flex-1 min-w-48 max-w-48">
           <div class="flex">
             @if (columnIndex === 0) {
               <div class="flex flex-col justify-around">
@@ -53,7 +54,7 @@
                   : student.fieldIdsToValues[columnDetail.fieldId]
               "
               [placeholder]="
-                columnDetail.type === FieldType.TEXT ? 'Add text' : 'Add number'
+                columnDetail.type === FieldType.TEXT ? 'Add text' : 'Add grade'
               "
               class="bg-transparent flex-1 text-ellipsis p-1 student-field-input"
               [type]="columnDetail.type === FieldType.TEXT ? 'text' : 'number'"

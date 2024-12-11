@@ -28,6 +28,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import {
   ClassroomsService,
+  ColumnDetail,
   Group,
   GroupDetail,
   StudentDetail,
@@ -169,6 +170,11 @@ export class ClassroomViewComponent {
       this.selectedConfigurationId()
     )()
   );
+  readonly columnDetails = computed(() =>
+    this.#classroomsService.select.columnDetails(
+      this.defaultGroup()?.configurationId
+    )
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
@@ -181,12 +187,14 @@ export class ClassroomViewComponent {
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
+  editingColumnDetails: ColumnDetail[] = [];
 
   constructor() {
     this.loadConfigPanelSettings();
 
     effect(() => (this.editingGroups = this.listGroupDetails()));
     effect(() => (this.editingDefaultGroup = this.defaultGroup()));
+    effect(() => (this.editingColumnDetails = this.columnDetails()));
 
     effect(() => {
       localStorage.setItem(

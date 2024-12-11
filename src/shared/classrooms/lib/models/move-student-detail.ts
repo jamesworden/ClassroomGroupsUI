@@ -1,5 +1,3 @@
-import { StudentDetail } from '.';
-
 export interface MoveStudentDetail {
   prevIndex: number;
   prevGroupId: string;

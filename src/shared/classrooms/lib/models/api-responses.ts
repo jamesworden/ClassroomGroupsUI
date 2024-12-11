@@ -88,3 +88,7 @@ export interface SortGroupsResponse {
 export interface MoveStudentResponse {
   updatedGroupDetails: GroupDetail[];
 }
+
+export interface MoveColumnResponse {
+  updatedColumnDetails: ColumnDetail[];
+}

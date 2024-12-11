@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   ClassroomsService,
+  ColumnDetail,
   GroupDetail,
   StudentDetail,
   StudentField,
@@ -39,6 +40,7 @@ export class GroupPanelComponent {
   readonly classroomId = input<string>();
   readonly groupDetail = input<GroupDetail>();
   readonly groupIndex = input<number>();
+  readonly columnDetails = input<ColumnDetail[]>([]);
 
   readonly groupDeleted = output<void>();
   readonly studentCreated = output<void>();
@@ -51,11 +53,6 @@ export class GroupPanelComponent {
   readonly studentsInGroup = computed(() =>
     this.students().filter(
       (student) => student.groupId === this.groupDetail()?.id
-    )
-  );
-  readonly columnDetails = computed(() =>
-    this.#classroomsService.select.columnDetails(
-      this.groupDetail()?.configurationId
     )
   );
   readonly averageScores = computed(() =>

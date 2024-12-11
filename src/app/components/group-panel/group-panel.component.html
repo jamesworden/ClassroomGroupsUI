@@ -1,5 +1,5 @@
 <div
-  class="panel rounded-lg flex-col gap-y-2 px-2 pt-1 shadow-lg"
+  class="panel rounded-lg flex-col gap-y-2 px-2 pt-1 shadow-lg flex-1"
   [ngClass]="{
     'pb-2': !anyAverageScore(),
   }"
@@ -24,10 +24,15 @@
     </div>
 
     <div class="flex gap-x-2">
-      <button mat-icon-button (click)="createStudent()" tabindex="-1">
+      <button
+        [tabIndex]="-1"
+        mat-icon-button
+        (click)="createStudent()"
+        tabindex="-1"
+      >
         <mat-icon>person_add</mat-icon>
       </button>
-      <button mat-icon-button (click)="deleteGroup()">
+      <button [tabIndex]="-1" mat-icon-button (click)="deleteGroup()">
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -41,17 +46,24 @@
     [groupId]="groupDetail()?.id"
     [studentDetails]="groupDetail()?.studentDetails"
     [groupIndex]="groupIndex()"
+    [columnDetails]="columnDetails()"
     (studentFieldUpdated)="updateStudentField($event)"
     (studentDeleted)="deleteStudent($event)"
     (studentPositionUpdated)="updateStudentPosition($event)"
   ></app-student-list>
 
   @if (anyAverageScore()) {
-    <div class="flex justify-between px-2 py-1">
+    <div class="flex justify-between py-1">
       @for (column of columnDetails(); track i; let i = $index) {
-        <span class="flex-1 opacity-80 text-sm">{{
-          averageScores()[column.fieldId] | number: '1.2-2'
-        }}</span>
+        <div class="flex-1">
+          @if (i === 0) {
+            <span class="mr-2">Avg.</span>
+          }
+
+          <span class="flex-1 opacity-80 text-sm">{{
+            averageScores()[column.fieldId] | number: '1.2-2'
+          }}</span>
+        </div>
       }
     </div>
   }
