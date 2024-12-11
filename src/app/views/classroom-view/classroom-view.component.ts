@@ -63,6 +63,7 @@ import { Subject } from '@microsoft/signalr';
 import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
 import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
+import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -185,6 +186,12 @@ export class ClassroomViewComponent {
   readonly columnDetails = computed(() =>
     this.#classroomsService.select.columnDetails(
       this.defaultGroup()?.configurationId
+    )
+  );
+  readonly averageScores = computed(() =>
+    calculateAverageScores(
+      this.defaultGroup()?.studentDetails ?? [],
+      this.columnDetails()
     )
   );
 

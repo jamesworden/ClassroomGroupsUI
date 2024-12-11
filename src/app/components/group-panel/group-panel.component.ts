@@ -14,7 +14,6 @@ import {
   StudentField,
 } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
-import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 
 @Component({
@@ -54,12 +53,6 @@ export class GroupPanelComponent {
     this.students().filter(
       (student) => student.groupId === this.groupDetail()?.id
     )
-  );
-  readonly averageScores = computed(() =>
-    calculateAverageScores(this.studentsInGroup(), this.columnDetails())
-  );
-  readonly anyAverageScore = computed(
-    () => !!Object.entries(this.averageScores()).length
   );
 
   createStudent() {

@@ -1,9 +1,4 @@
-<div
-  class="px-2 panel rounded-b-md"
-  [ngClass]="{
-    'pb-2': !anyAverageScore(),
-  }"
->
+<div class="px-2 panel rounded-b-md">
   @if (defaultGroup()?.studentDetails?.length ?? 0 > 0) {
     <app-student-list
       [classroomId]="classroomId()"
