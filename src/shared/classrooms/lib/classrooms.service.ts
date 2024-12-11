@@ -940,14 +940,14 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ deletedStudent, updatedGroupDetails: updatedGroups }) => {
+        tap(({ deletedStudent, updatedGroupDetails }) => {
           console.log('[Deleted Student]', deletedStudent);
-          console.log('[Updated Groups]', updatedGroups);
+          console.log('[Updated Groups]', updatedGroupDetails);
           this.patchState((draft) => {
             draft.configurationDetails.forEach((configuration) => {
               configuration.groupDetails = configuration.groupDetails.map(
                 (groupDetail) => {
-                  for (const updatedGroup of updatedGroups) {
+                  for (const updatedGroup of updatedGroupDetails) {
                     if (updatedGroup.id === groupDetail.id) {
                       return updatedGroup;
                     }
