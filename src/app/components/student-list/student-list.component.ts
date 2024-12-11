@@ -24,6 +24,7 @@ import {
 } from '@shared/classrooms';
 import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-student-list',
@@ -38,6 +39,7 @@ import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-det
     CdkContextMenuTrigger,
     CdkMenu,
     CdkMenuItem,
+    MatButtonModule,
   ],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss',
@@ -101,5 +103,17 @@ export class StudentListComponent {
 
   deleteStudent(studentDetail: StudentDetail) {
     this.studentDeleted.emit(studentDetail);
+  }
+
+  addStudent() {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createStudent(
+        classroomId,
+        configurationId,
+        this.groupId()
+      );
+    }
   }
 }
