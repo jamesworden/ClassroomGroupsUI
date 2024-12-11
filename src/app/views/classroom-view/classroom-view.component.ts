@@ -7,7 +7,16 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -24,7 +33,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import {
   ClassroomsService,
@@ -95,6 +104,9 @@ interface ConfigPanelSettings {
   styleUrl: './classroom-view.component.scss',
 })
 export class ClassroomViewComponent {
+  @ViewChild('spreadsheet')
+  spreadsheet!: ElementRef<HTMLDivElement>;
+
   readonly #themeService = inject(ThemeService);
   readonly #resizableService = inject(ResizableService);
   readonly #matDialog = inject(MatDialog);
@@ -184,7 +196,7 @@ export class ClassroomViewComponent {
     isOpen: true,
   });
   readonly classroomViewInitialized$ = new Subject<void>();
-  readonly spreadsheetContainerWidth = signal<number>(0);
+  readonly spreadsheetWidth = signal<number>(0);
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
@@ -228,6 +240,21 @@ export class ClassroomViewComponent {
         (classroomId) =>
           classroomId && this.#classroomsService.getConfigurations(classroomId)
       );
+
+    const observer = new ResizeObserver(() => {
+      if (this.spreadsheet) {
+        this.spreadsheetWidth.set(
+          this.spreadsheet.nativeElement.offsetWidth - 64
+        );
+      }
+    });
+
+    effect(() => {
+      this.configurationDetail();
+      if (this.spreadsheet?.nativeElement) {
+        observer.observe(this.spreadsheet?.nativeElement);
+      }
+    });
   }
 
   private loadConfigPanelSettings() {

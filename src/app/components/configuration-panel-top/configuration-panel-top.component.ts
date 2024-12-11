@@ -76,6 +76,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
 
   readonly configurationDetail = input<ConfigurationDetail>();
   readonly columnDetails = input<ColumnDetail[]>([]);
+  readonly spreadsheetWidth = input<number>(0);
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();

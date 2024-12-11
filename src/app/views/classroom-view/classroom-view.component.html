@@ -72,13 +72,17 @@
             </div>
           </section>
 
-          <section class="flex-1 flex flex-col overflow-hidden relative">
+          <section
+            #spreadsheet
+            class="flex-1 flex flex-col overflow-hidden relative"
+          >
             <div class="absolute inset-0 overflow-auto flex flex-col">
               <div class="flex flex-1 flex-col w-full h-full min-w-fit">
                 <app-configuration-panel-top
                   class="sticky top-0 z-10 mx-4 flex"
                   [configurationDetail]="configurationDetail()"
                   [columnDetails]="editingColumnDetails"
+                  [spreadsheetWidth]="spreadsheetWidth()"
                   (labelUpdated)="updateConfigurationLabel($event)"
                   (descriptionUpdated)="updateConfigurationDescription($event)"
                   (deletedConfiguration)="selectFirstConfiguration()"
