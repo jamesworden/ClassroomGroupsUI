@@ -1,0 +1,42 @@
+:host {
+  display: flex;
+  min-width: 100%;
+  min-height: 100%;
+  justify-content: space-around;
+  max-width: 100%;
+  max-height: 100%;
+  overflow-x: hidden;
+}
+
+.landing-page-content {
+  max-width: 1250px;
+}
+
+.gradient {
+  background-size: 200%;
+  transition: background-position 1s;
+  animation: bg-animation 20s infinite alternate;
+}
+
+@keyframes bg-animation {
+  0% {
+    background-position: left;
+  }
+  100% {
+    background-position: right;
+  }
+}
+
+.light-gradient {
+  background: #aebdc9;
+  background: -webkit-linear-gradient(to left, #eef2f3, #aebdc9);
+  background: linear-gradient(to left, #eef2f3, #d8bdbd);
+}
+
+.dark-gradient {
+  background-image: linear-gradient(
+    111.4deg,
+    rgba(7, 7, 9, 1) 6.5%,
+    rgb(27, 27, 87) 93.2%
+  );
+}

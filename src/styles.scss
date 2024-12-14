@@ -39,7 +39,7 @@ html {
   @include panel.lightTheme($light-theme);
   @include editInput.theme($light-theme);
   @include resizable.theme($light-theme);
-  @include materialUtilities.theme($light-theme);
+  @include materialUtilities.lightTheme($light-theme);
   @include contextMenu.lightTheme($light-theme);
 }
 .dark {
@@ -48,7 +48,7 @@ html {
   @include panel.darkTheme($dark-theme);
   @include editInput.theme($dark-theme);
   @include resizable.theme($dark-theme);
-  @include materialUtilities.theme($dark-theme);
+  @include materialUtilities.darkTheme($dark-theme);
   @include contextMenu.darkTheme($dark-theme);
 }
 

@@ -1,9 +1,59 @@
-<div class="flex-1 flex flex-col justify-evenly">
-  <div class="flex flex-col justify-around ml-8 gay-y-2">
-    <h1 style="margin: 0 !important">Classroom Groups</h1>
-    <h6 class="text-md">Log in to get started</h6>
-    <app-google-sign-in-button></app-google-sign-in-button>
-  </div>
+<div
+  class="flex-1 flex justify-around fixed top-0 left-0 w-full h-full bg-gray-100 overflow-auto z-10 gradient"
+  [ngClass]="{
+    'light-gradient': theme() === Themes.LIGHT,
+    'dark-gradient': theme() === Themes.DARK,
+  }"
+>
+  <div class="flex-1 flex flex-col landing-page-content w-full h-full">
+    <nav class="flex justify-between p-8">
+      <div class="text-lg">ClassroomGroups</div>
+      <div class="flex gap-x-6">
+        <div class="flex flex-col justify-around">
+          <button mat-icon-button (click)="toggleTheme()">
+            <mat-icon>{{
+              theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
+            }}</mat-icon>
+          </button>
+        </div>
+      </div>
+    </nav>
 
-  <div></div>
+    <div class="flex-1 flex gap-x-12 flex-col lg:flex-row">
+      <div class="flex flex-col mx-4 mt-16 lg:ml-8 lg:mt-32">
+        <div>
+          <span
+            style="margin: 0 !important; font-weight: semibold"
+            class="text-4xl lg:text-6xl"
+          >
+            Design <span class="text-primary">Smarter</span><br /><span
+              class="text-secondary"
+              >Learning</span
+            >
+            Spaces
+          </span>
+          <p class="max-w-md py-6">
+            Effortlessly create balanced, dynamic learning groups that maximize
+            student potential. Our intelligent algorithm analyzes student
+            performance, learning styles, and collaboration needs to generate
+            optimal classroom teams that promote engagement, support, and
+            academic growth.
+          </p>
+          <app-google-sign-in-button></app-google-sign-in-button>
+        </div>
+      </div>
+
+      <div class="ml-8 mt-16">
+        <img
+          class="lg:max-w-2xl"
+          [src]="
+            theme() === Themes.LIGHT
+              ? 'assets/teacher-light.svg'
+              : 'assets/teacher-dark.svg'
+          "
+          alt="Icon"
+        />
+      </div>
+    </div>
+  </div>
 </div>

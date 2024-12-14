@@ -1,16 +1,40 @@
-@use "sass:map";
-@use "@angular/material" as mat;
+@use 'sass:map';
+@use '@angular/material' as mat;
 
-@mixin color($theme) {
+@mixin sharedStyles($theme) {
   .hover-border-primary {
     &:hover {
       border-color: mat.get-theme-color($theme, primary, 50) !important;
     }
   }
+
+  .text-primary {
+    color: mat.get-theme-color($theme, primary, 50);
+  }
+
+  .text-secondary {
+    color: mat.get-theme-color($theme, tertiary, 50);
+  }
 }
 
-@mixin theme($theme) {
+@mixin lightColor($theme) {
+}
+
+@mixin lightTheme($theme) {
+  @include sharedStyles($theme);
+
   @if mat.theme-has($theme, color) {
-    @include color($theme);
+    @include lightColor($theme);
+  }
+}
+
+@mixin darkColor($theme) {
+}
+
+@mixin darkTheme($theme) {
+  @include sharedStyles($theme);
+
+  @if mat.theme-has($theme, color) {
+    @include darkColor($theme);
   }
 }
