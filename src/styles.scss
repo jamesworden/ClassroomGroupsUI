@@ -78,3 +78,8 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+.content-container {
+  max-width: 1200px;
+  margin: auto;
+}
