@@ -20,17 +20,17 @@
     </nav>
 
     <div class="flex-1 flex gap-x-12 flex-col lg:flex-row">
-      <div class="flex flex-col mx-4 mt-16 lg:ml-8 lg:mt-32">
+      <div class="flex-1 flex flex-col mx-4 mt-16 lg:ml-8 lg:mt-32">
         <div>
           <span
             style="margin: 0 !important; font-weight: semibold"
-            class="text-4xl lg:text-6xl"
+            class="text-4xl lg:text-7xl"
           >
-            Design <span class="text-primary">Smarter</span><br /><span
+            Design <span class="text-primary">smarter</span><br /><span
               class="text-secondary"
-              >Learning</span
+              >learning</span
             >
-            Spaces
+            spaces.
           </span>
           <p class="max-w-md py-6">
             Effortlessly create balanced, dynamic learning groups that maximize
@@ -43,17 +43,15 @@
         </div>
       </div>
 
-      <div class="ml-8 mt-16">
-        <img
-          class="lg:max-w-2xl"
-          [src]="
-            theme() === Themes.LIGHT
-              ? 'assets/teacher-light.svg'
-              : 'assets/teacher-dark.svg'
-          "
-          alt="Icon"
-        />
-      </div>
+      <img
+        class="max-w-xl"
+        [src]="
+          theme() === Themes.LIGHT
+            ? 'assets/teacher-light.svg'
+            : 'assets/teacher-dark.svg'
+        "
+        alt="Icon"
+      />
     </div>
   </div>
 </div>
