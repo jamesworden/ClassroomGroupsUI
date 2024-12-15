@@ -8,10 +8,6 @@
   overflow-x: hidden;
 }
 
-.landing-page-content {
-  max-width: 1250px;
-}
-
 .light-gradient {
   background: radial-gradient(
       circle at 136% 136%,
@@ -28,4 +24,8 @@
       rgba(0, 0, 0, 1)
     ),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 239 239' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.94' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+mat-toolbar {
+  background-color: transparent !important;
 }
