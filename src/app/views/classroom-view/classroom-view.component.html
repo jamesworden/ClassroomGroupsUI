@@ -151,25 +151,27 @@
 
                 <span class="flex-auto"></span>
 
-                <div
-                  class="sticky bottom-0 z-50 px-4 py-2 mx-4 panel rounded-t-md mt-4"
-                >
-                  <div class="flex flex-col justify-between gap-y-2">
-                    <span class="text-lg">Class average</span>
-                    <div class="flex grid-row py-1 rounded-md">
-                      @for (
-                        columnDetail of columnDetails();
-                        track columnIndex;
-                        let columnIndex = $index
-                      ) {
-                        <span class="flex-1 text-sm">{{
-                          averageScores()[columnDetail.fieldId]
-                            | number: '1.1-2'
-                        }}</span>
-                      }
+                @if (anyAverageScores()) {
+                  <div
+                    class="sticky bottom-0 z-50 px-4 py-2 mx-4 panel rounded-t-md mt-4"
+                  >
+                    <div class="flex flex-col justify-between gap-y-2">
+                      <span class="text-lg">Class average</span>
+                      <div class="flex grid-row py-1 rounded-md">
+                        @for (
+                          columnDetail of columnDetails();
+                          track columnIndex;
+                          let columnIndex = $index
+                        ) {
+                          <span class="flex-1 text-sm">{{
+                            averageScores()[columnDetail.fieldId]
+                              | number: '1.1-2'
+                          }}</span>
+                        }
+                      </div>
                     </div>
                   </div>
-                </div>
+                }
               </div>
             </div>
           </section>

@@ -194,6 +194,9 @@ export class ClassroomViewComponent {
       this.columnDetails()
     )
   );
+  readonly anyAverageScores = computed(
+    () => Object.keys(this.averageScores()).length > 0
+  );
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
