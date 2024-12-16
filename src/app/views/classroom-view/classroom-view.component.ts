@@ -224,8 +224,6 @@ export class ClassroomViewComponent {
     effect(() => (this.editingDefaultGroup = this.defaultGroup()));
     effect(() => (this.editingColumnDetails = this.columnDetails()));
 
-    effect(() => console.log(this.averageScores()));
-
     effect(() => {
       localStorage.setItem(
         StorageKeys.CONFIG_PANEL,
