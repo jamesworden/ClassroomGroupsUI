@@ -32,23 +32,43 @@
           <mat-label>{{
             groupingByDivision ? 'Number of groups' : 'Students per group'
           }}</mat-label>
-          <input matInput type="number" [(ngModel)]="groupingValue" />
-          <button matSuffix mat-icon-button (click)="toggleGroupingType()">
+          <input
+            [tabindex]="-1"
+            matInput
+            type="number"
+            [(ngModel)]="groupingValue"
+          />
+          <button
+            [tabindex]="-1"
+            [matTooltip]="
+              groupingByDivision ? 'Students per group' : 'Number of groups'
+            "
+            matSuffix
+            mat-icon-button
+            (click)="toggleGroupingType()"
+          >
             <mat-icon>safety_divider</mat-icon>
           </button>
         </mat-form-field>
 
         <div class="flex gap-x-2">
           <div class="flex flex-col justify-around">
-            <button mat-flat-button>Mixed Abilities</button>
+            <button [tabindex]="-1" mat-flat-button>Mixed Abilities</button>
           </div>
 
           <div class="flex flex-col justify-around">
-            <button mat-stroked-button>Similar Abilities</button>
+            <button [tabindex]="-1" mat-stroked-button>
+              Similar Abilities
+            </button>
           </div>
 
           <div class="flex flex-col justify-around">
-            <button mat-icon-button [matMenuTriggerFor]="configurationMenu">
+            <button
+              [tabindex]="-1"
+              matTooltip="More"
+              mat-icon-button
+              [matMenuTriggerFor]="configurationMenu"
+            >
               <mat-icon>more_vert</mat-icon>
             </button>
           </div>
@@ -104,6 +124,7 @@
               </div>
               <div class="flex">
                 <button
+                  [tabindex]="-1"
                   matSuffix
                   mat-icon-button
                   [matMenuTriggerFor]="fieldMenu"
