@@ -8,6 +8,10 @@
     }
   }
 
+  .border-primary {
+    border-color: mat.get-theme-color($theme, primary, 50) !important;
+  }
+
   .text-primary {
     color: mat.get-theme-color($theme, primary, 50);
   }

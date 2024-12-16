@@ -2,6 +2,7 @@ import {
   Component,
   computed,
   ElementRef,
+  HostListener,
   inject,
   input,
   output,
@@ -9,10 +10,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import {
-  ResizeableDirective,
-  ResizableSide,
-} from '../../directives/resizeable.directive';
+import { ResizableSide } from '../../directives/resizeable.directive';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -30,7 +28,6 @@ import { CommonModule } from '@angular/common';
   selector: 'app-configurations-panel',
   standalone: true,
   imports: [
-    ResizeableDirective,
     MatFormFieldModule,
     MatListModule,
     MatSnackBarModule,
@@ -51,7 +48,10 @@ export class ConfigurationsPanelComponent {
   readonly #accountsService = inject(AccountsService);
 
   @ViewChild('scrollContainer')
-  scrollContainer!: ElementRef<HTMLElement>;
+  scrollContainer: ElementRef<HTMLElement> | undefined;
+
+  @ViewChild('addConfigurationInput')
+  addConfigurationInput: ElementRef<HTMLInputElement> | undefined;
 
   readonly selectedConfigurationId = input<string>();
   readonly classroomId = input<string>();
@@ -67,6 +67,7 @@ export class ConfigurationsPanelComponent {
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly configurationsLoading =
     this.#classroomsService.select.configurationsLoading;
+  readonly addingConfiguration = signal<boolean>(false);
 
   createConfigurationLabel = '';
 
@@ -76,6 +77,18 @@ export class ConfigurationsPanelComponent {
         label.toLowerCase().includes(this.searchQuery())
       ) ?? []
   );
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const clickedElement = event.target as HTMLElement;
+    const clickedInput =
+      this.addConfigurationInput?.nativeElement.contains(clickedElement);
+    if (clickedInput) {
+      return;
+    }
+
+    this.stopAddingConfiguration();
+  }
 
   selectConfiguration(configurationId: string) {
     this.configurationIdSelected.emit(configurationId);
@@ -97,5 +110,16 @@ export class ConfigurationsPanelComponent {
       this.createConfigurationLabel
     );
     this.createConfigurationLabel = '';
+  }
+
+  startAddingConfiguration() {
+    setTimeout(() => {
+      this.addConfigurationInput?.nativeElement.focus();
+    });
+    this.addingConfiguration.set(true);
+  }
+
+  stopAddingConfiguration() {
+    this.addingConfiguration.set(false);
   }
 }

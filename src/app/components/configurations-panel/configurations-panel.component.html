@@ -49,22 +49,28 @@
       }
     </mat-action-list>
 
-    <div class="ml-4 flex gap-x-2 mb-2">
-      <div [matTooltip]="isLoggedIn() ? '' : 'You must be logged in!'">
+    <div class="flex">
+      @if (addingConfiguration()) {
+        <input
+          #addConfigurationInput
+          type="text"
+          [(ngModel)]="createConfigurationLabel"
+          (keydown.enter)="createConfiguration()"
+          placeholder="Add configuration"
+          class="outline-none border border-primary bg-transparent mx-12 p-2 flex-1"
+        />
+      } @else {
         <button
-          [disabled]="!createConfigurationLabel || !isLoggedIn()"
-          mat-icon-button
-          (click)="createConfiguration()"
+          class="mx-12"
+          #addConfigurationButton
+          matSuffix
+          mat-button
+          (click)="startAddingConfiguration(); $event.stopPropagation()"
         >
-          <mat-icon>add</mat-icon>
+          <mat-icon class="text-md">group_add</mat-icon>
+          <span class="text-sm opacity-80">Add configuration</span>
         </button>
-      </div>
-      <input
-        type="text"
-        [(ngModel)]="createConfigurationLabel"
-        placeholder="Add configuration"
-        class="outline-none border-b border-gray-600 dark:border-gray-300 bg-transparent placeholder-gray-700 dark:placeholder-current"
-      />
+      }
     </div>
   </div>
 </div>
