@@ -7,15 +7,31 @@
 >
   <div class="flex-1 flex flex-col content-container w-full h-full">
     <mat-toolbar>
-      <span>ClassroomGroups</span>
+      <div class="flex gap-x-4 flex-1">
+        <span class="hidden md:block">ClassroomGroups</span>
 
-      <span class="flex-auto"></span>
+        <span class="flex-auto hidden md:block"></span>
 
-      <button mat-icon-button (click)="toggleTheme()">
-        <mat-icon>{{
-          theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
-        }}</mat-icon>
-      </button>
+        <button
+          class="flex flex-col justify-around"
+          mat-icon-button
+          (click)="toggleTheme()"
+        >
+          <mat-icon>{{
+            theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
+          }}</mat-icon>
+        </button>
+
+        <span class="flex-auto block md:hidden"></span>
+
+        <button class="text-sm">Sign In</button>
+
+        <button
+          class="text-sm bg-white bg-opacity-80 dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-lg shadow-md hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
+        >
+          Try Free
+        </button>
+      </div>
     </mat-toolbar>
 
     <div class="flex-1 flex gap-x-12 flex-col lg:flex-row">
@@ -38,7 +54,11 @@
             optimal classroom teams that promote engagement, support, and
             academic growth.
           </p>
-          <app-google-sign-in-button></app-google-sign-in-button>
+          <button
+            class="text-md bg-white bg-opacity-80 dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-lg shadow-md hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
+          >
+            Try ClassroomGroups Free
+          </button>
         </div>
       </div>
 
