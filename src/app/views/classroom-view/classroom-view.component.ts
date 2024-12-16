@@ -192,7 +192,9 @@ export class ClassroomViewComponent {
   );
   readonly averageScores = computed(() =>
     calculateAverageScores(
-      this.defaultGroup()?.studentDetails ?? [],
+      (this.defaultGroup()?.studentDetails ?? []).concat(
+        ...this.listGroupDetails().map(({ studentDetails }) => studentDetails)
+      ),
       this.columnDetails()
     )
   );
@@ -221,6 +223,8 @@ export class ClassroomViewComponent {
     effect(() => (this.editingGroups = this.listGroupDetails()));
     effect(() => (this.editingDefaultGroup = this.defaultGroup()));
     effect(() => (this.editingColumnDetails = this.columnDetails()));
+
+    effect(() => console.log(this.averageScores()));
 
     effect(() => {
       localStorage.setItem(
