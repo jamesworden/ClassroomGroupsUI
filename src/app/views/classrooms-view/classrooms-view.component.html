@@ -9,6 +9,14 @@
         <span class="flex-auto"></span>
 
         <button
+          matTooltip="Classroom Groups"
+          mat-icon-button
+          [routerLink]="['/']"
+        >
+          <mat-icon>home</mat-icon>
+        </button>
+
+        <button
           matTooltip="Add classroom"
           mat-icon-button
           (click)="createClassroom()"

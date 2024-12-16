@@ -24,11 +24,11 @@ export class LandingViewComponent {
   readonly theme = this.#themeService.theme;
 
   constructor() {
-    effect(() => {
-      if (this.isLoggedIn()) {
-        this.#router.navigate(['classrooms']);
-      }
-    });
+    // effect(() => {
+    //   if (this.isLoggedIn()) {
+    //     this.#router.navigate(['classrooms']);
+    //   }
+    // });
   }
 
   toggleTheme() {

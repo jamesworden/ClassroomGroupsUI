@@ -5,7 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ClassroomDetail, ClassroomsService } from '@shared/classrooms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ThemeService } from 'app/themes/theme.service';
 import { Themes } from 'app/themes/theme.models';
 import { MatMenuModule } from '@angular/material/menu';
@@ -32,6 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTooltipModule,
+    RouterModule,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
