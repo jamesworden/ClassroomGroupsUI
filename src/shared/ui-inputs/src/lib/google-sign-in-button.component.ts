@@ -9,7 +9,7 @@ import { Component, effect, input, OnDestroy } from '@angular/core';
       <div
         id="g_id_onload"
         data-client_id="379282615975-blkaldtgv9vuieo7hc2gmttkl2nb5983.apps.googleusercontent.com"
-        data-context="signin"
+        [attr.data-context]="dataContext()"
         data-ux_mode="redirect"
         data-login_uri="https://localhost:7192/classroom-groups/api/v1/authentication/login-with-google"
         data-auto_prompt="false"
@@ -19,7 +19,7 @@ import { Component, effect, input, OnDestroy } from '@angular/core';
         data-type="standard"
         [attr.data-shape]="dataShape()"
         data-theme="outline"
-        data-text="signin_with"
+        [attr.data-text]="dataText()"
         [attr.data-size]="dataSize()"
         data-logo_alignment="left"
       ></div>
@@ -29,6 +29,8 @@ import { Component, effect, input, OnDestroy } from '@angular/core';
 export class GoogleSignInButtonComponent implements OnDestroy {
   dataSize = input<'large' | 'medium' | 'small'>('large');
   dataShape = input<'rectangular' | 'pill' | 'square'>('rectangular');
+  dataContext = input<'signin' | 'signup' | 'use'>('use');
+  dataText = input<'signin_with' | 'signup_with'>('signin_with');
   isVisible = input(true);
 
   script: HTMLScriptElement | undefined;
