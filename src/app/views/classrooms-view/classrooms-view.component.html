@@ -47,7 +47,10 @@
 
       <div class="mx-4 flex flex-col flex-1">
         @if (classroomDetails().length > 0) {
-          <section class="mat-elevation-z8" tabindex="0">
+          <section
+            class="mat-elevation-z8 rounded-md overflow-hidden"
+            tabindex="0"
+          >
             <table class="panel" mat-table [dataSource]="classroomDetails()">
               <ng-container matColumnDef="label">
                 <th mat-header-cell *matHeaderCellDef>Name</th>

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { ToolbarComponent } from 'app/components/toolbar/toolbar.component';
 import { Themes } from 'app/themes/theme.models';
