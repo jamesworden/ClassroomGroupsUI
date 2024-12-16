@@ -63,6 +63,7 @@ import { ConfigurationPanelTopComponent } from 'app/components/configuration-pan
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
 import { Themes } from 'app/themes/theme.models';
+import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -99,6 +100,7 @@ interface ConfigPanelSettings {
     ConfigurationPanelBottomComponent,
     ConfigurationPanelTopComponent,
     MatTooltipModule,
+    AccountMenuComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
@@ -207,6 +209,7 @@ export class ClassroomViewComponent {
   readonly classroomViewInitialized$ = new Subject<void>();
   readonly spreadsheetWidth = signal<number>(0);
   readonly Themes = Themes;
+  readonly menuIsOpen = signal(false);
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
@@ -540,5 +543,13 @@ export class ClassroomViewComponent {
     if (classroomId && configurationId) {
       this.#classroomsService.createGroup(classroomId, configurationId);
     }
+  }
+
+  markMenuAsOpen() {
+    this.menuIsOpen.set(true);
+  }
+
+  markMenuAsClosed() {
+    this.menuIsOpen.set(false);
   }
 }

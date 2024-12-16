@@ -5,16 +5,29 @@
     <section class="flex-1 flex flex-col flex-1">
       <mat-toolbar>
         <span>Classrooms</span>
+
         <span class="flex-auto"></span>
-        <button mat-icon-button [matMenuTriggerFor]="classroomMenu">
+
+        <button
+          matTooltip="Add classroom"
+          mat-icon-button
+          (click)="createClassroom()"
+        >
           <mat-icon>add</mat-icon>
         </button>
-        <button mat-icon-button (click)="toggleTheme()">
+
+        <button
+          [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
+          mat-icon-button
+          (click)="toggleTheme()"
+        >
           <mat-icon>{{
-            theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
+            theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
           }}</mat-icon>
         </button>
+
         <button
+          matTooltip="Account settings"
           mat-icon-button
           [matMenuTriggerFor]="accountMenu"
           (menuOpened)="markMenuAsOpen()"
@@ -108,12 +121,5 @@
 
   <mat-menu #accountMenu="matMenu">
     <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
-  </mat-menu>
-
-  <mat-menu #classroomMenu="matMenu">
-    <button mat-menu-item (click)="createClassroom()">
-      <mat-icon>group_add</mat-icon>
-      <span>Classroom</span>
-    </button>
   </mat-menu>
 </div>

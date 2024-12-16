@@ -17,6 +17,7 @@ import {
   YesNoDialogInputs,
 } from 'app/components/yes-no-dialog/yes-no-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -30,6 +31,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     AccountMenuComponent,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatTooltipModule,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
