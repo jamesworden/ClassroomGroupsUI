@@ -1,6 +1,6 @@
-<div class="rounded-t-md panel pt-2 px-2 flex flex-col gap-y-4 w-full">
+<div class="rounded-t-md panel pt-2 px-2 flex flex-col w-full">
   <!-- Toolbar -->
-  <div #toolbar class="fixed z-50" [style.width.px]="spreadsheetWidth()">
+  <div #toolbar>
     <div class="flex justify-between min-h-16 flex-wrap gap-y-4">
       <div class="flex flex-col justify-around pr-4 flex-1">
         <div class="flex flex-col">
@@ -78,7 +78,7 @@
   </div>
 
   <!-- Data Grid Header -->
-  <div [style.marginTop.px]="toolbarHeight()">
+  <div>
     <div class="mt-4">
       <div
         cdkDropList

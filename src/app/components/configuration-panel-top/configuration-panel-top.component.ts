@@ -32,7 +32,6 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from '../create-edit-column-dialog/create-edit-column-dialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import {
@@ -66,7 +65,6 @@ import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detai
 })
 export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly #matDialog = inject(MatDialog);
-  readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
 
   @ViewChild('toolbar')
@@ -74,7 +72,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
 
   readonly configurationDetail = input<ConfigurationDetail>();
   readonly columnDetails = input<ColumnDetail[]>([]);
-  readonly spreadsheetWidth = input<number>(0);
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
