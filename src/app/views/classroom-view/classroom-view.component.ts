@@ -302,7 +302,7 @@ export class ClassroomViewComponent {
       const classroomId = this.classroomId();
       if (success && classroomId) {
         this.#classroomsService.deleteClassroom(classroomId).subscribe(() => {
-          this.#router.navigate(['/']);
+          this.#router.navigate(['/classrooms']);
         });
       }
     });

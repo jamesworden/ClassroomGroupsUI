@@ -86,11 +86,7 @@ export class ClassroomsViewComponent {
     });
     dialogRef.afterClosed().subscribe((success: boolean) => {
       if (success) {
-        this.#classroomsService
-          .deleteClassroom(classroomDetail.id)
-          .subscribe(() => {
-            this.#router.navigate(['/']);
-          });
+        this.#classroomsService.deleteClassroom(classroomDetail.id);
       }
     });
   }
