@@ -25,6 +25,8 @@ import {
 import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { MatButtonModule } from '@angular/material/button';
+import { AccountsService } from '@shared/accounts';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-student-list',
@@ -39,6 +41,7 @@ import { MatButtonModule } from '@angular/material/button';
     CdkContextMenuTrigger,
     CdkMenu,
     CdkMenuItem,
+    MatTooltipModule,
     MatButtonModule,
   ],
   templateUrl: './student-list.component.html',
@@ -46,6 +49,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #accountsService = inject(AccountsService);
 
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
@@ -63,6 +67,12 @@ export class StudentListComponent {
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
   );
+  readonly studentsInConfiguration = computed(() =>
+    this.#classroomsService.select.studentsInConfiguration(
+      this.configurationId()
+    )()
+  );
+  readonly account = this.#accountsService.select.account;
 
   readonly FieldType = FieldType;
 

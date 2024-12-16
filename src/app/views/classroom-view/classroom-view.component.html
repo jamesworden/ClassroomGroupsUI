@@ -174,10 +174,30 @@
                   </div>
 
                   <div class="px-2 py-1 mx-4 panel rounded-md mt-4">
-                    <button matSuffix mat-button (click)="addGroup()">
-                      <mat-icon class="text-md">group_add</mat-icon>
-                      <span class="text-sm opacity-80">Add group</span>
-                    </button>
+                    <div
+                      matTooltipPosition="after"
+                      class="max-w-32"
+                      [matTooltip]="
+                        listGroupDetails().length >=
+                        (account()?.subscription?.maxStudentsPerClassroom ?? 0)
+                          ? 'Group limit reached!'
+                          : ''
+                      "
+                    >
+                      <button
+                        [disabled]="
+                          listGroupDetails().length >=
+                          (account()?.subscription?.maxStudentsPerClassroom ??
+                            0)
+                        "
+                        matSuffix
+                        mat-button
+                        (click)="addGroup()"
+                      >
+                        <mat-icon class="text-md">group_add</mat-icon>
+                        <span class="text-sm opacity-80">Add group</span>
+                      </button>
+                    </div>
                   </div>
 
                   <span class="flex-auto"></span>

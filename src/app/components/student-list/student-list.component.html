@@ -72,8 +72,26 @@
     }
   </div>
 
-  <div class="my-1">
-    <button [tabindex]="-1" matSuffix mat-button (click)="addStudent()">
+  <div
+    class="my-1 max-w-36"
+    matTooltipPosition="right"
+    [matTooltip]="
+      studentsInConfiguration().length >=
+      (account()?.subscription?.maxStudentsPerClassroom ?? 0)
+        ? 'Student limit reached!'
+        : ''
+    "
+  >
+    <button
+      [disabled]="
+        studentsInConfiguration().length >=
+        (account()?.subscription?.maxStudentsPerClassroom ?? 0)
+      "
+      [tabindex]="-1"
+      matSuffix
+      mat-button
+      (click)="addStudent()"
+    >
       <mat-icon class="text-md">person_add</mat-icon>
       <span class="text-sm opacity-80">Add student</span>
     </button>

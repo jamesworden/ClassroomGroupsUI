@@ -139,6 +139,14 @@ class ClassroomSelectors {
         (g) => g.id === configurationDetail.defaultGroupId
       );
     });
+
+  public readonly studentsInConfiguration = (configurationId?: string) =>
+    computed(
+      () =>
+        this.configurationDetail(configurationId)()?.groupDetails?.flatMap(
+          (g) => g.studentDetails
+        ) || []
+    );
 }
 
 interface ClassroomsState {

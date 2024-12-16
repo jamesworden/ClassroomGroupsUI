@@ -190,17 +190,25 @@ export class ClassroomViewComponent {
       this.defaultGroup()?.configurationId
     )
   );
+  readonly allGroupDetails = computed(() => {
+    const listGroupDetails = this.listGroupDetails();
+    const defaultGroupDetail = this.defaultGroup();
+    if (defaultGroupDetail) {
+      return [defaultGroupDetail, ...listGroupDetails];
+    } else {
+      return listGroupDetails;
+    }
+  });
+  readonly allStudentDetails = computed(() =>
+    this.allGroupDetails().flatMap(({ studentDetails }) => studentDetails)
+  );
   readonly averageScores = computed(() =>
-    calculateAverageScores(
-      (this.defaultGroup()?.studentDetails ?? []).concat(
-        ...this.listGroupDetails().map(({ studentDetails }) => studentDetails)
-      ),
-      this.columnDetails()
-    )
+    calculateAverageScores(this.allStudentDetails(), this.columnDetails())
   );
   readonly anyAverageScores = computed(
     () => Object.keys(this.averageScores()).length > 0
   );
+  readonly account = this.#accountsService.select.account;
 
   readonly ResizableSide = ResizableSide;
   readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
