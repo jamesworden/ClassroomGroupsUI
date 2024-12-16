@@ -8,6 +8,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   computed,
   effect,
@@ -105,7 +106,7 @@ interface ConfigPanelSettings {
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
 })
-export class ClassroomViewComponent {
+export class ClassroomViewComponent implements AfterViewInit {
   @ViewChild('spreadsheet')
   spreadsheet!: ElementRef<HTMLDivElement>;
 
@@ -214,6 +215,7 @@ export class ClassroomViewComponent {
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
   editingColumnDetails: ColumnDetail[] = [];
+  spreadsheetObserver: ResizeObserver | undefined;
 
   constructor() {
     this.loadConfigPanelSettings();
@@ -254,7 +256,7 @@ export class ClassroomViewComponent {
           classroomId && this.#classroomsService.getConfigurations(classroomId)
       );
 
-    const observer = new ResizeObserver(() => {
+    this.spreadsheetObserver = new ResizeObserver(() => {
       if (this.spreadsheet) {
         this.spreadsheetWidth.set(
           this.spreadsheet.nativeElement.offsetWidth - 64
@@ -264,10 +266,18 @@ export class ClassroomViewComponent {
 
     effect(() => {
       this.configurationDetail();
-      if (this.spreadsheet?.nativeElement) {
-        observer.observe(this.spreadsheet?.nativeElement);
-      }
+      this.updateSpreadsheetObserver();
     });
+  }
+
+  ngAfterViewInit() {
+    this.updateSpreadsheetObserver();
+  }
+
+  updateSpreadsheetObserver() {
+    if (this.spreadsheet?.nativeElement) {
+      this.spreadsheetObserver?.observe(this.spreadsheet?.nativeElement);
+    }
   }
 
   private loadConfigPanelSettings() {

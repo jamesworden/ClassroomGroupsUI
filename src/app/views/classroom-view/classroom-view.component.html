@@ -102,35 +102,37 @@
             </div>
           </section>
 
-          <section
-            #spreadsheet
-            class="flex-1 flex flex-col overflow-hidden relative"
-          >
-            <div class="absolute inset-0 overflow-auto flex flex-col">
-              <div class="flex flex-1 flex-col w-full min-w-fit">
-                <app-configuration-panel-top
-                  class="sticky top-0 z-10 mx-4 flex"
-                  [configurationDetail]="configurationDetail()"
-                  [columnDetails]="editingColumnDetails"
-                  [spreadsheetWidth]="spreadsheetWidth()"
-                  (labelUpdated)="updateConfigurationLabel($event)"
-                  (descriptionUpdated)="updateConfigurationDescription($event)"
-                  (deletedConfiguration)="selectFirstConfiguration()"
-                ></app-configuration-panel-top>
+          @if (configurationDetail()) {
+            <section
+              #spreadsheet
+              class="flex-1 flex flex-col overflow-hidden relative"
+            >
+              <div class="absolute inset-0 overflow-auto flex flex-col">
+                <div class="flex flex-1 flex-col w-full min-w-fit">
+                  <app-configuration-panel-top
+                    class="sticky top-0 z-10 mx-4 flex"
+                    [configurationDetail]="configurationDetail()"
+                    [columnDetails]="editingColumnDetails"
+                    [spreadsheetWidth]="spreadsheetWidth()"
+                    (labelUpdated)="updateConfigurationLabel($event)"
+                    (descriptionUpdated)="
+                      updateConfigurationDescription($event)
+                    "
+                    (deletedConfiguration)="selectFirstConfiguration()"
+                  ></app-configuration-panel-top>
 
-                <app-configuration-panel-bottom
-                  class="mx-4 flex"
-                  [classroomId]="classroomId()"
-                  [configurationId]="configurationDetail()?.id"
-                  [defaultGroup]="defaultGroup()"
-                  [columnDetails]="editingColumnDetails"
-                  (studentFieldUpdated)="updateStudentField($event)"
-                  (studentDeleted)="deleteStudent($event)"
-                  (studentPositionUpdated)="updateStudentPosition($event)"
-                ></app-configuration-panel-bottom>
+                  <app-configuration-panel-bottom
+                    class="mx-4 flex"
+                    [classroomId]="classroomId()"
+                    [configurationId]="configurationDetail()?.id"
+                    [defaultGroup]="defaultGroup()"
+                    [columnDetails]="editingColumnDetails"
+                    (studentFieldUpdated)="updateStudentField($event)"
+                    (studentDeleted)="deleteStudent($event)"
+                    (studentPositionUpdated)="updateStudentPosition($event)"
+                  ></app-configuration-panel-bottom>
 
-                <div class="flex flex-col gap-y-4">
-                  @if (configurationDetail()) {
+                  <div class="flex flex-col gap-y-4">
                     <section
                       cdkDropList
                       (cdkDropListDropped)="dropGroup($event)"
@@ -167,44 +169,56 @@
                         }
                       }
                     </section>
-                  } @else if (configurationLoading()) {
-                    <mat-spinner></mat-spinner>
-                  }
-                </div>
+                  </div>
 
-                <div class="px-2 py-1 mx-4 panel rounded-md mt-4">
-                  <button matSuffix mat-button (click)="addGroup()">
-                    <mat-icon class="text-md">group_add</mat-icon>
-                    <span class="text-sm opacity-80">Add group</span>
-                  </button>
-                </div>
+                  <div class="px-2 py-1 mx-4 panel rounded-md mt-4">
+                    <button matSuffix mat-button (click)="addGroup()">
+                      <mat-icon class="text-md">group_add</mat-icon>
+                      <span class="text-sm opacity-80">Add group</span>
+                    </button>
+                  </div>
 
-                <span class="flex-auto"></span>
+                  <span class="flex-auto"></span>
 
-                @if (anyAverageScores()) {
-                  <div
-                    class="sticky bottom-0 z-50 px-4 py-2 mx-4 panel rounded-t-md mt-4"
-                  >
-                    <div class="flex flex-col justify-between gap-y-2">
-                      <span class="text-lg">Class average</span>
-                      <div class="flex grid-row py-1 rounded-md">
-                        @for (
-                          columnDetail of columnDetails();
-                          track columnIndex;
-                          let columnIndex = $index
-                        ) {
-                          <span class="flex-1 text-sm">{{
-                            averageScores()[columnDetail.fieldId]
-                              | number: '1.1-2'
-                          }}</span>
-                        }
+                  @if (anyAverageScores()) {
+                    <div
+                      class="sticky bottom-0 z-50 px-4 py-2 mx-4 panel rounded-t-md mt-4"
+                    >
+                      <div class="flex flex-col justify-between gap-y-2">
+                        <span class="text-lg">Class average</span>
+                        <div class="flex grid-row py-1 rounded-md">
+                          @for (
+                            columnDetail of columnDetails();
+                            track columnIndex;
+                            let columnIndex = $index
+                          ) {
+                            <span class="flex-1 text-sm">{{
+                              averageScores()[columnDetail.fieldId]
+                                | number: '1.1-2'
+                            }}</span>
+                          }
+                        </div>
                       </div>
                     </div>
-                  </div>
-                }
+                  }
+                </div>
               </div>
+            </section>
+          } @else if (configurationLoading()) {
+            <div class="flex-1">
+              <img
+                class="p-12 max-w-3xl"
+                [src]="
+                  theme() === Themes.LIGHT
+                    ? 'assets/single-post-light.svg'
+                    : 'assets/single-post-dark.svg'
+                "
+                alt="Icon"
+              />
+
+              <mat-spinner class="pl-12"></mat-spinner>
             </div>
-          </section>
+          }
 
           <section class="sticky bottom-0 flex">
             <mat-progress-bar
