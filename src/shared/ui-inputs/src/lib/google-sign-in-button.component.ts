@@ -17,7 +17,7 @@ import { Component, effect, input, OnDestroy } from '@angular/core';
       <div
         class="g_id_signin"
         data-type="standard"
-        data-shape="rectangular"
+        [attr.data-shape]="dataShape()"
         data-theme="outline"
         data-text="signin_with"
         [attr.data-size]="dataSize()"
@@ -27,7 +27,8 @@ import { Component, effect, input, OnDestroy } from '@angular/core';
   `,
 })
 export class GoogleSignInButtonComponent implements OnDestroy {
-  dataSize = input('large');
+  dataSize = input<'large' | 'medium' | 'small'>('large');
+  dataShape = input<'rectangular' | 'pill' | 'square'>('rectangular');
   isVisible = input(true);
 
   script: HTMLScriptElement | undefined;

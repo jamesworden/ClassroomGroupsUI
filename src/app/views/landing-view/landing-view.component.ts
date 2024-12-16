@@ -1,22 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
-import { GoogleSignInButtonComponent } from '@ui-inputs';
+import { ToolbarComponent } from 'app/components/toolbar/toolbar.component';
 import { Themes } from 'app/themes/theme.models';
 import { ThemeService } from 'app/themes/theme.service';
 
 @Component({
   selector: 'app-landing-view',
   standalone: true,
-  imports: [
-    GoogleSignInButtonComponent,
-    MatIconModule,
-    CommonModule,
-    MatToolbarModule,
-  ],
+  imports: [MatIconModule, CommonModule, ToolbarComponent, RouterModule],
   templateUrl: './landing-view.component.html',
   styleUrl: './landing-view.component.scss',
 })

@@ -1,0 +1,30 @@
+<mat-toolbar>
+  <div class="flex gap-x-8 flex-1">
+    <a class="hidden md:block" [routerLink]="['/']">ClassroomGroups</a>
+
+    <span class="flex-auto hidden md:block"></span>
+
+    <button
+      class="flex flex-col justify-around"
+      mat-icon-button
+      (click)="toggleTheme()"
+    >
+      <mat-icon>{{
+        theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
+      }}</mat-icon>
+    </button>
+
+    <span class="flex-auto block md:hidden"></span>
+
+    <div class="flex flex-col justify-around">
+      <a class="text-sm" [routerLink]="['/sign-in']">Sign In</a>
+    </div>
+
+    <a
+      class="text-sm bg-white bg-opacity-80 dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-lg shadow-md hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
+      [routerLink]="['/sign-up']"
+    >
+      Try Free
+    </a>
+  </div>
+</mat-toolbar>
