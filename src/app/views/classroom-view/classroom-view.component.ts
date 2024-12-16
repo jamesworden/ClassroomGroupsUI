@@ -98,6 +98,7 @@ interface ConfigPanelSettings {
     MatProgressBarModule,
     ConfigurationPanelBottomComponent,
     ConfigurationPanelTopComponent,
+    MatTooltipModule,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
