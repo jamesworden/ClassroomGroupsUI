@@ -4,10 +4,6 @@
     'select-none': isResizing(),
   }"
 >
-  <app-sidebar
-    (toggledClassAndConfigPanel)="toggleClassAndConfigPanel()"
-  ></app-sidebar>
-
   <div class="flex-1 w-full h-full flex">
     @if (configPanelSettings().isOpen) {
       <div
@@ -59,6 +55,18 @@
                 (change)="updateClassroomDescription($event)"
                 placeholder="Add a description for your classroom"
               />
+            </div>
+
+            <div class="flex flex-col justify-around mr-2">
+              <button
+                mat-icon-button
+                class="sidebar-button"
+                (click)="toggleTheme()"
+              >
+                <mat-icon>{{
+                  theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
+                }}</mat-icon>
+              </button>
             </div>
 
             <div class="flex flex-col justify-around">

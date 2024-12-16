@@ -8,7 +8,6 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   computed,
   effect,
@@ -33,7 +32,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import {
   ClassroomsService,
@@ -45,7 +44,6 @@ import {
 } from '@shared/classrooms';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
 import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
-import { SidebarComponent } from 'app/components/sidebar/sidebar.component';
 import {
   YesNoDialogComponent,
   YesNoDialogInputs,
@@ -64,6 +62,7 @@ import { ConfigurationPanelBottomComponent } from 'app/components/configuration-
 import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
+import { Themes } from 'app/themes/theme.models';
 
 enum StorageKeys {
   CONFIG_PANEL = 'configurations-panel',
@@ -83,7 +82,6 @@ interface ConfigPanelSettings {
     CommonModule,
     MatButtonModule,
     MatSidenavModule,
-    SidebarComponent,
     MatIconModule,
     ConfigurationsPanelComponent,
     MatMenuModule,
@@ -207,6 +205,7 @@ export class ClassroomViewComponent {
   });
   readonly classroomViewInitialized$ = new Subject<void>();
   readonly spreadsheetWidth = signal<number>(0);
+  readonly Themes = Themes;
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
@@ -303,6 +302,10 @@ export class ClassroomViewComponent {
         });
       }
     });
+  }
+
+  toggleTheme() {
+    this.#themeService.toggleTheme();
   }
 
   updateClassroomDescription(event: Event) {
