@@ -60,16 +60,30 @@
           class="outline-none border border-primary bg-transparent mx-12 p-2 flex-1"
         />
       } @else {
-        <button
-          class="mx-12"
-          #addConfigurationButton
-          matSuffix
-          mat-button
-          (click)="startAddingConfiguration(); $event.stopPropagation()"
+        <div
+          class="flex flex-col justify-around"
+          [matTooltip]="
+            this.configurations().length >=
+            (account()?.subscription?.maxConfigurationsPerClassroom ?? 0)
+              ? 'Configuration limit reached!'
+              : ''
+          "
         >
-          <mat-icon class="text-md">group_add</mat-icon>
-          <span class="text-sm opacity-80">Add configuration</span>
-        </button>
+          <button
+            class="mx-12"
+            #addConfigurationButton
+            matSuffix
+            mat-button
+            (click)="startAddingConfiguration(); $event.stopPropagation()"
+            [disabled]="
+              this.configurations().length >=
+              (account()?.subscription?.maxConfigurationsPerClassroom ?? 0)
+            "
+          >
+            <mat-icon class="text-md">group_add</mat-icon>
+            <span class="text-sm opacity-80">Add configuration</span>
+          </button>
+        </div>
       }
     </div>
   </div>

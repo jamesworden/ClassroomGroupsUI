@@ -16,13 +16,27 @@
           <mat-icon>home</mat-icon>
         </button>
 
-        <button
-          matTooltip="Add classroom"
-          mat-icon-button
-          (click)="createClassroom()"
+        <div
+          class="flex flex-col justify-around"
+          [matTooltip]="
+            classroomDetails().length >=
+            (account()?.subscription?.maxClassrooms ?? 0)
+              ? 'Classroom limit reached!'
+              : ''
+          "
         >
-          <mat-icon>add</mat-icon>
-        </button>
+          <button
+            matTooltip="Add classroom"
+            mat-icon-button
+            (click)="createClassroom()"
+            [disabled]="
+              classroomDetails().length >=
+              (account()?.subscription?.maxClassrooms ?? 0)
+            "
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
 
         <button
           [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"

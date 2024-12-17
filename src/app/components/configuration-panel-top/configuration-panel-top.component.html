@@ -166,17 +166,56 @@
 
 <mat-menu #configurationMenu="matMenu">
   <ng-template matMenuContent>
-    <button mat-menu-item (click)="createStudent()">
+    <button
+      mat-menu-item
+      (click)="createStudent()"
+      [disabled]="
+        studentsInConfiguration().length >=
+        (account()?.subscription?.maxStudentsPerClassroom || 0)
+      "
+      [matTooltip]="
+        studentsInConfiguration().length >=
+        (account()?.subscription?.maxStudentsPerClassroom || 0)
+          ? 'Student limit reached!'
+          : ''
+      "
+    >
       <mat-icon>add_person</mat-icon>
-      <span>Create student</span>
+      <span>Add student</span>
     </button>
-    <button mat-menu-item (click)="createGroup()">
+    <button
+      [disabled]="
+        listGroupDetails().length >=
+        (account()?.subscription?.maxStudentsPerClassroom || 0)
+      "
+      [matTooltip]="
+        listGroupDetails().length >=
+        (account()?.subscription?.maxStudentsPerClassroom || 0)
+          ? 'Group limit reached!'
+          : ''
+      "
+      mat-menu-item
+      (click)="createGroup()"
+    >
       <mat-icon>add</mat-icon>
-      <span>Create group</span>
+      <span>Add group</span>
     </button>
-    <button mat-menu-item (click)="openCreateColumnDialog()">
+    <button
+      [disabled]="
+        columnDetails().length >=
+        (account()?.subscription?.maxFieldsPerClassroom || 0)
+      "
+      [matTooltip]="
+        columnDetails().length >=
+        (account()?.subscription?.maxFieldsPerClassroom || 0)
+          ? 'Column limit reached!'
+          : ''
+      "
+      mat-menu-item
+      (click)="openCreateColumnDialog()"
+    >
       <mat-icon>add</mat-icon>
-      <span>Create column</span>
+      <span>Add column</span>
     </button>
     <button
       mat-menu-item

@@ -41,6 +41,7 @@ import {
   ConfigurationDetail,
 } from '@shared/classrooms';
 import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detail';
+import { AccountsService } from '@shared/accounts';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -66,6 +67,7 @@ import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detai
 export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly #matDialog = inject(MatDialog);
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #accountsService = inject(AccountsService);
 
   @ViewChild('toolbar')
   toolbar!: ElementRef<HTMLDivElement>;
@@ -93,6 +95,16 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly defaultGroup = computed(() =>
     this.#classroomsService.select.defaultGroup(this.configurationId())()
   );
+  readonly listGroupDetails = computed(() =>
+    this.#classroomsService.select.listGroupDetails(this.configurationId())()
+  );
+  readonly studentsInConfiguration = computed(() =>
+    this.#classroomsService.select.studentsInConfiguration(
+      this.configurationId()
+    )()
+  );
+
+  readonly account = this.#accountsService.select.account;
 
   groupingByDivision = false;
   groupingValue = 0;

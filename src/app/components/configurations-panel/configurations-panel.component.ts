@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  effect,
   ElementRef,
   HostListener,
   inject,
@@ -68,6 +69,7 @@ export class ConfigurationsPanelComponent {
   readonly configurationsLoading =
     this.#classroomsService.select.configurationsLoading;
   readonly addingConfiguration = signal<boolean>(false);
+  readonly account = this.#accountsService.select.account;
 
   createConfigurationLabel = '';
 
@@ -110,6 +112,7 @@ export class ConfigurationsPanelComponent {
       this.createConfigurationLabel
     );
     this.createConfigurationLabel = '';
+    this.stopAddingConfiguration();
   }
 
   startAddingConfiguration() {
