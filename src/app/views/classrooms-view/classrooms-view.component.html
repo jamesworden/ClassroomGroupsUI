@@ -1,8 +1,6 @@
-<div class="flex justify-around grid-bg">
-  <div
-    class="min-h-screen flex flex-col justify-between content-container flex-1"
-  >
-    <section class="flex-1 flex flex-col flex-1">
+<div class="grid-bg flex flex-col h-full w-full overflow-x-hidden">
+  <div class="flex-1 flex flex-col justify-between">
+    <div class="flex flex-col content-container w-full">
       <mat-toolbar>
         <span>Classrooms</span>
 
@@ -59,7 +57,7 @@
         </button>
       </mat-toolbar>
 
-      <div class="mx-4 flex flex-col flex-1">
+      <div class="mx-4 flex flex-col">
         @if (classroomDetails().length > 0) {
           <section
             class="mat-elevation-z8 rounded-md overflow-hidden"
@@ -68,7 +66,9 @@
             <table class="panel" mat-table [dataSource]="classroomDetails()">
               <ng-container matColumnDef="label">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td mat-cell *matCellDef="let element">{{ element.label }}</td>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.label }}
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="description">
@@ -136,15 +136,42 @@
           <mat-spinner></mat-spinner>
         }
       </div>
-    </section>
+    </div>
 
-    <mat-progress-bar
-      class="fixed bottom-0 left-0 right-0"
-      [mode]="classroomsLoading() ? 'indeterminate' : 'determinate'"
-    ></mat-progress-bar>
+    <div class="flex-1 flex-col gap-y-8 my-16">
+      <div class="flex justify-around mx-4">
+        <h3 class="!font-semibold mx-auto">
+          Your Classroom, <span class="text-primary">Your</span>
+          <span class="text-secondary"> Way</span>.
+        </h3>
+      </div>
+
+      <div class="flex justify-around">
+        <div class="flex mt-12 mx-4 flex-col md:flex-row">
+          @for (plan of subscriptionPlans; let i = $index; track i) {
+            <app-subscription-plan-card
+              class="rounded-lg"
+              [ngClass]="{
+                'bg-white dark:bg-gray-800': i === 1,
+                'bg-indigo-100 dark:bg-indigo-900': i !== 1,
+                'scale-110': i === 1,
+                'shadow-lg': i !== 1,
+                'shadow-xl': i === 1,
+              }"
+              [subscriptionPlan]="plan"
+            ></app-subscription-plan-card>
+          }
+        </div>
+      </div>
+    </div>
   </div>
 
-  <mat-menu #accountMenu="matMenu">
-    <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
-  </mat-menu>
+  <mat-progress-bar
+    class="fixed bottom-0 left-0 right-0"
+    [mode]="classroomsLoading() ? 'indeterminate' : 'determinate'"
+  ></mat-progress-bar>
 </div>
+
+<mat-menu #accountMenu="matMenu">
+  <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
+</mat-menu>

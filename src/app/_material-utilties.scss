@@ -13,7 +13,11 @@
   }
 
   .text-primary {
-    color: mat.get-theme-color($theme, primary, 50);
+    color: mat.get-theme-color($theme, primary, 50) !important;
+  }
+
+  .bg-primary {
+    background-color: mat.get-theme-color($theme, primary, 50);
   }
 
   .text-secondary {

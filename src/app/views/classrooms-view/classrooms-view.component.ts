@@ -19,6 +19,9 @@ import {
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AccountsService } from '@shared/accounts';
+import { subscriptionPlans } from 'app/metadata';
+import { SubscriptionPlanCardComponent } from 'app/components/subscription-plan-card/subscription-plan-card.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -34,6 +37,8 @@ import { AccountsService } from '@shared/accounts';
     MatProgressBarModule,
     MatTooltipModule,
     RouterModule,
+    SubscriptionPlanCardComponent,
+    CommonModule,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
@@ -53,6 +58,7 @@ export class ClassroomsViewComponent {
   readonly menuIsOpen = signal(false);
   readonly account = this.#accountService.select.account;
 
+  readonly subscriptionPlans = subscriptionPlans;
   displayedColumns = ['label', 'description', 'actions'];
 
   viewClassroom(id: string) {

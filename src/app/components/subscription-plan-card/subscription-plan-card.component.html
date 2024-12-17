@@ -1,0 +1,29 @@
+<div class="px-8 py-12 max-w-xs">
+  <h5 class="!font-semibold !m-0">{{ subscriptionPlan()?.title }}</h5>
+  <span class="text-sm">{{ subscriptionPlan()?.subtitle }}</span>
+
+  <div class="my-4 flex gap-x-2">
+    <h6>{{ subscriptionPlan()?.displayCost }}</h6>
+    <div class="flex flex-col justify-around text-sm">
+      <span>{{ subscriptionPlan()?.displayCostSubtitle }}</span>
+    </div>
+  </div>
+
+  @if (subscriptionPlan()?.showActionAsButton) {
+    <button
+      class="bg-primary dark:bg-white dark:shadow-md rounded-full text-white dark:text-gray-700 text-sm px-4 py-2"
+    >
+      {{ subscriptionPlan()?.actionText }}
+    </button>
+  } @else {
+    <span
+      class="bg-gray-600 dark:bg-gray-800 rounded-full text-white text-sm px-4 py-2"
+    >
+      {{ subscriptionPlan()?.actionText }}
+    </span>
+  }
+
+  <pre class="pt-6 text-xs custom-pre">{{
+    subscriptionPlan()?.description
+  }}</pre>
+</div>
