@@ -229,62 +229,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
       });
   }
 
-  toggleColumn(columnId: string) {
-    // this.#classroomsService.toggleColumn(columnId);
-  }
-
-  setSortAscending(columnId: string) {
-    // this.#store.dispatch(
-    //   updateColumns({
-    //     classroomId: this.viewingClassroomId(),
-    //     configurationId: this.viewingConfigurationId(),
-    //     columns: {
-    //       ...this.columns.map((column) => ({
-    //         ...column,
-    //         sort:
-    //           column.id === columnId
-    //             ? ClassroomColumnSort.ASCENDING
-    //             : column.sort,
-    //       })),
-    //     },
-    //   })
-    // );
-  }
-
-  setSortDescending(columnId: string) {
-    // this.#store.dispatch(
-    //   updateColumns({
-    //     classroomId: this.viewingClassroomId(),
-    //     configurationId: this.viewingConfigurationId(),
-    //     columns: {
-    //       ...this.columns.map((column) => ({
-    //         ...column,
-    //         sort:
-    //           column.id === columnId
-    //             ? ClassroomColumnSort.DESCENDING
-    //             : column.sort,
-    //       })),
-    //     },
-    //   })
-    // );
-  }
-
-  removeSort(columnId: string) {
-    // this.#store.dispatch(
-    //   updateColumns({
-    //     classroomId: this.viewingClassroomId(),
-    //     configurationId: this.viewingConfigurationId(),
-    //     columns: {
-    //       ...this.columns.map((column) => ({
-    //         ...column,
-    //         sort:
-    //           column.id === columnId ? ClassroomColumnSort.NONE : column.sort,
-    //       })),
-    //     },
-    //   })
-    // );
-  }
-
   createGroup() {
     const classroomId = this.classroomId();
     const configurationId = this.configurationId();
