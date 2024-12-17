@@ -19,6 +19,8 @@ export const subscriptionPlans: SubscriptionPlan[] = [
     description:
       '✔ 2 Classrooms\n✔ 30 Students per Class \n✔ 5 Columns per Class\n✔ 3 Configurations per Class',
     showActionAsButton: false,
+    icon: 'sell',
+    iconClass: 'text-gray-600 dark:text-gray-200',
   },
   {
     title: 'Basic',
@@ -30,7 +32,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
       '✔ 5 Classrooms\n✔ 50 Students per Class \n✔ 20 Columns per Class\n✔ 20 Configurations per Class',
     showActionAsButton: true,
     icon: 'rocket_launch',
-    iconClass: 'text-yellow-300',
+    iconClass: 'text-yellow-500 dark:text-yellow-300',
   },
   {
     title: 'Pro',
@@ -42,6 +44,6 @@ export const subscriptionPlans: SubscriptionPlan[] = [
       '✔ 50 Classrooms\n✔ 100 Students per Class \n✔ 50 Columns per Class\n✔ 50 Configurations per Class',
     showActionAsButton: true,
     icon: 'star',
-    iconClass: 'text-yellow-300',
+    iconClass: 'text-yellow-500 dark:text-yellow-300',
   },
 ];
