@@ -6,6 +6,7 @@
 >
   <div class="flex-1 w-full h-full flex">
     @if (configPanelSettings().isOpen) {
+      <!-- Currently hiding configurations panel when screen is small. -->
       <div
         appResizeable
         [resizableSides]="[ResizableSide.RIGHT]"
@@ -16,7 +17,7 @@
         [ngStyle]="{
           'min-width': configPanelSettings().width + 'px',
         }"
-        class="flex flex-col border-r border-neutral-400 shadow-lg"
+        class="flex-col border-r border-neutral-400 shadow-lg hidden md:flex"
         resizingId="config-panel"
       >
         <app-configurations-panel
