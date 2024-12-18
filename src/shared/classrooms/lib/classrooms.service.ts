@@ -12,6 +12,7 @@ import {
   CreateStudentResponse,
   DeletedClassroomResponse,
   DeletedConfigurationResponse,
+  DeleteColumnResponse,
   DeleteGroupResponse,
   DeleteStudentResponse,
   FieldDetail,
@@ -990,6 +991,66 @@ export class ClassroomsService {
           });
         }),
         map((res) => res?.deletedStudent),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public deleteColumn(
+    classroomId: string,
+    configurationId: string,
+    columnId: string
+  ) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
+    this.#httpClient
+      .delete<DeleteColumnResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ deletedColumn, deletedField, updatedColumnDetails }) => {
+          console.log('[Deleted Column]', deletedColumn);
+          console.log('[Deleted Field]', deletedField);
+          console.log('[Updated Column Details]', updatedColumnDetails);
+
+          this.patchState((draft) => {
+            draft.classroomDetails.forEach((c) => {
+              c.fieldDetails = c.fieldDetails.filter(
+                (f) => f.id !== deletedField.id
+              );
+            });
+            draft.configurationDetails.forEach((c) => {
+              if (c.id === configurationId) {
+                c.columnDetails = updatedColumnDetails;
+              }
+              c.groupDetails.forEach((g) => {
+                g.studentDetails.forEach((s) => {
+                  delete s.fieldIdsToValues[deletedField.id];
+                });
+              });
+            });
+          });
+          this.#matSnackBar.open('Deleted column', undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Delete Column Failed]', error);
+          this.#matSnackBar.open('Error deleting column', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        map((res) => res?.deletedColumn),
         take(1)
       )
       .subscribe();

@@ -1,9 +1,11 @@
 import {
   Classroom,
   ClassroomDetail,
+  Column,
   ColumnDetail,
   Configuration,
   ConfigurationDetail,
+  Field,
   FieldDetail,
   Group,
   GroupDetail,
@@ -90,5 +92,11 @@ export interface MoveStudentResponse {
 }
 
 export interface MoveColumnResponse {
+  updatedColumnDetails: ColumnDetail[];
+}
+
+export interface DeleteColumnResponse {
+  deletedColumn: Column;
+  deletedField: Field;
   updatedColumnDetails: ColumnDetail[];
 }

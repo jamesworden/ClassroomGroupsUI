@@ -42,6 +42,7 @@ import {
 } from '@shared/classrooms';
 import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detail';
 import { AccountsService } from '@shared/accounts';
+import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -60,6 +61,9 @@ import { AccountsService } from '@shared/accounts';
     MatMenuModule,
     CommonModule,
     MatTooltipModule,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
   ],
   templateUrl: './configuration-panel-top.component.html',
   styleUrl: './configuration-panel-top.component.scss',
@@ -228,6 +232,18 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     const configurationId = this.configurationId();
     if (classroomId && configurationId) {
       this.#classroomsService.createStudent(classroomId, configurationId);
+    }
+  }
+
+  deleteColumn(columnId: string) {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.deleteColumn(
+        classroomId,
+        configurationId,
+        columnId
+      );
     }
   }
 }
