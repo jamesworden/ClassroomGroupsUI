@@ -77,7 +77,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
-  readonly deletedConfiguration = output();
+  readonly deletedConfiguration = output<string>();
 
   readonly classroomId = computed(
     () => this.configurationDetail()?.classroomId
@@ -141,24 +141,10 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   }
 
   openDeleteConfigurationModal() {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete configuration',
-        subtitle: `Are you sure you want to delete the configuration ${
-          this.configurationDetail()?.label
-        } and all of it's data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      const classroomId = this.classroomId();
-      const configurationId = this.configurationId();
-      if (success && classroomId && configurationId) {
-        this.#classroomsService
-          .deleteConfiguration(classroomId, configurationId)
-          .subscribe(() => this.deletedConfiguration.emit());
-      }
-    });
+    const configurationId = this.configurationId();
+    if (configurationId) {
+      this.deletedConfiguration.emit(configurationId);
+    }
   }
 
   startEditing(fieldId: string) {

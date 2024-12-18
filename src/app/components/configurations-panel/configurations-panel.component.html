@@ -29,10 +29,14 @@
           configuration of filteredConfigurations();
           track configuration.id
         ) {
-          <mat-list-item (click)="selectConfiguration(configuration.id)">
+          <mat-list-item
+            (click)="selectConfiguration(configuration.id)"
+            [cdkContextMenuTriggerFor]="configurationMenu"
+          >
             <mat-icon matListItemIcon>{{
               configuration.id === selectedConfigurationId() ? 'group' : null
             }}</mat-icon>
+
             <div
               matListItemTitle
               [ngClass]="{
@@ -41,9 +45,23 @@
             >
               {{ configuration.label || 'Untitled' }}
             </div>
+
             <div matListItemLine>
               {{ configuration.description }}
             </div>
+
+            <ng-template #configurationMenu>
+              <div class="context-menu" cdkMenu>
+                <button
+                  class="context-menu-item"
+                  cdkMenuItem
+                  (click)="deleteConfiguration(configuration.id)"
+                >
+                  <mat-icon class="mr-3">person_remove</mat-icon>
+                  <span>Delete configuration</span>
+                </button>
+              </div>
+            </ng-template>
           </mat-list-item>
         }
       }
@@ -57,7 +75,7 @@
           [(ngModel)]="createConfigurationLabel"
           (keydown.enter)="createConfiguration()"
           placeholder="Add configuration"
-          class="outline-none border border-primary bg-transparent mx-4 p-2 flex-1"
+          class="outline-none border border-primary bg-transparent mx-6 p-2 flex-1"
         />
       } @else {
         <div

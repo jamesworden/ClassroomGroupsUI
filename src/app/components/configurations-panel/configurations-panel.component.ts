@@ -24,6 +24,7 @@ import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -39,6 +40,9 @@ import { CommonModule } from '@angular/common';
     MatTooltipModule,
     MatProgressSpinnerModule,
     CommonModule,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
   ],
   templateUrl: './configurations-panel.component.html',
   styleUrl: './configurations-panel.component.scss',
@@ -71,7 +75,7 @@ export class ConfigurationsPanelComponent {
   readonly addingConfiguration = signal<boolean>(false);
   readonly account = this.#accountsService.select.account;
 
-  createConfigurationLabel = '';
+  readonly deletedConfiguration = output<string>();
 
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
     () =>
@@ -79,6 +83,8 @@ export class ConfigurationsPanelComponent {
         label.toLowerCase().includes(this.searchQuery())
       ) ?? []
   );
+
+  createConfigurationLabel = '';
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -124,5 +130,9 @@ export class ConfigurationsPanelComponent {
 
   stopAddingConfiguration() {
     this.addingConfiguration.set(false);
+  }
+
+  deleteConfiguration(configurationId: string) {
+    this.deletedConfiguration.emit(configurationId);
   }
 }

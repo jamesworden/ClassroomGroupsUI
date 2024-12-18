@@ -501,4 +501,37 @@ export class ClassroomViewComponent {
   markMenuAsClosed() {
     this.menuIsOpen.set(false);
   }
+
+  openDeleteConfigurationModal(configurationId: string) {
+    const classroomId = this.classroomId();
+    if (!classroomId) {
+      return;
+    }
+
+    const configuration = this.#classroomsService.select.configuration(
+      classroomId,
+      configurationId
+    )();
+    if (!configuration) {
+      return;
+    }
+
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete configuration',
+        subtitle: `Are you sure you want to delete the configuration ${
+          configuration.label
+        } and all of it's data?`,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((success) => {
+      if (success && classroomId && configurationId) {
+        this.#classroomsService
+          .deleteConfiguration(classroomId, configurationId)
+          .subscribe(() => this.selectFirstConfiguration());
+      }
+    });
+  }
 }
