@@ -66,10 +66,6 @@ import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-av
 import { Themes } from 'app/themes/theme.models';
 import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
 
-enum StorageKeys {
-  CONFIG_PANEL = 'configurations-panel',
-}
-
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
 interface ConfigPanelSettings {
@@ -209,14 +205,6 @@ export class ClassroomViewComponent {
     () => Object.keys(this.averageScores()).length > 0
   );
   readonly account = this.#accountsService.select.account;
-
-  readonly ResizableSide = ResizableSide;
-  readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
-  readonly minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
-  readonly configPanelSettings = signal<ConfigPanelSettings>({
-    width: DEFAULT_PANEL_WIDTH,
-    isOpen: true,
-  });
   readonly classroomViewInitialized$ = new Subject<void>();
   readonly Themes = Themes;
   readonly menuIsOpen = signal(false);
@@ -226,18 +214,10 @@ export class ClassroomViewComponent {
   editingColumnDetails: ColumnDetail[] = [];
 
   constructor() {
-    this.loadConfigPanelSettings();
-
     effect(() => (this.editingGroups = this.listGroupDetails()));
     effect(() => (this.editingDefaultGroup = this.defaultGroup()));
     effect(() => (this.editingColumnDetails = this.columnDetails()));
 
-    effect(() => {
-      localStorage.setItem(
-        StorageKeys.CONFIG_PANEL,
-        JSON.stringify(this.configPanelSettings())
-      );
-    });
     this.configurations$
       .pipe(
         takeUntilDestroyed(),
@@ -263,24 +243,6 @@ export class ClassroomViewComponent {
         (classroomId) =>
           classroomId && this.#classroomsService.getConfigurations(classroomId)
       );
-  }
-
-  private loadConfigPanelSettings() {
-    const setting = localStorage.getItem(StorageKeys.CONFIG_PANEL);
-    if (setting) {
-      const settings = JSON.parse(setting) as ConfigPanelSettings;
-      this.configPanelSettings.set({
-        ...settings,
-        width: settings.width ?? DEFAULT_PANEL_WIDTH,
-      });
-    }
-  }
-
-  setPanelWidth(panelWidth: number) {
-    this.configPanelSettings.set({
-      ...this.configPanelSettings(),
-      width: panelWidth,
-    });
   }
 
   openDeleteClassroomDialog() {
@@ -329,14 +291,6 @@ export class ClassroomViewComponent {
         classroom.description
       );
     }
-  }
-
-  toggleClassAndConfigPanel() {
-    const existingSettings = this.configPanelSettings();
-    this.configPanelSettings.set({
-      ...existingSettings,
-      isOpen: !existingSettings.isOpen,
-    });
   }
 
   createGroup() {

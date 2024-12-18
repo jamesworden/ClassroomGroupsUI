@@ -5,29 +5,12 @@
   }"
 >
   <div class="flex-1 w-full h-full flex">
-    @if (configPanelSettings().isOpen) {
-      <!-- Currently hiding configurations panel when screen is small. -->
-      <div
-        appResizeable
-        [resizableSides]="[ResizableSide.RIGHT]"
-        [panelWidth]="configPanelSettings().width"
-        [maxWidth]="maxClassAndConfigPanelWidth"
-        [minWidth]="minClassAndConfigPanelWidth"
-        (resizedWidth)="setPanelWidth($event)"
-        [ngStyle]="{
-          'min-width': configPanelSettings().width + 'px',
-        }"
-        class="flex-col border-r border-neutral-400 shadow-lg hidden md:flex"
-        resizingId="config-panel"
-      >
-        <app-configurations-panel
-          [classroomId]="classroomId()"
-          [selectedConfigurationId]="selectedConfigurationId()"
-          (configurationIdSelected)="selectConfigurationId($event)"
-          class="flex-1"
-        ></app-configurations-panel>
-      </div>
-    }
+    <app-configurations-panel
+      [classroomId]="classroomId()"
+      [selectedConfigurationId]="selectedConfigurationId()"
+      (configurationIdSelected)="selectConfigurationId($event)"
+      class="flex-1 max-w-xs shadow-lg"
+    ></app-configurations-panel>
 
     <div class="flex flex-col flex-1">
       @if (classroom()) {
