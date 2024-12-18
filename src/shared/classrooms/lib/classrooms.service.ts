@@ -1247,11 +1247,12 @@ export class ClassroomsService {
   moveColumn(
     classroomId: string,
     configurationId: string,
+    columnId: string,
     moveColumnDetail: MoveColumnDetail
   ) {
     return this.#httpClient
       .post<MoveColumnResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/move-column`,
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/move`,
         {
           moveColumnDetail,
         },

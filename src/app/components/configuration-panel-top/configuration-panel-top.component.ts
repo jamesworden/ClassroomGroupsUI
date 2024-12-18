@@ -184,7 +184,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
 
     const moveColumnDetail: MoveColumnDetail = {
-      columnId: column.id,
       currIndex: event.currentIndex,
       prevIndex: event.previousIndex,
     };
@@ -192,6 +191,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     this.#classroomsService.moveColumn(
       classroomId,
       configurationId,
+      column.id,
       moveColumnDetail
     );
   }
