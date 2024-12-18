@@ -37,6 +37,8 @@ import {
   SortGroupsResponse,
   StudentField,
   UpsertStudentFieldResponse,
+  LockGroupResponse,
+  UnlockGroupResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -1112,6 +1114,80 @@ export class ClassroomsService {
           this.patchState((draft) => {
             draft.updatingClassroomIds.delete(classroomId);
           });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  lockGroup(classroomId: string, configurationId: string, groupId: string) {
+    return this.#httpClient
+      .post<LockGroupResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/lock`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedGroup }) => {
+          console.log('[Group Locked]', updatedGroup);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                const groupToLock = detail.groupDetails.find(
+                  (g) => g.id === groupId
+                );
+                if (groupToLock) {
+                  groupToLock.isLocked = true;
+                }
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Lock Group Failed]', error);
+          this.#matSnackBar.open('Error locking group', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  unlockGroup(classroomId: string, configurationId: string, groupId: string) {
+    return this.#httpClient
+      .post<UnlockGroupResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/unlock`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedGroup }) => {
+          console.log('[Group Unlocked]', updatedGroup);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                const groupToUnlock = detail.groupDetails.find(
+                  (g) => g.id === groupId
+                );
+                if (groupToUnlock) {
+                  groupToUnlock.isLocked = false;
+                }
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Unlock Group Failed]', error);
+          this.#matSnackBar.open('Error unlocking group', undefined, {
+            duration: 3000,
+          });
+          return of(null);
         }),
         take(1)
       )

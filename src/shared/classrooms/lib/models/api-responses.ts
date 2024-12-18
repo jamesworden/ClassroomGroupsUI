@@ -102,3 +102,11 @@ export interface DeleteColumnResponse {
     [configurationId: string]: ColumnDetail[];
   };
 }
+
+export interface LockGroupResponse {
+  updatedGroup: Group;
+}
+
+export interface UnlockGroupResponse {
+  updatedGroup: Group;
+}

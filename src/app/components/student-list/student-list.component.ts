@@ -19,6 +19,7 @@ import {
   ClassroomsService,
   ColumnDetail,
   FieldType,
+  GroupDetail,
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
@@ -59,6 +60,7 @@ export class StudentListComponent {
   readonly roundedTop = input<boolean>(false);
   readonly groupIndex = input<number>();
   readonly columnDetails = input<ColumnDetail[]>([]);
+  readonly groupDetail = input<GroupDetail>();
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();
@@ -124,6 +126,25 @@ export class StudentListComponent {
         configurationId,
         this.groupId()
       );
+    }
+  }
+
+  toggleGroupLocked() {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    const group = this.groupDetail();
+    if (classroomId && configurationId && group) {
+      group.isLocked
+        ? this.#classroomsService.unlockGroup(
+            classroomId,
+            configurationId,
+            group.id
+          )
+        : this.#classroomsService.lockGroup(
+            classroomId,
+            configurationId,
+            group.id
+          );
     }
   }
 }
