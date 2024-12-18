@@ -98,5 +98,7 @@ export interface MoveColumnResponse {
 export interface DeleteColumnResponse {
   deletedColumn: Column;
   deletedField: Field;
-  updatedColumnDetails: ColumnDetail[];
+  configurationIdsColumnDetails: {
+    [configurationId: string]: ColumnDetail[];
+  };
 }

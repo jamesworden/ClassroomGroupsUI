@@ -1028,32 +1028,35 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ deletedColumn, deletedField, updatedColumnDetails }) => {
-          console.log('[Deleted Column]', deletedColumn);
-          console.log('[Deleted Field]', deletedField);
-          console.log('[Updated Column Details]', updatedColumnDetails);
+        tap(
+          ({ deletedColumn, deletedField, configurationIdsColumnDetails }) => {
+            console.log('[Deleted Column]', deletedColumn);
+            console.log('[Deleted Field]', deletedField);
+            console.log(
+              '[Configuration Ids To Column Details]',
+              configurationIdsColumnDetails
+            );
 
-          this.patchState((draft) => {
-            draft.classroomDetails.forEach((c) => {
-              c.fieldDetails = c.fieldDetails.filter(
-                (f) => f.id !== deletedField.id
-              );
-            });
-            draft.configurationDetails.forEach((c) => {
-              if (c.id === configurationId) {
-                c.columnDetails = updatedColumnDetails;
-              }
-              c.groupDetails.forEach((g) => {
-                g.studentDetails.forEach((s) => {
-                  delete s.fieldIdsToValues[deletedField.id];
+            this.patchState((draft) => {
+              draft.classroomDetails.forEach((c) => {
+                c.fieldDetails = c.fieldDetails.filter(
+                  (f) => f.id !== deletedField.id
+                );
+              });
+              draft.configurationDetails.forEach((c) => {
+                c.columnDetails = configurationIdsColumnDetails[c.id];
+                c.groupDetails.forEach((g) => {
+                  g.studentDetails.forEach((s) => {
+                    delete s.fieldIdsToValues[deletedField.id];
+                  });
                 });
               });
             });
-          });
-          this.#matSnackBar.open('Deleted column', undefined, {
-            duration: 3000,
-          });
-        }),
+            this.#matSnackBar.open('Deleted column', undefined, {
+              duration: 3000,
+            });
+          }
+        ),
         catchError((error) => {
           console.log('[Delete Column Failed]', error);
           this.#matSnackBar.open('Error deleting column', undefined, {
