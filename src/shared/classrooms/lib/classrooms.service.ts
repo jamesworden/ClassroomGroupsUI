@@ -1,4 +1,11 @@
-import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  isDevMode,
+  Signal,
+  signal,
+} from '@angular/core';
 import {
   Classroom,
   ClassroomDetail,
@@ -46,6 +53,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { create } from 'mutative';
 import { MoveStudentDetail } from './models/move-student-detail';
 import { MoveColumnDetail } from './models/move-column-detail';
+import { warnOnValueMismatch } from './logic/warn-on-value-mismatch';
 
 class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
@@ -251,6 +259,14 @@ export class ClassroomsService {
         tap(({ configurationDetail }) => {
           console.log('[Got Configuration Detail]', configurationDetail);
           this.patchState((draft) => {
+            const existingDetail = draft.configurationDetails.find(
+              (c) => c.id === configurationDetail.id
+            );
+
+            isDevMode() &&
+              existingDetail &&
+              warnOnValueMismatch(existingDetail, configurationDetail);
+
             draft.configurationDetails = [
               ...draft.configurationDetails.filter(
                 (c) => c.id !== configurationDetail.id
