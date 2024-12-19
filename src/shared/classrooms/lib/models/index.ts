@@ -122,3 +122,8 @@ export interface StudentDetail {
     [id: string]: string;
   };
 }
+
+export enum StudentGroupingStrategy {
+  MixedAbilities,
+  SimilarAbilities,
+}

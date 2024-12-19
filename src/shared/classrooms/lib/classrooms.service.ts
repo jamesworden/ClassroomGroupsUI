@@ -39,6 +39,8 @@ import {
   UpsertStudentFieldResponse,
   LockGroupResponse,
   UnlockGroupResponse,
+  StudentGroupingStrategy,
+  GroupStudentsResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -949,6 +951,57 @@ export class ClassroomsService {
         catchError((error) => {
           console.log('[Upsert Student Field Failed]', error);
           this.#matSnackBar.open('Error upserting student field', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  groupStudents(
+    classroomId: string,
+    configurationId: string,
+    strategy: StudentGroupingStrategy,
+    numberOfGroups?: number,
+    studentsPerGroup?: number
+  ) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
+
+    return this.#httpClient
+      .post<GroupStudentsResponse>(
+        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/group-students`,
+        {
+          strategy,
+          numberOfGroups,
+          studentsPerGroup,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedGroupDetails }) => {
+          console.log('[Grouped Students]', updatedGroupDetails);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                detail.groupDetails = updatedGroupDetails;
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Group Students Failed]', error);
+          this.#matSnackBar.open('Error grouping students', undefined, {
             duration: 3000,
           });
           return of(null);

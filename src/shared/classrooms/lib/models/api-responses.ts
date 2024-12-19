@@ -110,3 +110,7 @@ export interface LockGroupResponse {
 export interface UnlockGroupResponse {
   updatedGroup: Group;
 }
+
+export interface GroupStudentsResponse {
+  updatedGroupDetails: GroupDetail[];
+}

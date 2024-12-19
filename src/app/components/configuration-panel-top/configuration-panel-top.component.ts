@@ -39,6 +39,7 @@ import {
   Column,
   ColumnDetail,
   ConfigurationDetail,
+  StudentGroupingStrategy,
 } from '@shared/classrooms';
 import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detail';
 import { AccountsService } from '@shared/accounts';
@@ -109,13 +110,14 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   );
 
   readonly account = this.#accountsService.select.account;
+  readonly toolbarHeight = signal<number>(0);
+  readonly StudentGroupingStrategy = StudentGroupingStrategy;
 
   groupingByDivision = false;
   groupingValue = 0;
   columns: ColumnDetail[] = [];
   editingFieldId?: string;
   editingField = '';
-  readonly toolbarHeight = signal<number>(0);
 
   constructor() {
     effect(() => (this.columns = this.columnDetails()));
@@ -243,6 +245,27 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
         classroomId,
         configurationId,
         columnId
+      );
+    }
+  }
+
+  groupStudents(studentGroupingStrategy: StudentGroupingStrategy) {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (classroomId && configurationId) {
+      const studentsPerGroup = this.groupingByDivision
+        ? undefined
+        : this.groupingValue;
+      const numberOfGroups = this.groupingByDivision
+        ? this.groupingValue
+        : undefined;
+
+      this.#classroomsService.groupStudents(
+        classroomId,
+        configurationId,
+        studentGroupingStrategy,
+        numberOfGroups,
+        studentsPerGroup
       );
     }
   }

@@ -53,11 +53,21 @@
 
         <div class="flex gap-x-2">
           <div class="flex flex-col justify-around">
-            <button [tabindex]="-1" mat-flat-button>Mixed Abilities</button>
+            <button
+              [tabindex]="-1"
+              mat-flat-button
+              (click)="groupStudents(StudentGroupingStrategy.MixedAbilities)"
+            >
+              Mixed Abilities
+            </button>
           </div>
 
           <div class="flex flex-col justify-around">
-            <button [tabindex]="-1" mat-stroked-button>
+            <button
+              [tabindex]="-1"
+              mat-stroked-button
+              (click)="groupStudents(StudentGroupingStrategy.SimilarAbilities)"
+            >
               Similar Abilities
             </button>
           </div>
