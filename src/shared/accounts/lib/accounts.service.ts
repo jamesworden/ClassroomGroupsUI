@@ -50,7 +50,7 @@ export class AccountsService {
     });
     return this.#httpClient
       .get<GetAccountResponse>(
-        `${environment.BASE_API}/v1/authentication/account`,
+        `${environment.BASE_API}/api/v1/authentication/account`,
         {
           withCredentials: true,
         }
@@ -82,7 +82,7 @@ export class AccountsService {
 
   logout() {
     return this.#httpClient
-      .post(`${environment.BASE_API}/v1/authentication/logout`, {
+      .post(`${environment.BASE_API}/api/v1/authentication/logout`, {
         withCredentials: true,
       })
       .pipe(

@@ -35,7 +35,7 @@ export class GoogleSignInButtonComponent implements OnDestroy {
   readonly isVisible = input(true);
 
   readonly GOOGLE_CLIENT_ID = environment.GOOGLE_CLIENT_ID;
-  readonly GOOGLE_LOGIN_URI = environment.GOOGLE_LOGIN_URI;
+  readonly GOOGLE_LOGIN_URI = `${environment.BASE_API}${environment.GOOGLE_LOGIN_URI}`;
 
   script: HTMLScriptElement | undefined;
 
