@@ -37,7 +37,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -47,14 +47,14 @@
               ],
               "outputHashing": "all"
             },
-            "development": {
+            "local": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
+                  "with": "src/environments/environment.local.ts"
                 }
               ]
             }
@@ -67,11 +67,11 @@
             "production": {
               "buildTarget": "classroom-groups:build:production"
             },
-            "development": {
-              "buildTarget": "classroom-groups:build:development"
+            "local": {
+              "buildTarget": "classroom-groups:build:local"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -111,7 +111,7 @@
             "production": {
               "tsConfig": "src/shared/ui-inputs/tsconfig.lib.prod.json"
             },
-            "development": {
+            "local": {
               "tsConfig": "src/shared/ui-inputs/tsconfig.lib.json"
             }
           },
