@@ -3,6 +3,7 @@ import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { catchError, finalize, of, take, tap } from 'rxjs';
 import { Account, GetAccountResponse } from './models';
 import { create } from 'mutative';
+import { environment } from 'environments/environment';
 
 class AccountSelectors {
   constructor(private _state: Signal<AccountsState>) {}
@@ -48,9 +49,12 @@ export class AccountsService {
       draft.accountLoading = true;
     });
     return this.#httpClient
-      .get<GetAccountResponse>('/api/v1/authentication/account', {
-        withCredentials: true,
-      })
+      .get<GetAccountResponse>(
+        `${environment.BASE_API}/v1/authentication/account`,
+        {
+          withCredentials: true,
+        }
+      )
       .pipe(
         tap(({ account }) => {
           if (account) {
@@ -78,7 +82,7 @@ export class AccountsService {
 
   logout() {
     return this.#httpClient
-      .post('/api/v1/authentication/logout', {
+      .post(`${environment.BASE_API}/v1/authentication/logout`, {
         withCredentials: true,
       })
       .pipe(

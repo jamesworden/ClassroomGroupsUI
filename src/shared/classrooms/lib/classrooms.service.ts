@@ -58,6 +58,7 @@ import { create } from 'mutative';
 import { MoveStudentDetail } from './models/move-student-detail';
 import { MoveColumnDetail } from './models/move-column-detail';
 import { warnOnValueMismatch } from './logic/warn-on-value-mismatch';
+import { environment } from 'environments/environment';
 
 class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
@@ -215,7 +216,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .get<GetClassroomDetailsResponse>(
-        '/api/v1/classrooms/classroom-details',
+        `${environment.BASE_API}/v1/classrooms/classroom-details`,
         {
           withCredentials: true,
         }
@@ -254,7 +255,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .get<GetConfigurationDetailResponse>(
-        `/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
         {
           withCredentials: true,
         }
@@ -306,7 +307,7 @@ export class ClassroomsService {
     });
     const classroomDetail$ = this.#httpClient
       .post<CreatedClassroomResponse>(
-        `/api/v1/classrooms`,
+        `${environment.BASE_API}/v1/classrooms`,
         {
           label,
           description,
@@ -353,9 +354,12 @@ export class ClassroomsService {
       draft.updatingClassroomIds.add(classroomId);
     });
     const deletedClassroom$ = this.#httpClient
-      .delete<DeletedClassroomResponse>(`/api/v1/classrooms/${classroomId}`, {
-        withCredentials: true,
-      })
+      .delete<DeletedClassroomResponse>(
+        `${environment.BASE_API}/v1/classrooms/${classroomId}`,
+        {
+          withCredentials: true,
+        }
+      )
       .pipe(
         tap(({ deletedClassroom }) => {
           console.log('[Deleted Classroom]', deletedClassroom);
@@ -397,7 +401,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .post<CreatedConfigurationResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations`,
         {
           label,
         },
@@ -444,7 +448,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .get<GetConfigurationsResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations`,
         {
           withCredentials: true,
         }
@@ -504,7 +508,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .patch<PatchConfigurationResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}`,
         {
           label,
           description,
@@ -562,7 +566,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .patch<PatchClassroomResponse>(
-        `/api/v1/classrooms/${classroomId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}`,
         {
           label,
           description,
@@ -603,7 +607,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .post<CreateGroupResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
         {
           label,
         },
@@ -652,7 +656,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .delete<DeleteGroupResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
         {
           withCredentials: true,
         }
@@ -705,7 +709,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .post<CreateStudentResponse>(
-        `/api/v1/classrooms/${classroomId}/students`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/students`,
         {
           configurationId,
           groupId,
@@ -784,7 +788,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .patch<PatchGroupResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
         {
           label,
         },
@@ -820,7 +824,7 @@ export class ClassroomsService {
     });
     const deletedConfiguration$ = this.#httpClient
       .delete<DeletedConfigurationResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}`,
         {
           withCredentials: true,
         }
@@ -873,7 +877,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .post<CreateColumnResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/columns`,
         {
           label,
           type,
@@ -937,7 +941,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .put<UpsertStudentFieldResponse>(
-        `/api/v1/classrooms/${classroomId}/students/${studentField.studentId}/fields/${studentField.fieldId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/students/${studentField.studentId}/fields/${studentField.fieldId}`,
         { value: studentField.value },
         {
           withCredentials: true,
@@ -978,7 +982,7 @@ export class ClassroomsService {
 
     return this.#httpClient
       .post<GroupStudentsResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/group-students`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/group-students`,
         {
           strategy,
           numberOfGroups,
@@ -1041,7 +1045,7 @@ export class ClassroomsService {
     });
     this.#httpClient
       .delete<DeleteStudentResponse>(
-        `/api/v1/classrooms/${classroomId}/students/${studentId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/students/${studentId}`,
         {
           withCredentials: true,
         }
@@ -1096,7 +1100,7 @@ export class ClassroomsService {
     });
     this.#httpClient
       .delete<DeleteColumnResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}`,
         {
           withCredentials: true,
         }
@@ -1156,7 +1160,7 @@ export class ClassroomsService {
   ) {
     return this.#httpClient
       .post<SortGroupsResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/sort-groups`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/sort-groups`,
         {
           sortedGroupIds,
         },
@@ -1195,7 +1199,7 @@ export class ClassroomsService {
   lockGroup(classroomId: string, configurationId: string, groupId: string) {
     return this.#httpClient
       .post<LockGroupResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/lock`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/lock`,
         {},
         {
           withCredentials: true,
@@ -1232,7 +1236,7 @@ export class ClassroomsService {
   unlockGroup(classroomId: string, configurationId: string, groupId: string) {
     return this.#httpClient
       .post<UnlockGroupResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/unlock`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/unlock`,
         {},
         {
           withCredentials: true,
@@ -1273,7 +1277,7 @@ export class ClassroomsService {
   ) {
     return this.#httpClient
       .post<MoveStudentResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/move-student`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/move-student`,
         {
           moveStudentDetail,
         },
@@ -1324,7 +1328,7 @@ export class ClassroomsService {
   ) {
     return this.#httpClient
       .post<MoveColumnResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/move`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/move`,
         {
           moveColumnDetail,
         },
@@ -1398,7 +1402,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .patch<PatchFieldResponse>(
-        `/api/v1/classrooms/${classroomId}/fields/${fieldId}`,
+        `${environment.BASE_API}/v1/classrooms/${classroomId}/fields/${fieldId}`,
         {
           label,
         },
