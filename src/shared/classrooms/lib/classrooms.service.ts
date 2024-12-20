@@ -989,7 +989,16 @@ export class ClassroomsService {
         }
       )
       .pipe(
-        tap(({ updatedGroupDetails }) => {
+        tap((response) => {
+          if (response.errorMessage) {
+            this.#matSnackBar.open(response.errorMessage, undefined, {
+              duration: 3000,
+            });
+            return;
+          }
+
+          const { updatedGroupDetails } = response;
+
           console.log('[Grouped Students]', updatedGroupDetails);
 
           this.patchState((draft) => {

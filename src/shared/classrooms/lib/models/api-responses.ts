@@ -113,4 +113,5 @@ export interface UnlockGroupResponse {
 
 export interface GroupStudentsResponse {
   updatedGroupDetails: GroupDetail[];
+  errorMessage?: string;
 }
