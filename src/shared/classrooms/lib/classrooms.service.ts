@@ -991,12 +991,22 @@ export class ClassroomsService {
       .pipe(
         tap(({ updatedGroupDetails }) => {
           console.log('[Grouped Students]', updatedGroupDetails);
+
           this.patchState((draft) => {
             draft.configurationDetails.forEach((detail) => {
               if (detail.id === configurationId) {
                 detail.groupDetails = updatedGroupDetails;
               }
             });
+          });
+
+          const message = getGroupedStudentsMessage(
+            numberOfGroups,
+            studentsPerGroup
+          );
+
+          this.#matSnackBar.open(message, undefined, {
+            duration: 3000,
           });
         }),
         catchError((error) => {
@@ -1506,4 +1516,17 @@ export class ClassroomsService {
       label,
     };
   }
+}
+
+function getGroupedStudentsMessage(
+  numberOfGroups?: number,
+  studentsPerGroup?: number
+) {
+  if (numberOfGroups === 0 || studentsPerGroup === 0) {
+    return 'Ungrouped students';
+  }
+
+  return numberOfGroups === undefined
+    ? `Assigned groups of ${studentsPerGroup}`
+    : `Assigned ${numberOfGroups} groups`;
 }
