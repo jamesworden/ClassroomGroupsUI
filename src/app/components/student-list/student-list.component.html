@@ -98,7 +98,15 @@
       </button>
     </div>
 
-    <button [tabindex]="-1" matSuffix mat-button (click)="toggleGroupLocked()">
+    <button
+      [ngClass]="{
+        'font-bold': groupDetail()?.isLocked,
+      }"
+      [tabindex]="-1"
+      matSuffix
+      mat-button
+      (click)="toggleGroupLocked()"
+    >
       <mat-icon class="text-md">{{
         groupDetail()?.isLocked ? 'lock_person' : 'lock_open_right'
       }}</mat-icon>
