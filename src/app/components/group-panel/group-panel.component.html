@@ -1,16 +1,11 @@
-<div
-  class="panel rounded-lg flex-col gap-y-2 px-2 pt-1 shadow-lg"
-  [ngClass]="{
-    'pb-2': !anyAverageScore(),
-  }"
->
+<div class="panel rounded-lg flex-col gap-y-2 px-2 pt-1 shadow-lg flex-1">
   <div class="flex justify-between">
     <div class="flex gap-x-2 flex-1">
       <div class="flex flex-col justify-around">
         <ng-content></ng-content>
       </div>
 
-      <div class="flex flex-col justify-around flex-1 mr-2">
+      <div class="flex flex-col justify-around flex-1">
         <input
           class="text-ellipsis text-lg m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
@@ -24,10 +19,7 @@
     </div>
 
     <div class="flex gap-x-2">
-      <button mat-icon-button (click)="createStudent()" tabindex="-1">
-        <mat-icon>person_add</mat-icon>
-      </button>
-      <button mat-icon-button (click)="deleteGroup()">
+      <button [tabIndex]="-1" mat-icon-button (click)="deleteGroup()">
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -39,20 +31,12 @@
     [classroomId]="classroomId()"
     [configurationId]="groupDetail()?.configurationId"
     [groupId]="groupDetail()?.id"
+    [groupDetail]="groupDetail()"
     [studentDetails]="groupDetail()?.studentDetails"
     [groupIndex]="groupIndex()"
+    [columnDetails]="columnDetails()"
     (studentFieldUpdated)="updateStudentField($event)"
     (studentDeleted)="deleteStudent($event)"
     (studentPositionUpdated)="updateStudentPosition($event)"
   ></app-student-list>
-
-  @if (anyAverageScore()) {
-    <div class="flex justify-between px-2 py-1">
-      @for (column of columnDetails(); track i; let i = $index) {
-        <span class="flex-1 opacity-80 text-sm">{{
-          averageScores()[column.fieldId] | number: '1.2-2'
-        }}</span>
-      }
-    </div>
-  }
 </div>

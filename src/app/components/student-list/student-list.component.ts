@@ -17,12 +17,17 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import {
   ClassroomsService,
+  ColumnDetail,
   FieldType,
+  GroupDetail,
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
 import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
+import { MatButtonModule } from '@angular/material/button';
+import { AccountsService } from '@shared/accounts';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-student-list',
@@ -37,12 +42,15 @@ import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-det
     CdkContextMenuTrigger,
     CdkMenu,
     CdkMenuItem,
+    MatTooltipModule,
+    MatButtonModule,
   ],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss',
 })
 export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #accountsService = inject(AccountsService);
 
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
@@ -51,6 +59,8 @@ export class StudentListComponent {
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
   readonly groupIndex = input<number>();
+  readonly columnDetails = input<ColumnDetail[]>([]);
+  readonly groupDetail = input<GroupDetail>();
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();
@@ -59,9 +69,12 @@ export class StudentListComponent {
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
   );
-  readonly columnDetails = computed(() =>
-    this.#classroomsService.select.columnDetails(this.configurationId())
+  readonly studentsInConfiguration = computed(() =>
+    this.#classroomsService.select.studentsInConfiguration(
+      this.configurationId()
+    )()
   );
+  readonly account = this.#accountsService.select.account;
 
   readonly FieldType = FieldType;
 
@@ -102,5 +115,36 @@ export class StudentListComponent {
 
   deleteStudent(studentDetail: StudentDetail) {
     this.studentDeleted.emit(studentDetail);
+  }
+
+  addStudent() {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createStudent(
+        classroomId,
+        configurationId,
+        this.groupId()
+      );
+    }
+  }
+
+  toggleGroupLocked() {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationId();
+    const group = this.groupDetail();
+    if (classroomId && configurationId && group) {
+      group.isLocked
+        ? this.#classroomsService.unlockGroup(
+            classroomId,
+            configurationId,
+            group.id
+          )
+        : this.#classroomsService.lockGroup(
+            classroomId,
+            configurationId,
+            group.id
+          );
+    }
   }
 }

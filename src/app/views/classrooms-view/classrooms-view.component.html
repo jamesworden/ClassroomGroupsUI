@@ -1,79 +1,170 @@
-<div class="min-h-screen flex flex-col justify-between">
-  <section>
-    <mat-toolbar>
-      <span>Classrooms</span>
-      <span class="flex-auto"></span>
-      <button mat-icon-button [matMenuTriggerFor]="classroomMenu">
-        <mat-icon>add</mat-icon>
-      </button>
-      <button mat-icon-button (click)="toggleTheme()">
-        <mat-icon>{{
-          theme() === Themes.LIGHT ? 'light_mode' : 'dark_mode'
-        }}</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="accountMenu"
-        (menuOpened)="markMenuAsOpen()"
-        (menuClosed)="markMenuAsClosed()"
-      >
-        <mat-icon>account_circle</mat-icon>
-      </button>
-    </mat-toolbar>
+<div class="grid-bg flex flex-col h-full w-full overflow-x-hidden">
+  <div class="flex-1 flex flex-col justify-between">
+    <div class="flex flex-col content-container w-full">
+      <mat-toolbar>
+        <span>Classrooms</span>
 
-    <div class="mx-4">
-      @if (classroomDetails().length > 0) {
-      <section class="mat-elevation-z8" tabindex="0">
-        <table mat-table [dataSource]="classroomDetails()">
-          <ng-container matColumnDef="label">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let element">{{ element.label }}</td>
-          </ng-container>
+        <span class="flex-auto"></span>
 
-          <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef>Description</th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.description }}
-            </td>
-          </ng-container>
+        <button
+          matTooltip="Classroom Groups"
+          mat-icon-button
+          [routerLink]="['/']"
+        >
+          <mat-icon>arrow_back</mat-icon>
+        </button>
 
-          <tr
-            mat-header-row
-            *matHeaderRowDef="displayedColumns; sticky: true"
-          ></tr>
-          <tr
-            (click)="viewClassroom(row.id)"
-            class="classroom-row cursor-pointer"
-            mat-row
-            *matRowDef="let row; columns: displayedColumns"
-          ></tr>
+        <div
+          class="flex flex-col justify-around"
+          [matTooltip]="
+            classroomDetails().length >=
+            (account()?.subscription?.maxClassrooms ?? 0)
+              ? 'Classroom limit reached!'
+              : ''
+          "
+        >
+          <button
+            matTooltip="Add classroom"
+            mat-icon-button
+            (click)="createClassroom()"
+            [disabled]="
+              classroomDetails().length >=
+              (account()?.subscription?.maxClassrooms ?? 0)
+            "
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
 
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td
-              mat-cell
-              *matCellDef="let element"
-              class="cursor-auto"
-              (click)="$event.stopPropagation()"
-            >
-              <button
-                mat-icon-button
-                color="warn"
-                (click)="openDeleteClassroomModal(element)"
-              >
-                <mat-icon>delete</mat-icon>
+        <button
+          [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
+          mat-icon-button
+          (click)="toggleTheme()"
+        >
+          <mat-icon>{{
+            theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
+          }}</mat-icon>
+        </button>
+
+        <button
+          matTooltip="Account settings"
+          mat-icon-button
+          [matMenuTriggerFor]="accountMenu"
+          (menuOpened)="markMenuAsOpen()"
+          (menuClosed)="markMenuAsClosed()"
+        >
+          <mat-icon>account_circle</mat-icon>
+        </button>
+      </mat-toolbar>
+
+      <div class="mx-4 flex flex-col">
+        @if (classroomDetails().length > 0) {
+          <section
+            class="mat-elevation-z8 rounded-md overflow-hidden"
+            tabindex="0"
+          >
+            <table class="panel" mat-table [dataSource]="classroomDetails()">
+              <ng-container matColumnDef="label">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.label }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.description }}
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumns; sticky: true"
+              ></tr>
+              <tr
+                (click)="viewClassroom(row.id)"
+                class="classroom-row cursor-pointer"
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
+              ></tr>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="cursor-auto"
+                  (click)="$event.stopPropagation()"
+                >
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="openDeleteClassroomModal(element)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+            </table>
+          </section>
+        } @else if (!classroomsLoading()) {
+          <div class="pt-24">
+            <h4>
+              There's no classrooms.
+              <button mat-button (click)="createClassroom()">
+                <mat-icon>group_add</mat-icon>
+                <span class="opacity-80">Add one?</span>
               </button>
-            </td>
-          </ng-container>
-        </table>
-      </section>
-      } @else if (!classroomsLoading()) {
-      <h2>No classrooms!</h2>
-      } @else {
-      <mat-spinner></mat-spinner>
-      }
+            </h4>
+          </div>
+
+          <div class="flex-1 relative">
+            <div class="absolute w-full h-full overflow-hidden">
+              <img
+                class="pt-12 max-w-3xl"
+                [src]="
+                  theme() === Themes.LIGHT
+                    ? 'assets/add-classroom-light.svg'
+                    : 'assets/add-classroom-dark.svg'
+                "
+                alt="Icon"
+              />
+            </div>
+          </div>
+        } @else {
+          <mat-spinner></mat-spinner>
+        }
+      </div>
     </div>
-  </section>
+
+    <div class="flex-1 flex-col gap-y-8 my-16">
+      <div class="flex justify-around mx-4">
+        <h3 class="!font-semibold mx-auto">
+          Your Classroom, <span class="text-primary">Your</span>
+          <span class="text-secondary"> Way</span>.
+        </h3>
+      </div>
+
+      <div class="flex justify-around">
+        <div class="flex mt-12 mx-4 flex-col md:flex-row">
+          @for (plan of subscriptionPlans; let i = $index; track i) {
+            <app-subscription-plan-card
+              class="rounded-lg"
+              [ngClass]="{
+                'bg-white dark:bg-gray-800': i === 1,
+                'bg-indigo-100 dark:bg-indigo-900': i !== 1,
+                'scale-110': i === 1,
+                'shadow-lg': i !== 1,
+                'shadow-xl': i === 1,
+              }"
+              [subscriptionPlan]="plan"
+            ></app-subscription-plan-card>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
 
   <mat-progress-bar
     class="fixed bottom-0 left-0 right-0"
@@ -83,11 +174,4 @@
 
 <mat-menu #accountMenu="matMenu">
   <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
-</mat-menu>
-
-<mat-menu #classroomMenu="matMenu">
-  <button mat-menu-item (click)="createClassroom()">
-    <mat-icon>group_add</mat-icon>
-    <span>Classroom</span>
-  </button>
 </mat-menu>

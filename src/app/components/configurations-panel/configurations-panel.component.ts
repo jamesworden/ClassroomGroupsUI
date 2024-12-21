@@ -1,7 +1,9 @@
 import {
   Component,
   computed,
+  effect,
   ElementRef,
+  HostListener,
   inject,
   input,
   output,
@@ -9,10 +11,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import {
-  ResizeableDirective,
-  ResizableSide,
-} from '../../directives/resizeable.directive';
+import { ResizableSide } from '../../directives/resizeable.directive';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -25,12 +24,12 @@ import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 
 @Component({
   selector: 'app-configurations-panel',
   standalone: true,
   imports: [
-    ResizeableDirective,
     MatFormFieldModule,
     MatListModule,
     MatSnackBarModule,
@@ -41,6 +40,9 @@ import { CommonModule } from '@angular/common';
     MatTooltipModule,
     MatProgressSpinnerModule,
     CommonModule,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
   ],
   templateUrl: './configurations-panel.component.html',
   styleUrl: './configurations-panel.component.scss',
@@ -51,7 +53,10 @@ export class ConfigurationsPanelComponent {
   readonly #accountsService = inject(AccountsService);
 
   @ViewChild('scrollContainer')
-  scrollContainer!: ElementRef<HTMLElement>;
+  scrollContainer: ElementRef<HTMLElement> | undefined;
+
+  @ViewChild('addConfigurationInput')
+  addConfigurationInput: ElementRef<HTMLInputElement> | undefined;
 
   readonly selectedConfigurationId = input<string>();
   readonly classroomId = input<string>();
@@ -67,8 +72,10 @@ export class ConfigurationsPanelComponent {
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly configurationsLoading =
     this.#classroomsService.select.configurationsLoading;
+  readonly addingConfiguration = signal<boolean>(false);
+  readonly account = this.#accountsService.select.account;
 
-  createConfigurationLabel = '';
+  readonly deletedConfiguration = output<string>();
 
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
     () =>
@@ -76,6 +83,20 @@ export class ConfigurationsPanelComponent {
         label.toLowerCase().includes(this.searchQuery())
       ) ?? []
   );
+
+  createConfigurationLabel = '';
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const clickedElement = event.target as HTMLElement;
+    const clickedInput =
+      this.addConfigurationInput?.nativeElement.contains(clickedElement);
+    if (clickedInput) {
+      return;
+    }
+
+    this.stopAddingConfiguration();
+  }
 
   selectConfiguration(configurationId: string) {
     this.configurationIdSelected.emit(configurationId);
@@ -97,5 +118,21 @@ export class ConfigurationsPanelComponent {
       this.createConfigurationLabel
     );
     this.createConfigurationLabel = '';
+    this.stopAddingConfiguration();
+  }
+
+  startAddingConfiguration() {
+    setTimeout(() => {
+      this.addConfigurationInput?.nativeElement.focus();
+    });
+    this.addingConfiguration.set(true);
+  }
+
+  stopAddingConfiguration() {
+    this.addingConfiguration.set(false);
+  }
+
+  deleteConfiguration(configurationId: string) {
+    this.deletedConfiguration.emit(configurationId);
   }
 }

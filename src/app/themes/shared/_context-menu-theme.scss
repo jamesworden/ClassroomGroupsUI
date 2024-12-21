@@ -14,7 +14,8 @@
     .context-menu-item {
       background-color: transparent;
       cursor: pointer;
-      border: none;
+      border: none !important;
+      outline: none !important;
 
       user-select: none;
       min-width: 64px;

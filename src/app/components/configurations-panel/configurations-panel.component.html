@@ -29,10 +29,14 @@
           configuration of filteredConfigurations();
           track configuration.id
         ) {
-          <mat-list-item (click)="selectConfiguration(configuration.id)">
+          <mat-list-item
+            (click)="selectConfiguration(configuration.id)"
+            [cdkContextMenuTriggerFor]="configurationMenu"
+          >
             <mat-icon matListItemIcon>{{
               configuration.id === selectedConfigurationId() ? 'group' : null
             }}</mat-icon>
+
             <div
               matListItemTitle
               [ngClass]="{
@@ -41,30 +45,64 @@
             >
               {{ configuration.label || 'Untitled' }}
             </div>
+
             <div matListItemLine>
               {{ configuration.description }}
             </div>
+
+            <ng-template #configurationMenu>
+              <div class="context-menu" cdkMenu>
+                <button
+                  class="context-menu-item"
+                  cdkMenuItem
+                  (click)="deleteConfiguration(configuration.id)"
+                >
+                  <mat-icon class="mr-3">group_remove</mat-icon>
+                  <span>Delete configuration</span>
+                </button>
+              </div>
+            </ng-template>
           </mat-list-item>
         }
       }
     </mat-action-list>
 
-    <div class="ml-4 flex gap-x-2 mb-2">
-      <div [matTooltip]="isLoggedIn() ? '' : 'You must be logged in!'">
-        <button
-          [disabled]="!createConfigurationLabel || !isLoggedIn()"
-          mat-icon-button
-          (click)="createConfiguration()"
+    <div class="flex">
+      @if (addingConfiguration()) {
+        <input
+          #addConfigurationInput
+          type="text"
+          [(ngModel)]="createConfigurationLabel"
+          (keydown.enter)="createConfiguration()"
+          placeholder="Add configuration"
+          class="outline-none border border-primary bg-transparent mx-6 p-2 flex-1"
+        />
+      } @else {
+        <div
+          class="flex flex-col justify-around"
+          [matTooltip]="
+            this.configurations().length >=
+            (account()?.subscription?.maxConfigurationsPerClassroom ?? 0)
+              ? 'Configuration limit reached!'
+              : ''
+          "
         >
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-      <input
-        type="text"
-        [(ngModel)]="createConfigurationLabel"
-        placeholder="Add configuration"
-        class="outline-none border-b border-gray-600 dark:border-gray-300 bg-transparent placeholder-gray-700 dark:placeholder-current"
-      />
+          <button
+            class="ml-6"
+            #addConfigurationButton
+            matSuffix
+            mat-button
+            (click)="startAddingConfiguration(); $event.stopPropagation()"
+            [disabled]="
+              this.configurations().length >=
+              (account()?.subscription?.maxConfigurationsPerClassroom ?? 0)
+            "
+          >
+            <mat-icon class="text-md">group_add</mat-icon>
+            <span class="text-sm opacity-80">Add configuration</span>
+          </button>
+        </div>
+      }
     </div>
   </div>
 </div>

@@ -1,4 +1,5 @@
 import { Component, effect, input, OnDestroy } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-google-sign-in-button',
@@ -8,27 +9,33 @@ import { Component, effect, input, OnDestroy } from '@angular/core';
     <div class="h-[44px] max-w-[222px]">
       <div
         id="g_id_onload"
-        data-client_id="379282615975-blkaldtgv9vuieo7hc2gmttkl2nb5983.apps.googleusercontent.com"
-        data-context="signin"
+        [attr.data-client_id]="GOOGLE_CLIENT_ID"
+        [attr.data-context]="context()"
         data-ux_mode="redirect"
-        data-login_uri="https://localhost:7192/classroom-groups/api/v1/authentication/login-with-google"
+        [attr.data-login_uri]="GOOGLE_LOGIN_URI"
         data-auto_prompt="false"
       ></div>
       <div
         class="g_id_signin"
         data-type="standard"
-        data-shape="rectangular"
+        [attr.data-shape]="shape()"
         data-theme="outline"
-        data-text="signin_with"
-        [attr.data-size]="dataSize()"
+        [attr.data-text]="text()"
+        [attr.data-size]="size()"
         data-logo_alignment="left"
       ></div>
     </div>
   `,
 })
 export class GoogleSignInButtonComponent implements OnDestroy {
-  dataSize = input('large');
-  isVisible = input(true);
+  readonly size = input<'large' | 'medium' | 'small'>('large');
+  readonly shape = input<'rectangular' | 'pill' | 'square'>('rectangular');
+  readonly context = input<'signin' | 'signup' | 'use'>('use');
+  readonly text = input<'signin_with' | 'signup_with'>('signin_with');
+  readonly isVisible = input(true);
+
+  readonly GOOGLE_CLIENT_ID = environment.GOOGLE_CLIENT_ID;
+  readonly GOOGLE_LOGIN_URI = `${environment.BASE_API}${environment.GOOGLE_LOGIN_URI}`;
 
   script: HTMLScriptElement | undefined;
 

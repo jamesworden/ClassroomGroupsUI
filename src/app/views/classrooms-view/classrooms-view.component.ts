@@ -5,7 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ClassroomDetail, ClassroomsService } from '@shared/classrooms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ThemeService } from 'app/themes/theme.service';
 import { Themes } from 'app/themes/theme.models';
 import { MatMenuModule } from '@angular/material/menu';
@@ -17,6 +17,11 @@ import {
   YesNoDialogInputs,
 } from 'app/components/yes-no-dialog/yes-no-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AccountsService } from '@shared/accounts';
+import { subscriptionPlans } from 'app/metadata';
+import { SubscriptionPlanCardComponent } from 'app/components/subscription-plan-card/subscription-plan-card.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -30,6 +35,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     AccountMenuComponent,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatTooltipModule,
+    RouterModule,
+    SubscriptionPlanCardComponent,
+    CommonModule,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
@@ -40,13 +49,16 @@ export class ClassroomsViewComponent {
   readonly #router = inject(Router);
   readonly #themeService = inject(ThemeService);
   readonly #matDialog = inject(MatDialog);
+  readonly #accountService = inject(AccountsService);
 
   readonly classroomDetails = this.#classroomsService.select.classroomDetails;
   readonly classroomsLoading = this.#classroomsService.select.classroomsLoading;
   readonly theme = this.#themeService.theme;
   readonly Themes = Themes;
   readonly menuIsOpen = signal(false);
+  readonly account = this.#accountService.select.account;
 
+  readonly subscriptionPlans = subscriptionPlans;
   displayedColumns = ['label', 'description', 'actions'];
 
   viewClassroom(id: string) {
@@ -83,11 +95,7 @@ export class ClassroomsViewComponent {
     });
     dialogRef.afterClosed().subscribe((success: boolean) => {
       if (success) {
-        this.#classroomsService
-          .deleteClassroom(classroomDetail.id)
-          .subscribe(() => {
-            this.#router.navigate(['/']);
-          });
+        this.#classroomsService.deleteClassroom(classroomDetail.id);
       }
     });
   }

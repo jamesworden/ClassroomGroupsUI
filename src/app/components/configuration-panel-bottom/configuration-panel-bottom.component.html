@@ -1,35 +1,17 @@
-<div
-  class="px-2 panel rounded-b-md"
-  [ngClass]="{
-    'pb-2': !anyAverageScore(),
-  }"
->
+<div class="px-2 panel rounded-b-md w-full shadow-lg">
   @if (defaultGroup()?.studentDetails?.length ?? 0 > 0) {
     <app-student-list
       [classroomId]="classroomId()"
       [configurationId]="configurationId()"
       [groupId]="defaultGroup()?.id"
+      [groupDetail]="defaultGroup()"
       [studentDetails]="defaultGroup()?.studentDetails"
       [roundedBottom]="true"
       [groupIndex]="0"
+      [columnDetails]="columnDetails()"
       (studentFieldUpdated)="updateStudentField($event)"
       (studentDeleted)="deleteStudent($event)"
       (studentPositionUpdated)="updateStudentPosition($event)"
     ></app-student-list>
-  }
-  @if (anyAverageScore()) {
-    <div class="flex justify-between py-1">
-      @for (column of columnDetails(); track i; let i = $index) {
-        @if (i === 0) {
-          <div class="flex flex-col justify-around">
-            <mat-icon class="opacity-80">functions</mat-icon>
-          </div>
-        }
-
-        <span class="flex-1 opacity-80 text-sm">{{
-          averageScores()[column.fieldId] | number: '1.2-2'
-        }}</span>
-      }
-    </div>
   }
 </div>

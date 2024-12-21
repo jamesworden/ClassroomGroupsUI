@@ -1,0 +1,44 @@
+<div
+  class="w-full h-full overflow-hidden"
+  [ngClass]="{
+    'light-gradient': theme() === Themes.LIGHT,
+    'dark-gradient': theme() === Themes.DARK,
+  }"
+>
+  <div class="content-container w-full h-full">
+    <div class="flex-1 flex flex-col justify-between h-full w-full">
+      <app-toolbar></app-toolbar>
+
+      <div class="flex-1 flex flex-row justify-around">
+        <div class="flex flex-col justify-around">
+          <div
+            class="max-w-md p-8 mx-4 shadow-lg rounded-md bg-white text-black flex flex-col justify-around gap-y-8"
+          >
+            <div>
+              <h4>Create your account</h4>
+              <p>
+                Have an account?
+                <a class="underline" [routerLink]="['/sign-in']">Log in now</a>
+              </p>
+            </div>
+
+            <app-google-sign-in-button
+              dataContext="signup"
+              dataText="signup_with"
+            ></app-google-sign-in-button>
+
+            <img
+              class="pt-12 sm:max-w-xs md:max-w-sm mt-8"
+              [src]="
+                theme() === Themes.LIGHT
+                  ? 'assets/sign-up-light.svg'
+                  : 'assets/sign-up-dark.svg'
+              "
+              alt="Icon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

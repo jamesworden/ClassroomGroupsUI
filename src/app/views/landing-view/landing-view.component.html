@@ -1,9 +1,54 @@
-<div class="flex-1 flex flex-col justify-evenly">
-  <div class="flex flex-col justify-around ml-8 gay-y-2">
-    <h1 style="margin: 0 !important">Classroom Groups</h1>
-    <h6 class="text-md">Log in to get started</h6>
-    <app-google-sign-in-button></app-google-sign-in-button>
-  </div>
+<div
+  class="flex-1 flex justify-around fixed top-0 left-0 w-full h-full bg-gray-100 overflow-auto z-10"
+  [ngClass]="{
+    'light-gradient': theme() === Themes.LIGHT,
+    'dark-gradient': theme() === Themes.DARK,
+  }"
+>
+  <div class="flex-1 flex flex-col content-container w-full h-full">
+    <app-toolbar></app-toolbar>
 
-  <div></div>
+    <div class="flex-1 flex gap-x-12 flex-col lg:flex-row min-h-[80vh]">
+      <div class="flex-1 flex flex-col mx-4 mt-16 lg:ml-8 lg:mt-32">
+        <div>
+          <span
+            style="margin: 0 !important; font-weight: semibold"
+            class="text-4xl lg:text-7xl"
+          >
+            Design <span class="text-primary">smarter</span><br /><span
+              class="text-secondary"
+              >learning</span
+            >
+            spaces.
+          </span>
+          <p class="max-w-md py-6">
+            Effortlessly create balanced, dynamic learning groups that maximize
+            student potential. Our intelligent algorithm analyzes student
+            performance, learning styles, and collaboration needs to generate
+            optimal classroom teams that promote engagement, support, and
+            academic growth.
+          </p>
+          <a
+            class="text-md bg-white bg-opacity-80 dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-lg shadow-md hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
+            [routerLink]="[isLoggedIn() ? '/classrooms' : '/sign-up']"
+          >
+            {{ isLoggedIn() ? 'Go to Classrooms' : 'Try ClassroomGroups Free' }}
+          </a>
+        </div>
+      </div>
+
+      <img
+        class="max-w-lg"
+        [src]="
+          theme() === Themes.LIGHT
+            ? 'assets/teacher-light.svg'
+            : 'assets/teacher-dark.svg'
+        "
+        alt="Icon"
+      />
+    </div>
+
+    <!-- Future Content -->
+    <div></div>
+  </div>
 </div>

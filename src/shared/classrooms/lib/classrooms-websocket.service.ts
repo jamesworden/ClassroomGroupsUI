@@ -4,6 +4,7 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from '@microsoft/signalr';
+import { environment } from 'environments/environment';
 
 enum MessageType {
   LoadedClassrooms = 'LoadedClassrooms',
@@ -16,7 +17,7 @@ export class ClassroomsWebsocketService {
   private readonly _isConnectedToServer = signal(false);
 
   private hubConnection: HubConnection = new HubConnectionBuilder()
-    .withUrl(`https://localhost:7192/classroom-groups`)
+    .withUrl(environment.BASE_API)
     .withAutomaticReconnect()
     .configureLogging(LogLevel.Information)
     .build();

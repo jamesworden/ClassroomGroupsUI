@@ -7,7 +7,16 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -24,10 +33,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import {
   ClassroomsService,
+  ColumnDetail,
   Group,
   GroupDetail,
   StudentDetail,
@@ -35,7 +45,6 @@ import {
 } from '@shared/classrooms';
 import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
 import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
-import { SidebarComponent } from 'app/components/sidebar/sidebar.component';
 import {
   YesNoDialogComponent,
   YesNoDialogInputs,
@@ -53,10 +62,9 @@ import { Subject } from '@microsoft/signalr';
 import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
 import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
-
-enum StorageKeys {
-  CONFIG_PANEL = 'configurations-panel',
-}
+import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
+import { Themes } from 'app/themes/theme.models';
+import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
 
 const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
 
@@ -72,7 +80,6 @@ interface ConfigPanelSettings {
     CommonModule,
     MatButtonModule,
     MatSidenavModule,
-    SidebarComponent,
     MatIconModule,
     ConfigurationsPanelComponent,
     MatMenuModule,
@@ -89,11 +96,16 @@ interface ConfigPanelSettings {
     MatProgressBarModule,
     ConfigurationPanelBottomComponent,
     ConfigurationPanelTopComponent,
+    MatTooltipModule,
+    AccountMenuComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
 })
 export class ClassroomViewComponent {
+  @ViewChild('spreadsheet')
+  spreadsheet!: ElementRef<HTMLDivElement>;
+
   readonly #themeService = inject(ThemeService);
   readonly #resizableService = inject(ResizableService);
   readonly #matDialog = inject(MatDialog);
@@ -169,31 +181,43 @@ export class ClassroomViewComponent {
       this.selectedConfigurationId()
     )()
   );
-
-  readonly ResizableSide = ResizableSide;
-  readonly maxClassAndConfigPanelWidth = Math.max(window.innerWidth / 2, 700);
-  readonly minClassAndConfigPanelWidth = Math.max(window.innerWidth / 5, 350);
-  readonly configPanelSettings = signal<ConfigPanelSettings>({
-    width: DEFAULT_PANEL_WIDTH,
-    isOpen: true,
+  readonly columnDetails = computed(() =>
+    this.#classroomsService.select.columnDetails(
+      this.defaultGroup()?.configurationId
+    )
+  );
+  readonly allGroupDetails = computed(() => {
+    const listGroupDetails = this.listGroupDetails();
+    const defaultGroupDetail = this.defaultGroup();
+    if (defaultGroupDetail) {
+      return [defaultGroupDetail, ...listGroupDetails];
+    } else {
+      return listGroupDetails;
+    }
   });
+  readonly allStudentDetails = computed(() =>
+    this.allGroupDetails().flatMap(({ studentDetails }) => studentDetails)
+  );
+  readonly averageScores = computed(() =>
+    calculateAverageScores(this.allStudentDetails(), this.columnDetails())
+  );
+  readonly anyAverageScores = computed(
+    () => Object.keys(this.averageScores()).length > 0
+  );
+  readonly account = this.#accountsService.select.account;
   readonly classroomViewInitialized$ = new Subject<void>();
+  readonly Themes = Themes;
+  readonly menuIsOpen = signal(false);
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
+  editingColumnDetails: ColumnDetail[] = [];
 
   constructor() {
-    this.loadConfigPanelSettings();
-
     effect(() => (this.editingGroups = this.listGroupDetails()));
     effect(() => (this.editingDefaultGroup = this.defaultGroup()));
+    effect(() => (this.editingColumnDetails = this.columnDetails()));
 
-    effect(() => {
-      localStorage.setItem(
-        StorageKeys.CONFIG_PANEL,
-        JSON.stringify(this.configPanelSettings())
-      );
-    });
     this.configurations$
       .pipe(
         takeUntilDestroyed(),
@@ -221,24 +245,6 @@ export class ClassroomViewComponent {
       );
   }
 
-  private loadConfigPanelSettings() {
-    const setting = localStorage.getItem(StorageKeys.CONFIG_PANEL);
-    if (setting) {
-      const settings = JSON.parse(setting) as ConfigPanelSettings;
-      this.configPanelSettings.set({
-        ...settings,
-        width: settings.width ?? DEFAULT_PANEL_WIDTH,
-      });
-    }
-  }
-
-  setPanelWidth(panelWidth: number) {
-    this.configPanelSettings.set({
-      ...this.configPanelSettings(),
-      width: panelWidth,
-    });
-  }
-
   openDeleteClassroomDialog() {
     const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
       restoreFocus: false,
@@ -253,10 +259,14 @@ export class ClassroomViewComponent {
       const classroomId = this.classroomId();
       if (success && classroomId) {
         this.#classroomsService.deleteClassroom(classroomId).subscribe(() => {
-          this.#router.navigate(['/']);
+          this.#router.navigate(['/classrooms']);
         });
       }
     });
+  }
+
+  toggleTheme() {
+    this.#themeService.toggleTheme();
   }
 
   updateClassroomDescription(event: Event) {
@@ -281,14 +291,6 @@ export class ClassroomViewComponent {
         classroom.description
       );
     }
-  }
-
-  toggleClassAndConfigPanel() {
-    const existingSettings = this.configPanelSettings();
-    this.configPanelSettings.set({
-      ...existingSettings,
-      isOpen: !existingSettings.isOpen,
-    });
   }
 
   createGroup() {
@@ -482,5 +484,54 @@ export class ClassroomViewComponent {
     }
 
     this.#classroomsService.moveStudent(classroomId, configurationId, position);
+  }
+
+  addGroup() {
+    const classroomId = this.classroomId();
+    const configurationId = this.selectedConfigurationId();
+    if (classroomId && configurationId) {
+      this.#classroomsService.createGroup(classroomId, configurationId);
+    }
+  }
+
+  markMenuAsOpen() {
+    this.menuIsOpen.set(true);
+  }
+
+  markMenuAsClosed() {
+    this.menuIsOpen.set(false);
+  }
+
+  openDeleteConfigurationModal(configurationId: string) {
+    const classroomId = this.classroomId();
+    if (!classroomId) {
+      return;
+    }
+
+    const configuration = this.#classroomsService.select.configuration(
+      classroomId,
+      configurationId
+    )();
+    if (!configuration) {
+      return;
+    }
+
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete configuration',
+        subtitle: `Are you sure you want to delete the configuration ${
+          configuration.label
+        } and all of it's data?`,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((success) => {
+      if (success && classroomId && configurationId) {
+        this.#classroomsService
+          .deleteConfiguration(classroomId, configurationId)
+          .subscribe(() => this.selectFirstConfiguration());
+      }
+    });
   }
 }

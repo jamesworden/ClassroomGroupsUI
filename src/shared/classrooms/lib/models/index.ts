@@ -37,6 +37,7 @@ export interface Group {
   configurationId: string;
   label: string;
   ordinal: number;
+  isLocked: boolean;
 }
 
 export enum FieldType {
@@ -110,6 +111,7 @@ export interface GroupDetail {
   ordinal: number;
   label: string;
   studentDetails: StudentDetail[];
+  isLocked: boolean;
 }
 
 export interface StudentDetail {
@@ -119,4 +121,9 @@ export interface StudentDetail {
   fieldIdsToValues: {
     [id: string]: string;
   };
+}
+
+export enum StudentGroupingStrategy {
+  MixedAbilities,
+  SimilarAbilities,
 }

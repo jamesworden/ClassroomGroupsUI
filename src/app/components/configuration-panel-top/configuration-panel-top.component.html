@@ -1,98 +1,121 @@
-<div class="rounded-t-md panel pt-2 px-2 flex flex-col gap-y-4">
+<div class="panel pt-2 px-2 flex flex-col w-full">
   <!-- Toolbar -->
-  <div class="flex justify-between min-h-16 flex-wrap gap-y-4">
-    <div class="flex flex-col justify-around pr-4 flex-1">
-      <div class="flex flex-col">
-        <input
-          class="text-ellipsis text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          maxlength="120"
-          [value]="configurationLabel()"
-          (change)="updateLabel($event)"
-          placeholder="Untitled"
-        />
-        <input
-          class="text-ellipsis text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          maxlength="150"
-          [value]="configurationDescription()"
-          (change)="updateDescription($event)"
-          placeholder="Add a description for your configuration"
-        />
-      </div>
-    </div>
-
-    <div class="flex gap-x-4 mt-2">
-      <div class="flex flex-col justify-around">
+  <div #toolbar>
+    <div class="flex justify-between min-h-16 flex-wrap gap-y-4">
+      <div class="flex flex-col justify-around pr-4 flex-1">
         <div class="flex flex-col">
-          <span class="text-sm ml-2">Average Scores</span>
-          <div class="flex justify-between">
-            <div></div>
-            <mat-slide-toggle
-              color="primary"
-              class="scale-75"
-              [checked]="averageScores"
-            >
-            </mat-slide-toggle>
-          </div>
+          <input
+            class="text-ellipsis text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            maxlength="120"
+            [value]="configurationLabel()"
+            (change)="updateLabel($event)"
+            placeholder="Untitled"
+          />
+          <input
+            class="text-ellipsis text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            maxlength="150"
+            [value]="configurationDescription()"
+            (change)="updateDescription($event)"
+            placeholder="Add a description for your configuration"
+          />
         </div>
       </div>
 
-      <mat-form-field
-        appearance="outline"
-        class="w-48"
-        subscriptSizing="dynamic"
-      >
-        <mat-label>{{
-          groupingByDivision ? 'Number of groups' : 'Students per group'
-        }}</mat-label>
-        <input matInput type="number" [(ngModel)]="groupingValue" />
-        <button matSuffix mat-icon-button (click)="toggleGroupingType()">
-          <mat-icon>safety_divider</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <div class="flex gap-x-2">
-        <div class="flex flex-col justify-around">
-          <button mat-flat-button>Group</button>
-        </div>
-
-        <div class="flex flex-col justify-around">
-          <button mat-stroked-button>Shuffle</button>
-        </div>
-
-        <div class="flex flex-col justify-around">
-          <button mat-icon-button [matMenuTriggerFor]="configurationMenu">
-            <mat-icon>more_vert</mat-icon>
+      <div class="flex gap-x-4 mt-2">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>{{
+            groupingByDivision ? 'Number of groups' : 'Students per group'
+          }}</mat-label>
+          <input
+            [tabindex]="-1"
+            matInput
+            type="number"
+            [(ngModel)]="groupingValue"
+            [min]="0"
+          />
+          <button
+            [tabindex]="-1"
+            [matTooltip]="
+              groupingByDivision ? 'Students per group' : 'Number of groups'
+            "
+            matSuffix
+            mat-icon-button
+            (click)="toggleGroupingType()"
+          >
+            <mat-icon>safety_divider</mat-icon>
           </button>
+        </mat-form-field>
+
+        <div class="flex gap-x-2">
+          <div class="flex flex-col justify-around">
+            <button
+              [tabindex]="-1"
+              mat-flat-button
+              (click)="groupStudents(StudentGroupingStrategy.MixedAbilities)"
+            >
+              Mixed Abilities
+            </button>
+          </div>
+
+          <div class="flex flex-col justify-around">
+            <button
+              [tabindex]="-1"
+              mat-stroked-button
+              (click)="groupStudents(StudentGroupingStrategy.SimilarAbilities)"
+            >
+              Similar Abilities
+            </button>
+          </div>
+
+          <div class="flex flex-col justify-around">
+            <button
+              [tabindex]="-1"
+              matTooltip="More"
+              mat-icon-button
+              [matMenuTriggerFor]="configurationMenu"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Data Grid Header -->
   <div>
-    <!-- Data Grid Header -->
-    <div>
+    <div class="mt-4">
       <div
         cdkDropList
         cdkDropListOrientation="horizontal"
-        class="grid-row border border-neutral-200 dark:border-neutral-600 flex flex-row rounded-t-md min-h-16"
+        class="grid-row border-t border-x border-neutral-200 dark:border-neutral-600 flex flex-row rounded-t-md min-h-16"
         [ngClass]="{
-          'rounded-tr-lg':
-            columns.length > 0 &&
-            enabledColumnBadges()[columns[columns.length - 1].id],
           'rounded-b-md': (defaultGroup()?.studentDetails?.length ?? 0) <= 0,
         }"
         (cdkDropListDropped)="drop($event)"
       >
         @for (column of columns; track column.id) {
           <div
-            class="draggable-field grid-row p-2 border-r border-neutral-200 dark:border-neutral-600 rounded-t-md"
+            class="draggable-field grid-row p-2 border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48"
             cdkDrag
-            [matBadge]="enabledColumnBadges()[column.id]"
-            matBadgeOverlap="true"
-            matBadgeColor="primary"
+            [cdkDragData]="column"
+            [cdkContextMenuTriggerFor]="columnHeaderMenu"
           >
+            <ng-template #columnHeaderMenu>
+              <div class="context-menu" cdkMenu>
+                <button
+                  class="context-menu-item"
+                  cdkMenuItem
+                  (click)="deleteColumn(column.id)"
+                >
+                  <mat-icon class="mr-3">delete</mat-icon>
+                  <span>Delete column</span>
+                </button>
+              </div>
+            </ng-template>
+
             <div class="flex justify-between w-full">
               <div class="flex flex-col justify-around flex-1">
                 <div class="flex">
@@ -120,18 +143,6 @@
                   }
                 </div>
               </div>
-              <div class="flex">
-                <button
-                  matSuffix
-                  mat-icon-button
-                  [matMenuTriggerFor]="fieldMenu"
-                  [matMenuTriggerData]="{
-                    column: column,
-                  }"
-                >
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-              </div>
             </div>
           </div>
         }
@@ -140,40 +151,58 @@
   </div>
 </div>
 
-<mat-menu #fieldMenu="matMenu">
-  <ng-template matMenuContent let-column="column">
-    <button mat-menu-item (click)="toggleColumn(column.id)">
-      <mat-icon>{{ column.enabled ? 'close' : 'check' }}</mat-icon>
-      <span>{{ column.enabled ? 'Disable grouping' : 'Enable grouping' }}</span>
-    </button>
-    <button mat-menu-item (click)="setSortAscending(column.id)">
-      <mat-icon>arrow_upward</mat-icon>
-      <span>Sort ascending</span>
-    </button>
-    <button mat-menu-item (click)="setSortDescending(column.id)">
-      <mat-icon>arrow_downward</mat-icon>
-      <span>Sort descending</span>
-    </button>
-    <button mat-menu-item (click)="removeSort(column.id)">
-      <mat-icon>remove</mat-icon>
-      <span>Remove sort</span>
-    </button>
-  </ng-template>
-</mat-menu>
-
 <mat-menu #configurationMenu="matMenu">
   <ng-template matMenuContent>
-    <button mat-menu-item (click)="createStudent()">
+    <button
+      mat-menu-item
+      (click)="createStudent()"
+      [disabled]="
+        studentsInConfiguration().length >=
+        (account()?.subscription?.maxStudentsPerClassroom || 0)
+      "
+      [matTooltip]="
+        studentsInConfiguration().length >=
+        (account()?.subscription?.maxStudentsPerClassroom || 0)
+          ? 'Student limit reached!'
+          : ''
+      "
+    >
       <mat-icon>add_person</mat-icon>
-      <span>Create student</span>
+      <span>Add student</span>
     </button>
-    <button mat-menu-item (click)="createGroup()">
+    <button
+      [disabled]="
+        listGroupDetails().length >=
+        (account()?.subscription?.maxStudentsPerClassroom || 0)
+      "
+      [matTooltip]="
+        listGroupDetails().length >=
+        (account()?.subscription?.maxStudentsPerClassroom || 0)
+          ? 'Group limit reached!'
+          : ''
+      "
+      mat-menu-item
+      (click)="createGroup()"
+    >
       <mat-icon>add</mat-icon>
-      <span>Create group</span>
+      <span>Add group</span>
     </button>
-    <button mat-menu-item (click)="openCreateColumnDialog()">
+    <button
+      [disabled]="
+        columnDetails().length >=
+        (account()?.subscription?.maxFieldsPerClassroom || 0)
+      "
+      [matTooltip]="
+        columnDetails().length >=
+        (account()?.subscription?.maxFieldsPerClassroom || 0)
+          ? 'Column limit reached!'
+          : ''
+      "
+      mat-menu-item
+      (click)="openCreateColumnDialog()"
+    >
       <mat-icon>add</mat-icon>
-      <span>Create column</span>
+      <span>Add column</span>
     </button>
     <button
       mat-menu-item

@@ -23,5 +23,6 @@ export function getGroupFromDetail(detail: GroupDetail): Group {
     id: detail.id,
     label: detail.label,
     ordinal: detail.ordinal,
+    isLocked: detail.isLocked,
   };
 }

@@ -1,4 +1,11 @@
-import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  isDevMode,
+  Signal,
+  signal,
+} from '@angular/core';
 import {
   Classroom,
   ClassroomDetail,
@@ -12,6 +19,7 @@ import {
   CreateStudentResponse,
   DeletedClassroomResponse,
   DeletedConfigurationResponse,
+  DeleteColumnResponse,
   DeleteGroupResponse,
   DeleteStudentResponse,
   FieldDetail,
@@ -20,6 +28,7 @@ import {
   GetConfigurationDetailResponse,
   GetConfigurationsResponse,
   GroupDetail,
+  MoveColumnResponse,
   MoveStudentResponse,
   PatchClassroomResponse,
   PatchConfigurationResponse,
@@ -28,6 +37,10 @@ import {
   SortGroupsResponse,
   StudentField,
   UpsertStudentFieldResponse,
+  LockGroupResponse,
+  UnlockGroupResponse,
+  StudentGroupingStrategy,
+  GroupStudentsResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -43,6 +56,9 @@ import { getConfigurationFromDetail } from './logic/get-model-from-detail';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { create } from 'mutative';
 import { MoveStudentDetail } from './models/move-student-detail';
+import { MoveColumnDetail } from './models/move-column-detail';
+import { warnOnValueMismatch } from './logic/warn-on-value-mismatch';
+import { environment } from 'environments/environment';
 
 class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
@@ -73,6 +89,14 @@ class ClassroomSelectors {
       this._state()
         .configurations.filter((c) => c.classroomId === classroomId)
         .sort((a, b) => a.label.localeCompare(b.label))
+    );
+
+  public readonly configuration = (
+    classroomId?: string,
+    configurationId?: string
+  ) =>
+    computed(() =>
+      this.configurations(classroomId)()?.find((c) => c.id == configurationId)
     );
 
   public readonly classroomsLoading = computed(
@@ -137,6 +161,14 @@ class ClassroomSelectors {
         (g) => g.id === configurationDetail.defaultGroupId
       );
     });
+
+  public readonly studentsInConfiguration = (configurationId?: string) =>
+    computed(
+      () =>
+        this.configurationDetail(configurationId)()?.groupDetails?.flatMap(
+          (g) => g.studentDetails
+        ) || []
+    );
 }
 
 interface ClassroomsState {
@@ -184,7 +216,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .get<GetClassroomDetailsResponse>(
-        '/api/v1/classrooms/classroom-details',
+        `${environment.BASE_API}/api/v1/classrooms/classroom-details`,
         {
           withCredentials: true,
         }
@@ -223,7 +255,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .get<GetConfigurationDetailResponse>(
-        `/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configuration-detail/${configurationId}`,
         {
           withCredentials: true,
         }
@@ -232,6 +264,14 @@ export class ClassroomsService {
         tap(({ configurationDetail }) => {
           console.log('[Got Configuration Detail]', configurationDetail);
           this.patchState((draft) => {
+            const existingDetail = draft.configurationDetails.find(
+              (c) => c.id === configurationDetail.id
+            );
+
+            isDevMode() &&
+              existingDetail &&
+              warnOnValueMismatch(existingDetail, configurationDetail);
+
             draft.configurationDetails = [
               ...draft.configurationDetails.filter(
                 (c) => c.id !== configurationDetail.id
@@ -267,7 +307,7 @@ export class ClassroomsService {
     });
     const classroomDetail$ = this.#httpClient
       .post<CreatedClassroomResponse>(
-        `/api/v1/classrooms`,
+        `${environment.BASE_API}/api/v1/classrooms`,
         {
           label,
           description,
@@ -314,9 +354,12 @@ export class ClassroomsService {
       draft.updatingClassroomIds.add(classroomId);
     });
     const deletedClassroom$ = this.#httpClient
-      .delete<DeletedClassroomResponse>(`/api/v1/classrooms/${classroomId}`, {
-        withCredentials: true,
-      })
+      .delete<DeletedClassroomResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}`,
+        {
+          withCredentials: true,
+        }
+      )
       .pipe(
         tap(({ deletedClassroom }) => {
           console.log('[Deleted Classroom]', deletedClassroom);
@@ -358,7 +401,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .post<CreatedConfigurationResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations`,
         {
           label,
         },
@@ -405,7 +448,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .get<GetConfigurationsResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations`,
         {
           withCredentials: true,
         }
@@ -465,7 +508,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .patch<PatchConfigurationResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
         {
           label,
           description,
@@ -523,7 +566,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .patch<PatchClassroomResponse>(
-        `/api/v1/classrooms/${classroomId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}`,
         {
           label,
           description,
@@ -564,7 +607,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .post<CreateGroupResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
         {
           label,
         },
@@ -613,7 +656,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .delete<DeleteGroupResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
         {
           withCredentials: true,
         }
@@ -666,7 +709,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .post<CreateStudentResponse>(
-        `/api/v1/classrooms/${classroomId}/students`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/students`,
         {
           configurationId,
           groupId,
@@ -745,7 +788,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .patch<PatchGroupResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}`,
         {
           label,
         },
@@ -781,7 +824,7 @@ export class ClassroomsService {
     });
     const deletedConfiguration$ = this.#httpClient
       .delete<DeletedConfigurationResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}`,
         {
           withCredentials: true,
         }
@@ -834,7 +877,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .post<CreateColumnResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns`,
         {
           label,
           type,
@@ -898,7 +941,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .put<UpsertStudentFieldResponse>(
-        `/api/v1/classrooms/${classroomId}/students/${studentField.studentId}/fields/${studentField.fieldId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/students/${studentField.studentId}/fields/${studentField.fieldId}`,
         { value: studentField.value },
         {
           withCredentials: true,
@@ -926,26 +969,96 @@ export class ClassroomsService {
       .subscribe();
   }
 
+  groupStudents(
+    classroomId: string,
+    configurationId: string,
+    strategy: StudentGroupingStrategy,
+    numberOfGroups?: number,
+    studentsPerGroup?: number
+  ) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
+
+    return this.#httpClient
+      .post<GroupStudentsResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/group-students`,
+        {
+          strategy,
+          numberOfGroups,
+          studentsPerGroup,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap((response) => {
+          if (response.errorMessage) {
+            this.#matSnackBar.open(response.errorMessage, undefined, {
+              duration: 3000,
+            });
+            return;
+          }
+
+          const { updatedGroupDetails } = response;
+
+          console.log('[Grouped Students]', updatedGroupDetails);
+
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                detail.groupDetails = updatedGroupDetails;
+              }
+            });
+          });
+
+          const message = getGroupedStudentsMessage(
+            numberOfGroups,
+            studentsPerGroup
+          );
+
+          this.#matSnackBar.open(message, undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Group Students Failed]', error);
+          this.#matSnackBar.open('Error grouping students', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
   public deleteStudent(classroomId: string, studentId: string) {
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroomId);
     });
     this.#httpClient
       .delete<DeleteStudentResponse>(
-        `/api/v1/classrooms/${classroomId}/students/${studentId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/students/${studentId}`,
         {
           withCredentials: true,
         }
       )
       .pipe(
-        tap(({ deletedStudent, updatedGroupDetails: updatedGroups }) => {
+        tap(({ deletedStudent, updatedGroupDetails }) => {
           console.log('[Deleted Student]', deletedStudent);
-          console.log('[Updated Groups]', updatedGroups);
+          console.log('[Updated Groups]', updatedGroupDetails);
           this.patchState((draft) => {
             draft.configurationDetails.forEach((configuration) => {
               configuration.groupDetails = configuration.groupDetails.map(
                 (groupDetail) => {
-                  for (const updatedGroup of updatedGroups) {
+                  for (const updatedGroup of updatedGroupDetails) {
                     if (updatedGroup.id === groupDetail.id) {
                       return updatedGroup;
                     }
@@ -977,6 +1090,69 @@ export class ClassroomsService {
       .subscribe();
   }
 
+  public deleteColumn(
+    classroomId: string,
+    configurationId: string,
+    columnId: string
+  ) {
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+    });
+    this.#httpClient
+      .delete<DeleteColumnResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(
+          ({ deletedColumn, deletedField, configurationIdsColumnDetails }) => {
+            console.log('[Deleted Column]', deletedColumn);
+            console.log('[Deleted Field]', deletedField);
+            console.log(
+              '[Configuration Ids To Column Details]',
+              configurationIdsColumnDetails
+            );
+
+            this.patchState((draft) => {
+              draft.classroomDetails.forEach((c) => {
+                c.fieldDetails = c.fieldDetails.filter(
+                  (f) => f.id !== deletedField.id
+                );
+              });
+              draft.configurationDetails.forEach((c) => {
+                c.columnDetails = configurationIdsColumnDetails[c.id];
+                c.groupDetails.forEach((g) => {
+                  g.studentDetails.forEach((s) => {
+                    delete s.fieldIdsToValues[deletedField.id];
+                  });
+                });
+              });
+            });
+            this.#matSnackBar.open('Deleted column', undefined, {
+              duration: 3000,
+            });
+          }
+        ),
+        catchError((error) => {
+          console.log('[Delete Column Failed]', error);
+          this.#matSnackBar.open('Error deleting column', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        map((res) => res?.deletedColumn),
+        take(1)
+      )
+      .subscribe();
+  }
+
   sortGroups(
     classroomId: string,
     configurationId: string,
@@ -984,7 +1160,7 @@ export class ClassroomsService {
   ) {
     return this.#httpClient
       .post<SortGroupsResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/sort-groups`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/sort-groups`,
         {
           sortedGroupIds,
         },
@@ -1020,6 +1196,80 @@ export class ClassroomsService {
       .subscribe();
   }
 
+  lockGroup(classroomId: string, configurationId: string, groupId: string) {
+    return this.#httpClient
+      .post<LockGroupResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/lock`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedGroup }) => {
+          console.log('[Group Locked]', updatedGroup);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                const groupToLock = detail.groupDetails.find(
+                  (g) => g.id === groupId
+                );
+                if (groupToLock) {
+                  groupToLock.isLocked = true;
+                }
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Lock Group Failed]', error);
+          this.#matSnackBar.open('Error locking group', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  unlockGroup(classroomId: string, configurationId: string, groupId: string) {
+    return this.#httpClient
+      .post<UnlockGroupResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/unlock`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedGroup }) => {
+          console.log('[Group Unlocked]', updatedGroup);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                const groupToUnlock = detail.groupDetails.find(
+                  (g) => g.id === groupId
+                );
+                if (groupToUnlock) {
+                  groupToUnlock.isLocked = false;
+                }
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Unlock Group Failed]', error);
+          this.#matSnackBar.open('Error unlocking group', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
   moveStudent(
     classroomId: string,
     configurationId: string,
@@ -1027,7 +1277,7 @@ export class ClassroomsService {
   ) {
     return this.#httpClient
       .post<MoveStudentResponse>(
-        `/api/v1/classrooms/${classroomId}/configurations/${configurationId}/move-student`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/move-student`,
         {
           moveStudentDetail,
         },
@@ -1054,8 +1304,52 @@ export class ClassroomsService {
           });
         }),
         catchError((error) => {
-          console.log('[Sort Students Failed]', error);
-          this.#matSnackBar.open('Error sorting students', undefined, {
+          console.log('[Move Student Failed]', error);
+          this.#matSnackBar.open('Error moving student', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  moveColumn(
+    classroomId: string,
+    configurationId: string,
+    columnId: string,
+    moveColumnDetail: MoveColumnDetail
+  ) {
+    return this.#httpClient
+      .post<MoveColumnResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/move`,
+        {
+          moveColumnDetail,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ updatedColumnDetails }) => {
+          console.log('[Updated Column Details]', updatedColumnDetails);
+          this.patchState((draft) => {
+            draft.configurationDetails.forEach((detail) => {
+              if (detail.id === configurationId) {
+                detail.columnDetails = updatedColumnDetails;
+              }
+            });
+          });
+        }),
+        catchError((error) => {
+          console.log('[Move Column Failed]', error);
+          this.#matSnackBar.open('Error moving column', undefined, {
             duration: 3000,
           });
           return of(null);
@@ -1108,7 +1402,7 @@ export class ClassroomsService {
     });
     return this.#httpClient
       .patch<PatchFieldResponse>(
-        `/api/v1/classrooms/${classroomId}/fields/${fieldId}`,
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/fields/${fieldId}`,
         {
           label,
         },
@@ -1235,4 +1529,17 @@ export class ClassroomsService {
       label,
     };
   }
+}
+
+function getGroupedStudentsMessage(
+  numberOfGroups?: number,
+  studentsPerGroup?: number
+) {
+  if (numberOfGroups === 0 || studentsPerGroup === 0) {
+    return 'Ungrouped students';
+  }
+
+  return numberOfGroups === undefined
+    ? `Assigned groups of ${studentsPerGroup}`
+    : `Assigned ${numberOfGroups} groups`;
 }

@@ -1,9 +1,11 @@
 import {
   Classroom,
   ClassroomDetail,
+  Column,
   ColumnDetail,
   Configuration,
   ConfigurationDetail,
+  Field,
   FieldDetail,
   Group,
   GroupDetail,
@@ -87,4 +89,29 @@ export interface SortGroupsResponse {
 
 export interface MoveStudentResponse {
   updatedGroupDetails: GroupDetail[];
+}
+
+export interface MoveColumnResponse {
+  updatedColumnDetails: ColumnDetail[];
+}
+
+export interface DeleteColumnResponse {
+  deletedColumn: Column;
+  deletedField: Field;
+  configurationIdsColumnDetails: {
+    [configurationId: string]: ColumnDetail[];
+  };
+}
+
+export interface LockGroupResponse {
+  updatedGroup: Group;
+}
+
+export interface UnlockGroupResponse {
+  updatedGroup: Group;
+}
+
+export interface GroupStudentsResponse {
+  updatedGroupDetails: GroupDetail[];
+  errorMessage?: string;
 }
