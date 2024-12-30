@@ -29,7 +29,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
     displayCost: '$0.99',
     displayCostSubtitle: '/mo',
     description:
-      '✔ 5 Classrooms\n✔ 50 Students per Class \n✔ 20 Columns per Class\n✔ 20 Configurations per Class',
+      '✔ 5 Classrooms\n✔ 40 Students per Class \n✔ 20 Columns per Class\n✔ 20 Configurations per Class',
     showActionAsButton: true,
     icon: 'rocket_launch',
     iconClass: 'text-yellow-500 dark:text-yellow-300',
@@ -41,7 +41,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
     displayCost: '$1.29',
     displayCostSubtitle: '/mo',
     description:
-      '✔ 50 Classrooms\n✔ 100 Students per Class \n✔ 50 Columns per Class\n✔ 50 Configurations per Class',
+      '✔ 50 Classrooms\n✔ 50 Students per Class \n✔ 50 Columns per Class\n✔ 50 Configurations per Class',
     showActionAsButton: true,
     icon: 'star',
     iconClass: 'text-yellow-500 dark:text-yellow-300',
