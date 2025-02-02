@@ -6,7 +6,8 @@
 @use './app/directives/_resizable-theme' as resizable;
 @use './app/material-utilties' as materialUtilities;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 $light-theme: mat.define-theme(
   (
@@ -28,10 +29,12 @@ $dark-theme: mat.define-theme(
   )
 );
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 html {
-  @include mat.core-theme($light-theme);
+  @include mat.elevation-classes();
+  @include mat.app-background();
 }
 .light {
   @include panel.lightTheme($light-theme);
