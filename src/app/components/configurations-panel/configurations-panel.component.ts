@@ -27,25 +27,24 @@ import { CommonModule } from '@angular/common';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 
 @Component({
-  selector: 'app-configurations-panel',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatListModule,
-    MatSnackBarModule,
-    MatIconModule,
-    FormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
-    CommonModule,
-    CdkContextMenuTrigger,
-    CdkMenu,
-    CdkMenuItem,
-  ],
-  templateUrl: './configurations-panel.component.html',
-  styleUrl: './configurations-panel.component.scss',
+    selector: 'app-configurations-panel',
+    imports: [
+        MatFormFieldModule,
+        MatListModule,
+        MatSnackBarModule,
+        MatIconModule,
+        FormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        CommonModule,
+        CdkContextMenuTrigger,
+        CdkMenu,
+        CdkMenuItem,
+    ],
+    templateUrl: './configurations-panel.component.html',
+    styleUrl: './configurations-panel.component.scss'
 })
 export class ConfigurationsPanelComponent {
   readonly #matSnackBar = inject(MatSnackBar);

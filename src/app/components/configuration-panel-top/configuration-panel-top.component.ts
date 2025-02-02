@@ -46,28 +46,27 @@ import { AccountsService } from '@shared/accounts';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 
 @Component({
-  selector: 'app-configuration-panel-top',
-  standalone: true,
-  imports: [
-    MatSlideToggleModule,
-    MatInputModule,
-    FormsModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatTooltipModule,
-    CdkDrag,
-    CdkDropList,
-    MatSlideToggleModule,
-    MatMenuModule,
-    CommonModule,
-    MatTooltipModule,
-    CdkContextMenuTrigger,
-    CdkMenu,
-    CdkMenuItem,
-  ],
-  templateUrl: './configuration-panel-top.component.html',
-  styleUrl: './configuration-panel-top.component.scss',
+    selector: 'app-configuration-panel-top',
+    imports: [
+        MatSlideToggleModule,
+        MatInputModule,
+        FormsModule,
+        MatIconModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatTooltipModule,
+        CdkDrag,
+        CdkDropList,
+        MatSlideToggleModule,
+        MatMenuModule,
+        CommonModule,
+        MatTooltipModule,
+        CdkContextMenuTrigger,
+        CdkMenu,
+        CdkMenuItem,
+    ],
+    templateUrl: './configuration-panel-top.component.html',
+    styleUrl: './configuration-panel-top.component.scss'
 })
 export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly #matDialog = inject(MatDialog);

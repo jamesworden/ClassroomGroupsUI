@@ -30,23 +30,22 @@ import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-student-list',
-  standalone: true,
-  imports: [
-    CommonModule,
-    DragDropModule,
-    FormsModule,
-    CdkDrag,
-    CdkDropList,
-    MatIconModule,
-    CdkContextMenuTrigger,
-    CdkMenu,
-    CdkMenuItem,
-    MatTooltipModule,
-    MatButtonModule,
-  ],
-  templateUrl: './student-list.component.html',
-  styleUrl: './student-list.component.scss',
+    selector: 'app-student-list',
+    imports: [
+        CommonModule,
+        DragDropModule,
+        FormsModule,
+        CdkDrag,
+        CdkDropList,
+        MatIconModule,
+        CdkContextMenuTrigger,
+        CdkMenu,
+        CdkMenuItem,
+        MatTooltipModule,
+        MatButtonModule,
+    ],
+    templateUrl: './student-list.component.html',
+    styleUrl: './student-list.component.scss'
 })
 export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);

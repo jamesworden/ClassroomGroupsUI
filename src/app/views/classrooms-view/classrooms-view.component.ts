@@ -24,25 +24,24 @@ import { SubscriptionPlanCardComponent } from 'app/components/subscription-plan-
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-classrooms-view',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatTableModule,
-    MatToolbarModule,
-    MatMenuModule,
-    AccountMenuComponent,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    MatTooltipModule,
-    RouterModule,
-    SubscriptionPlanCardComponent,
-    CommonModule,
-  ],
-  templateUrl: './classrooms-view.component.html',
-  styleUrl: './classrooms-view.component.scss',
-  providers: [provideNativeDateAdapter()],
+    selector: 'app-classrooms-view',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatTableModule,
+        MatToolbarModule,
+        MatMenuModule,
+        AccountMenuComponent,
+        MatProgressSpinnerModule,
+        MatProgressBarModule,
+        MatTooltipModule,
+        RouterModule,
+        SubscriptionPlanCardComponent,
+        CommonModule,
+    ],
+    templateUrl: './classrooms-view.component.html',
+    styleUrl: './classrooms-view.component.scss',
+    providers: [provideNativeDateAdapter()]
 })
 export class ClassroomsViewComponent {
   readonly #classroomsService = inject(ClassroomsService);

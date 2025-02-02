@@ -9,17 +9,16 @@ import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { AccountsService } from '@shared/accounts';
 
 @Component({
-  selector: 'app-toolbar',
-  standalone: true,
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    RouterModule,
-    MatMenuModule,
-    AccountMenuComponent,
-  ],
-  templateUrl: './toolbar.component.html',
-  styleUrl: './toolbar.component.scss',
+    selector: 'app-toolbar',
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        RouterModule,
+        MatMenuModule,
+        AccountMenuComponent,
+    ],
+    templateUrl: './toolbar.component.html',
+    styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent {
   readonly #themeService = inject(ThemeService);

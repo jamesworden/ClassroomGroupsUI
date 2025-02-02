@@ -8,17 +8,16 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { combineLatest, filter } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterModule],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  providers: [
-    ThemeService,
-    ResizableService,
-    ClassroomsService,
-    AccountsService,
-  ],
+    selector: 'app-root',
+    imports: [RouterModule],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    providers: [
+        ThemeService,
+        ResizableService,
+        ClassroomsService,
+        AccountsService,
+    ]
 })
 export class AppComponent {
   readonly #router = inject(Router);

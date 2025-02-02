@@ -15,17 +15,16 @@ export interface YesNoDialogInputs {
 }
 
 @Component({
-  selector: 'app-yes-no-dialog',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogTitle,
-    MatDialogContent,
-  ],
-  templateUrl: './yes-no-dialog.component.html',
-  styleUrl: './yes-no-dialog.component.scss',
+    selector: 'app-yes-no-dialog',
+    imports: [
+        MatButtonModule,
+        MatDialogActions,
+        MatDialogClose,
+        MatDialogTitle,
+        MatDialogContent,
+    ],
+    templateUrl: './yes-no-dialog.component.html',
+    styleUrl: './yes-no-dialog.component.scss'
 })
 export class YesNoDialogComponent {
   readonly #data = inject<YesNoDialogInputs>(MAT_DIALOG_DATA);

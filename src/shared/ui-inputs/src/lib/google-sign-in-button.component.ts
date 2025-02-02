@@ -2,10 +2,9 @@ import { Component, effect, input, OnDestroy } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-google-sign-in-button',
-  standalone: true,
-  imports: [],
-  template: `
+    selector: 'app-google-sign-in-button',
+    imports: [],
+    template: `
     <div class="h-[44px] max-w-[222px]">
       <div
         id="g_id_onload"
@@ -25,7 +24,7 @@ import { environment } from '../../../../environments/environment';
         data-logo_alignment="left"
       ></div>
     </div>
-  `,
+  `
 })
 export class GoogleSignInButtonComponent implements OnDestroy {
   readonly size = input<'large' | 'medium' | 'small'>('large');

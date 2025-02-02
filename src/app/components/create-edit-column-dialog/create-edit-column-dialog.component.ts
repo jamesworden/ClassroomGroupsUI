@@ -30,13 +30,11 @@ export interface CreateEditColumnDialogInputs {
 
 @Component({
   selector: 'app-create-edit-column-dialog',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatDialogActions,
     MatDialogClose,
     MatDialogTitle,
-    MatDialogContent,
     MatRadioModule,
     MatFormFieldModule,
     FormsModule,

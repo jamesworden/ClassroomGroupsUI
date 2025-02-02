@@ -7,16 +7,15 @@ import { Themes } from 'app/themes/theme.models';
 import { ThemeService } from 'app/themes/theme.service';
 
 @Component({
-  selector: 'app-sign-in-view',
-  standalone: true,
-  imports: [
-    ToolbarComponent,
-    CommonModule,
-    RouterModule,
-    GoogleSignInButtonComponent,
-  ],
-  templateUrl: './sign-in-view.component.html',
-  styleUrl: './sign-in-view.component.scss',
+    selector: 'app-sign-in-view',
+    imports: [
+        ToolbarComponent,
+        CommonModule,
+        RouterModule,
+        GoogleSignInButtonComponent,
+    ],
+    templateUrl: './sign-in-view.component.html',
+    styleUrl: './sign-in-view.component.scss'
 })
 export class SignInViewComponent {
   readonly #themeService = inject(ThemeService);

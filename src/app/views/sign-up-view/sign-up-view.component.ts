@@ -7,16 +7,15 @@ import { Themes } from 'app/themes/theme.models';
 import { ThemeService } from 'app/themes/theme.service';
 
 @Component({
-  selector: 'app-sign-up-view',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ToolbarComponent,
-    GoogleSignInButtonComponent,
-    RouterModule,
-  ],
-  templateUrl: './sign-up-view.component.html',
-  styleUrl: './sign-up-view.component.scss',
+    selector: 'app-sign-up-view',
+    imports: [
+        CommonModule,
+        ToolbarComponent,
+        GoogleSignInButtonComponent,
+        RouterModule,
+    ],
+    templateUrl: './sign-up-view.component.html',
+    styleUrl: './sign-up-view.component.scss'
 })
 export class SignUpViewComponent {
   readonly #themeService = inject(ThemeService);

@@ -4,11 +4,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SubscriptionPlan } from 'app/metadata';
 
 @Component({
-  selector: 'app-subscription-plan-card',
-  standalone: true,
-  imports: [MatIconModule, MatTooltipModule],
-  templateUrl: './subscription-plan-card.component.html',
-  styleUrl: './subscription-plan-card.component.scss',
+    selector: 'app-subscription-plan-card',
+    imports: [MatIconModule, MatTooltipModule],
+    templateUrl: './subscription-plan-card.component.html',
+    styleUrl: './subscription-plan-card.component.scss'
 })
 export class SubscriptionPlanCardComponent {
   subscriptionPlan = input<SubscriptionPlan>();

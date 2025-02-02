@@ -17,20 +17,19 @@ import { StudentListComponent } from '../student-list/student-list.component';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 
 @Component({
-  selector: 'app-group-panel',
-  standalone: true,
-  imports: [
-    MatIconModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatIconModule,
-    CommonModule,
-    FormsModule,
-    StudentListComponent,
-  ],
-  templateUrl: './group-panel.component.html',
-  styleUrl: './group-panel.component.scss',
+    selector: 'app-group-panel',
+    imports: [
+        MatIconModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatIconModule,
+        CommonModule,
+        FormsModule,
+        StudentListComponent,
+    ],
+    templateUrl: './group-panel.component.html',
+    styleUrl: './group-panel.component.scss'
 })
 export class GroupPanelComponent {
   readonly #classroomsService = inject(ClassroomsService);

@@ -8,7 +8,6 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   computed,
   effect,
@@ -50,10 +49,6 @@ import {
   YesNoDialogInputs,
 } from 'app/components/yes-no-dialog/yes-no-dialog.component';
 import { ResizableService } from 'app/directives/resizable.service';
-import {
-  ResizableSide,
-  ResizeableDirective,
-} from 'app/directives/resizeable.directive';
 import { ThemeService } from 'app/themes/theme.service';
 import { combineLatest, filter, take } from 'rxjs';
 import { getConfigurationFromDetail } from 'shared/classrooms/lib/logic/get-model-from-detail';
@@ -66,16 +61,8 @@ import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-av
 import { Themes } from 'app/themes/theme.models';
 import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
 
-const DEFAULT_PANEL_WIDTH = Math.max(window.innerWidth / 4, 350);
-
-interface ConfigPanelSettings {
-  width: number;
-  isOpen: boolean;
-}
-
 @Component({
   selector: 'app-classroom-view',
-  standalone: true,
   imports: [
     CommonModule,
     MatButtonModule,
@@ -84,7 +71,6 @@ interface ConfigPanelSettings {
     ConfigurationsPanelComponent,
     MatMenuModule,
     MatTooltipModule,
-    ResizeableDirective,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,

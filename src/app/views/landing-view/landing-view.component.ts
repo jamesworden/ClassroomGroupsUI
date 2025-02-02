@@ -8,11 +8,10 @@ import { Themes } from 'app/themes/theme.models';
 import { ThemeService } from 'app/themes/theme.service';
 
 @Component({
-  selector: 'app-landing-view',
-  standalone: true,
-  imports: [MatIconModule, CommonModule, ToolbarComponent, RouterModule],
-  templateUrl: './landing-view.component.html',
-  styleUrl: './landing-view.component.scss',
+    selector: 'app-landing-view',
+    imports: [MatIconModule, CommonModule, ToolbarComponent, RouterModule],
+    templateUrl: './landing-view.component.html',
+    styleUrl: './landing-view.component.scss'
 })
 export class LandingViewComponent {
   readonly #accountsService = inject(AccountsService);
