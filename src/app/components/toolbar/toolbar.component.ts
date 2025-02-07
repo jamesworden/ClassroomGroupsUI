@@ -3,12 +3,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { Themes } from 'app/themes/theme.models';
-import { ThemeService } from 'app/themes/theme.service';
-import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { AccountsService } from '@shared/accounts';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Themes, ThemeService } from '@app/themes';
+import { AccountMenuComponent } from '@app/components';
 
 @Component({
   selector: 'app-toolbar',

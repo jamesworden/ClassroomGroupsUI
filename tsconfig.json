@@ -4,6 +4,15 @@
   "compilerOptions": {
     "baseUrl": "src",
     "paths": {
+      "@app/components": [
+        "app/components"
+      ],
+      "@app/metadata": [
+        "app/metadata"
+      ],
+      "@app/themes": [
+        "app/themes"
+      ],
       "@shared/accounts": ["shared/accounts"],
       "@shared/classrooms": [
         "shared/classrooms"

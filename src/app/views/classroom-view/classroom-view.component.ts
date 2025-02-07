@@ -52,13 +52,12 @@ import { ConfigurationPanelBottomComponent } from './configuration-panel-bottom/
 import { ConfigurationPanelTopComponent } from './configuration-panel-top/configuration-panel-top.component';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
 import { GroupPanelComponent } from './group-panel/group-panel.component';
-import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
-import { ThemeService } from 'app/themes/theme.service';
-import { Themes } from 'app/themes/theme.models';
 import {
+  AccountMenuComponent,
   YesNoDialogComponent,
   YesNoDialogInputs,
-} from 'app/components/yes-no-dialog/yes-no-dialog.component';
+} from '@app/components';
+import { Themes, ThemeService } from '@app/themes';
 
 @Component({
   selector: 'app-classroom-view',
