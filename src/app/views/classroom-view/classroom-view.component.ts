@@ -48,7 +48,6 @@ import {
   YesNoDialogComponent,
   YesNoDialogInputs,
 } from 'app/components/yes-no-dialog/yes-no-dialog.component';
-import { ResizableService } from 'app/directives/resizable.service';
 import { ThemeService } from 'app/themes/theme.service';
 import { combineLatest, filter, take } from 'rxjs';
 import { getConfigurationFromDetail } from 'shared/classrooms/lib/logic/get-model-from-detail';
@@ -92,7 +91,6 @@ export class ClassroomViewComponent {
   spreadsheet!: ElementRef<HTMLDivElement>;
 
   readonly #themeService = inject(ThemeService);
-  readonly #resizableService = inject(ResizableService);
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
@@ -101,7 +99,6 @@ export class ClassroomViewComponent {
   readonly #router = inject(Router);
 
   readonly theme = this.#themeService.theme;
-  readonly isResizing = this.#resizableService.isResizing;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly accountLoading = this.#accountsService.select.accountLoading;
 
