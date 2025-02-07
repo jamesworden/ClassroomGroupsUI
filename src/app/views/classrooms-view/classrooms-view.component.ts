@@ -20,28 +20,28 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AccountsService } from '@shared/accounts';
 import { subscriptionPlans } from 'app/metadata';
-import { SubscriptionPlanCardComponent } from 'app/components/subscription-plan-card/subscription-plan-card.component';
 import { CommonModule } from '@angular/common';
+import { SubscriptionPlanCardComponent } from './subscription-plan-card/subscription-plan-card.component';
 
 @Component({
-    selector: 'app-classrooms-view',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatTableModule,
-        MatToolbarModule,
-        MatMenuModule,
-        AccountMenuComponent,
-        MatProgressSpinnerModule,
-        MatProgressBarModule,
-        MatTooltipModule,
-        RouterModule,
-        SubscriptionPlanCardComponent,
-        CommonModule,
-    ],
-    templateUrl: './classrooms-view.component.html',
-    styleUrl: './classrooms-view.component.scss',
-    providers: [provideNativeDateAdapter()]
+  selector: 'app-classrooms-view',
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule,
+    MatToolbarModule,
+    MatMenuModule,
+    AccountMenuComponent,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    MatTooltipModule,
+    RouterModule,
+    SubscriptionPlanCardComponent,
+    CommonModule,
+  ],
+  templateUrl: './classrooms-view.component.html',
+  styleUrl: './classrooms-view.component.scss',
+  providers: [provideNativeDateAdapter()],
 })
 export class ClassroomsViewComponent {
   readonly #classroomsService = inject(ClassroomsService);
