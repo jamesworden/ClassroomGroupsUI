@@ -1,26 +1,38 @@
 <mat-toolbar>
-  <div class="flex gap-x-8 flex-1">
+  <div class="flex gap-x-2 flex-1 pt-8">
     <a class="hidden md:block" [routerLink]="['/']">ClassroomGroups</a>
 
     <span class="flex-auto hidden md:block"></span>
 
     <div class="flex flex-col justify-around">
-      <button mat-icon-button (click)="toggleTheme()">
-        <mat-icon>{{
-          theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
-        }}</mat-icon>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="codeMenu"
+        matTooltip="Our code"
+      >
+        <mat-icon>code</mat-icon>
       </button>
     </div>
+
+    <button
+      [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
+      mat-icon-button
+      (click)="toggleTheme()"
+    >
+      <mat-icon>{{
+        theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
+      }}</mat-icon>
+    </button>
 
     <span class="flex-auto block md:hidden"></span>
 
     @if (!isLoggedIn()) {
-      <div class="flex flex-col justify-around">
+      <div class="flex flex-col justify-around mx-2">
         <a class="text-sm" [routerLink]="['/sign-in']">Sign In</a>
       </div>
 
       <a
-        class="text-sm bg-white bg-opacity-80 dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-lg shadow-lg hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
+        class="flex flex-col justify-around ml-2 text-sm bg-primary text-white dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-sm shadow-lg hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
         [routerLink]="['/sign-up']"
       >
         Try Free
@@ -38,9 +50,9 @@
         </button>
       </div>
 
-      <div class="flex flex-col justify-around">
+      <div class="flex flex-col justify-around ml-2">
         <a
-          class="text-sm bg-white bg-opacity-80 dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-lg shadow-lg hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
+          class="text-sm bg-primary text-white dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-sm shadow-lg hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
           [routerLink]="['/classrooms']"
         >
           Go to Classrooms
@@ -52,4 +64,31 @@
 
 <mat-menu #accountMenu="matMenu">
   <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
+</mat-menu>
+
+<mat-menu #codeMenu="matMenu">
+  <h2 class="p-4">
+    We're <span class="text-primary italic">open</span><br /><span
+      class="text-secondary italic"
+      >source</span
+    >.
+  </h2>
+  <a
+    mat-menu-item
+    href="https://github.com/jamesworden/ClassroomGroupsUI"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <mat-icon>web</mat-icon>
+    <span>Client code</span>
+  </a>
+  <a
+    mat-menu-item
+    href="https://github.com/jamesworden/LanesBackend"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <mat-icon>storage</mat-icon>
+    <span>Server code</span>
+  </a>
 </mat-menu>

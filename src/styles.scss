@@ -3,7 +3,6 @@
 @use './app/themes/shared/_panel-theme' as panel;
 @use './app/themes/shared/_context-menu-theme' as contextMenu;
 @use './app/themes/shared/_edit-input-theme' as editInput;
-@use './app/directives/_resizable-theme' as resizable;
 @use './app/material-utilties' as materialUtilities;
 
 @include mat.elevation-classes();
@@ -39,7 +38,6 @@ html {
 .light {
   @include panel.lightTheme($light-theme);
   @include editInput.theme($light-theme);
-  @include resizable.theme($light-theme);
   @include materialUtilities.lightTheme($light-theme);
   @include contextMenu.lightTheme($light-theme);
 }
@@ -47,7 +45,6 @@ html {
   @include mat.all-component-themes($dark-theme);
   @include panel.darkTheme($dark-theme);
   @include editInput.theme($dark-theme);
-  @include resizable.theme($dark-theme);
   @include materialUtilities.darkTheme($dark-theme);
   @include contextMenu.darkTheme($dark-theme);
 }
@@ -82,24 +79,6 @@ input[type='number'] {
 .content-container {
   max-width: 1200px;
   margin: auto;
-}
-
-.light-gradient {
-  background: radial-gradient(
-      circle at 136% 136%,
-      rgba(255, 255, 255, 0.61),
-      rgba(245, 219, 219, 1)
-    ),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 239 239' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.94' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-.dark-gradient {
-  background: radial-gradient(
-      circle at 136% 136%,
-      rgba(65, 1, 117, 0.5),
-      rgba(0, 0, 0, 1)
-    ),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 239 239' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.94' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 .grid-bg {

@@ -1,25 +1,22 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import {
-  ClassroomsService,
   ColumnDetail,
   GroupDetail,
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
-import { StudentListComponent } from '../student-list/student-list.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
+import { StudentListComponent } from '../student-list/student-list.component';
 
 @Component({
-    selector: 'app-configuration-panel-bottom',
-    imports: [StudentListComponent, CommonModule, MatIconModule],
-    templateUrl: './configuration-panel-bottom.component.html',
-    styleUrl: './configuration-panel-bottom.component.scss'
+  selector: 'app-configuration-panel-bottom',
+  imports: [StudentListComponent, CommonModule, MatIconModule],
+  templateUrl: './configuration-panel-bottom.component.html',
+  styleUrl: './configuration-panel-bottom.component.scss',
 })
 export class ConfigurationPanelBottomComponent {
-  readonly #classroomsService = inject(ClassroomsService);
-
   readonly classroomId = input<string>();
   readonly configurationId = input<string>();
   readonly defaultGroup = input<GroupDetail>();

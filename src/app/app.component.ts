@@ -1,23 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ThemeService } from './themes/theme.service';
-import { ResizableService } from './directives/resizable.service';
 import { ClassroomsService } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { combineLatest, filter } from 'rxjs';
 
 @Component({
-    selector: 'app-root',
-    imports: [RouterModule],
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    providers: [
-        ThemeService,
-        ResizableService,
-        ClassroomsService,
-        AccountsService,
-    ]
+  selector: 'app-root',
+  imports: [RouterModule],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  providers: [ThemeService, ClassroomsService, AccountsService],
 })
 export class AppComponent {
   readonly #router = inject(Router);

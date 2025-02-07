@@ -42,24 +42,22 @@ import {
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
-import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
-import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
-import {
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from 'app/components/yes-no-dialog/yes-no-dialog.component';
-import { ResizableService } from 'app/directives/resizable.service';
-import { ThemeService } from 'app/themes/theme.service';
 import { combineLatest, filter, take } from 'rxjs';
 import { getConfigurationFromDetail } from 'shared/classrooms/lib/logic/get-model-from-detail';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
-import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
-import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
-import { Themes } from 'app/themes/theme.models';
-import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
+import { ConfigurationPanelBottomComponent } from './configuration-panel-bottom/configuration-panel-bottom.component';
+import { ConfigurationPanelTopComponent } from './configuration-panel-top/configuration-panel-top.component';
+import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
+import { GroupPanelComponent } from './group-panel/group-panel.component';
+import {
+  AccountMenuComponent,
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from '@app/components';
+import { Themes, ThemeService } from '@app/themes';
 
 @Component({
   selector: 'app-classroom-view',
@@ -70,7 +68,6 @@ import { AccountMenuComponent } from 'app/components/account-menu/account-menu.c
     MatIconModule,
     ConfigurationsPanelComponent,
     MatMenuModule,
-    MatTooltipModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
@@ -93,7 +90,6 @@ export class ClassroomViewComponent {
   spreadsheet!: ElementRef<HTMLDivElement>;
 
   readonly #themeService = inject(ThemeService);
-  readonly #resizableService = inject(ResizableService);
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
@@ -102,7 +98,6 @@ export class ClassroomViewComponent {
   readonly #router = inject(Router);
 
   readonly theme = this.#themeService.theme;
-  readonly isResizing = this.#resizableService.isResizing;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly accountLoading = this.#accountsService.select.accountLoading;
 

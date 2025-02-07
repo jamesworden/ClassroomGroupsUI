@@ -6,42 +6,41 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ClassroomDetail, ClassroomsService } from '@shared/classrooms';
 import { Router, RouterModule } from '@angular/router';
-import { ThemeService } from 'app/themes/theme.service';
-import { Themes } from 'app/themes/theme.models';
 import { MatMenuModule } from '@angular/material/menu';
-import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from 'app/components/yes-no-dialog/yes-no-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AccountsService } from '@shared/accounts';
-import { subscriptionPlans } from 'app/metadata';
-import { SubscriptionPlanCardComponent } from 'app/components/subscription-plan-card/subscription-plan-card.component';
 import { CommonModule } from '@angular/common';
+import { SubscriptionPlanCardComponent } from './subscription-plan-card/subscription-plan-card.component';
+import { subscriptionPlans } from '@app/metadata';
+import {
+  AccountMenuComponent,
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from '@app/components';
+import { Themes, ThemeService } from '@app/themes';
 
 @Component({
-    selector: 'app-classrooms-view',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatTableModule,
-        MatToolbarModule,
-        MatMenuModule,
-        AccountMenuComponent,
-        MatProgressSpinnerModule,
-        MatProgressBarModule,
-        MatTooltipModule,
-        RouterModule,
-        SubscriptionPlanCardComponent,
-        CommonModule,
-    ],
-    templateUrl: './classrooms-view.component.html',
-    styleUrl: './classrooms-view.component.scss',
-    providers: [provideNativeDateAdapter()]
+  selector: 'app-classrooms-view',
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule,
+    MatToolbarModule,
+    MatMenuModule,
+    AccountMenuComponent,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    MatTooltipModule,
+    RouterModule,
+    SubscriptionPlanCardComponent,
+    CommonModule,
+  ],
+  templateUrl: './classrooms-view.component.html',
+  styleUrl: './classrooms-view.component.scss',
+  providers: [provideNativeDateAdapter()],
 })
 export class ClassroomsViewComponent {
   readonly #classroomsService = inject(ClassroomsService);

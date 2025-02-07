@@ -2,16 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { ToolbarComponent } from '@app/components';
+import { Themes, ThemeService } from '@app/themes';
 import { AccountsService } from '@shared/accounts';
-import { ToolbarComponent } from 'app/components/toolbar/toolbar.component';
-import { Themes } from 'app/themes/theme.models';
-import { ThemeService } from 'app/themes/theme.service';
 
 @Component({
-    selector: 'app-landing-view',
-    imports: [MatIconModule, CommonModule, ToolbarComponent, RouterModule],
-    templateUrl: './landing-view.component.html',
-    styleUrl: './landing-view.component.scss'
+  selector: 'app-landing-view',
+  imports: [MatIconModule, CommonModule, ToolbarComponent, RouterModule],
+  templateUrl: './landing-view.component.html',
+  styleUrl: './landing-view.component.scss',
 })
 export class LandingViewComponent {
   readonly #accountsService = inject(AccountsService);

@@ -1,39 +1,34 @@
 <div
-  class="flex-1 flex justify-around fixed top-0 left-0 w-full h-full bg-gray-100 overflow-auto z-10"
-  [ngClass]="{
-    'light-gradient': theme() === Themes.LIGHT,
-    'dark-gradient': theme() === Themes.DARK,
-  }"
+  class="grid-bg flex-1 grid-bg flex justify-around fixed top-0 left-0 w-full h-full overflow-auto z-10"
 >
   <div class="flex-1 flex flex-col content-container w-full h-full">
     <app-toolbar></app-toolbar>
 
-    <div class="flex-1 flex gap-x-12 flex-col lg:flex-row min-h-[80vh]">
-      <div class="flex-1 flex flex-col mx-4 mt-16 lg:ml-8 lg:mt-32">
+    <div class="flex-1 flex gap-x-12 flex-col lg:flex-row">
+      <div class="flex-1 flex flex-col mx-4 mt-16 lg:ml-4 lg:mt-32">
         <div>
           <span
             style="margin: 0 !important; font-weight: semibold"
             class="text-4xl lg:text-7xl"
           >
-            Design <span class="text-primary">smarter</span><br /><span
-              class="text-secondary"
+            Design <span class="text-primary italic">smarter</span><br /><span
+              class="text-secondary italic"
               >learning</span
             >
             spaces.
           </span>
-          <p class="max-w-md py-6">
-            Effortlessly create balanced, dynamic learning groups that maximize
-            student potential. Our intelligent algorithm analyzes student
-            performance, learning styles, and collaboration needs to generate
-            optimal classroom teams that promote engagement, support, and
-            academic growth.
+          <p class="max-w-md py-6 lg:py-12 text-lg lg:text-3xl">
+            Create balanced learning groups with our intelligent algorithm,
+            optimizing student performance, collaboration, and growth.
           </p>
-          <a
-            class="text-md bg-white bg-opacity-80 dark:bg-opacity-20 backdrop-blur-md py-2 px-6 rounded-lg shadow-lg hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
-            [routerLink]="[isLoggedIn() ? '/classrooms' : '/sign-up']"
-          >
-            {{ isLoggedIn() ? 'Go to Classrooms' : 'Try ClassroomGroups Free' }}
-          </a>
+          <div class="mt-2">
+            <a
+              class="text-white text-lg font-semibold bg-white bg-primary backdrop-blur-md py-2 lg:py-4 px-8 rounded-sm shadow-lg hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
+              [routerLink]="[isLoggedIn() ? '/classrooms' : '/sign-up']"
+            >
+              {{ isLoggedIn() ? 'Go to Classrooms' : 'Start Grouping' }}
+            </a>
+          </div>
         </div>
       </div>
 

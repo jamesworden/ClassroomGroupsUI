@@ -16,10 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import {
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from '../yes-no-dialog/yes-no-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   CdkDragDrop,
@@ -46,27 +42,27 @@ import { AccountsService } from '@shared/accounts';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 
 @Component({
-    selector: 'app-configuration-panel-top',
-    imports: [
-        MatSlideToggleModule,
-        MatInputModule,
-        FormsModule,
-        MatIconModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatTooltipModule,
-        CdkDrag,
-        CdkDropList,
-        MatSlideToggleModule,
-        MatMenuModule,
-        CommonModule,
-        MatTooltipModule,
-        CdkContextMenuTrigger,
-        CdkMenu,
-        CdkMenuItem,
-    ],
-    templateUrl: './configuration-panel-top.component.html',
-    styleUrl: './configuration-panel-top.component.scss'
+  selector: 'app-configuration-panel-top',
+  imports: [
+    MatSlideToggleModule,
+    MatInputModule,
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatTooltipModule,
+    CdkDrag,
+    CdkDropList,
+    MatSlideToggleModule,
+    MatMenuModule,
+    CommonModule,
+    MatTooltipModule,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+  ],
+  templateUrl: './configuration-panel-top.component.html',
+  styleUrl: './configuration-panel-top.component.scss',
 })
 export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly #matDialog = inject(MatDialog);

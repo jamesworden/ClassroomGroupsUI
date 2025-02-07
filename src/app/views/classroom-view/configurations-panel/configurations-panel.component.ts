@@ -1,7 +1,6 @@
 import {
   Component,
   computed,
-  effect,
   ElementRef,
   HostListener,
   inject,
@@ -11,7 +10,6 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ResizableSide } from '../../directives/resizeable.directive';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -27,24 +25,24 @@ import { CommonModule } from '@angular/common';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 
 @Component({
-    selector: 'app-configurations-panel',
-    imports: [
-        MatFormFieldModule,
-        MatListModule,
-        MatSnackBarModule,
-        MatIconModule,
-        FormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatTooltipModule,
-        MatProgressSpinnerModule,
-        CommonModule,
-        CdkContextMenuTrigger,
-        CdkMenu,
-        CdkMenuItem,
-    ],
-    templateUrl: './configurations-panel.component.html',
-    styleUrl: './configurations-panel.component.scss'
+  selector: 'app-configurations-panel',
+  imports: [
+    MatFormFieldModule,
+    MatListModule,
+    MatSnackBarModule,
+    MatIconModule,
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    CommonModule,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+  ],
+  templateUrl: './configurations-panel.component.html',
+  styleUrl: './configurations-panel.component.scss',
 })
 export class ConfigurationsPanelComponent {
   readonly #matSnackBar = inject(MatSnackBar);
@@ -66,7 +64,6 @@ export class ConfigurationsPanelComponent {
     this.#classroomsService.select.configurations(this.classroomId())()
   );
 
-  readonly ResizableSide = ResizableSide;
   readonly searchQuery = signal('');
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly configurationsLoading =
