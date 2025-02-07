@@ -42,23 +42,23 @@ import {
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
-import { ConfigurationsPanelComponent } from 'app/components/configurations-panel/configurations-panel.component';
-import { GroupPanelComponent } from 'app/components/group-panel/group-panel.component';
-import {
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from 'app/components/yes-no-dialog/yes-no-dialog.component';
-import { ThemeService } from 'app/themes/theme.service';
 import { combineLatest, filter, take } from 'rxjs';
 import { getConfigurationFromDetail } from 'shared/classrooms/lib/logic/get-model-from-detail';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
-import { ConfigurationPanelBottomComponent } from 'app/components/configuration-panel-bottom/configuration-panel-bottom.component';
-import { ConfigurationPanelTopComponent } from 'app/components/configuration-panel-top/configuration-panel-top.component';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
-import { Themes } from 'app/themes/theme.models';
+import { ConfigurationPanelBottomComponent } from './configuration-panel-bottom/configuration-panel-bottom.component';
+import { ConfigurationPanelTopComponent } from './configuration-panel-top/configuration-panel-top.component';
+import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
+import { GroupPanelComponent } from './group-panel/group-panel.component';
 import { AccountMenuComponent } from 'app/components/account-menu/account-menu.component';
+import { ThemeService } from 'app/themes/theme.service';
+import { Themes } from 'app/themes/theme.models';
+import {
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from 'app/components/yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-classroom-view',

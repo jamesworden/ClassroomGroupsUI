@@ -5,10 +5,10 @@ import {
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
-import { StudentListComponent } from '../student-list/student-list.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
+import { StudentListComponent } from '../student-list/student-list.component';
 
 @Component({
   selector: 'app-configuration-panel-bottom',
