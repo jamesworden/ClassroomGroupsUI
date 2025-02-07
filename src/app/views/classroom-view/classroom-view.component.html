@@ -38,6 +38,7 @@
 
             <div class="flex flex-col justify-around">
               <button
+                class="!flex"
                 matTooltip="Back to classrooms"
                 mat-icon-button
                 (click)="goToClassroomsView()"
@@ -49,6 +50,7 @@
 
             <div class="flex flex-col justify-around">
               <button
+                class="!flex"
                 [tabindex]="-1"
                 [matTooltip]="
                   theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'
@@ -64,6 +66,7 @@
 
             <div class="flex flex-col justify-around">
               <button
+                class="!flex"
                 matTooltip="Settings"
                 mat-icon-button
                 [matMenuTriggerFor]="classroomSettingsMenu"
@@ -75,6 +78,7 @@
 
             <div class="flex flex-col justify-around">
               <button
+                class="!flex"
                 matTooltip="Account settings"
                 mat-icon-button
                 [matMenuTriggerFor]="accountMenu"
