@@ -70,7 +70,6 @@ import { AccountMenuComponent } from 'app/components/account-menu/account-menu.c
     MatIconModule,
     ConfigurationsPanelComponent,
     MatMenuModule,
-    MatTooltipModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
