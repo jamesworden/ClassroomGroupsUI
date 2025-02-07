@@ -5,22 +5,24 @@
     <span class="flex-auto hidden md:block"></span>
 
     <div class="flex flex-col justify-around">
-      <button mat-icon-button [matMenuTriggerFor]="codeMenu">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="codeMenu"
+        matTooltip="Our code"
+      >
         <mat-icon>code</mat-icon>
       </button>
     </div>
 
-    <div class="flex flex-col justify-around">
-      <button
-        mat-icon-button
-        matTooltip="Classroom Groups"
-        (click)="toggleTheme()"
-      >
-        <mat-icon>{{
-          theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
-        }}</mat-icon>
-      </button>
-    </div>
+    <button
+      [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
+      mat-icon-button
+      (click)="toggleTheme()"
+    >
+      <mat-icon>{{
+        theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
+      }}</mat-icon>
+    </button>
 
     <span class="flex-auto block md:hidden"></span>
 

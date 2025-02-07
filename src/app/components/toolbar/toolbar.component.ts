@@ -8,6 +8,7 @@ import { ThemeService } from 'app/themes/theme.service';
 import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { AccountsService } from '@shared/accounts';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-toolbar',
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatMenuModule,
     AccountMenuComponent,
     MatButtonModule,
+    MatTooltipModule,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
