@@ -7,18 +7,20 @@ import { Themes } from 'app/themes/theme.models';
 import { ThemeService } from 'app/themes/theme.service';
 import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { AccountsService } from '@shared/accounts';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-toolbar',
-    imports: [
-        MatToolbarModule,
-        MatIconModule,
-        RouterModule,
-        MatMenuModule,
-        AccountMenuComponent,
-    ],
-    templateUrl: './toolbar.component.html',
-    styleUrl: './toolbar.component.scss'
+  selector: 'app-toolbar',
+  imports: [
+    MatToolbarModule,
+    MatIconModule,
+    RouterModule,
+    MatMenuModule,
+    AccountMenuComponent,
+    MatButtonModule,
+  ],
+  templateUrl: './toolbar.component.html',
+  styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
   readonly #themeService = inject(ThemeService);
