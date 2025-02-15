@@ -51,19 +51,21 @@ export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
 
-  readonly classroomId = input<string>();
-  readonly configurationId = input<string>();
-  readonly groupId = input<string>();
-  readonly studentDetails = input<StudentDetail[]>();
+  readonly classroomId = input.required<string>();
+  readonly configurationId = input.required<string>();
+  readonly groupId = input.required<string>();
+  readonly studentDetails = input.required<StudentDetail[]>();
+  readonly groupIndex = input.required<number>();
+  readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly groupDetail = input.required<GroupDetail>();
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
-  readonly groupIndex = input<number>();
-  readonly columnDetails = input<ColumnDetail[]>([]);
-  readonly groupDetail = input<GroupDetail>();
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();
   readonly studentPositionUpdated = output<MoveStudentDetail>();
+
+  readonly account = this.#accountsService.select.account;
 
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
@@ -73,7 +75,6 @@ export class StudentListComponent {
       this.configurationId()
     )()
   );
-  readonly account = this.#accountsService.select.account;
 
   readonly FieldType = FieldType;
 
@@ -114,36 +115,5 @@ export class StudentListComponent {
 
   deleteStudent(studentDetail: StudentDetail) {
     this.studentDeleted.emit(studentDetail);
-  }
-
-  addStudent() {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createStudent(
-        classroomId,
-        configurationId,
-        this.groupId()
-      );
-    }
-  }
-
-  toggleGroupLocked() {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    const group = this.groupDetail();
-    if (classroomId && configurationId && group) {
-      group.isLocked
-        ? this.#classroomsService.unlockGroup(
-            classroomId,
-            configurationId,
-            group.id
-          )
-        : this.#classroomsService.lockGroup(
-            classroomId,
-            configurationId,
-            group.id
-          );
-    }
   }
 }

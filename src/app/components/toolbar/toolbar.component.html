@@ -67,28 +67,5 @@
 </mat-menu>
 
 <mat-menu #codeMenu="matMenu">
-  <h2 class="p-4">
-    We're <span class="text-primary italic">open</span><br /><span
-      class="text-secondary italic"
-      >source</span
-    >.
-  </h2>
-  <a
-    mat-menu-item
-    href="https://github.com/jamesworden/ClassroomGroupsUI"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <mat-icon>web</mat-icon>
-    <span>Client code</span>
-  </a>
-  <a
-    mat-menu-item
-    href="https://github.com/jamesworden/LanesBackend"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <mat-icon>storage</mat-icon>
-    <span>Server code</span>
-  </a>
+  <app-code-links-menu></app-code-links-menu>
 </mat-menu>

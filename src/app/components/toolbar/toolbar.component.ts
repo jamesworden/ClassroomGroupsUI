@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Themes, ThemeService } from '@app/themes';
 import { AccountMenuComponent } from '@app/components';
+import { CodeLinksMenuComponent } from '../code-links-menu/code-links-menu.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -19,6 +20,7 @@ import { AccountMenuComponent } from '@app/components';
     AccountMenuComponent,
     MatButtonModule,
     MatTooltipModule,
+    CodeLinksMenuComponent,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
@@ -29,8 +31,10 @@ export class ToolbarComponent {
 
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly theme = this.#themeService.theme;
-  readonly Themes = Themes;
+
   readonly menuIsOpen = signal(false);
+
+  readonly Themes = Themes;
 
   toggleTheme() {
     this.#themeService.toggleTheme();

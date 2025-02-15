@@ -1,118 +1,69 @@
-<div class="flex flex-col">
-  <div
-    cdkDropList
-    [id]="groupId()!"
-    [cdkDropListConnectedTo]="groupIds()"
-    class="grid-row student-list overflow-hidden w-full border"
-    [ngClass]="{
-      'min-h-8 border-4 border-dashed border-gray-300':
-        editingStudents.length <= 0,
-      'border-neutral-200 dark:border-neutral-600': editingStudents.length > 0,
-      'rounded-b-md': roundedBottom(),
-      'rounded-t-md': roundedTop(),
-    }"
-    (cdkDropListDropped)="drop($event)"
-  >
-    @for (student of editingStudents; track student.id; let rowIndex = $index) {
-      <div
-        class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 flex"
-        cdkDrag
-        [cdkDragData]="student"
-        [cdkContextMenuTriggerFor]="studentMenu"
-      >
-        <ng-template #studentMenu>
-          <div class="context-menu" cdkMenu>
-            <button
-              class="context-menu-item"
-              cdkMenuItem
-              (click)="deleteStudent(student)"
-            >
-              <mat-icon class="mr-3">person_remove</mat-icon>
-              <span>Delete student</span>
-            </button>
-          </div>
-        </ng-template>
-
-        @for (
-          columnDetail of columnDetails();
-          track columnIndex;
-          let columnIndex = $index
-        ) {
-          <div class="flex-1 min-w-48">
-            <div class="flex">
-              @if (columnIndex === 0) {
-                <div class="flex flex-col justify-around">
-                  <mat-icon class="cursor-move opacity-80" cdkDragHandle
-                    >drag_indicator</mat-icon
-                  >
-                </div>
-              }
-
-              <input
-                #valueInput
-                [value]="
-                  student.fieldIdsToValues[columnDetail.fieldId] === undefined
-                    ? ''
-                    : student.fieldIdsToValues[columnDetail.fieldId]
-                "
-                [placeholder]="
-                  columnDetail.type === FieldType.TEXT
-                    ? 'Add text'
-                    : 'Add grade'
-                "
-                class="bg-transparent flex-1 text-ellipsis p-1 student-field-input"
-                [type]="
-                  columnDetail.type === FieldType.TEXT ? 'text' : 'number'
-                "
-                (change)="saveEdits(student.id, columnDetail.fieldId, $event)"
-              />
-            </div>
-          </div>
-        }
-      </div>
-    }
-  </div>
-
-  <div class="my-1 flex justify-between flex-1" matTooltipPosition="right">
+<div
+  cdkDropList
+  [id]="groupId()!"
+  [cdkDropListConnectedTo]="groupIds()"
+  class="grid-row student-list overflow-hidden w-full border"
+  [ngClass]="{
+    'min-h-8 border-3 border-dashed border-gray-300 dark:border-gray-500':
+      editingStudents.length <= 0,
+    'border-neutral-200 dark:border-neutral-600': editingStudents.length > 0,
+    'rounded-b-md': roundedBottom(),
+    'rounded-t-md': roundedTop(),
+  }"
+  (cdkDropListDropped)="drop($event)"
+>
+  @for (student of editingStudents; track student.id; let rowIndex = $index) {
     <div
-      class="max-w-36"
-      [matTooltip]="
-        studentsInConfiguration().length >=
-        (account()?.subscription?.maxStudentsPerClassroom ?? 0)
-          ? 'Student limit reached!'
-          : ''
-      "
+      class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 flex"
+      cdkDrag
+      [cdkDragData]="student"
+      [cdkContextMenuTriggerFor]="studentMenu"
     >
-      <button
-        [disabled]="
-          studentsInConfiguration().length >=
-          (account()?.subscription?.maxStudentsPerClassroom ?? 0)
-        "
-        [tabindex]="-1"
-        matSuffix
-        mat-button
-        (click)="addStudent()"
-      >
-        <mat-icon class="text-md">person_add</mat-icon>
-        <span class="text-sm opacity-80">Add student</span>
-      </button>
-    </div>
+      <ng-template #studentMenu>
+        <div class="context-menu" cdkMenu>
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="deleteStudent(student)"
+          >
+            <mat-icon class="mr-3">person_remove</mat-icon>
+            <span>Delete student</span>
+          </button>
+        </div>
+      </ng-template>
 
-    <button
-      [ngClass]="{
-        'font-bold': groupDetail()?.isLocked,
-      }"
-      [tabindex]="-1"
-      matSuffix
-      mat-button
-      (click)="toggleGroupLocked()"
-    >
-      <mat-icon class="text-md">{{
-        groupDetail()?.isLocked ? 'lock_person' : 'lock_open_right'
-      }}</mat-icon>
-      <span class="text-sm opacity-80">{{
-        groupDetail()?.isLocked ? 'Unlock group' : 'Lock group'
-      }}</span>
-    </button>
-  </div>
+      @for (
+        columnDetail of columnDetails();
+        track columnIndex;
+        let columnIndex = $index
+      ) {
+        <div class="flex-1 min-w-48">
+          <div class="flex">
+            @if (columnIndex === 0) {
+              <div class="flex flex-col justify-around">
+                <mat-icon class="cursor-move opacity-80" cdkDragHandle
+                  >drag_indicator</mat-icon
+                >
+              </div>
+            }
+
+            <input
+              #valueInput
+              [value]="
+                student.fieldIdsToValues[columnDetail.fieldId] === undefined
+                  ? ''
+                  : student.fieldIdsToValues[columnDetail.fieldId]
+              "
+              [placeholder]="
+                columnDetail.type === FieldType.TEXT ? 'Add text' : 'Add grade'
+              "
+              class="bg-transparent flex-1 text-ellipsis p-1 student-field-input"
+              [type]="columnDetail.type === FieldType.TEXT ? 'text' : 'number'"
+              (change)="saveEdits(student.id, columnDetail.fieldId, $event)"
+            />
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>

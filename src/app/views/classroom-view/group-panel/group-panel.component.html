@@ -10,7 +10,7 @@
           class="text-ellipsis text-lg m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
           maxlength="120"
-          [value]="groupDetail()?.label || ''"
+          [value]="groupDetail().label || ''"
           (change)="updateLabel($event)"
           placeholder="Untitled"
           tabindex="-1"
@@ -19,7 +19,12 @@
     </div>
 
     <div class="flex gap-x-2">
-      <button [tabIndex]="-1" mat-icon-button (click)="deleteGroup()">
+      <button
+        [tabIndex]="-1"
+        mat-icon-button
+        (click)="deleteGroup()"
+        class="!flex"
+      >
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -29,14 +34,21 @@
     [roundedTop]="true"
     [roundedBottom]="true"
     [classroomId]="classroomId()"
-    [configurationId]="groupDetail()?.configurationId"
-    [groupId]="groupDetail()?.id"
+    [configurationId]="groupDetail().configurationId"
+    [groupId]="groupDetail().id"
     [groupDetail]="groupDetail()"
-    [studentDetails]="groupDetail()?.studentDetails"
+    [studentDetails]="groupDetail().studentDetails"
     [groupIndex]="groupIndex()"
     [columnDetails]="columnDetails()"
     (studentFieldUpdated)="updateStudentField($event)"
     (studentDeleted)="deleteStudent($event)"
     (studentPositionUpdated)="updateStudentPosition($event)"
   ></app-student-list>
+
+  <app-group-footer
+    [classroomId]="classroomId()"
+    [configurationId]="groupDetail().configurationId"
+    [groupId]="groupDetail().id"
+    [groupDetail]="groupDetail()"
+  ></app-group-footer>
 </div>

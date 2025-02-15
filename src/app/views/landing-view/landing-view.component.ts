@@ -17,8 +17,9 @@ export class LandingViewComponent {
   readonly #themeService = inject(ThemeService);
 
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
-  readonly Themes = Themes;
   readonly theme = this.#themeService.theme;
+
+  readonly Themes = Themes;
 
   toggleTheme() {
     this.#themeService.toggleTheme();

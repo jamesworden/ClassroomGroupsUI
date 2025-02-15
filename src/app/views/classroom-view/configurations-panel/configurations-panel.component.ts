@@ -55,29 +55,29 @@ export class ConfigurationsPanelComponent {
   @ViewChild('addConfigurationInput')
   addConfigurationInput: ElementRef<HTMLInputElement> | undefined;
 
-  readonly selectedConfigurationId = input<string>();
-  readonly classroomId = input<string>();
+  readonly selectedConfigurationId = input.required<string>();
+  readonly classroomId = input.required<string>();
 
   readonly configurationIdSelected = output<string>();
+  readonly deletedConfiguration = output<string>();
 
-  readonly configurations = computed(() =>
-    this.#classroomsService.select.configurations(this.classroomId())()
-  );
-
-  readonly searchQuery = signal('');
+  readonly account = this.#accountsService.select.account;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly configurationsLoading =
     this.#classroomsService.select.configurationsLoading;
-  readonly addingConfiguration = signal<boolean>(false);
-  readonly account = this.#accountsService.select.account;
 
-  readonly deletedConfiguration = output<string>();
+  readonly searchQuery = signal('');
+  readonly addingConfiguration = signal(false);
 
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
     () =>
       this.configurations()?.filter(({ label }) =>
         label.toLowerCase().includes(this.searchQuery())
       ) ?? []
+  );
+
+  readonly configurations = computed(() =>
+    this.#classroomsService.select.configurations(this.classroomId())()
   );
 
   createConfigurationLabel = '';

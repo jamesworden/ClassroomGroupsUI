@@ -58,6 +58,7 @@ import {
   YesNoDialogInputs,
 } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
+import { CodeLinksMenuComponent } from '../../components/code-links-menu/code-links-menu.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -81,6 +82,7 @@ import { Themes, ThemeService } from '@app/themes';
     ConfigurationPanelTopComponent,
     MatTooltipModule,
     AccountMenuComponent,
+    CodeLinksMenuComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
@@ -100,15 +102,19 @@ export class ClassroomViewComponent {
   readonly theme = this.#themeService.theme;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly accountLoading = this.#accountsService.select.accountLoading;
+  readonly account = this.#accountsService.select.account;
+
+  readonly classroomViewInitialized$ = new Subject<void>();
+  readonly menuIsOpen = signal(false);
+
+  readonly Themes = Themes;
 
   readonly queryParams = toSignal(this.#activatedRoute.params, {
     initialValue: {
       id: null,
     },
   });
-  readonly classroomId = computed(
-    () => this.queryParams().id as string | undefined
-  );
+  readonly classroomId = computed(() => this.queryParams().id as string);
   readonly classroomId$ = toObservable(this.classroomId);
   readonly classroom = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
@@ -185,10 +191,6 @@ export class ClassroomViewComponent {
   readonly anyAverageScores = computed(
     () => Object.keys(this.averageScores()).length > 0
   );
-  readonly account = this.#accountsService.select.account;
-  readonly classroomViewInitialized$ = new Subject<void>();
-  readonly Themes = Themes;
-  readonly menuIsOpen = signal(false);
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];

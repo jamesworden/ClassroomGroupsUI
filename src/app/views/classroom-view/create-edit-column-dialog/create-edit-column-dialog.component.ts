@@ -46,13 +46,14 @@ export interface CreateEditColumnDialogInputs {
 export class CreateEditColumnDialogComponent {
   readonly #data = inject<CreateEditColumnDialogInputs>(MAT_DIALOG_DATA);
 
-  readonly Type = FieldType;
-
   public readonly dialogRef = inject(
     MatDialogRef<CreateEditColumnDialogComponent>
   );
 
+  readonly canceled = signal(undefined);
   readonly title = signal(this.#data.title);
+
+  readonly Type = FieldType;
 
   label?: string;
   type = FieldType.NUMBER;
@@ -63,8 +64,6 @@ export class CreateEditColumnDialogComponent {
       type: this.type,
       label: this.label ?? '',
     });
-
-  readonly canceled = signal(undefined);
 
   setFieldNameIsValid() {
     this.fieldNameIsValid = (this.label?.trim().length ?? 0) > 0;

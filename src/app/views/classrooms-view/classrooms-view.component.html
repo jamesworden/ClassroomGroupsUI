@@ -36,6 +36,16 @@
           </button>
         </div>
 
+        <div class="flex flex-col justify-around">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="codeMenu"
+            matTooltip="Our code"
+          >
+            <mat-icon>code</mat-icon>
+          </button>
+        </div>
+
         <button
           [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
           mat-icon-button
@@ -174,4 +184,8 @@
 
 <mat-menu #accountMenu="matMenu">
   <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
+</mat-menu>
+
+<mat-menu #codeMenu="matMenu">
+  <app-code-links-menu></app-code-links-menu>
 </mat-menu>

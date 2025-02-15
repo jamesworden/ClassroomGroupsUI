@@ -20,5 +20,6 @@ export class SignInViewComponent {
   readonly #themeService = inject(ThemeService);
 
   readonly theme = this.#themeService.theme;
+
   readonly Themes = Themes;
 }

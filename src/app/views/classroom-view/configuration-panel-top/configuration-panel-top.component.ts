@@ -72,12 +72,16 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   @ViewChild('toolbar')
   toolbar!: ElementRef<HTMLDivElement>;
 
-  readonly configurationDetail = input<ConfigurationDetail>();
-  readonly columnDetails = input<ColumnDetail[]>([]);
+  readonly configurationDetail = input.required<ConfigurationDetail>();
+  readonly columnDetails = input.required<ColumnDetail[]>();
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
   readonly deletedConfiguration = output<string>();
+
+  readonly account = this.#accountsService.select.account;
+
+  readonly toolbarHeight = signal<number>(0);
 
   readonly classroomId = computed(
     () => this.configurationDetail()?.classroomId
@@ -104,8 +108,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     )()
   );
 
-  readonly account = this.#accountsService.select.account;
-  readonly toolbarHeight = signal<number>(0);
   readonly StudentGroupingStrategy = StudentGroupingStrategy;
 
   groupingByDivision = false;

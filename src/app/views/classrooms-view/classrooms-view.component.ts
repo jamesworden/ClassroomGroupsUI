@@ -21,6 +21,7 @@ import {
   YesNoDialogInputs,
 } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
+import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -37,6 +38,7 @@ import { Themes, ThemeService } from '@app/themes';
     RouterModule,
     SubscriptionPlanCardComponent,
     CommonModule,
+    CodeLinksMenuComponent,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
@@ -51,13 +53,14 @@ export class ClassroomsViewComponent {
 
   readonly classroomDetails = this.#classroomsService.select.classroomDetails;
   readonly classroomsLoading = this.#classroomsService.select.classroomsLoading;
-  readonly theme = this.#themeService.theme;
-  readonly Themes = Themes;
-  readonly menuIsOpen = signal(false);
   readonly account = this.#accountService.select.account;
+  readonly theme = this.#themeService.theme;
 
+  readonly menuIsOpen = signal(false);
+
+  readonly Themes = Themes;
   readonly subscriptionPlans = subscriptionPlans;
-  displayedColumns = ['label', 'description', 'actions'];
+  readonly displayedColumns = ['label', 'description', 'actions'];
 
   viewClassroom(id: string) {
     this.#router.navigate(['/classrooms', id]);
