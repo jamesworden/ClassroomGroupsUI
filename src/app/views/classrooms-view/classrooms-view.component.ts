@@ -21,6 +21,7 @@ import {
   YesNoDialogInputs,
 } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
+import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -37,6 +38,7 @@ import { Themes, ThemeService } from '@app/themes';
     RouterModule,
     SubscriptionPlanCardComponent,
     CommonModule,
+    CodeLinksMenuComponent,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
