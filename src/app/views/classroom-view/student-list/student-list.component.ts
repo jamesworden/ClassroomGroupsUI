@@ -51,15 +51,15 @@ export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
 
-  readonly classroomId = input<string>();
-  readonly configurationId = input<string>();
-  readonly groupId = input<string>();
-  readonly studentDetails = input<StudentDetail[]>();
+  readonly classroomId = input.required<string>();
+  readonly configurationId = input.required<string>();
+  readonly groupId = input.required<string>();
+  readonly studentDetails = input.required<StudentDetail[]>();
+  readonly groupIndex = input.required<number>();
+  readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly groupDetail = input.required<GroupDetail>();
   readonly roundedBottom = input<boolean>(false);
   readonly roundedTop = input<boolean>(false);
-  readonly groupIndex = input<number>();
-  readonly columnDetails = input<ColumnDetail[]>([]);
-  readonly groupDetail = input<GroupDetail>();
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();

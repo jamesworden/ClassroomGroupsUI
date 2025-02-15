@@ -23,10 +23,10 @@ import { GroupFooterComponent } from '../group-footer/group-footer.component';
   styleUrl: './configuration-panel-bottom.component.scss',
 })
 export class ConfigurationPanelBottomComponent {
-  readonly classroomId = input<string>();
-  readonly configurationId = input<string>();
-  readonly defaultGroup = input<GroupDetail>();
-  readonly columnDetails = input<ColumnDetail[]>([]);
+  readonly classroomId = input.required<string>();
+  readonly configurationId = input.required<string>();
+  readonly defaultGroup = input.required<GroupDetail>();
+  readonly columnDetails = input.required<ColumnDetail[]>();
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();

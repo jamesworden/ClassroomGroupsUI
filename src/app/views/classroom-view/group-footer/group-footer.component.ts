@@ -16,10 +16,10 @@ export class GroupFooterComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
 
-  readonly configurationId = input<string>();
-  readonly classroomId = input<string>();
-  readonly groupId = input<string>();
-  readonly groupDetail = input<GroupDetail>();
+  readonly configurationId = input.required<string>();
+  readonly classroomId = input.required<string>();
+  readonly groupId = input.required<string>();
+  readonly groupDetail = input.required<GroupDetail>();
 
   readonly studentsInConfiguration = computed(() =>
     this.#classroomsService.select.studentsInConfiguration(

@@ -72,8 +72,8 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   @ViewChild('toolbar')
   toolbar!: ElementRef<HTMLDivElement>;
 
-  readonly configurationDetail = input<ConfigurationDetail>();
-  readonly columnDetails = input<ColumnDetail[]>([]);
+  readonly configurationDetail = input.required<ConfigurationDetail>();
+  readonly columnDetails = input.required<ColumnDetail[]>();
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();

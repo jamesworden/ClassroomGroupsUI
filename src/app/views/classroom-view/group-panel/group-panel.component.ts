@@ -32,10 +32,10 @@ import { GroupFooterComponent } from '../group-footer/group-footer.component';
   styleUrl: './group-panel.component.scss',
 })
 export class GroupPanelComponent {
-  readonly classroomId = input<string>();
-  readonly groupDetail = input<GroupDetail>();
-  readonly groupIndex = input<number>();
-  readonly columnDetails = input<ColumnDetail[]>([]);
+  readonly classroomId = input.required<string>();
+  readonly groupDetail = input.required<GroupDetail>();
+  readonly groupIndex = input.required<number>();
+  readonly columnDetails = input.required<ColumnDetail[]>();
 
   readonly groupDeleted = output<void>();
   readonly studentCreated = output<void>();

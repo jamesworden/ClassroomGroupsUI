@@ -1,12 +1,14 @@
 <div class="w-full h-full flex grid-bg">
   <div class="flex-1 w-full h-full flex">
-    <app-configurations-panel
-      [classroomId]="classroomId()"
-      [selectedConfigurationId]="selectedConfigurationId()"
-      (configurationIdSelected)="selectConfigurationId($event)"
-      class="flex-1 max-w-xs shadow-lg border-r border-neutral-400"
-      (deletedConfiguration)="openDeleteConfigurationModal($event)"
-    ></app-configurations-panel>
+    @if (selectedConfigurationId(); as selectedConfigurationId) {
+      <app-configurations-panel
+        [classroomId]="classroomId()"
+        [selectedConfigurationId]="selectedConfigurationId"
+        (configurationIdSelected)="selectConfigurationId($event)"
+        class="flex-1 max-w-xs shadow-lg border-r border-neutral-400"
+        (deletedConfiguration)="openDeleteConfigurationModal($event)"
+      ></app-configurations-panel>
+    }
 
     <div class="flex flex-col flex-1">
       @if (classroom()) {
@@ -95,29 +97,33 @@
                 class="absolute inset-0 overflow-auto flex flex-col"
               >
                 <div class="flex flex-1 flex-col w-full min-w-fit">
-                  <app-configuration-panel-top
-                    class="sticky top-0 z-10 mx-4 flex"
-                    [configurationDetail]="configurationDetail()"
-                    [columnDetails]="editingColumnDetails"
-                    (labelUpdated)="updateConfigurationLabel($event)"
-                    (descriptionUpdated)="
-                      updateConfigurationDescription($event)
-                    "
-                    (deletedConfiguration)="
-                      openDeleteConfigurationModal($event)
-                    "
-                  ></app-configuration-panel-top>
+                  @if (configurationDetail(); as configurationDetail) {
+                    <app-configuration-panel-top
+                      class="sticky top-0 z-10 mx-4 flex"
+                      [configurationDetail]="configurationDetail"
+                      [columnDetails]="editingColumnDetails"
+                      (labelUpdated)="updateConfigurationLabel($event)"
+                      (descriptionUpdated)="
+                        updateConfigurationDescription($event)
+                      "
+                      (deletedConfiguration)="
+                        openDeleteConfigurationModal($event)
+                      "
+                    ></app-configuration-panel-top>
 
-                  <app-configuration-panel-bottom
-                    class="mx-4 flex"
-                    [classroomId]="classroomId()"
-                    [configurationId]="configurationDetail()?.id"
-                    [defaultGroup]="defaultGroup()"
-                    [columnDetails]="editingColumnDetails"
-                    (studentFieldUpdated)="updateStudentField($event)"
-                    (studentDeleted)="deleteStudent($event)"
-                    (studentPositionUpdated)="updateStudentPosition($event)"
-                  ></app-configuration-panel-bottom>
+                    @if (defaultGroup(); as defaultGroup) {
+                      <app-configuration-panel-bottom
+                        class="mx-4 flex"
+                        [classroomId]="classroomId()"
+                        [configurationId]="configurationDetail.id"
+                        [defaultGroup]="defaultGroup"
+                        [columnDetails]="editingColumnDetails"
+                        (studentFieldUpdated)="updateStudentField($event)"
+                        (studentDeleted)="deleteStudent($event)"
+                        (studentPositionUpdated)="updateStudentPosition($event)"
+                      ></app-configuration-panel-bottom>
+                    }
+                  }
 
                   <div class="flex flex-col gap-y-4">
                     <section

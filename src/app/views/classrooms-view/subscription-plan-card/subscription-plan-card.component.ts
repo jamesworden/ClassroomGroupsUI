@@ -10,5 +10,5 @@ import { SubscriptionPlan } from '@app/metadata';
   styleUrl: './subscription-plan-card.component.scss',
 })
 export class SubscriptionPlanCardComponent {
-  subscriptionPlan = input<SubscriptionPlan>();
+  subscriptionPlan = input.required<SubscriptionPlan>();
 }

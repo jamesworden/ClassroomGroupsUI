@@ -25,7 +25,7 @@
 
   <button
     [ngClass]="{
-      'font-bold': groupDetail()?.isLocked,
+      'font-bold': groupDetail().isLocked,
     }"
     [tabindex]="-1"
     matSuffix
@@ -33,10 +33,10 @@
     (click)="toggleGroupLocked()"
   >
     <mat-icon class="text-md">{{
-      groupDetail()?.isLocked ? 'lock_person' : 'lock_open_right'
+      groupDetail().isLocked ? 'lock_person' : 'lock_open_right'
     }}</mat-icon>
     <span class="text-sm opacity-80">{{
-      groupDetail()?.isLocked ? 'Unlock group' : 'Lock group'
+      groupDetail().isLocked ? 'Unlock group' : 'Lock group'
     }}</span>
   </button>
 </div>
