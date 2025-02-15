@@ -102,6 +102,10 @@
             cdkDrag
             [cdkDragData]="column"
             [cdkContextMenuTriggerFor]="columnHeaderMenu"
+            [ngClass]="{
+              'rounded-b-md':
+                (defaultGroup()?.studentDetails?.length ?? 0) <= 0,
+            }"
           >
             <ng-template #columnHeaderMenu>
               <div class="context-menu" cdkMenu>

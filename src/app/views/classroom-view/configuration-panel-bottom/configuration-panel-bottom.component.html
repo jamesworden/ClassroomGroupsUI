@@ -1,5 +1,5 @@
-<div class="px-2 panel rounded-b-md w-full shadow-lg">
-  @if (defaultGroup()?.studentDetails?.length ?? 0 > 0) {
+<div class="px-2 panel rounded-b-md w-full shadow-lg flex flex-col">
+  @if ((defaultGroup()?.studentDetails?.length || 0) > 0) {
     <app-student-list
       [classroomId]="classroomId()"
       [configurationId]="configurationId()"
@@ -14,4 +14,11 @@
       (studentPositionUpdated)="updateStudentPosition($event)"
     ></app-student-list>
   }
+
+  <app-group-footer
+    [classroomId]="classroomId()"
+    [configurationId]="configurationId()"
+    [groupDetail]="defaultGroup()"
+    [groupId]="defaultGroup()?.id"
+  ></app-group-footer>
 </div>

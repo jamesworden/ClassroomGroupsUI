@@ -1,0 +1,42 @@
+<div class="my-1 flex justify-between flex-1" matTooltipPosition="right">
+  <div
+    class="max-w-36"
+    [matTooltip]="
+      studentsInConfiguration().length >=
+      (account()?.subscription?.maxStudentsPerClassroom ?? 0)
+        ? 'Student limit reached!'
+        : ''
+    "
+  >
+    <button
+      [disabled]="
+        studentsInConfiguration().length >=
+        (account()?.subscription?.maxStudentsPerClassroom ?? 0)
+      "
+      [tabindex]="-1"
+      matSuffix
+      mat-button
+      (click)="addStudent()"
+    >
+      <mat-icon class="text-md">person_add</mat-icon>
+      <span class="text-sm opacity-80">Add student</span>
+    </button>
+  </div>
+
+  <button
+    [ngClass]="{
+      'font-bold': groupDetail()?.isLocked,
+    }"
+    [tabindex]="-1"
+    matSuffix
+    mat-button
+    (click)="toggleGroupLocked()"
+  >
+    <mat-icon class="text-md">{{
+      groupDetail()?.isLocked ? 'lock_person' : 'lock_open_right'
+    }}</mat-icon>
+    <span class="text-sm opacity-80">{{
+      groupDetail()?.isLocked ? 'Unlock group' : 'Lock group'
+    }}</span>
+  </button>
+</div>

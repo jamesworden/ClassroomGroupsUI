@@ -115,35 +115,4 @@ export class StudentListComponent {
   deleteStudent(studentDetail: StudentDetail) {
     this.studentDeleted.emit(studentDetail);
   }
-
-  addStudent() {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createStudent(
-        classroomId,
-        configurationId,
-        this.groupId()
-      );
-    }
-  }
-
-  toggleGroupLocked() {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    const group = this.groupDetail();
-    if (classroomId && configurationId && group) {
-      group.isLocked
-        ? this.#classroomsService.unlockGroup(
-            classroomId,
-            configurationId,
-            group.id
-          )
-        : this.#classroomsService.lockGroup(
-            classroomId,
-            configurationId,
-            group.id
-          );
-    }
-  }
 }

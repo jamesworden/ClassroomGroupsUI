@@ -13,6 +13,7 @@ import {
 } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
+import { GroupFooterComponent } from '../group-footer/group-footer.component';
 
 @Component({
   selector: 'app-group-panel',
@@ -25,6 +26,7 @@ import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-det
     CommonModule,
     FormsModule,
     StudentListComponent,
+    GroupFooterComponent,
   ],
   templateUrl: './group-panel.component.html',
   styleUrl: './group-panel.component.scss',

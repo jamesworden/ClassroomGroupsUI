@@ -19,7 +19,12 @@
     </div>
 
     <div class="flex gap-x-2">
-      <button [tabIndex]="-1" mat-icon-button (click)="deleteGroup()">
+      <button
+        [tabIndex]="-1"
+        mat-icon-button
+        (click)="deleteGroup()"
+        class="!flex"
+      >
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -39,4 +44,11 @@
     (studentDeleted)="deleteStudent($event)"
     (studentPositionUpdated)="updateStudentPosition($event)"
   ></app-student-list>
+
+  <app-group-footer
+    [classroomId]="classroomId()"
+    [configurationId]="groupDetail()?.configurationId"
+    [groupId]="groupDetail()?.id"
+    [groupDetail]="groupDetail()"
+  ></app-group-footer>
 </div>
