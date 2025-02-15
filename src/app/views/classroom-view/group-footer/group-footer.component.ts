@@ -21,13 +21,13 @@ export class GroupFooterComponent {
   readonly groupId = input.required<string>();
   readonly groupDetail = input.required<GroupDetail>();
 
+  readonly account = this.#accountsService.select.account;
+
   readonly studentsInConfiguration = computed(() =>
     this.#classroomsService.select.studentsInConfiguration(
       this.configurationId()
     )()
   );
-
-  readonly account = this.#accountsService.select.account;
 
   addStudent() {
     const classroomId = this.classroomId();

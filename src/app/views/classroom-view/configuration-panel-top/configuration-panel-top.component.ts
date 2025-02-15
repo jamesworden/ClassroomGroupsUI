@@ -79,6 +79,10 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly descriptionUpdated = output<string>();
   readonly deletedConfiguration = output<string>();
 
+  readonly account = this.#accountsService.select.account;
+
+  readonly toolbarHeight = signal<number>(0);
+
   readonly classroomId = computed(
     () => this.configurationDetail()?.classroomId
   );
@@ -104,8 +108,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     )()
   );
 
-  readonly account = this.#accountsService.select.account;
-  readonly toolbarHeight = signal<number>(0);
   readonly StudentGroupingStrategy = StudentGroupingStrategy;
 
   groupingByDivision = false;

@@ -65,6 +65,8 @@ export class StudentListComponent {
   readonly studentDeleted = output<StudentDetail>();
   readonly studentPositionUpdated = output<MoveStudentDetail>();
 
+  readonly account = this.#accountsService.select.account;
+
   readonly groupIds = computed(() =>
     this.#classroomsService.select.groupIds(this.configurationId())()
   );
@@ -73,7 +75,6 @@ export class StudentListComponent {
       this.configurationId()
     )()
   );
-  readonly account = this.#accountsService.select.account;
 
   readonly FieldType = FieldType;
 

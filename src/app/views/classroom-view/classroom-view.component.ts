@@ -104,6 +104,7 @@ export class ClassroomViewComponent {
 
   readonly classroomViewInitialized$ = new Subject<void>();
   readonly menuIsOpen = signal(false);
+
   readonly Themes = Themes;
 
   readonly queryParams = toSignal(this.#activatedRoute.params, {

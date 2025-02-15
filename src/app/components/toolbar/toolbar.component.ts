@@ -29,8 +29,10 @@ export class ToolbarComponent {
 
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly theme = this.#themeService.theme;
-  readonly Themes = Themes;
+
   readonly menuIsOpen = signal(false);
+
+  readonly Themes = Themes;
 
   toggleTheme() {
     this.#themeService.toggleTheme();

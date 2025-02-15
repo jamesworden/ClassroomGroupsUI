@@ -51,13 +51,14 @@ export class ClassroomsViewComponent {
 
   readonly classroomDetails = this.#classroomsService.select.classroomDetails;
   readonly classroomsLoading = this.#classroomsService.select.classroomsLoading;
-  readonly theme = this.#themeService.theme;
-  readonly Themes = Themes;
-  readonly menuIsOpen = signal(false);
   readonly account = this.#accountService.select.account;
+  readonly theme = this.#themeService.theme;
 
+  readonly menuIsOpen = signal(false);
+
+  readonly Themes = Themes;
   readonly subscriptionPlans = subscriptionPlans;
-  displayedColumns = ['label', 'description', 'actions'];
+  readonly displayedColumns = ['label', 'description', 'actions'];
 
   viewClassroom(id: string) {
     this.#router.navigate(['/classrooms', id]);
