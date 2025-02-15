@@ -58,6 +58,7 @@ import {
   YesNoDialogInputs,
 } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
+import { CodeLinksMenuComponent } from '../../components/code-links-menu/code-links-menu.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -81,6 +82,7 @@ import { Themes, ThemeService } from '@app/themes';
     ConfigurationPanelTopComponent,
     MatTooltipModule,
     AccountMenuComponent,
+    CodeLinksMenuComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
