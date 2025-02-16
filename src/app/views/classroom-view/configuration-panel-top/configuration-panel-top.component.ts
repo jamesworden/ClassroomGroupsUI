@@ -35,6 +35,7 @@ import {
   Column,
   ColumnDetail,
   ConfigurationDetail,
+  GroupDetail,
   StudentGroupingStrategy,
 } from '@shared/classrooms';
 import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detail';
@@ -74,6 +75,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly defaultGroup = input.required<GroupDetail>();
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
@@ -95,9 +97,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   );
   readonly configurationDescription = computed(
     () => this.configurationDetail()?.description ?? ''
-  );
-  readonly defaultGroup = computed(() =>
-    this.#classroomsService.select.defaultGroup(this.configurationId())()
   );
   readonly listGroupDetails = computed(() =>
     this.#classroomsService.select.listGroupDetails(this.configurationId())()

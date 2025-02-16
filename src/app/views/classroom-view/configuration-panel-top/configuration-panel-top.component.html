@@ -1,4 +1,9 @@
-<div class="panel pt-2 px-2 flex flex-col w-full">
+<div
+  class="panel pt-2 px-2 flex flex-col w-full border-t border-x border-transparent"
+  [ngClass]="{
+    'border-primary': defaultGroup().isLocked,
+  }"
+>
   <!-- Toolbar -->
   <div #toolbar>
     <div class="flex justify-between min-h-16 flex-wrap gap-y-4">

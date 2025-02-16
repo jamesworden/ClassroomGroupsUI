@@ -109,20 +109,21 @@
               >
                 <div class="flex flex-1 flex-col w-full min-w-fit">
                   @if (configurationDetail(); as configurationDetail) {
-                    <app-configuration-panel-top
-                      class="sticky top-0 z-10 mx-4 flex"
-                      [configurationDetail]="configurationDetail"
-                      [columnDetails]="editingColumnDetails"
-                      (labelUpdated)="updateConfigurationLabel($event)"
-                      (descriptionUpdated)="
-                        updateConfigurationDescription($event)
-                      "
-                      (deletedConfiguration)="
-                        openDeleteConfigurationModal($event)
-                      "
-                    ></app-configuration-panel-top>
-
                     @if (defaultGroup(); as defaultGroup) {
+                      <app-configuration-panel-top
+                        class="sticky top-0 z-10 mx-4 flex"
+                        [configurationDetail]="configurationDetail"
+                        [columnDetails]="editingColumnDetails"
+                        [defaultGroup]="defaultGroup"
+                        (labelUpdated)="updateConfigurationLabel($event)"
+                        (descriptionUpdated)="
+                          updateConfigurationDescription($event)
+                        "
+                        (deletedConfiguration)="
+                          openDeleteConfigurationModal($event)
+                        "
+                      ></app-configuration-panel-top>
+
                       <app-configuration-panel-bottom
                         class="mx-4 flex"
                         [classroomId]="classroomId()"
