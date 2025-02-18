@@ -59,6 +59,22 @@
             <div class="flex flex-col justify-around">
               <button
                 class="!flex"
+                [matTooltip]="
+                  collapsePanelDetails() ? 'Show details' : 'Hide details'
+                "
+                mat-icon-button
+                (click)="toggleCollapsedPanels()"
+                [tabIndex]="-1"
+              >
+                <mat-icon>{{
+                  collapsePanelDetails() ? 'unfold_more' : 'unfold_less'
+                }}</mat-icon>
+              </button>
+            </div>
+
+            <div class="flex flex-col justify-around">
+              <button
+                class="!flex"
                 [tabindex]="-1"
                 [matTooltip]="
                   theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'
@@ -115,6 +131,7 @@
                         [configurationDetail]="configurationDetail"
                         [columnDetails]="editingColumnDetails"
                         [defaultGroup]="defaultGroup"
+                        [collapsed]="collapsePanelDetails()"
                         (labelUpdated)="updateConfigurationLabel($event)"
                         (descriptionUpdated)="
                           updateConfigurationDescription($event)
@@ -130,6 +147,7 @@
                         [configurationId]="configurationDetail.id"
                         [defaultGroup]="defaultGroup"
                         [columnDetails]="editingColumnDetails"
+                        [collapsed]="collapsePanelDetails()"
                         (studentFieldUpdated)="updateStudentField($event)"
                         (studentDeleted)="deleteStudent($event)"
                         (studentPositionUpdated)="updateStudentPosition($event)"
@@ -152,7 +170,11 @@
                           group.id !== configurationDetail()?.defaultGroupId
                         ) {
                           <app-group-panel
-                            class="flex w-full mt-4"
+                            class="flex w-full"
+                            [ngClass]="{
+                              'mt-4': !collapsePanelDetails(),
+                              'mt-2': collapsePanelDetails(),
+                            }"
                             cdkDrag
                             [classroomId]="classroomId()"
                             [groupDetail]="group"
@@ -166,6 +188,7 @@
                               updateStudentPosition($event)
                             "
                             [groupIndex]="i"
+                            [collapsed]="collapsePanelDetails()"
                           >
                             <mat-icon class="cursor-move" cdkDragHandle
                               >drag_handle</mat-icon

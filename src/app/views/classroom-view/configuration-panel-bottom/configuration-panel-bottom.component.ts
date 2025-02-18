@@ -27,6 +27,7 @@ export class ConfigurationPanelBottomComponent {
   readonly configurationId = input.required<string>();
   readonly defaultGroup = input.required<GroupDetail>();
   readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly collapsed = input(false);
 
   readonly studentFieldUpdated = output<StudentField>();
   readonly studentDeleted = output<StudentDetail>();

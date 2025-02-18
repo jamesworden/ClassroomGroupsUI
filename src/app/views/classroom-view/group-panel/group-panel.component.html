@@ -1,39 +1,43 @@
 <div
-  class="panel rounded-lg flex-col gap-y-2 px-2 pt-1 shadow-lg flex-1 border border-transparent"
+  class="panel flex-col gap-y-2 px-2 shadow-lg flex-1 border border-transparent"
   [ngClass]="{
     'border-primary': groupDetail().isLocked,
+    'pt-1 rounded-lg': !collapsed(),
+    'py-2 rounded-md': collapsed(),
   }"
 >
-  <div class="flex justify-between">
-    <div class="flex gap-x-2 flex-1">
-      <div class="flex flex-col justify-around">
-        <ng-content></ng-content>
+  @if (!collapsed()) {
+    <div class="flex justify-between">
+      <div class="flex gap-x-2 flex-1">
+        <div class="flex flex-col justify-around">
+          <ng-content></ng-content>
+        </div>
+
+        <div class="flex flex-col justify-around flex-1">
+          <input
+            class="text-ellipsis text-lg m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            maxlength="120"
+            [value]="groupDetail().label || ''"
+            (change)="updateLabel($event)"
+            placeholder="Untitled"
+            tabindex="-1"
+          />
+        </div>
       </div>
 
-      <div class="flex flex-col justify-around flex-1">
-        <input
-          class="text-ellipsis text-lg m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          maxlength="120"
-          [value]="groupDetail().label || ''"
-          (change)="updateLabel($event)"
-          placeholder="Untitled"
-          tabindex="-1"
-        />
+      <div class="flex gap-x-2">
+        <button
+          [tabIndex]="-1"
+          mat-icon-button
+          (click)="deleteGroup()"
+          class="!flex"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
     </div>
-
-    <div class="flex gap-x-2">
-      <button
-        [tabIndex]="-1"
-        mat-icon-button
-        (click)="deleteGroup()"
-        class="!flex"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-  </div>
+  }
 
   <app-student-list
     [roundedTop]="true"
@@ -50,10 +54,12 @@
     (studentPositionUpdated)="updateStudentPosition($event)"
   ></app-student-list>
 
-  <app-group-footer
-    [classroomId]="classroomId()"
-    [configurationId]="groupDetail().configurationId"
-    [groupId]="groupDetail().id"
-    [groupDetail]="groupDetail()"
-  ></app-group-footer>
+  @if (!collapsed()) {
+    <app-group-footer
+      [classroomId]="classroomId()"
+      [configurationId]="groupDetail().configurationId"
+      [groupId]="groupDetail().id"
+      [groupDetail]="groupDetail()"
+    ></app-group-footer>
+  }
 </div>

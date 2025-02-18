@@ -36,6 +36,7 @@ export class GroupPanelComponent {
   readonly groupDetail = input.required<GroupDetail>();
   readonly groupIndex = input.required<number>();
   readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly collapsed = input(false);
 
   readonly groupDeleted = output<void>();
   readonly studentCreated = output<void>();

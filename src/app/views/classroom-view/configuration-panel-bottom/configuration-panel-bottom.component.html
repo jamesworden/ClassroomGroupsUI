@@ -1,5 +1,5 @@
 <div
-  class="px-2 panel rounded-b-md w-full shadow-lg flex flex-col border-b border-x border-transparent"
+  class="px-2 panel rounded-b-md w-full shadow-lg flex flex-col border-b border-x border-transparent min-h-2"
   [ngClass]="{
     'border-primary': defaultGroup().isLocked,
   }"
@@ -20,10 +20,12 @@
     ></app-student-list>
   }
 
-  <app-group-footer
-    [classroomId]="classroomId()"
-    [configurationId]="configurationId()"
-    [groupDetail]="defaultGroup()"
-    [groupId]="defaultGroup().id"
-  ></app-group-footer>
+  @if (!collapsed()) {
+    <app-group-footer
+      [classroomId]="classroomId()"
+      [configurationId]="configurationId()"
+      [groupDetail]="defaultGroup()"
+      [groupId]="defaultGroup().id"
+    ></app-group-footer>
+  }
 </div>

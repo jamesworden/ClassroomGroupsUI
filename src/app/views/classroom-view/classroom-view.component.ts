@@ -106,6 +106,7 @@ export class ClassroomViewComponent {
 
   readonly classroomViewInitialized$ = new Subject<void>();
   readonly menuIsOpen = signal(false);
+  readonly collapsePanelDetails = signal(false);
 
   readonly Themes = Themes;
 
@@ -516,5 +517,9 @@ export class ClassroomViewComponent {
           .subscribe(() => this.selectFirstConfiguration());
       }
     });
+  }
+
+  toggleCollapsedPanels() {
+    this.collapsePanelDetails.set(!this.collapsePanelDetails());
   }
 }

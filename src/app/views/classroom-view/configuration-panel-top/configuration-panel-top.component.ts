@@ -76,6 +76,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly columnDetails = input.required<ColumnDetail[]>();
   readonly defaultGroup = input.required<GroupDetail>();
+  readonly collapsed = input(false);
 
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
