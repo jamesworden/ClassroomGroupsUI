@@ -107,6 +107,9 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
       this.configurationId()
     )()
   );
+  readonly classroomUpdating = computed(() =>
+    this.#classroomsService.select.classroomUpdating(this.classroomId())()
+  );
 
   readonly StudentGroupingStrategy = StudentGroupingStrategy;
 

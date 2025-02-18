@@ -57,6 +57,7 @@
           <div class="flex flex-col justify-around">
             <button
               [tabindex]="-1"
+              [disabled]="classroomUpdating()"
               mat-flat-button
               (click)="groupStudents(StudentGroupingStrategy.MixedAbilities)"
             >
@@ -67,6 +68,7 @@
           <div class="flex flex-col justify-around">
             <button
               [tabindex]="-1"
+              [disabled]="classroomUpdating()"
               mat-stroked-button
               (click)="groupStudents(StudentGroupingStrategy.SimilarAbilities)"
             >

@@ -29,6 +29,10 @@ export class GroupFooterComponent {
     )()
   );
 
+  readonly updatingGroup = computed(() =>
+    this.#classroomsService.select.groupUpdating(this.groupId())()
+  );
+
   addStudent() {
     const classroomId = this.classroomId();
     const configurationId = this.configurationId();

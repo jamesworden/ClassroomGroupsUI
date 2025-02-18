@@ -151,6 +151,11 @@ class ClassroomSelectors {
       classroomId ? this._state().updatingClassroomIds.has(classroomId) : false
     );
 
+  public readonly groupUpdating = (groupId?: string) =>
+    computed(() =>
+      groupId ? this._state().updatingGroupIds.has(groupId) : false
+    );
+
   public readonly configurationIds = (classroomId?: string) =>
     computed(() => this.configurations(classroomId)().map(({ id }) => id));
 
@@ -180,6 +185,7 @@ interface ClassroomsState {
   loadingConfigurationDetailIds: Set<string>;
   updatingConfigurationIds: Set<string>;
   updatingClassroomIds: Set<string>;
+  updatingGroupIds: Set<string>;
 }
 
 @Injectable({
@@ -198,6 +204,7 @@ export class ClassroomsService {
     loadingConfigurationDetailIds: new Set<string>(),
     updatingConfigurationIds: new Set<string>(),
     updatingClassroomIds: new Set<string>(),
+    updatingGroupIds: new Set<string>(),
   });
 
   public readonly select = new ClassroomSelectors(this._state.asReadonly());
@@ -979,7 +986,6 @@ export class ClassroomsService {
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroomId);
     });
-
     return this.#httpClient
       .post<GroupStudentsResponse>(
         `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/group-students`,
@@ -1197,6 +1203,9 @@ export class ClassroomsService {
   }
 
   lockGroup(classroomId: string, configurationId: string, groupId: string) {
+    this.patchState((draft) => {
+      draft.updatingGroupIds.add(groupId);
+    });
     return this.#httpClient
       .post<LockGroupResponse>(
         `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/lock`,
@@ -1228,12 +1237,20 @@ export class ClassroomsService {
           });
           return of(null);
         }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingGroupIds.delete(groupId);
+          });
+        }),
         take(1)
       )
       .subscribe();
   }
 
   unlockGroup(classroomId: string, configurationId: string, groupId: string) {
+    this.patchState((draft) => {
+      draft.updatingGroupIds.add(groupId);
+    });
     return this.#httpClient
       .post<UnlockGroupResponse>(
         `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups/${groupId}/unlock`,
@@ -1264,6 +1281,11 @@ export class ClassroomsService {
             duration: 3000,
           });
           return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingGroupIds.delete(groupId);
+          });
         }),
         take(1)
       )

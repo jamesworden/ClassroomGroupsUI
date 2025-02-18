@@ -11,7 +11,8 @@
     <button
       [disabled]="
         studentsInConfiguration().length >=
-        (account()?.subscription?.maxStudentsPerClassroom ?? 0)
+          (account()?.subscription?.maxStudentsPerClassroom ?? 0) ||
+        updatingGroup()
       "
       [tabindex]="-1"
       matSuffix
@@ -24,6 +25,7 @@
   </div>
 
   <button
+    [disabled]="updatingGroup()"
     [ngClass]="{
       'font-bold': groupDetail().isLocked,
     }"
