@@ -192,6 +192,21 @@ export class ClassroomViewComponent {
   readonly anyAverageScores = computed(
     () => Object.keys(this.averageScores()).length > 0
   );
+  readonly studentLimitReached = computed(
+    () =>
+      (this.account()?.subscription?.maxStudentsPerClassroom || 0) <=
+      this.allStudentDetails().length
+  );
+  readonly groupLimitReached = computed(
+    () =>
+      this.listGroupDetails().length >=
+      (this.account()?.subscription?.maxStudentsPerClassroom ?? 0)
+  );
+  readonly columnLimitReached = computed(
+    () =>
+      this.columnDetails().length >=
+      (this.account()?.subscription?.maxFieldsPerClassroom || 0)
+  );
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];

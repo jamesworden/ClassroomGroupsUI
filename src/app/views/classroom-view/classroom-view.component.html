@@ -35,10 +35,20 @@
 
             <div
               class="panel flex flex-col justify-around px-2 rounded-md shadow-md mr-4"
-              matTooltip="{{ listGroupDetails().length + ' groups' }}"
+              [matTooltip]="
+                groupLimitReached()
+                  ? 'Group limit reached!'
+                  : listGroupDetails().length + ' groups'
+              "
             >
               <div class="flex flex-col">
-                <mat-icon class="opacity-80">group</mat-icon>
+                <mat-icon
+                  [ngClass]="{
+                    'opacity-80': !groupLimitReached(),
+                    'text-primary': groupLimitReached(),
+                  }"
+                  >group</mat-icon
+                >
                 <div class="flex justify-around">
                   <span>{{ listGroupDetails().length }}</span>
                 </div>
@@ -47,10 +57,20 @@
 
             <div
               class="panel flex flex-col justify-around px-2 rounded-md shadow-md mr-4"
-              matTooltip="{{ allStudentDetails().length + ' students' }}"
+              [matTooltip]="
+                studentLimitReached()
+                  ? 'Student limit reached!'
+                  : allStudentDetails().length + ' students'
+              "
             >
               <div class="flex flex-col">
-                <mat-icon class="opacity-80">person</mat-icon>
+                <mat-icon
+                  [ngClass]="{
+                    'opacity-80': !studentLimitReached(),
+                    'text-primary': studentLimitReached(),
+                  }"
+                  >person</mat-icon
+                >
                 <div class="flex justify-around">
                   <span>{{ allStudentDetails().length }}</span>
                 </div>
@@ -59,10 +79,20 @@
 
             <div
               class="panel flex flex-col justify-around px-2 rounded-md shadow-md mr-4"
-              matTooltip="{{ columnDetails().length + ' columns' }}"
+              [matTooltip]="
+                columnLimitReached()
+                  ? 'Column limit reached!'
+                  : columnDetails().length + ' students'
+              "
             >
               <div class="flex flex-col">
-                <mat-icon class="opacity-80">view_columns</mat-icon>
+                <mat-icon
+                  [ngClass]="{
+                    'opacity-80': !columnLimitReached(),
+                    'text-primary': columnLimitReached(),
+                  }"
+                  >view_columns</mat-icon
+                >
                 <div class="flex justify-around">
                   <span>{{ columnDetails().length }}</span>
                 </div>
@@ -240,18 +270,11 @@
                       matTooltipPosition="after"
                       class="max-w-32"
                       [matTooltip]="
-                        listGroupDetails().length >=
-                        (account()?.subscription?.maxStudentsPerClassroom ?? 0)
-                          ? 'Group limit reached!'
-                          : ''
+                        groupLimitReached() ? 'Group limit reached!' : ''
                       "
                     >
                       <button
-                        [disabled]="
-                          listGroupDetails().length >=
-                          (account()?.subscription?.maxStudentsPerClassroom ??
-                            0)
-                        "
+                        [disabled]="groupLimitReached()"
                         matSuffix
                         mat-button
                         (click)="addGroup()"
