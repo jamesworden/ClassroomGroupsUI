@@ -158,16 +158,24 @@
         <div class="flex mt-12 mx-4 flex-col md:flex-row">
           @for (plan of subscriptionPlans; let i = $index; track i) {
             <app-subscription-plan-card
-              class="rounded-lg border border-zinc-200 dark:border-zinc-700"
+              class="rounded-lg border"
               [ngClass]="{
-                'bg-white dark:bg-zinc-800': i === 1,
+                'bg-white dark:bg-zinc-800 border-primary': i === 1,
                 'bg-zinc-50 dark:bg-zinc-900': i !== 1,
                 'scale-110': i === 1,
-                'shadow-lg': i !== 1,
+                'shadow-lg border-zinc-200 dark:border-zinc-700': i !== 1,
                 'shadow-xl': i === 1,
               }"
               [subscriptionPlan]="plan"
-            ></app-subscription-plan-card>
+            >
+              @if (i === 1) {
+                <div
+                  class="absolute -top-3 left-0 right-0 mx-auto w-fit rounded-full bg-gradient-fade px-3 py-0.5 text-xs text-white"
+                >
+                  Most Popular
+                </div>
+              }
+            </app-subscription-plan-card>
           }
         </div>
       </div>
