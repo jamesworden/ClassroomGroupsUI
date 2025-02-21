@@ -33,7 +33,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
       '✔ 5 Classrooms\n✔ 40 Students per Class \n✔ 20 Columns per Class\n✔ 20 Configurations per Class',
     showActionAsButton: true,
     icon: 'rocket_launch',
-    iconClass: 'gradient-fade-text',
+    iconClass: 'text-gradient-fade',
   },
   {
     title: 'Pro',
@@ -45,6 +45,6 @@ export const subscriptionPlans: SubscriptionPlan[] = [
       '✔ 50 Classrooms\n✔ 50 Students per Class \n✔ 50 Columns per Class\n✔ 50 Configurations per Class',
     showActionAsButton: true,
     icon: 'auto_awesome',
-    iconClass: 'gradient-fade-text',
+    iconClass: 'text-gradient-fade',
   },
 ];

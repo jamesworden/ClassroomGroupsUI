@@ -24,7 +24,7 @@
     color: mat.get-theme-color($theme, tertiary, 50);
   }
 
-  .gradient-fade-bg {
+  .bg-gradient-fade {
     background: linear-gradient(
       to right,
       mat.get-theme-color($theme, primary, 50),
@@ -35,7 +35,7 @@
   $primary-color: mat.get-theme-color($theme, primary, 50);
   $accent-color: mat.get-theme-color($theme, tertiary, 50);
 
-  .gradient-fade-text {
+  .text-gradient-fade {
     background: linear-gradient(to right, $primary-color, $accent-color);
     -webkit-background-clip: text;
     background-clip: text;
