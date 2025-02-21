@@ -145,137 +145,24 @@
             </div>
           </section>
 
-          @if (configurationDetail()) {
-            <section
-              #spreadsheet
-              class="flex-1 flex flex-col overflow-hidden relative"
-            >
-              <div
-                cdkScrollable
-                class="absolute inset-0 overflow-auto flex flex-col"
-              >
-                <div class="flex flex-1 flex-col w-full min-w-fit">
-                  @if (configurationDetail(); as configurationDetail) {
-                    @if (defaultGroup(); as defaultGroup) {
-                      <app-configuration-panel-top
-                        class="sticky top-0 z-10 mx-4 flex"
-                        [configurationDetail]="configurationDetail"
-                        [columnDetails]="editingColumnDetails"
-                        [defaultGroup]="defaultGroup"
-                        [collapsed]="collapsePanelDetails()"
-                        (labelUpdated)="updateConfigurationLabel($event)"
-                        (descriptionUpdated)="
-                          updateConfigurationDescription($event)
-                        "
-                        (deletedConfiguration)="
-                          openDeleteConfigurationModal($event)
-                        "
-                      ></app-configuration-panel-top>
-
-                      <app-configuration-panel-bottom
-                        class="mx-4 flex"
-                        [classroomId]="classroomId()"
-                        [configurationId]="configurationDetail.id"
-                        [defaultGroup]="defaultGroup"
-                        [columnDetails]="editingColumnDetails"
-                        [collapsed]="collapsePanelDetails()"
-                        (studentFieldUpdated)="updateStudentField($event)"
-                        (studentDeleted)="deleteStudent($event)"
-                        (studentPositionUpdated)="updateStudentPosition($event)"
-                      ></app-configuration-panel-bottom>
-                    }
-                  }
-
-                  <div class="flex flex-col gap-y-4">
-                    <section
-                      cdkDropList
-                      (cdkDropListDropped)="dropGroup($event)"
-                      class="mx-4 flex flex-col flex-1"
-                    >
-                      @for (
-                        group of editingGroups;
-                        track group.id;
-                        let i = $index
-                      ) {
-                        @if (
-                          group.id !== configurationDetail()?.defaultGroupId
-                        ) {
-                          <app-group-panel
-                            class="flex w-full"
-                            [ngClass]="{
-                              'mt-4': !collapsePanelDetails(),
-                              'mt-2': collapsePanelDetails(),
-                            }"
-                            cdkDrag
-                            [classroomId]="classroomId()"
-                            [groupDetail]="group"
-                            [columnDetails]="editingColumnDetails"
-                            (groupDeleted)="deleteGroup(group.id)"
-                            (studentCreated)="createStudent(group.id)"
-                            (labelUpdated)="updateGroupLabel(group, $event)"
-                            (studentFieldUpdated)="updateStudentField($event)"
-                            (studentDeleted)="deleteStudent($event)"
-                            (studentPositionUpdated)="
-                              updateStudentPosition($event)
-                            "
-                            [groupIndex]="i"
-                            [collapsed]="collapsePanelDetails()"
-                          >
-                            <mat-icon class="cursor-move" cdkDragHandle
-                              >drag_handle</mat-icon
-                            >
-                          </app-group-panel>
-                        }
-                      }
-                    </section>
-                  </div>
-
-                  <div class="px-2 py-1 mx-4 panel rounded-md mt-4 shadow-lg">
-                    <div
-                      matTooltipPosition="after"
-                      class="max-w-32"
-                      [matTooltip]="
-                        groupLimitReached() ? 'Group limit reached!' : ''
-                      "
-                    >
-                      <button
-                        [disabled]="groupLimitReached()"
-                        matSuffix
-                        mat-button
-                        (click)="addGroup()"
-                      >
-                        <mat-icon class="text-md">group_add</mat-icon>
-                        <span class="text-sm opacity-80">Add group</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <span class="flex-auto"></span>
-
-                  @if (anyAverageScores()) {
-                    <div
-                      class="sticky bottom-0 z-50 px-4 py-2 mx-4 panel rounded-t-md mt-4"
-                    >
-                      <div class="flex flex-col justify-between gap-y-2">
-                        <span class="text-lg">Class average</span>
-                        <div class="flex grid-row py-1 pl-2 rounded-md">
-                          @for (
-                            columnDetail of columnDetails();
-                            track columnIndex;
-                            let columnIndex = $index
-                          ) {
-                            <span class="flex-1 text-sm">{{
-                              averageScores()[columnDetail.fieldId]
-                                | number: '1.1-2'
-                            }}</span>
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
-              </div>
-            </section>
+          @if (configurationDetail(); as configurationDetail) {
+            <app-configuration-view
+              class="flex-1"
+              [configurationDetail]="configurationDetail"
+              [defaultGroup]="defaultGroup()!"
+              [classroomId]="classroomId()"
+              [columnDetails]="editingColumnDetails"
+              [collapsePanelDetails]="collapsePanelDetails()"
+              [groupDetails]="editingGroups"
+              [groupLimitReached]="groupLimitReached()"
+              [anyAverageScores]="anyAverageScores()"
+              [averageScores]="averageScores()"
+              (deleteConfigurationModalOpened)="
+                openDeleteConfigurationModal($event)
+              "
+              (studentPositionUpdated)="updateStudentPosition($event)"
+              (groupDropped)="dropGroup($event)"
+            ></app-configuration-view>
           } @else if (configurationLoading()) {
             <div class="flex-1">
               <img

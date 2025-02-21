@@ -48,10 +48,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
-import { ConfigurationPanelBottomComponent } from './configuration-panel-bottom/configuration-panel-bottom.component';
-import { ConfigurationPanelTopComponent } from './configuration-panel-top/configuration-panel-top.component';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
-import { GroupPanelComponent } from './group-panel/group-panel.component';
 import {
   AccountMenuComponent,
   YesNoDialogComponent,
@@ -60,6 +57,7 @@ import {
 import { Themes, ThemeService } from '@app/themes';
 import { CodeLinksMenuComponent } from '../../components/code-links-menu/code-links-menu.component';
 import { CounterCardComponent } from './counter-card/counter-card.component';
+import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -73,26 +71,18 @@ import { CounterCardComponent } from './counter-card/counter-card.component';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    GroupPanelComponent,
-    CdkDropList,
-    CdkDrag,
-    CdkDragHandle,
     MatProgressSpinnerModule,
     MatProgressBarModule,
-    ConfigurationPanelBottomComponent,
-    ConfigurationPanelTopComponent,
     MatTooltipModule,
     AccountMenuComponent,
     CodeLinksMenuComponent,
     CounterCardComponent,
+    ConfigurationViewComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
 })
 export class ClassroomViewComponent {
-  @ViewChild('spreadsheet')
-  spreadsheet!: ElementRef<HTMLDivElement>;
-
   readonly #themeService = inject(ThemeService);
   readonly #matDialog = inject(MatDialog);
   readonly #matSnackBar = inject(MatSnackBar);
@@ -292,18 +282,6 @@ export class ClassroomViewComponent {
     }
   }
 
-  deleteGroup(groupId: string) {
-    const classroomId = this.classroomId();
-    const configurationId = this.selectedConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.deleteGroup(
-        classroomId,
-        configurationId,
-        groupId
-      );
-    }
-  }
-
   dropGroup(event: CdkDragDrop<Group[]>) {
     const classroomId = this.classroomId();
     const configurationId = this.configurationDetail()?.id;
@@ -333,57 +311,6 @@ export class ClassroomViewComponent {
     this.selectedConfigurationId.set(configurationId);
   }
 
-  updateConfigurationLabel(label: string) {
-    const configuration = this.selectedConfiguration();
-    const classroom = this.classroom();
-    if (classroom && configuration) {
-      this.#classroomsService.patchConfiguration(
-        classroom.id,
-        configuration.id,
-        label,
-        configuration.description
-      );
-    }
-  }
-
-  updateConfigurationDescription(description: string) {
-    const configuration = this.selectedConfiguration();
-    const classroom = this.classroom();
-    if (classroom && configuration) {
-      this.#classroomsService.patchConfiguration(
-        classroom.id,
-        configuration.id,
-        configuration.label,
-        description
-      );
-    }
-  }
-
-  createStudent(groupId: string) {
-    const classroomId = this.classroomId();
-    const configurationId = this.selectedConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createStudent(
-        classroomId,
-        configurationId,
-        groupId
-      );
-    }
-  }
-
-  updateGroupLabel(group: GroupDetail, label: string) {
-    const classroomId = this.classroomId();
-    const configurationId = this.selectedConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.patchGroup(
-        classroomId,
-        configurationId,
-        group.id,
-        label
-      );
-    }
-  }
-
   selectFirstConfiguration() {
     const [firstConfigurationId] = this.configurationIds();
     if (firstConfigurationId) {
@@ -401,14 +328,6 @@ export class ClassroomViewComponent {
       return;
     }
     this.#classroomsService.upsertStudentField(classroomId, studentField);
-  }
-
-  deleteStudent(studentDetail: StudentDetail) {
-    const classroomId = this.classroomId();
-    if (!classroomId) {
-      return;
-    }
-    this.#classroomsService.deleteStudent(classroomId, studentDetail.id);
   }
 
   updateStudentPosition(position: MoveStudentDetail) {
@@ -475,14 +394,6 @@ export class ClassroomViewComponent {
     }
 
     this.#classroomsService.moveStudent(classroomId, configurationId, position);
-  }
-
-  addGroup() {
-    const classroomId = this.classroomId();
-    const configurationId = this.selectedConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createGroup(classroomId, configurationId);
-    }
   }
 
   markMenuAsOpen() {
