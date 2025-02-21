@@ -1,0 +1,17 @@
+<div class="px-2 py-1 mx-4 panel rounded-md mt-4 shadow-lg">
+  <div
+    matTooltipPosition="after"
+    class="max-w-32"
+    [matTooltip]="groupLimitReached() ? 'Group limit reached!' : ''"
+  >
+    <button
+      [disabled]="groupLimitReached()"
+      matSuffix
+      mat-button
+      (click)="addGroup()"
+    >
+      <mat-icon class="text-md">group_add</mat-icon>
+      <span class="text-sm opacity-80">Add group</span>
+    </button>
+  </div>
+</div>

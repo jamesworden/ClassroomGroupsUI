@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { AddGroupPanelComponent } from './add-group-panel/add-group-panel.component';
 
 @Component({
   selector: 'app-configuration-view',
@@ -36,6 +37,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatTooltipModule,
     MatIconModule,
     MatButtonModule,
+    AddGroupPanelComponent,
   ],
   templateUrl: './configuration-view.component.html',
   styleUrl: './configuration-view.component.scss',
@@ -120,13 +122,6 @@ export class ConfigurationViewComponent {
       this.configurationDetail().id,
       group.id,
       label
-    );
-  }
-
-  addGroup() {
-    this.#classroomsService.createGroup(
-      this.classroomId(),
-      this.configurationDetail().id
     );
   }
 }
