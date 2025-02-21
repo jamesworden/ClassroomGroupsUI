@@ -23,6 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AddGroupPanelComponent } from './add-group-panel/add-group-panel.component';
+import { AverageScoresPanelComponent } from './average-scores-panel/average-scores-panel.component';
 
 @Component({
   selector: 'app-configuration-view',
@@ -38,6 +39,7 @@ import { AddGroupPanelComponent } from './add-group-panel/add-group-panel.compon
     MatIconModule,
     MatButtonModule,
     AddGroupPanelComponent,
+    AverageScoresPanelComponent,
   ],
   templateUrl: './configuration-view.component.html',
   styleUrl: './configuration-view.component.scss',
