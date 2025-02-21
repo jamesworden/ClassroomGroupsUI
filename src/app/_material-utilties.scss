@@ -32,11 +32,12 @@
     );
   }
 
-  $primary-color: mat.get-theme-color($theme, primary, 50);
-  $accent-color: mat.get-theme-color($theme, tertiary, 50);
-
   .text-gradient-fade {
-    background: linear-gradient(to right, $primary-color, $accent-color);
+    background: linear-gradient(
+      to right,
+      mat.get-theme-color($theme, primary, 50),
+      mat.get-theme-color($theme, tertiary, 50)
+    );
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

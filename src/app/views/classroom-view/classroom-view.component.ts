@@ -59,6 +59,7 @@ import {
 } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import { CodeLinksMenuComponent } from '../../components/code-links-menu/code-links-menu.component';
+import { CounterCardComponent } from './counter-card/counter-card.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -83,6 +84,7 @@ import { CodeLinksMenuComponent } from '../../components/code-links-menu/code-li
     MatTooltipModule,
     AccountMenuComponent,
     CodeLinksMenuComponent,
+    CounterCardComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
@@ -192,20 +194,10 @@ export class ClassroomViewComponent {
   readonly anyAverageScores = computed(
     () => Object.keys(this.averageScores()).length > 0
   );
-  readonly studentLimitReached = computed(
-    () =>
-      (this.account()?.subscription?.maxStudentsPerClassroom || 0) <=
-      this.allStudentDetails().length
-  );
   readonly groupLimitReached = computed(
     () =>
       this.listGroupDetails().length >=
       (this.account()?.subscription?.maxStudentsPerClassroom ?? 0)
-  );
-  readonly columnLimitReached = computed(
-    () =>
-      this.columnDetails().length >=
-      (this.account()?.subscription?.maxFieldsPerClassroom || 0)
   );
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
