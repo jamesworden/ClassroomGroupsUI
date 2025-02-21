@@ -21,6 +21,7 @@ import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-det
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-configuration-view',
@@ -34,6 +35,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     MatTooltipModule,
     MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: './configuration-view.component.html',
   styleUrl: './configuration-view.component.scss',

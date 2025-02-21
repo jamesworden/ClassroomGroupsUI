@@ -1,21 +1,10 @@
 import {
-  CdkDrag,
   CdkDragDrop,
-  CdkDragHandle,
-  CdkDropList,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  inject,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -39,7 +28,6 @@ import {
   ColumnDetail,
   Group,
   GroupDetail,
-  StudentDetail,
   StudentField,
 } from '@shared/classrooms';
 import { combineLatest, filter, take } from 'rxjs';
@@ -49,15 +37,10 @@ import { Subject } from '@microsoft/signalr';
 import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
-import {
-  AccountMenuComponent,
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from '@app/components';
+import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
-import { CodeLinksMenuComponent } from '../../components/code-links-menu/code-links-menu.component';
-import { CounterCardComponent } from './counter-card/counter-card.component';
 import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
+import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -74,10 +57,8 @@ import { ConfigurationViewComponent } from './configuration-view/configuration-v
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTooltipModule,
-    AccountMenuComponent,
-    CodeLinksMenuComponent,
-    CounterCardComponent,
     ConfigurationViewComponent,
+    ClassroomHeaderComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
@@ -246,34 +227,6 @@ export class ClassroomViewComponent {
     });
   }
 
-  toggleTheme() {
-    this.#themeService.toggleTheme();
-  }
-
-  updateClassroomDescription(event: Event) {
-    const description = (event.target as HTMLInputElement)?.value;
-    const classroom = this.classroom();
-    if (classroom) {
-      this.#classroomsService.patchClassroom(
-        classroom.id,
-        classroom.label,
-        description
-      );
-    }
-  }
-
-  updateClassroomLabel(event: Event) {
-    const label = (event.target as HTMLInputElement)?.value;
-    const classroom = this.classroom();
-    if (classroom) {
-      this.#classroomsService.patchClassroom(
-        classroom.id,
-        label,
-        classroom.description
-      );
-    }
-  }
-
   createGroup() {
     const classroomId = this.classroomId();
     const configurationId = this.selectedConfigurationId();
@@ -316,10 +269,6 @@ export class ClassroomViewComponent {
     if (firstConfigurationId) {
       this.selectConfigurationId(firstConfigurationId);
     }
-  }
-
-  goToClassroomsView() {
-    this.#router.navigate(['classrooms']);
   }
 
   updateStudentField(studentField: StudentField) {

@@ -1,0 +1,142 @@
+<section class="flex justify-between m-4">
+  <div class="flex flex-col flex-1">
+    <input
+      class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+      type="text"
+      maxlength="150"
+      [value]="classroom().label"
+      (change)="updateClassroomLabel($event)"
+      placeholder="Untitled"
+    />
+    <input
+      class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+      type="text"
+      maxlength="150"
+      [value]="classroom().description"
+      (change)="updateClassroomDescription($event)"
+      placeholder="Add a description for your classroom"
+    />
+  </div>
+
+  <app-counter-card
+    class="mr-4"
+    [count]="groupDetails().length"
+    icon="group"
+    limitReachedTooltip="Group limit reached!"
+    [withinLimitTooltip]="groupDetails().length + ' groups'"
+    [totalCount]="maxStudentsPerClassroom()"
+  ></app-counter-card>
+
+  <app-counter-card
+    class="mr-4"
+    [count]="studentDetails().length"
+    icon="person"
+    limitReachedTooltip="Student limit reached!"
+    [withinLimitTooltip]="studentDetails().length + ' students'"
+    [totalCount]="maxStudentsPerClassroom()"
+  ></app-counter-card>
+
+  <app-counter-card
+    class="mr-4"
+    [count]="columnDetails().length"
+    icon="view_columns"
+    limitReachedTooltip="Column limit reached!"
+    [withinLimitTooltip]="columnDetails().length + ' columns'"
+    [totalCount]="maxFieldsPerClassroom()"
+  ></app-counter-card>
+
+  <div class="flex flex-col justify-around">
+    <button
+      class="!flex"
+      matTooltip="Back to classrooms"
+      mat-icon-button
+      (click)="goToClassroomsView()"
+      [tabindex]="-1"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+
+  <div class="flex flex-col justify-around">
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="codeMenu"
+      matTooltip="Our code"
+      class="!flex"
+    >
+      <mat-icon>code</mat-icon>
+    </button>
+  </div>
+
+  <div class="flex flex-col justify-around">
+    <button
+      class="!flex"
+      [matTooltip]="collapsePanelDetails() ? 'Show details' : 'Hide details'"
+      mat-icon-button
+      (click)="toggleCollapsedPanels()"
+      [tabIndex]="-1"
+    >
+      <mat-icon>{{
+        collapsePanelDetails() ? 'unfold_more' : 'unfold_less'
+      }}</mat-icon>
+    </button>
+  </div>
+
+  <div class="flex flex-col justify-around">
+    <button
+      class="!flex"
+      [tabindex]="-1"
+      [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
+      mat-icon-button
+      (click)="toggleTheme()"
+    >
+      <mat-icon>{{
+        theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
+      }}</mat-icon>
+    </button>
+  </div>
+
+  <div class="flex flex-col justify-around">
+    <button
+      class="!flex"
+      matTooltip="Settings"
+      mat-icon-button
+      [matMenuTriggerFor]="classroomSettingsMenu"
+      [tabIndex]="-1"
+    >
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
+
+  <div class="flex flex-col justify-around">
+    <button
+      class="!flex"
+      matTooltip="Account settings"
+      mat-icon-button
+      [matMenuTriggerFor]="accountMenu"
+      (menuOpened)="markMenuAsOpen()"
+      (menuClosed)="markMenuAsClosed()"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </div>
+</section>
+
+<mat-menu #accountMenu="matMenu">
+  <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
+</mat-menu>
+
+<mat-menu #codeMenu="matMenu">
+  <app-code-links-menu></app-code-links-menu>
+</mat-menu>
+
+<mat-menu #classroomSettingsMenu="matMenu">
+  <button
+    mat-menu-item
+    (click)="openDeleteClassroomDialog()"
+    matTooltip="Delete Classroom"
+  >
+    <mat-icon>delete</mat-icon>
+    <span>Delete classroom</span>
+  </button>
+</mat-menu>
