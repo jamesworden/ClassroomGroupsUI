@@ -23,6 +23,24 @@
   .text-secondary {
     color: mat.get-theme-color($theme, tertiary, 50);
   }
+
+  .gradient-fade-bg {
+    background: linear-gradient(
+      to right,
+      mat.get-theme-color($theme, primary, 50),
+      mat.get-theme-color($theme, tertiary, 50)
+    );
+  }
+
+  $primary-color: mat.get-theme-color($theme, primary, 50);
+  $accent-color: mat.get-theme-color($theme, tertiary, 50);
+
+  .gradient-fade-text {
+    background: linear-gradient(to right, $primary-color, $accent-color);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 @mixin lightColor($theme) {

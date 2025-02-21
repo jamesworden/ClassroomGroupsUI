@@ -5,33 +5,33 @@
     </span>
   </mat-icon>
 
-  <h5 class="!font-semibold !m-0">{{ subscriptionPlan().title }}</h5>
-  <span class="text-sm">{{ subscriptionPlan().subtitle }}</span>
+  <h5 class="!font-semibold !m-0 text-xl">{{ subscriptionPlan().title }}</h5>
+  <span class="text-sm italic">{{ subscriptionPlan().subtitle }}</span>
 
-  <div class="my-4 flex gap-x-2">
-    <h6>{{ subscriptionPlan().displayCost }}</h6>
-    <div class="flex flex-col justify-around text-sm">
+  <div class="my-6 flex">
+    <h6 class="font-bold text-3xl">{{ subscriptionPlan().displayCost }}</h6>
+    <div class="flex flex-col justify-around text-sm opacity-70 mt-2">
       <span>{{ subscriptionPlan().displayCostSubtitle }}</span>
     </div>
+  </div>
+
+  <div class="mb-6">
+    <pre class="text-xs custom-pre">{{ subscriptionPlan().description }}</pre>
   </div>
 
   @if (subscriptionPlan().showActionAsButton) {
     <button
       matTooltip="Under construction!"
       [disabled]="true"
-      class="bg-primary dark:bg-white dark:shadow-lg rounded-full text-white dark:text-gray-700 text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-gray-700"
+      class="gradient-fade-bg dark:shadow-lg rounded-lg text-white text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-gray-700"
     >
       {{ subscriptionPlan().actionText }}
     </button>
   } @else {
     <span
-      class="bg-gray-600 dark:bg-gray-800 rounded-full text-white text-sm px-4 py-2"
+      class="bg-zinc-200 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-500 font-semibold rounded-lg text-sm px-4 py-2"
     >
       {{ subscriptionPlan().actionText }}
     </span>
   }
-
-  <pre class="pt-6 text-xs custom-pre">{{
-    subscriptionPlan().description
-  }}</pre>
 </div>
