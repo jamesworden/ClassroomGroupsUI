@@ -3,8 +3,15 @@
     #scrollContainer
     class="absolute h-full flex flex-col overflow-auto flex-1 w-full"
   >
-    <div class="sticky top-0 z-10 panel shadow-lg w-full px-4 pt-4">
-      <h5 class="text-2xl mb-2">Configurations</h5>
+    <div
+      class="sticky top-0 z-10 panel shadow-lg dark:shadow-2xl w-full px-4 pt-4 border-b border-zinc-400"
+    >
+      <div class="flex justify-content-between">
+        <h5 class="text-2xl mb-2">
+          {{ configurations().length }}
+          Configuration{{ configurations().length > 1 ? 's' : '' }}
+        </h5>
+      </div>
 
       <form>
         <mat-form-field appearance="outline" class="w-full">

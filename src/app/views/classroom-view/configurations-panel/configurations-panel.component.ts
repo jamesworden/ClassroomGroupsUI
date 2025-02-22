@@ -61,6 +61,16 @@ export class ConfigurationsPanelComponent {
   readonly configurationIdSelected = output<string>();
   readonly deletedConfiguration = output<string>();
 
+  readonly filteredConfigurations: Signal<Configuration[]> = computed(
+    () =>
+      this.configurations()?.filter(({ label }) =>
+        label.toLowerCase().includes(this.searchQuery())
+      ) ?? []
+  );
+  readonly configurations = computed(() =>
+    this.#classroomsService.select.configurations(this.classroomId())()
+  );
+
   readonly account = this.#accountsService.select.account;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly configurationsLoading =
@@ -68,17 +78,6 @@ export class ConfigurationsPanelComponent {
 
   readonly searchQuery = signal('');
   readonly addingConfiguration = signal(false);
-
-  readonly filteredConfigurations: Signal<Configuration[]> = computed(
-    () =>
-      this.configurations()?.filter(({ label }) =>
-        label.toLowerCase().includes(this.searchQuery())
-      ) ?? []
-  );
-
-  readonly configurations = computed(() =>
-    this.#classroomsService.select.configurations(this.classroomId())()
-  );
 
   createConfigurationLabel = '';
 
