@@ -23,7 +23,11 @@
     [count]="groupDetails().length"
     icon="group"
     limitReachedTooltip="Group limit reached!"
-    [withinLimitTooltip]="groupDetails().length + ' groups'"
+    [withinLimitTooltip]="
+      (groupDetails().length || 'No') +
+      ' group' +
+      (groupDetails().length === 1 ? '' : 's')
+    "
     [totalCount]="maxStudentsPerClassroom()"
   ></app-counter-card>
 
@@ -32,7 +36,11 @@
     [count]="studentDetails().length"
     icon="person"
     limitReachedTooltip="Student limit reached!"
-    [withinLimitTooltip]="studentDetails().length + ' students'"
+    [withinLimitTooltip]="
+      (studentDetails().length || 'No') +
+      ' student' +
+      (studentDetails().length === 1 ? '' : 's')
+    "
     [totalCount]="maxStudentsPerClassroom()"
   ></app-counter-card>
 
@@ -41,7 +49,11 @@
     [count]="columnDetails().length"
     icon="view_columns"
     limitReachedTooltip="Column limit reached!"
-    [withinLimitTooltip]="columnDetails().length + ' columns'"
+    [withinLimitTooltip]="
+      (columnDetails().length || 'No') +
+      ' column' +
+      (columnDetails().length === 1 ? '' : 's')
+    "
     [totalCount]="maxFieldsPerClassroom()"
   ></app-counter-card>
 
