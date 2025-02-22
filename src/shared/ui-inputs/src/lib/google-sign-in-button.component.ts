@@ -1,9 +1,8 @@
-import { Component, effect, input, OnDestroy } from '@angular/core';
+import { Component, input, OnDestroy } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-google-sign-in-button',
-  imports: [],
   template: `
     <div class="h-[44px] max-w-[222px]">
       <div
@@ -31,7 +30,6 @@ export class GoogleSignInButtonComponent implements OnDestroy {
   readonly shape = input<'rectangular' | 'pill' | 'square'>('rectangular');
   readonly context = input<'signin' | 'signup' | 'use'>('use');
   readonly text = input<'signin_with' | 'signup_with'>('signin_with');
-  readonly isVisible = input(true);
 
   readonly GOOGLE_CLIENT_ID = environment.GOOGLE_CLIENT_ID;
   readonly GOOGLE_LOGIN_URI = `${environment.BASE_API}${environment.GOOGLE_LOGIN_URI}`;
@@ -39,12 +37,8 @@ export class GoogleSignInButtonComponent implements OnDestroy {
   script?: HTMLScriptElement;
 
   constructor() {
-    effect(() => {
-      if (this.isVisible()) {
-        this.removeScriptIfExists();
-        this.addScript();
-      }
-    });
+    this.removeScriptIfExists();
+    this.addScript();
   }
 
   ngOnDestroy() {

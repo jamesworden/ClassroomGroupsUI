@@ -25,11 +25,8 @@
               account()?.subscription?.maxFieldsPerClassroom || 0
             "
             [studentDetails]="allStudentDetails()"
-            [menuIsOpen]="menuIsOpen()"
             (collapsedPanelsToggled)="toggleCollapsedPanels()"
             (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
-            (menuMarkedAsClosed)="markMenuAsClosed()"
-            (menuMarkedAsOpen)="markMenuAsOpen()"
           ></app-classroom-header>
 
           @if (configurationDetail(); as configurationDetail) {

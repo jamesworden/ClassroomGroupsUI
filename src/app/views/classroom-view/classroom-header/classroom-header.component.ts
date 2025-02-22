@@ -43,13 +43,10 @@ export class ClassroomHeaderComponent {
   readonly maxFieldsPerClassroom = input.required<number>();
   readonly studentDetails = input.required<StudentDetail[]>();
   readonly columnDetails = input.required<ColumnDetail[]>();
-  readonly menuIsOpen = input.required<boolean>();
   readonly collapsePanelDetails = input.required<boolean>();
 
   readonly collapsedPanelsToggled = output();
   readonly deleteClassroomDialogOpened = output();
-  readonly menuMarkedAsOpen = output();
-  readonly menuMarkedAsClosed = output();
 
   readonly Themes = Themes;
 
@@ -81,13 +78,5 @@ export class ClassroomHeaderComponent {
 
   openDeleteClassroomDialog() {
     this.deleteClassroomDialogOpened.emit();
-  }
-
-  markMenuAsOpen() {
-    this.menuMarkedAsOpen.emit();
-  }
-
-  markMenuAsClosed() {
-    this.menuMarkedAsOpen.emit();
   }
 }

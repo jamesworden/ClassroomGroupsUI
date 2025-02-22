@@ -78,7 +78,6 @@ export class ClassroomViewComponent {
   readonly account = this.#accountsService.select.account;
 
   readonly classroomViewInitialized$ = new Subject<void>();
-  readonly menuIsOpen = signal(false);
   readonly collapsePanelDetails = signal(false);
 
   readonly Themes = Themes;
@@ -343,14 +342,6 @@ export class ClassroomViewComponent {
     }
 
     this.#classroomsService.moveStudent(classroomId, configurationId, position);
-  }
-
-  markMenuAsOpen() {
-    this.menuIsOpen.set(true);
-  }
-
-  markMenuAsClosed() {
-    this.menuIsOpen.set(false);
   }
 
   openDeleteConfigurationModal(configurationId: string) {

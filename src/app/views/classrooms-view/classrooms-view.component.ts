@@ -56,8 +56,6 @@ export class ClassroomsViewComponent {
   readonly account = this.#accountService.select.account;
   readonly theme = this.#themeService.theme;
 
-  readonly menuIsOpen = signal(false);
-
   readonly Themes = Themes;
   readonly subscriptionPlans = subscriptionPlans;
   readonly displayedColumns = ['label', 'description', 'actions'];
@@ -68,14 +66,6 @@ export class ClassroomsViewComponent {
 
   toggleTheme() {
     this.#themeService.toggleTheme();
-  }
-
-  markMenuAsOpen() {
-    this.menuIsOpen.set(true);
-  }
-
-  markMenuAsClosed() {
-    this.menuIsOpen.set(false);
   }
 
   createClassroom() {

@@ -44,8 +44,6 @@
           matTooltip="Account settings"
           mat-icon-button
           [matMenuTriggerFor]="accountMenu"
-          (menuOpened)="markMenuAsOpen()"
-          (menuClosed)="markMenuAsClosed()"
         >
           <mat-icon>account_circle</mat-icon>
         </button>
@@ -67,7 +65,7 @@
 </mat-toolbar>
 
 <mat-menu #accountMenu="matMenu">
-  <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
+  <app-account-menu></app-account-menu>
 </mat-menu>
 
 <mat-menu #codeMenu="matMenu">
