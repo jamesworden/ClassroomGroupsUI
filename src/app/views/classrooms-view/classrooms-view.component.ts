@@ -20,6 +20,7 @@ import { Themes, ThemeService } from '@app/themes';
 import {
   AccountMenuButtonComponent,
   CodeLinksMenuButtonComponent,
+  HomeButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 
@@ -40,6 +41,7 @@ import {
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
     CodeLinksMenuButtonComponent,
+    HomeButtonComponent,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',

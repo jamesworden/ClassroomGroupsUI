@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -9,6 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   AccountMenuButtonComponent,
   CodeLinksMenuButtonComponent,
+  HomeButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 
@@ -24,12 +25,15 @@ import {
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
     CodeLinksMenuButtonComponent,
+    HomeButtonComponent,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
   readonly #accountsService = inject(AccountsService);
+
+  readonly showHomeButton = input(false);
 
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
 }

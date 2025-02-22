@@ -4,6 +4,10 @@
 
     <span class="flex-auto hidden md:block"></span>
 
+    @if (showHomeButton()) {
+      <app-home-button></app-home-button>
+    }
+
     <app-code-links-menu-button></app-code-links-menu-button>
 
     <app-toggle-theme-button></app-toggle-theme-button>
