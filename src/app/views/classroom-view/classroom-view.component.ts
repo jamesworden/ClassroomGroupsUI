@@ -175,6 +175,15 @@ export class ClassroomViewComponent {
     effect(() => (this.editingDefaultGroup = this.defaultGroup()));
     effect(() => (this.editingColumnDetails = this.columnDetails()));
 
+    // Fetch all configurations
+    this.classroomId$
+      .pipe(takeUntilDestroyed())
+      .subscribe(
+        (classroomId) =>
+          classroomId && this.#classroomsService.getConfigurations(classroomId)
+      );
+
+    // Select first configuration
     this.configurations$
       .pipe(
         takeUntilDestroyed(),
@@ -184,6 +193,8 @@ export class ClassroomViewComponent {
       .subscribe(([firstConfiguration]) =>
         this.selectedConfigurationId.set(firstConfiguration.id)
       );
+
+    // Fetch current configuration detail
     combineLatest([this.classroomId$, this.selectedConfigurationId$])
       .pipe(takeUntilDestroyed())
       .subscribe(([classroomId, configurationId]) => {
@@ -194,12 +205,6 @@ export class ClassroomViewComponent {
           );
         }
       });
-    this.classroomId$
-      .pipe(takeUntilDestroyed())
-      .subscribe(
-        (classroomId) =>
-          classroomId && this.#classroomsService.getConfigurations(classroomId)
-      );
   }
 
   openDeleteClassroomDialog() {
