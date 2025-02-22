@@ -8,7 +8,7 @@ import {
 } from '@shared/classrooms';
 import { CounterCardComponent } from '../counter-card/counter-card.component';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Themes, ThemeService } from '@app/themes';
@@ -26,13 +26,13 @@ import { MatButtonModule } from '@angular/material/button';
     AccountMenuComponent,
     CodeLinksMenuComponent,
     MatButtonModule,
+    RouterModule,
   ],
   templateUrl: './classroom-header.component.html',
   styleUrl: './classroom-header.component.scss',
 })
 export class ClassroomHeaderComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #router = inject(Router);
   readonly #themeService = inject(ThemeService);
 
   readonly theme = this.#themeService.theme;
@@ -69,10 +69,6 @@ export class ClassroomHeaderComponent {
       this.classroom().label,
       description
     );
-  }
-
-  goToClassroomsView() {
-    this.#router.navigate(['classrooms']);
   }
 
   toggleCollapsedPanels() {
