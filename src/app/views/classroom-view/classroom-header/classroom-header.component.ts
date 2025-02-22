@@ -12,10 +12,10 @@ import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Themes, ThemeService } from '@app/themes';
-import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
 import { MatButtonModule } from '@angular/material/button';
 import {
   AccountMenuButtonComponent,
+  CodeLinksMenuButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 
@@ -26,11 +26,11 @@ import {
     MatIconModule,
     MatMenuModule,
     MatTooltipModule,
-    CodeLinksMenuComponent,
     MatButtonModule,
     RouterModule,
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
+    CodeLinksMenuButtonComponent,
   ],
   templateUrl: './classroom-header.component.html',
   styleUrl: './classroom-header.component.scss',

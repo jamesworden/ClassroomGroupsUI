@@ -17,9 +17,9 @@ import { SubscriptionPlanCardComponent } from './subscription-plan-card/subscrip
 import { subscriptionPlans } from '@app/metadata';
 import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
-import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
 import {
   AccountMenuButtonComponent,
+  CodeLinksMenuButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 
@@ -37,9 +37,9 @@ import {
     RouterModule,
     SubscriptionPlanCardComponent,
     CommonModule,
-    CodeLinksMenuComponent,
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
+    CodeLinksMenuButtonComponent,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',

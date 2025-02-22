@@ -6,9 +6,9 @@ import { RouterModule } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CodeLinksMenuComponent } from '../code-links-menu/code-links-menu.component';
 import {
   AccountMenuButtonComponent,
+  CodeLinksMenuButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 
@@ -21,9 +21,9 @@ import {
     MatMenuModule,
     MatButtonModule,
     MatTooltipModule,
-    CodeLinksMenuComponent,
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
+    CodeLinksMenuButtonComponent,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',

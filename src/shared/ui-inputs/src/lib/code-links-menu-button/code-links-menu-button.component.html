@@ -1,0 +1,12 @@
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="codeMenu"
+  matTooltip="Our code"
+  class="!flex"
+>
+  <mat-icon>code</mat-icon>
+</button>
+
+<mat-menu #codeMenu="matMenu">
+  <app-code-links-menu></app-code-links-menu>
+</mat-menu>
