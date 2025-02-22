@@ -77,7 +77,6 @@ export class ClassroomViewComponent {
   readonly accountLoading = this.#accountsService.select.accountLoading;
   readonly account = this.#accountsService.select.account;
 
-  readonly classroomViewInitialized$ = new Subject<void>();
   readonly collapsePanelDetails = signal(false);
 
   readonly Themes = Themes;
