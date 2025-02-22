@@ -19,7 +19,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
@@ -31,11 +30,9 @@ import {
   Group,
   GroupDetail,
   MoveStudentDetail,
-  StudentField,
 } from '@shared/classrooms';
 import { combineLatest, filter, take } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { Subject } from '@microsoft/signalr';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
 import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
@@ -66,7 +63,6 @@ import { ClassroomHeaderComponent } from './classroom-header/classroom-header.co
 export class ClassroomViewComponent {
   readonly #themeService = inject(ThemeService);
   readonly #matDialog = inject(MatDialog);
-  readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
   readonly #activatedRoute = inject(ActivatedRoute);
