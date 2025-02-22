@@ -226,14 +226,6 @@ export class ClassroomViewComponent {
     });
   }
 
-  createGroup() {
-    const classroomId = this.classroomId();
-    const configurationId = this.selectedConfigurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createGroup(classroomId, configurationId);
-    }
-  }
-
   dropGroup(event: CdkDragDrop<Group[]>) {
     const classroomId = this.classroomId();
     const configurationId = this.configurationDetail()?.id;
@@ -262,14 +254,6 @@ export class ClassroomViewComponent {
     if (firstConfigurationId) {
       this.selectConfigurationId(firstConfigurationId);
     }
-  }
-
-  updateStudentField(studentField: StudentField) {
-    const classroomId = this.classroomId();
-    if (!classroomId) {
-      return;
-    }
-    this.#classroomsService.upsertStudentField(classroomId, studentField);
   }
 
   updateStudentPosition(position: MoveStudentDetail) {
