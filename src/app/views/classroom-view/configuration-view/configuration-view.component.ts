@@ -14,10 +14,10 @@ import {
   ConfigurationDetail,
   Group,
   GroupDetail,
+  MoveStudentDetail,
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
-import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';

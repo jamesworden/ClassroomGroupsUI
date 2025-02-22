@@ -22,7 +22,7 @@ import {
 } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
-import { ToggleThemeButtonComponent } from 'shared/ui-inputs/src/lib/toggle-theme-button/toggle-theme-button.component';
+import { ToggleThemeButtonComponent } from '@ui-inputs';
 
 @Component({
   selector: 'app-classrooms-view',

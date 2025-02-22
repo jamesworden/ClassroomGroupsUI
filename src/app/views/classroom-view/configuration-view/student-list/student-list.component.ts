@@ -20,11 +20,11 @@ import {
   ColumnDetail,
   FieldType,
   GroupDetail,
+  MoveStudentDetail,
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
 import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
-import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { MatButtonModule } from '@angular/material/button';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';

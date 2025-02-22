@@ -15,7 +15,7 @@ import { Themes, ThemeService } from '@app/themes';
 import { AccountMenuComponent } from '@app/components';
 import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
 import { MatButtonModule } from '@angular/material/button';
-import { ToggleThemeButtonComponent } from 'shared/ui-inputs/src/lib/toggle-theme-button/toggle-theme-button.component';
+import { ToggleThemeButtonComponent } from '@ui-inputs';
 
 @Component({
   selector: 'app-classroom-header',

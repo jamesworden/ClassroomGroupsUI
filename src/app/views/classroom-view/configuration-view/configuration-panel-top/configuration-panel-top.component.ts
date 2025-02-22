@@ -36,9 +36,9 @@ import {
   ColumnDetail,
   ConfigurationDetail,
   GroupDetail,
+  MoveColumnDetail,
   StudentGroupingStrategy,
 } from '@shared/classrooms';
-import { MoveColumnDetail } from 'shared/classrooms/lib/models/move-column-detail';
 import { AccountsService } from '@shared/accounts';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 

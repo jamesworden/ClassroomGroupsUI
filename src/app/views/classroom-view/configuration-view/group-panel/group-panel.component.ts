@@ -8,11 +8,11 @@ import { FormsModule } from '@angular/forms';
 import {
   ColumnDetail,
   GroupDetail,
+  MoveStudentDetail,
   StudentDetail,
   StudentField,
 } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
-import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
 import { GroupFooterComponent } from '../group-footer/group-footer.component';
 
 @Component({
