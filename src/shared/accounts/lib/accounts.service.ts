@@ -13,6 +13,19 @@ class AccountSelectors {
   public readonly isLoggedIn = computed(() => !!this._state().account);
 
   public readonly accountLoading = computed(() => this._state().accountLoading);
+
+  public readonly maxStudentsPerClassroom = computed(
+    () => this._state().account?.subscription?.maxStudentsPerClassroom ?? 0
+  );
+
+  public readonly maxFieldsPerClassroom = computed(
+    () => this._state().account?.subscription?.maxFieldsPerClassroom ?? 0
+  );
+
+  public readonly maxConfigurationsPerClassroom = computed(
+    () =>
+      this._state().account?.subscription?.maxConfigurationsPerClassroom ?? 0
+  );
 }
 
 interface AccountsState {

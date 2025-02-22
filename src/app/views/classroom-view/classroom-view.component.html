@@ -18,12 +18,6 @@
             [groupDetails]="editingGroups"
             [collapsePanelDetails]="collapsePanelDetails()"
             [columnDetails]="editingColumnDetails"
-            [maxStudentsPerClassroom]="
-              account()?.subscription?.maxStudentsPerClassroom || 0
-            "
-            [maxFieldsPerClassroom]="
-              account()?.subscription?.maxFieldsPerClassroom || 0
-            "
             [studentDetails]="allStudentDetails()"
             (collapsedPanelsToggled)="toggleCollapsedPanels()"
             (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
@@ -38,7 +32,9 @@
               [columnDetails]="editingColumnDetails"
               [collapsePanelDetails]="collapsePanelDetails()"
               [groupDetails]="editingGroups"
-              [groupLimitReached]="groupLimitReached()"
+              [groupLimitReached]="
+                listGroupDetails().length >= maxStudentsPerClassroom()
+              "
               [anyAverageScores]="anyAverageScores()"
               [averageScores]="averageScores()"
               (deleteConfigurationModalOpened)="

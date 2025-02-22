@@ -19,6 +19,7 @@ import {
   HomeButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
+import { AccountsService } from '@shared/accounts';
 
 @Component({
   selector: 'app-classroom-header',
@@ -40,19 +41,22 @@ import {
 export class ClassroomHeaderComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #themeService = inject(ThemeService);
-
-  readonly theme = this.#themeService.theme;
+  readonly #accountsService = inject(AccountsService);
 
   readonly classroom = input.required<ClassroomDetail>();
   readonly groupDetails = input.required<GroupDetail[]>();
-  readonly maxStudentsPerClassroom = input.required<number>();
-  readonly maxFieldsPerClassroom = input.required<number>();
   readonly studentDetails = input.required<StudentDetail[]>();
   readonly columnDetails = input.required<ColumnDetail[]>();
   readonly collapsePanelDetails = input.required<boolean>();
 
   readonly collapsedPanelsToggled = output();
   readonly deleteClassroomDialogOpened = output();
+
+  readonly theme = this.#themeService.theme;
+  readonly maxStudentsPerClassroom =
+    this.#accountsService.select.maxStudentsPerClassroom;
+  readonly maxFieldsPerClassroom =
+    this.#accountsService.select.maxFieldsPerClassroom;
 
   readonly Themes = Themes;
 
