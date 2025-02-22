@@ -12,10 +12,12 @@ import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Themes, ThemeService } from '@app/themes';
-import { AccountMenuComponent } from '@app/components';
 import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
 import { MatButtonModule } from '@angular/material/button';
-import { ToggleThemeButtonComponent } from '@ui-inputs';
+import {
+  AccountMenuButtonComponent,
+  ToggleThemeButtonComponent,
+} from '@ui-inputs';
 
 @Component({
   selector: 'app-classroom-header',
@@ -24,11 +26,11 @@ import { ToggleThemeButtonComponent } from '@ui-inputs';
     MatIconModule,
     MatMenuModule,
     MatTooltipModule,
-    AccountMenuComponent,
     CodeLinksMenuComponent,
     MatButtonModule,
     RouterModule,
     ToggleThemeButtonComponent,
+    AccountMenuButtonComponent,
   ],
   templateUrl: './classroom-header.component.html',
   styleUrl: './classroom-header.component.scss',

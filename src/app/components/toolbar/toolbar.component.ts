@@ -6,9 +6,11 @@ import { RouterModule } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AccountMenuComponent } from '@app/components';
 import { CodeLinksMenuComponent } from '../code-links-menu/code-links-menu.component';
-import { ToggleThemeButtonComponent } from '@ui-inputs';
+import {
+  AccountMenuButtonComponent,
+  ToggleThemeButtonComponent,
+} from '@ui-inputs';
 
 @Component({
   selector: 'app-toolbar',
@@ -17,11 +19,11 @@ import { ToggleThemeButtonComponent } from '@ui-inputs';
     MatIconModule,
     RouterModule,
     MatMenuModule,
-    AccountMenuComponent,
     MatButtonModule,
     MatTooltipModule,
     CodeLinksMenuComponent,
     ToggleThemeButtonComponent,
+    AccountMenuButtonComponent,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',

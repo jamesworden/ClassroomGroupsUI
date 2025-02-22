@@ -22,17 +22,10 @@
 
         <app-toggle-theme-button></app-toggle-theme-button>
 
-        <button
-          class="mr-2"
-          matTooltip="Account settings"
-          mat-icon-button
-          [matMenuTriggerFor]="accountMenu"
-        >
-          <mat-icon>account_circle</mat-icon>
-        </button>
+        <app-account-menu-button></app-account-menu-button>
 
         <div
-          class="flex flex-col justify-around"
+          class="flex flex-col justify-around ml-2"
           [matTooltip]="
             classroomDetails().length >=
             (account()?.subscription?.maxClassrooms ?? 0)
@@ -177,10 +170,6 @@
     [mode]="classroomsLoading() ? 'indeterminate' : 'determinate'"
   ></mat-progress-bar>
 </div>
-
-<mat-menu #accountMenu="matMenu">
-  <app-account-menu></app-account-menu>
-</mat-menu>
 
 <mat-menu #codeMenu="matMenu">
   <app-code-links-menu></app-code-links-menu>

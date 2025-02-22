@@ -32,13 +32,7 @@
       </a>
     } @else {
       <div class="flex flex-col justify-around">
-        <button
-          matTooltip="Account settings"
-          mat-icon-button
-          [matMenuTriggerFor]="accountMenu"
-        >
-          <mat-icon>account_circle</mat-icon>
-        </button>
+        <app-account-menu-button></app-account-menu-button>
       </div>
 
       <div class="flex flex-col justify-around ml-2">
@@ -55,10 +49,6 @@
     }
   </div>
 </mat-toolbar>
-
-<mat-menu #accountMenu="matMenu">
-  <app-account-menu></app-account-menu>
-</mat-menu>
 
 <mat-menu #codeMenu="matMenu">
   <app-code-links-menu></app-code-links-menu>

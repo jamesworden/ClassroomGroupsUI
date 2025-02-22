@@ -15,14 +15,13 @@ import { AccountsService } from '@shared/accounts';
 import { CommonModule } from '@angular/common';
 import { SubscriptionPlanCardComponent } from './subscription-plan-card/subscription-plan-card.component';
 import { subscriptionPlans } from '@app/metadata';
-import {
-  AccountMenuComponent,
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from '@app/components';
+import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
-import { ToggleThemeButtonComponent } from '@ui-inputs';
+import {
+  AccountMenuButtonComponent,
+  ToggleThemeButtonComponent,
+} from '@ui-inputs';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -32,7 +31,6 @@ import { ToggleThemeButtonComponent } from '@ui-inputs';
     MatTableModule,
     MatToolbarModule,
     MatMenuModule,
-    AccountMenuComponent,
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTooltipModule,
@@ -41,6 +39,7 @@ import { ToggleThemeButtonComponent } from '@ui-inputs';
     CommonModule,
     CodeLinksMenuComponent,
     ToggleThemeButtonComponent,
+    AccountMenuButtonComponent,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
