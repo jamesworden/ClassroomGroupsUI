@@ -253,12 +253,6 @@ export class ClassroomViewComponent {
     );
   }
 
-  chooseFileToUpload() {
-    this.#matSnackBar.open('Under construction!', 'Hide', {
-      duration: 3000,
-    });
-  }
-
   selectConfigurationId(configurationId: string) {
     this.selectedConfigurationId.set(configurationId);
   }
