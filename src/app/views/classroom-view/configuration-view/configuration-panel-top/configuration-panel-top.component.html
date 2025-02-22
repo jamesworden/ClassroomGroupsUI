@@ -177,6 +177,7 @@
           ? 'Student limit reached!'
           : ''
       "
+      matTooltipPosition="left"
     >
       <mat-icon>add_person</mat-icon>
       <span>Add student</span>
@@ -192,6 +193,7 @@
           ? 'Group limit reached!'
           : ''
       "
+      matTooltipPosition="left"
       mat-menu-item
       (click)="createGroup()"
     >
@@ -209,6 +211,7 @@
           ? 'Column limit reached!'
           : ''
       "
+      matTooltipPosition="left"
       mat-menu-item
       (click)="openCreateColumnDialog()"
     >
@@ -223,6 +226,7 @@
           ? 'You can\'t delete the last configuration'
           : ''
       "
+      matTooltipPosition="left"
       [disabled]="configurations().length <= 1"
     >
       <mat-icon>delete</mat-icon>
