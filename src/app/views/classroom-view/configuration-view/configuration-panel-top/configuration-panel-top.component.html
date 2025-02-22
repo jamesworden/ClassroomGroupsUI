@@ -120,7 +120,7 @@
                   cdkMenuItem
                   (click)="deleteColumn(column.id)"
                 >
-                  <mat-icon class="mr-3">delete</mat-icon>
+                  <mat-icon class="mr-3 !text-red-500">delete</mat-icon>
                   <span>Delete column</span>
                 </button>
               </div>
@@ -228,7 +228,7 @@
       matTooltipPosition="left"
       [disabled]="configurations().length <= 1"
     >
-      <mat-icon>delete</mat-icon>
+      <mat-icon class="!text-red-500">delete</mat-icon>
       <span>Delete configuration</span>
     </button>
   </ng-template>
