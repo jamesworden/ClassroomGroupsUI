@@ -16,7 +16,6 @@ import { MatButtonModule } from '@angular/material/button';
 import {
   AccountMenuButtonComponent,
   CodeLinksMenuButtonComponent,
-  HomeButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 import { AccountsService } from '@shared/accounts';
@@ -33,7 +32,6 @@ import { AccountsService } from '@shared/accounts';
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
     CodeLinksMenuButtonComponent,
-    HomeButtonComponent,
   ],
   templateUrl: './classroom-header.component.html',
   styleUrl: './classroom-header.component.scss',

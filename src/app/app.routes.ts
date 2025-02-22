@@ -21,7 +21,11 @@ export const routes: Routes = [
     component: ClassroomsViewComponent,
   },
   {
-    path: 'classrooms/:id',
+    path: 'classrooms/:classroomId',
+    component: ClassroomViewComponent,
+  },
+  {
+    path: 'classrooms/:classroomId/configurations/:configurationId',
     component: ClassroomViewComponent,
   },
   { path: '**', component: PageNotFoundViewComponent },

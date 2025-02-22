@@ -1,6 +1,6 @@
 <div class="w-full h-full flex grid-bg">
   <div class="flex-1 w-full h-full flex">
-    @if (selectedConfigurationId(); as selectedConfigurationId) {
+    @if (configurationId(); as selectedConfigurationId) {
       <app-configurations-panel
         [classroomId]="classroomId()"
         [selectedConfigurationId]="selectedConfigurationId"

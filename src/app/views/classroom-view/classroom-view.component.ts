@@ -79,42 +79,39 @@ export class ClassroomViewComponent {
 
   readonly queryParams = toSignal(this.#activatedRoute.params, {
     initialValue: {
-      id: null,
+      classroomId: null,
+      configurationId: null,
     },
   });
-  readonly classroomId = computed(() => this.queryParams().id as string);
-  readonly classroomId$ = toObservable(this.classroomId);
+  readonly classroomId = computed(
+    () => this.queryParams().classroomId as string
+  );
+  readonly configurationId = computed(
+    () => this.queryParams().configurationId as string
+  );
   readonly classroom = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
   );
-  readonly selectedConfigurationId = signal<string | undefined>(undefined);
-  readonly selectedConfigurationId$ = toObservable(
-    this.selectedConfigurationId
-  );
   readonly configurationDetail = computed(() =>
-    this.#classroomsService.select.configurationDetail(
-      this.selectedConfigurationId()
-    )()
+    this.#classroomsService.select.configurationDetail(this.configurationId())()
   );
   readonly configurationLoading = computed(() =>
     this.#classroomsService.select.configurationLoading(
-      this.selectedConfigurationId()
+      this.configurationId()
     )()
   );
   readonly selectedConfiguration = computed(() => {
     const detail = this.#classroomsService.select.configurationDetail(
-      this.selectedConfigurationId()
+      this.configurationId()
     )();
     return detail ? getConfigurationFromDetail(detail) : undefined;
   });
   readonly listGroupDetails = computed(() =>
-    this.#classroomsService.select.listGroupDetails(
-      this.selectedConfigurationId()
-    )()
+    this.#classroomsService.select.listGroupDetails(this.configurationId())()
   );
   readonly configurationUpdating = computed(() =>
     this.#classroomsService.select.configurationUpdating(
-      this.selectedConfigurationId()
+      this.configurationId()
     )()
   );
   readonly classroomUpdating = computed(() =>
@@ -123,7 +120,6 @@ export class ClassroomViewComponent {
   readonly configurations = computed(() =>
     this.#classroomsService.select.configurations(this.classroomId())()
   );
-  readonly configurations$ = toObservable(this.configurations);
   readonly configurationIds = computed(() =>
     this.#classroomsService.select.configurationIds(this.classroomId())()
   );
@@ -132,9 +128,7 @@ export class ClassroomViewComponent {
     () => this.classroom()?.description ?? ''
   );
   readonly defaultGroup = computed(() =>
-    this.#classroomsService.select.defaultGroup(
-      this.selectedConfigurationId()
-    )()
+    this.#classroomsService.select.defaultGroup(this.configurationId())()
   );
   readonly columnDetails = computed(() =>
     this.#classroomsService.select.columnDetails(
@@ -159,6 +153,11 @@ export class ClassroomViewComponent {
   readonly anyAverageScores = computed(
     () => Object.keys(this.averageScores()).length > 0
   );
+
+  readonly classroomId$ = toObservable(this.classroomId);
+  readonly configurationId$ = toObservable(this.configurationId);
+  readonly configurations$ = toObservable(this.configurations);
+
   readonly maxStudentsPerClassroom =
     this.#accountsService.select.maxStudentsPerClassroom;
 
@@ -171,27 +170,25 @@ export class ClassroomViewComponent {
     effect(() => (this.editingDefaultGroup = this.defaultGroup()));
     effect(() => (this.editingColumnDetails = this.columnDetails()));
 
-    // Fetch all configurations
-    this.classroomId$
-      .pipe(takeUntilDestroyed())
-      .subscribe(
-        (classroomId) =>
-          classroomId && this.#classroomsService.getConfigurations(classroomId)
-      );
-
-    // Select first configuration
+    this.classroomId$.pipe(takeUntilDestroyed()).subscribe((classroomId) => {
+      if (classroomId) {
+        this.#classroomsService.getConfigurations(classroomId);
+      } else {
+        this.#router.navigate(['/classrooms']);
+      }
+    });
     this.configurations$
-      .pipe(
-        takeUntilDestroyed(),
-        filter((configurations) => configurations.length > 0),
-        take(1)
-      )
-      .subscribe(([firstConfiguration]) =>
-        this.selectedConfigurationId.set(firstConfiguration.id)
-      );
-
-    // Fetch current configuration detail
-    combineLatest([this.classroomId$, this.selectedConfigurationId$])
+      .pipe(takeUntilDestroyed())
+      .subscribe(([firstConfiguration]) => {
+        const classroomId = this.classroomId();
+        const configurationId = this.configurationId();
+        if (classroomId && firstConfiguration && !configurationId) {
+          this.#router.navigate([
+            `/classrooms/${classroomId}/configurations/${firstConfiguration.id}`,
+          ]);
+        }
+      });
+    combineLatest([this.classroomId$, this.configurationId$])
       .pipe(takeUntilDestroyed())
       .subscribe(([classroomId, configurationId]) => {
         if (classroomId && configurationId) {
@@ -243,7 +240,9 @@ export class ClassroomViewComponent {
   }
 
   selectConfigurationId(configurationId: string) {
-    this.selectedConfigurationId.set(configurationId);
+    this.#router.navigate([
+      `/classrooms/${this.classroomId()}/configurations/${configurationId}`,
+    ]);
   }
 
   selectFirstConfiguration() {
@@ -261,7 +260,7 @@ export class ClassroomViewComponent {
 
   moveStudentInGroup(position: MoveStudentDetail) {
     const classroomId = this.classroomId();
-    const configurationId = this.selectedConfigurationId();
+    const configurationId = this.configurationId();
     if (!classroomId || !configurationId) {
       return;
     }
@@ -311,7 +310,7 @@ export class ClassroomViewComponent {
     );
 
     const classroomId = this.classroomId();
-    const configurationId = this.selectedConfigurationId();
+    const configurationId = this.configurationId();
     if (!classroomId || !configurationId) {
       return;
     }
