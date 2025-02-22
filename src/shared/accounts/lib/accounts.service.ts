@@ -1,34 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { catchError, finalize, of, take, tap } from 'rxjs';
 import { Account, GetAccountResponse } from './models';
 import { create } from 'mutative';
 import { environment } from 'environments/environment';
+import { AccountSelectors } from './accounts.selectors';
 
-class AccountSelectors {
-  constructor(private _state: Signal<AccountsState>) {}
-
-  public readonly account = computed(() => this._state().account);
-
-  public readonly isLoggedIn = computed(() => !!this._state().account);
-
-  public readonly accountLoading = computed(() => this._state().accountLoading);
-
-  public readonly maxStudentsPerClassroom = computed(
-    () => this._state().account?.subscription?.maxStudentsPerClassroom ?? 0
-  );
-
-  public readonly maxFieldsPerClassroom = computed(
-    () => this._state().account?.subscription?.maxFieldsPerClassroom ?? 0
-  );
-
-  public readonly maxConfigurationsPerClassroom = computed(
-    () =>
-      this._state().account?.subscription?.maxConfigurationsPerClassroom ?? 0
-  );
-}
-
-interface AccountsState {
+export interface AccountsState {
   accountLoading: boolean;
   account?: Account;
 }

@@ -4,10 +4,6 @@ export interface Account {
   subscription: Subscription;
 }
 
-export interface GetAccountResponse {
-  account: Account;
-}
-
 export interface Subscription {
   displayName: string;
   id: string;
