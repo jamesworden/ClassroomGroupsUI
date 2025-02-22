@@ -6,9 +6,9 @@ import { RouterModule } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Themes, ThemeService } from '@app/themes';
 import { AccountMenuComponent } from '@app/components';
 import { CodeLinksMenuComponent } from '../code-links-menu/code-links-menu.component';
+import { ToggleThemeButtonComponent } from '@ui-inputs';
 
 @Component({
   selector: 'app-toolbar',
@@ -21,20 +21,13 @@ import { CodeLinksMenuComponent } from '../code-links-menu/code-links-menu.compo
     MatButtonModule,
     MatTooltipModule,
     CodeLinksMenuComponent,
+    ToggleThemeButtonComponent,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
-  readonly #themeService = inject(ThemeService);
   readonly #accountsService = inject(AccountsService);
 
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
-  readonly theme = this.#themeService.theme;
-
-  readonly Themes = Themes;
-
-  toggleTheme() {
-    this.#themeService.toggleTheme();
-  }
 }

@@ -82,17 +82,7 @@
   </div>
 
   <div class="flex flex-col justify-around">
-    <button
-      class="!flex"
-      [tabindex]="-1"
-      [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
-      mat-icon-button
-      (click)="toggleTheme()"
-    >
-      <mat-icon>{{
-        theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
-      }}</mat-icon>
-    </button>
+    <app-toggle-theme-button></app-toggle-theme-button>
   </div>
 
   <div class="flex flex-col justify-around">

@@ -24,18 +24,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import {
+  calculateAverageScores,
   ClassroomsService,
   ColumnDetail,
+  getConfigurationFromDetail,
   Group,
   GroupDetail,
+  MoveStudentDetail,
   StudentField,
 } from '@shared/classrooms';
 import { combineLatest, filter, take } from 'rxjs';
-import { getConfigurationFromDetail } from 'shared/classrooms/lib/logic/get-model-from-detail';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Subject } from '@microsoft/signalr';
-import { MoveStudentDetail } from 'shared/classrooms/lib/models/move-student-detail';
-import { calculateAverageScores } from 'shared/classrooms/lib/logic/calculate-average-scores';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
 import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';

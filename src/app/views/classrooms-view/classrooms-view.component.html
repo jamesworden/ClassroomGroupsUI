@@ -20,15 +20,7 @@
           </button>
         </div>
 
-        <button
-          [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
-          mat-icon-button
-          (click)="toggleTheme()"
-        >
-          <mat-icon>{{
-            theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
-          }}</mat-icon>
-        </button>
+        <app-toggle-theme-button></app-toggle-theme-button>
 
         <button
           class="mr-2"

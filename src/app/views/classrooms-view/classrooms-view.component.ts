@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -22,6 +22,7 @@ import {
 } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
+import { ToggleThemeButtonComponent } from 'shared/ui-inputs/src/lib/toggle-theme-button/toggle-theme-button.component';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -39,6 +40,7 @@ import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-link
     SubscriptionPlanCardComponent,
     CommonModule,
     CodeLinksMenuComponent,
+    ToggleThemeButtonComponent,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
@@ -62,10 +64,6 @@ export class ClassroomsViewComponent {
 
   viewClassroom(id: string) {
     this.#router.navigate(['/classrooms', id]);
-  }
-
-  toggleTheme() {
-    this.#themeService.toggleTheme();
   }
 
   createClassroom() {
