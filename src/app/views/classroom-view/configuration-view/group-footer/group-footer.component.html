@@ -1,4 +1,4 @@
-<div class="my-1 flex justify-between flex-1" matTooltipPosition="right">
+<div class="py-2 flex justify-between flex-1" matTooltipPosition="right">
   <div
     class="max-w-36"
     [matTooltip]="
@@ -11,34 +11,37 @@
     <button
       [disabled]="
         studentsInConfiguration().length >=
-          (account()?.subscription?.maxStudentsPerClassroom ?? 0) ||
-        updatingGroup()
+        (account()?.subscription?.maxStudentsPerClassroom ?? 0)
       "
       [tabindex]="-1"
       matSuffix
       mat-button
-      (click)="addStudent()"
+      (click)="!updatingGroup() && addStudent()"
     >
       <mat-icon class="text-md">person_add</mat-icon>
       <span class="text-sm opacity-80">Add student</span>
     </button>
   </div>
 
-  <button
-    [disabled]="updatingGroup()"
-    [ngClass]="{
-      'font-bold': groupDetail().isLocked,
-    }"
-    [tabindex]="-1"
-    matSuffix
-    mat-button
-    (click)="toggleGroupLocked()"
-  >
-    <mat-icon class="text-md">{{
-      groupDetail().isLocked ? 'lock_person' : 'lock_open_right'
-    }}</mat-icon>
-    <span class="text-sm opacity-80">{{
-      groupDetail().isLocked ? 'Unlock group' : 'Lock group'
-    }}</span>
-  </button>
+  @if (groupDetail().isLocked) {
+    <button
+      [tabindex]="-1"
+      matSuffix
+      mat-raised-button
+      (click)="!updatingGroup() && toggleGroupLocked()"
+    >
+      <mat-icon class="text-md">lock_open_right</mat-icon>
+      <span class="text-sm opacity-80">Unlock group</span>
+    </button>
+  } @else {
+    <button
+      [tabindex]="-1"
+      matSuffix
+      mat-button
+      (click)="!updatingGroup() && toggleGroupLocked()"
+    >
+      <mat-icon class="text-md">lock_person</mat-icon>
+      <span class="text-sm opacity-80">Lock group</span>
+    </button>
+  }
 </div>

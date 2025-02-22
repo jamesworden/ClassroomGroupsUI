@@ -1,9 +1,4 @@
-<div
-  class="panel pt-2 px-2 flex flex-col w-full border-t border-x border-transparent"
-  [ngClass]="{
-    'border-primary': defaultGroup().isLocked,
-  }"
->
+<div class="panel pt-2 px-2 flex flex-col w-full">
   <!-- Toolbar -->
   <div #toolbar>
     <div class="flex justify-between min-h-16 flex-wrap gap-y-4">
@@ -57,9 +52,11 @@
           <div class="flex flex-col justify-around">
             <button
               [tabindex]="-1"
-              [disabled]="classroomUpdating()"
               mat-flat-button
-              (click)="groupStudents(StudentGroupingStrategy.MixedAbilities)"
+              (click)="
+                !classroomUpdating() &&
+                  groupStudents(StudentGroupingStrategy.MixedAbilities)
+              "
             >
               Mixed Abilities
             </button>
@@ -68,9 +65,11 @@
           <div class="flex flex-col justify-around">
             <button
               [tabindex]="-1"
-              [disabled]="classroomUpdating()"
               mat-stroked-button
-              (click)="groupStudents(StudentGroupingStrategy.SimilarAbilities)"
+              (click)="
+                !classroomUpdating() &&
+                  groupStudents(StudentGroupingStrategy.SimilarAbilities)
+              "
             >
               Similar Abilities
             </button>

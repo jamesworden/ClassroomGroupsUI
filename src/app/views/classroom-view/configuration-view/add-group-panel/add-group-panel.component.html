@@ -4,12 +4,7 @@
     class="max-w-32"
     [matTooltip]="groupLimitReached() ? 'Group limit reached!' : ''"
   >
-    <button
-      [disabled]="groupLimitReached()"
-      matSuffix
-      mat-button
-      (click)="addGroup()"
-    >
+    <button matSuffix mat-button (click)="!groupLimitReached() && addGroup()">
       <mat-icon class="text-md">group_add</mat-icon>
       <span class="text-sm opacity-80">Add group</span>
     </button>

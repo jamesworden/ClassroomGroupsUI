@@ -1,9 +1,4 @@
-<div
-  class="px-2 panel rounded-b-md w-full shadow-lg flex flex-col border-b border-x border-transparent min-h-2"
-  [ngClass]="{
-    'border-primary': defaultGroup().isLocked,
-  }"
->
+<div class="px-2 panel rounded-b-md w-full shadow-lg flex flex-col min-h-2">
   @if (defaultGroup().studentDetails.length > 0) {
     <app-student-list
       [classroomId]="classroomId()"
