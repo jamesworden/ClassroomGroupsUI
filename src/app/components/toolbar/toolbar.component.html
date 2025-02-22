@@ -19,13 +19,13 @@
         <a class="text-sm" [routerLink]="['/sign-in']">Sign In</a>
       </div>
 
-      <a
+      <button
         class="inline-flex items-center gap-2 ml-2 text-sm bg-gradient-fade text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 px-6 rounded-lg shadow-lg"
         [routerLink]="['/sign-up']"
       >
         <mat-icon class="text-md">ads_click</mat-icon>
         Try Free
-      </a>
+      </button>
     } @else {
       <div class="flex flex-col justify-around">
         <app-account-menu-button></app-account-menu-button>

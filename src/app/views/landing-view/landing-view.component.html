@@ -24,7 +24,7 @@
             </p>
           </div>
           <div>
-            <a
+            <button
               class="inline-flex items-center gap-2 bg-gradient-fade font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 py-3 px-8 rounded-lg shadow-lg hover:bg-opacity-50 dark:hover:bg-opacity-30 transition duration-100"
               [routerLink]="[isLoggedIn() ? '/classrooms' : '/sign-up']"
             >
@@ -32,7 +32,7 @@
               <span>{{
                 isLoggedIn() ? 'Go to Classrooms' : 'Start Grouping'
               }}</span>
-            </a>
+            </button>
           </div>
         </div>
       </div>
