@@ -195,9 +195,16 @@
   </ng-template>
 </mat-menu>
 
-<ng-template #columnRightHeaderTemplate let-enabled="enabled" let-id="id">
-  <mat-checkbox
-    [checked]="enabled"
-    (change)="toggleColumnEnabled(id, $event)"
-  ></mat-checkbox>
+<ng-template
+  #columnRightHeaderTemplate
+  let-enabled="enabled"
+  let-id="id"
+  let-type="type"
+>
+  @if (type === FieldType.NUMBER) {
+    <mat-checkbox
+      [checked]="enabled"
+      (change)="toggleColumnEnabled(id, $event)"
+    ></mat-checkbox>
+  }
 </ng-template>
