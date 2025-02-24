@@ -48,6 +48,8 @@
                 class="flex-1"
                 [configurationDetail]="configurationDetail"
                 [classroom]="classroom"
+                [columnDetails]="columnDetails()"
+                [defaultGroup]="defaultGroup()!"
               ></app-configuration-preview>
             }
           } @else if (configurationLoading()) {

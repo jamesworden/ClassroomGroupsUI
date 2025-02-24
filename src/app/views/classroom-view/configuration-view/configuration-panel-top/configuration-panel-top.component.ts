@@ -32,7 +32,10 @@ import {
   StudentGroupingStrategy,
 } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  MatCheckboxChange,
+  MatCheckboxModule,
+} from '@angular/material/checkbox';
 import { ColumnListComponent } from '../../column-list/column-list.component';
 
 @Component({
@@ -192,5 +195,19 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
 
   toggleCollapsedPanels() {
     this.collapsePanelsToggled.emit();
+  }
+
+  toggleColumnEnabled(columnId: string, { checked }: MatCheckboxChange) {
+    checked
+      ? this.#classroomsService.enableColumn(
+          this.classroomId(),
+          this.configurationId(),
+          columnId
+        )
+      : this.#classroomsService.disableColumn(
+          this.classroomId(),
+          this.configurationId(),
+          columnId
+        );
   }
 }

@@ -115,7 +115,7 @@
         [columnDetails]="columnDetails()"
         [configurationId]="configurationId()"
         [defaultGroup]="defaultGroup()"
-        [showCheckboxes]="true"
+        [rightHeaderTemplate]="columnRightHeaderTemplate"
       ></app-column-list>
     </div>
   </div>
@@ -193,3 +193,15 @@
     </button>
   </ng-template>
 </mat-menu>
+
+<ng-template
+  #columnRightHeaderTemplate
+  let-type="type"
+  let-enabled="enabled"
+  let-id="id"
+>
+  <mat-checkbox
+    [checked]="enabled"
+    (change)="toggleColumnEnabled(id, $event)"
+  ></mat-checkbox>
+</ng-template>

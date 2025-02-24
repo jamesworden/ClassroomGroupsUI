@@ -6,7 +6,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, effect, inject, input, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -25,6 +25,7 @@ import {
   MatCheckboxChange,
   MatCheckboxModule,
 } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-column-list',
@@ -37,6 +38,7 @@ import {
     CdkDropList,
     MatIconModule,
     MatCheckboxModule,
+    MatSlideToggleModule,
   ],
   templateUrl: './column-list.component.html',
   styleUrl: './column-list.component.scss',
@@ -49,8 +51,8 @@ export class ColumnListComponent {
   readonly configurationId = input.required<string>();
   readonly defaultGroup = input.required<GroupDetail>();
   readonly columnDetails = input.required<ColumnDetail[]>();
-
-  readonly showCheckboxes = input(true);
+  readonly enableDrag = input(true);
+  readonly rightHeaderTemplate = input<TemplateRef<ColumnDetail>>();
 
   readonly FieldType = FieldType;
 
@@ -113,19 +115,5 @@ export class ColumnListComponent {
           );
         }
       });
-  }
-
-  toggleColumnEnabled(columnId: string, { checked }: MatCheckboxChange) {
-    checked
-      ? this.#classroomsService.enableColumn(
-          this.classroomId(),
-          this.configurationId(),
-          columnId
-        )
-      : this.#classroomsService.disableColumn(
-          this.classroomId(),
-          this.configurationId(),
-          columnId
-        );
   }
 }

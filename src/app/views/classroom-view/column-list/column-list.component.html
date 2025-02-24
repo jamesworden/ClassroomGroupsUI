@@ -9,12 +9,14 @@
 >
   @for (column of editingColumnDetails; track column.id) {
     <div
-      class="draggable-field grid-row border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48"
+      class="draggable-field grow justify-between flex grid-row border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48"
       cdkDrag
       [cdkDragData]="column"
       [cdkContextMenuTriggerFor]="columnHeaderMenu"
+      [cdkDragDisabled]="!enableDrag()"
       [ngClass]="{
         'rounded-b-md': defaultGroup().studentDetails.length <= 0,
+        'cursor-move': enableDrag(),
       }"
     >
       <ng-template #columnHeaderMenu>
@@ -52,13 +54,10 @@
               </span>
             </div>
 
-            @if (showCheckboxes() && column.type === FieldType.NUMBER) {
-              <div class="flex flex-col justify-around">
-                <mat-checkbox
-                  [checked]="column.enabled"
-                  (change)="toggleColumnEnabled(column.id, $event)"
-                ></mat-checkbox>
-              </div>
+            @if (rightHeaderTemplate(); as rightHeaderTemplate) {
+              <ng-container
+                *ngTemplateOutlet="rightHeaderTemplate; context: column"
+              ></ng-container>
             }
           </div>
         </div>

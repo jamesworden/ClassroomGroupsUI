@@ -1,5 +1,5 @@
-<div class="mx-4 py-4 px-6 panel rounded-b-lg flex flex-col">
-  <div class="flex justify-between">
+<div class="mx-4 py-4 px-2 panel rounded-b-lg flex flex-col">
+  <div class="px-2 flex justify-between">
     <div class="flex flex-col justify-around">
       <div>
         <h3 class="text-2xl">
@@ -24,5 +24,32 @@
     </div>
   </div>
 
-  <!-- Column Headers -->
+  <app-column-list
+    class="py-4"
+    [classroomId]="classroom().id"
+    [columnDetails]="columnDetails()"
+    [configurationId]="configurationDetail().id"
+    [defaultGroup]="defaultGroup()"
+    [enableDrag]="false"
+    [rightHeaderTemplate]="columnRightHeaderTemplate"
+  >
+  </app-column-list>
 </div>
+
+<ng-template
+  #columnRightHeaderTemplate
+  let-type="type"
+  let-enabled="enabled"
+  let-id="id"
+>
+  @if (visibleColumnIds) {
+    <div class="flex flex-col justify-around">
+      <mat-slide-toggle
+        class="scale-75"
+        [checked]="visibleColumnIds!.has(id)"
+        (change)="toggleVisibleColumn(id, $event)"
+      >
+      </mat-slide-toggle>
+    </div>
+  }
+</ng-template>

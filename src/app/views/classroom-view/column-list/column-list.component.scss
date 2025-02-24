@@ -1,13 +1,5 @@
 .draggable-field {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  cursor: move;
   font-size: 14px;
-  flex-grow: 1;
-  flex-basis: 0;
 }
 
 .cdk-drag-preview {
