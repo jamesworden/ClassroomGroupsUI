@@ -110,7 +110,7 @@
                             columnDetail of columnDetails();
                             track columnDetail.id
                           ) {
-                            @if (visibleColumnIds.has(columnDetail.id)) {
+                            @if (visibleFieldIds.has(columnDetail.fieldId)) {
                               {{
                                 studentDetail.fieldIdsToValues[
                                   columnDetail.fieldId
@@ -133,20 +133,13 @@
   </div>
 </div>
 
-<ng-template
-  #columnRightHeaderTemplate
-  let-type="type"
-  let-enabled="enabled"
-  let-id="id"
->
-  @if (visibleColumnIds) {
-    <div class="flex flex-col justify-around">
-      <mat-slide-toggle
-        class="scale-75"
-        [checked]="visibleColumnIds!.has(id)"
-        (change)="toggleVisibleColumn(id, $event)"
-      >
-      </mat-slide-toggle>
-    </div>
-  }
+<ng-template #columnRightHeaderTemplate let-fieldId="fieldId">
+  <div class="flex flex-col justify-around">
+    <mat-slide-toggle
+      class="scale-75"
+      [checked]="visibleFieldIds!.has(fieldId)"
+      (change)="toggleVisibleField(fieldId, $event)"
+    >
+    </mat-slide-toggle>
+  </div>
 </ng-template>

@@ -56,16 +56,18 @@ export class ConfigurationPreviewComponent {
   readonly showUngroupedStudents = signal(true);
   readonly underlineGroupNames = signal(true);
 
-  visibleColumnIds = new Set<string>();
+  visibleFieldIds = new Set<string>();
 
   constructor() {
     effect(() => {
-      this.visibleColumnIds.clear();
-      const firstTextColumn = this.columnDetails().find(
-        ({ type }) => type === FieldType.TEXT
-      );
-      if (firstTextColumn) {
-        this.visibleColumnIds.add(firstTextColumn.id);
+      if (!this.visibleFieldIds.size) {
+        this.visibleFieldIds.clear();
+        const firstTextColumn = this.columnDetails().find(
+          ({ type }) => type === FieldType.TEXT
+        );
+        if (firstTextColumn) {
+          this.visibleFieldIds.add(firstTextColumn.fieldId);
+        }
       }
     });
   }
@@ -82,10 +84,10 @@ export class ConfigurationPreviewComponent {
     this.underlineGroupNames.set(!this.underlineGroupNames());
   }
 
-  toggleVisibleColumn(columnId: string, { checked }: MatSlideToggleChange) {
+  toggleVisibleField(fieldId: string, { checked }: MatSlideToggleChange) {
     checked
-      ? this.visibleColumnIds.add(columnId)
-      : this.visibleColumnIds.delete(columnId);
+      ? this.visibleFieldIds.add(fieldId)
+      : this.visibleFieldIds.delete(fieldId);
   }
 
   copyText() {

@@ -195,12 +195,7 @@
   </ng-template>
 </mat-menu>
 
-<ng-template
-  #columnRightHeaderTemplate
-  let-type="type"
-  let-enabled="enabled"
-  let-id="id"
->
+<ng-template #columnRightHeaderTemplate let-enabled="enabled" let-id="id">
   <mat-checkbox
     [checked]="enabled"
     (change)="toggleColumnEnabled(id, $event)"
