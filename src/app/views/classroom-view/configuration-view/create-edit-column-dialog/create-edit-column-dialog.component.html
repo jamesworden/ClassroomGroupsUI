@@ -11,14 +11,16 @@
     />
   </mat-form-field>
 
-  <mat-radio-group [(ngModel)]="type">
-    <mat-radio-button color="primary" [value]="Type.NUMBER"
-      >Grade</mat-radio-button
-    >
-    <mat-radio-button color="primary" [value]="Type.TEXT"
-      >Text</mat-radio-button
-    >
-  </mat-radio-group>
+  @if (!existingData()?.columnDetail?.type) {
+    <mat-radio-group [(ngModel)]="type">
+      <mat-radio-button color="primary" [value]="Type.NUMBER"
+        >Grade</mat-radio-button
+      >
+      <mat-radio-button color="primary" [value]="Type.TEXT"
+        >Text</mat-radio-button
+      >
+    </mat-radio-group>
+  }
 </div>
 
 <mat-dialog-actions>

@@ -1332,7 +1332,7 @@ export class ClassroomsService {
       .subscribe();
   }
 
-  moveColumn(
+  public moveColumn(
     classroomId: string,
     configurationId: string,
     columnId: string,

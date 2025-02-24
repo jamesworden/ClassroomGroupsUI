@@ -122,6 +122,15 @@
                   <mat-icon class="mr-3 !text-red-500">delete</mat-icon>
                   <span>Delete column</span>
                 </button>
+
+                <button
+                  class="context-menu-item"
+                  cdkMenuItem
+                  (click)="openEditColumnDialog(column)"
+                >
+                  <mat-icon class="mr-3">edit</mat-icon>
+                  <span>Edit column</span>
+                </button>
               </div>
             </ng-template>
 

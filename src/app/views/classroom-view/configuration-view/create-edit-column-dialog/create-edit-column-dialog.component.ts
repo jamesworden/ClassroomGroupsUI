@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Column, Field, FieldType } from '@shared/classrooms';
+import { ColumnDetail, FieldType } from '@shared/classrooms';
 
 export interface CreateEditColumnDialogOutputs {
   type: FieldType;
@@ -22,8 +22,7 @@ export interface CreateEditColumnDialogOutputs {
 export interface CreateEditColumnDialogInputs {
   title: string;
   existingData?: {
-    column: Column;
-    field: Field;
+    columnDetail: ColumnDetail;
   };
 }
 
@@ -52,6 +51,7 @@ export class CreateEditColumnDialogComponent {
 
   readonly canceled = signal(undefined);
   readonly title = signal(this.#data.title);
+  readonly existingData = signal(this.#data.existingData);
 
   readonly Type = FieldType;
 

@@ -204,6 +204,31 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
       });
   }
 
+  openEditColumnDialog(columnDetail: ColumnDetail) {
+    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+      restoreFocus: false,
+      data: <CreateEditColumnDialogInputs>{
+        title: 'Edit Column',
+        existingData: {
+          columnDetail,
+        },
+      },
+    });
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        const classroomId = this.classroomId();
+        const configurationId = this.configurationId();
+        if (outputs && classroomId && configurationId) {
+          this.#classroomsService.patchField(
+            classroomId,
+            configurationId,
+            outputs.label
+          );
+        }
+      });
+  }
+
   createGroup() {
     const classroomId = this.classroomId();
     const configurationId = this.configurationId();
