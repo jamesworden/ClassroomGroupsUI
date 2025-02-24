@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -15,13 +15,14 @@ import { AccountsService } from '@shared/accounts';
 import { CommonModule } from '@angular/common';
 import { SubscriptionPlanCardComponent } from './subscription-plan-card/subscription-plan-card.component';
 import { subscriptionPlans } from '@app/metadata';
-import {
-  AccountMenuComponent,
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from '@app/components';
+import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
-import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-links-menu.component';
+import {
+  AccountMenuButtonComponent,
+  CodeLinksMenuButtonComponent,
+  HomeButtonComponent,
+  ToggleThemeButtonComponent,
+} from '@ui-inputs';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -31,14 +32,16 @@ import { CodeLinksMenuComponent } from 'app/components/code-links-menu/code-link
     MatTableModule,
     MatToolbarModule,
     MatMenuModule,
-    AccountMenuComponent,
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTooltipModule,
     RouterModule,
     SubscriptionPlanCardComponent,
     CommonModule,
-    CodeLinksMenuComponent,
+    ToggleThemeButtonComponent,
+    AccountMenuButtonComponent,
+    CodeLinksMenuButtonComponent,
+    HomeButtonComponent,
   ],
   templateUrl: './classrooms-view.component.html',
   styleUrl: './classrooms-view.component.scss',
@@ -56,26 +59,12 @@ export class ClassroomsViewComponent {
   readonly account = this.#accountService.select.account;
   readonly theme = this.#themeService.theme;
 
-  readonly menuIsOpen = signal(false);
-
   readonly Themes = Themes;
   readonly subscriptionPlans = subscriptionPlans;
   readonly displayedColumns = ['label', 'description', 'actions'];
 
   viewClassroom(id: string) {
     this.#router.navigate(['/classrooms', id]);
-  }
-
-  toggleTheme() {
-    this.#themeService.toggleTheme();
-  }
-
-  markMenuAsOpen() {
-    this.menuIsOpen.set(true);
-  }
-
-  markMenuAsClosed() {
-    this.menuIsOpen.set(false);
   }
 
   createClassroom() {
@@ -91,7 +80,7 @@ export class ClassroomsViewComponent {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete the classroom ${classroomDetail.label} and all of it's data?`,
+        subtitle: `Are you sure you want to delete classroom '${classroomDetail.label}' and all of it's data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success: boolean) => {

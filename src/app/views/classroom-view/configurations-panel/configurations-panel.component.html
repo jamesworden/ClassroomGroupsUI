@@ -3,8 +3,15 @@
     #scrollContainer
     class="absolute h-full flex flex-col overflow-auto flex-1 w-full"
   >
-    <div class="sticky top-0 z-10 panel shadow-lg w-full px-4 pt-4">
-      <h5 class="text-2xl mb-2">Configurations</h5>
+    <div
+      class="sticky top-0 z-10 panel shadow-lg dark:shadow-2xl w-full px-4 pt-4 border-b border-zinc-400"
+    >
+      <div class="flex justify-content-between">
+        <h5 class="text-2xl mb-3">
+          {{ configurations().length }}
+          Configuration{{ configurations().length > 1 ? 's' : '' }}
+        </h5>
+      </div>
 
       <form>
         <mat-form-field appearance="outline" class="w-full">
@@ -37,18 +44,18 @@
               configuration.id === selectedConfigurationId() ? 'group' : null
             }}</mat-icon>
 
-            <div
+            <h3
               matListItemTitle
               [ngClass]="{
                 'opacity-50': !configuration.label,
               }"
             >
               {{ configuration.label || 'Untitled' }}
-            </div>
+            </h3>
 
-            <div class="opacity-80" matListItemLine>
+            <p class="opacity-80" matListItemLine>
               {{ configuration.description }}
-            </div>
+            </p>
 
             <ng-template #configurationMenu>
               <div class="context-menu" cdkMenu>
@@ -56,8 +63,17 @@
                   class="context-menu-item"
                   cdkMenuItem
                   (click)="deleteConfiguration(configuration.id)"
+                  [matTooltip]="
+                    configurations().length <= 1
+                      ? 'You can\'t delete the last configuration'
+                      : ''
+                  "
+                  [disabled]="configurations().length <= 1"
+                  [ngClass]="{
+                    '!opacity-50': configurations().length <= 1,
+                  }"
                 >
-                  <mat-icon class="mr-3">group_remove</mat-icon>
+                  <mat-icon class="mr-3 !text-red-500">group_remove</mat-icon>
                   <span>Delete configuration</span>
                 </button>
               </div>

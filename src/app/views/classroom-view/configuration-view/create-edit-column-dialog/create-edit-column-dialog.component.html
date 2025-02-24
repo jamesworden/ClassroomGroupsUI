@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>{{ title() }}</h2>
+
+<div class="px-4 flex flex-col gap-y-2">
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Column name</mat-label>
+    <input
+      (change)="setFieldNameIsValid()"
+      [(ngModel)]="label"
+      type="text"
+      matInput
+    />
+  </mat-form-field>
+
+  @if (!existingData()?.columnDetail?.type) {
+    <mat-radio-group [(ngModel)]="type">
+      <mat-radio-button color="primary" [value]="Type.NUMBER"
+        >Grade</mat-radio-button
+      >
+      <mat-radio-button color="primary" [value]="Type.TEXT"
+        >Text</mat-radio-button
+      >
+    </mat-radio-group>
+  }
+</div>
+
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="canceled()">Cancel</button>
+  <button
+    [disabled]="!fieldNameIsValid"
+    mat-button
+    [mat-dialog-close]="saved()()"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

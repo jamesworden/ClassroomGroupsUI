@@ -1,281 +1,55 @@
 <div class="w-full h-full flex grid-bg">
   <div class="flex-1 w-full h-full flex">
-    @if (selectedConfigurationId(); as selectedConfigurationId) {
+    @if (configurationId(); as selectedConfigurationId) {
       <app-configurations-panel
         [classroomId]="classroomId()"
         [selectedConfigurationId]="selectedConfigurationId"
         (configurationIdSelected)="selectConfigurationId($event)"
-        class="flex-1 max-w-xs shadow-lg border-r border-neutral-400"
+        class="flex-1 max-w-xs shadow-lg border-r border-zinc-400"
         (deletedConfiguration)="openDeleteConfigurationModal($event)"
       ></app-configurations-panel>
     }
 
     <div class="flex flex-col flex-1">
-      @if (classroom()) {
+      @if (classroom(); as classroom) {
         <div class="flex-1 flex flex-col">
-          <section class="flex justify-between m-4">
-            <div class="flex flex-col flex-1">
-              <input
-                class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                maxlength="150"
-                [value]="classroomLabel()"
-                (change)="updateClassroomLabel($event)"
-                placeholder="Untitled"
-              />
-              <input
-                class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                maxlength="150"
-                [value]="classroomDescription()"
-                (change)="updateClassroomDescription($event)"
-                placeholder="Add a description for your classroom"
-              />
-            </div>
+          <app-classroom-header
+            [classroom]="classroom"
+            [groupDetails]="listGroupDetails()"
+            [columnDetails]="columnDetails()"
+            [studentDetails]="allStudentDetails()"
+            [configurationViewMode]="configurationViewMode()"
+            (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
+            (configurationViewModeSet)="setConfigurationViewMode($event)"
+          ></app-classroom-header>
 
-            <app-counter-card
-              class="mr-4"
-              [count]="listGroupDetails().length"
-              icon="group"
-              limitReachedTooltip="Group limit reached!"
-              [withinLimitTooltip]="listGroupDetails().length + ' groups'"
-              [totalCount]="
-                account()?.subscription?.maxStudentsPerClassroom ?? 0
-              "
-            ></app-counter-card>
-
-            <app-counter-card
-              class="mr-4"
-              [count]="allStudentDetails().length"
-              icon="person"
-              limitReachedTooltip="Student limit reached!"
-              [withinLimitTooltip]="allStudentDetails().length + ' students'"
-              [totalCount]="
-                account()?.subscription?.maxStudentsPerClassroom ?? 0
-              "
-            ></app-counter-card>
-
-            <app-counter-card
-              class="mr-4"
-              [count]="columnDetails().length"
-              icon="view_columns"
-              limitReachedTooltip="Column limit reached!"
-              [withinLimitTooltip]="columnDetails().length + ' columns'"
-              [totalCount]="account()?.subscription?.maxFieldsPerClassroom ?? 0"
-            ></app-counter-card>
-
-            <div class="flex flex-col justify-around">
-              <button
-                class="!flex"
-                matTooltip="Back to classrooms"
-                mat-icon-button
-                (click)="goToClassroomsView()"
-                [tabindex]="-1"
-              >
-                <mat-icon>arrow_back</mat-icon>
-              </button>
-            </div>
-
-            <div class="flex flex-col justify-around">
-              <button
-                mat-icon-button
-                [matMenuTriggerFor]="codeMenu"
-                matTooltip="Our code"
-                class="!flex"
-              >
-                <mat-icon>code</mat-icon>
-              </button>
-            </div>
-
-            <div class="flex flex-col justify-around">
-              <button
-                class="!flex"
-                [matTooltip]="
-                  collapsePanelDetails() ? 'Show details' : 'Hide details'
+          @if (configurationDetail(); as configurationDetail) {
+            @if (configurationViewMode() === ConfigurationViewMode.List) {
+              <app-configuration-view
+                class="flex-1"
+                [configurationDetail]="configurationDetail"
+                [defaultGroup]="defaultGroup()!"
+                [classroomId]="classroomId()"
+                [columnDetails]="columnDetails()"
+                [groupDetails]="listGroupDetails()"
+                [groupLimitReached]="
+                  listGroupDetails().length >= maxStudentsPerClassroom()
                 "
-                mat-icon-button
-                (click)="toggleCollapsedPanels()"
-                [tabIndex]="-1"
-              >
-                <mat-icon>{{
-                  collapsePanelDetails() ? 'unfold_more' : 'unfold_less'
-                }}</mat-icon>
-              </button>
-            </div>
-
-            <div class="flex flex-col justify-around">
-              <button
-                class="!flex"
-                [tabindex]="-1"
-                [matTooltip]="
-                  theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'
+                [anyAverageScores]="anyAverageScores()"
+                [averageScores]="averageScores()"
+                (deleteConfigurationModalOpened)="
+                  openDeleteConfigurationModal($event)
                 "
-                mat-icon-button
-                (click)="toggleTheme()"
-              >
-                <mat-icon>{{
-                  theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
-                }}</mat-icon>
-              </button>
-            </div>
-
-            <div class="flex flex-col justify-around">
-              <button
-                class="!flex"
-                matTooltip="Settings"
-                mat-icon-button
-                [matMenuTriggerFor]="classroomSettingsMenu"
-                [tabIndex]="-1"
-              >
-                <mat-icon>settings</mat-icon>
-              </button>
-            </div>
-
-            <div class="flex flex-col justify-around">
-              <button
-                class="!flex"
-                matTooltip="Account settings"
-                mat-icon-button
-                [matMenuTriggerFor]="accountMenu"
-                (menuOpened)="markMenuAsOpen()"
-                (menuClosed)="markMenuAsClosed()"
-              >
-                <mat-icon>account_circle</mat-icon>
-              </button>
-            </div>
-          </section>
-
-          @if (configurationDetail()) {
-            <section
-              #spreadsheet
-              class="flex-1 flex flex-col overflow-hidden relative"
-            >
-              <div
-                cdkScrollable
-                class="absolute inset-0 overflow-auto flex flex-col"
-              >
-                <div class="flex flex-1 flex-col w-full min-w-fit">
-                  @if (configurationDetail(); as configurationDetail) {
-                    @if (defaultGroup(); as defaultGroup) {
-                      <app-configuration-panel-top
-                        class="sticky top-0 z-10 mx-4 flex"
-                        [configurationDetail]="configurationDetail"
-                        [columnDetails]="editingColumnDetails"
-                        [defaultGroup]="defaultGroup"
-                        [collapsed]="collapsePanelDetails()"
-                        (labelUpdated)="updateConfigurationLabel($event)"
-                        (descriptionUpdated)="
-                          updateConfigurationDescription($event)
-                        "
-                        (deletedConfiguration)="
-                          openDeleteConfigurationModal($event)
-                        "
-                      ></app-configuration-panel-top>
-
-                      <app-configuration-panel-bottom
-                        class="mx-4 flex"
-                        [classroomId]="classroomId()"
-                        [configurationId]="configurationDetail.id"
-                        [defaultGroup]="defaultGroup"
-                        [columnDetails]="editingColumnDetails"
-                        [collapsed]="collapsePanelDetails()"
-                        (studentFieldUpdated)="updateStudentField($event)"
-                        (studentDeleted)="deleteStudent($event)"
-                        (studentPositionUpdated)="updateStudentPosition($event)"
-                      ></app-configuration-panel-bottom>
-                    }
-                  }
-
-                  <div class="flex flex-col gap-y-4">
-                    <section
-                      cdkDropList
-                      (cdkDropListDropped)="dropGroup($event)"
-                      class="mx-4 flex flex-col flex-1"
-                    >
-                      @for (
-                        group of editingGroups;
-                        track group.id;
-                        let i = $index
-                      ) {
-                        @if (
-                          group.id !== configurationDetail()?.defaultGroupId
-                        ) {
-                          <app-group-panel
-                            class="flex w-full"
-                            [ngClass]="{
-                              'mt-4': !collapsePanelDetails(),
-                              'mt-2': collapsePanelDetails(),
-                            }"
-                            cdkDrag
-                            [classroomId]="classroomId()"
-                            [groupDetail]="group"
-                            [columnDetails]="editingColumnDetails"
-                            (groupDeleted)="deleteGroup(group.id)"
-                            (studentCreated)="createStudent(group.id)"
-                            (labelUpdated)="updateGroupLabel(group, $event)"
-                            (studentFieldUpdated)="updateStudentField($event)"
-                            (studentDeleted)="deleteStudent($event)"
-                            (studentPositionUpdated)="
-                              updateStudentPosition($event)
-                            "
-                            [groupIndex]="i"
-                            [collapsed]="collapsePanelDetails()"
-                          >
-                            <mat-icon class="cursor-move" cdkDragHandle
-                              >drag_handle</mat-icon
-                            >
-                          </app-group-panel>
-                        }
-                      }
-                    </section>
-                  </div>
-
-                  <div class="px-2 py-1 mx-4 panel rounded-md mt-4 shadow-lg">
-                    <div
-                      matTooltipPosition="after"
-                      class="max-w-32"
-                      [matTooltip]="
-                        groupLimitReached() ? 'Group limit reached!' : ''
-                      "
-                    >
-                      <button
-                        [disabled]="groupLimitReached()"
-                        matSuffix
-                        mat-button
-                        (click)="addGroup()"
-                      >
-                        <mat-icon class="text-md">group_add</mat-icon>
-                        <span class="text-sm opacity-80">Add group</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <span class="flex-auto"></span>
-
-                  @if (anyAverageScores()) {
-                    <div
-                      class="sticky bottom-0 z-50 px-4 py-2 mx-4 panel rounded-t-md mt-4"
-                    >
-                      <div class="flex flex-col justify-between gap-y-2">
-                        <span class="text-lg">Class average</span>
-                        <div class="flex grid-row py-1 pl-2 rounded-md">
-                          @for (
-                            columnDetail of columnDetails();
-                            track columnIndex;
-                            let columnIndex = $index
-                          ) {
-                            <span class="flex-1 text-sm">{{
-                              averageScores()[columnDetail.fieldId]
-                                | number: '1.1-2'
-                            }}</span>
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
-              </div>
-            </section>
+              ></app-configuration-view>
+            } @else {
+              <app-configuration-preview
+                class="flex-1"
+                [configurationDetail]="configurationDetail"
+                [classroom]="classroom"
+                [columnDetails]="columnDetails()"
+                [defaultGroup]="defaultGroup()!"
+              ></app-configuration-preview>
+            }
           } @else if (configurationLoading()) {
             <div class="flex-1">
               <img
@@ -307,22 +81,3 @@
     </div>
   </div>
 </div>
-
-<mat-menu #classroomSettingsMenu="matMenu">
-  <button
-    mat-menu-item
-    (click)="openDeleteClassroomDialog()"
-    matTooltip="Delete Classroom"
-  >
-    <mat-icon>delete</mat-icon>
-    <span>Delete classroom</span>
-  </button>
-</mat-menu>
-
-<mat-menu #accountMenu="matMenu">
-  <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
-</mat-menu>
-
-<mat-menu #codeMenu="matMenu">
-  <app-code-links-menu></app-code-links-menu>
-</mat-menu>

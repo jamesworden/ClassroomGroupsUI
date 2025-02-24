@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ThemeService } from './themes/theme.service';
 import { ClassroomsService } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
@@ -14,7 +14,6 @@ import { combineLatest, filter } from 'rxjs';
   providers: [ThemeService, ClassroomsService, AccountsService],
 })
 export class AppComponent {
-  readonly #router = inject(Router);
   readonly #accountsService = inject(AccountsService);
   readonly #classroomsService = inject(ClassroomsService);
 
@@ -29,10 +28,9 @@ export class AppComponent {
         takeUntilDestroyed(),
         filter(([_, accountLoading]) => !accountLoading)
       )
-      .subscribe(([isLoggedIn]) =>
-        isLoggedIn
-          ? this.#classroomsService.getClassroomDetails()
-          : this.#router.navigate(['/'])
+      .subscribe(
+        ([isLoggedIn]) =>
+          isLoggedIn && this.#classroomsService.getClassroomDetails()
       );
   }
 }

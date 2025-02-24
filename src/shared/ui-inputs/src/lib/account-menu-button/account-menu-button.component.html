@@ -1,0 +1,12 @@
+<button
+  class="!flex"
+  matTooltip="Account settings"
+  mat-icon-button
+  [matMenuTriggerFor]="accountMenu"
+>
+  <mat-icon>account_circle</mat-icon>
+</button>
+
+<mat-menu #accountMenu="matMenu">
+  <app-account-menu></app-account-menu>
+</mat-menu>

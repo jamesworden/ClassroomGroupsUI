@@ -1,21 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { catchError, finalize, of, take, tap } from 'rxjs';
 import { Account, GetAccountResponse } from './models';
 import { create } from 'mutative';
 import { environment } from 'environments/environment';
+import { AccountSelectors } from './accounts.selectors';
+import { Router } from '@angular/router';
 
-class AccountSelectors {
-  constructor(private _state: Signal<AccountsState>) {}
-
-  public readonly account = computed(() => this._state().account);
-
-  public readonly isLoggedIn = computed(() => !!this._state().account);
-
-  public readonly accountLoading = computed(() => this._state().accountLoading);
-}
-
-interface AccountsState {
+export interface AccountsState {
   accountLoading: boolean;
   account?: Account;
 }
@@ -25,6 +17,7 @@ interface AccountsState {
 })
 export class AccountsService {
   readonly #httpClient = inject(HttpClient);
+  readonly #router = inject(Router);
 
   private readonly _state = signal<AccountsState>({
     accountLoading: true,
@@ -86,6 +79,9 @@ export class AccountsService {
         withCredentials: true,
       })
       .pipe(
+        tap(() => {
+          this.#router.navigate(['/']);
+        }),
         finalize(() => {
           this.patchState((draft) => {
             draft.account = undefined;

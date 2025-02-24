@@ -41,6 +41,9 @@ import {
   UnlockGroupResponse,
   StudentGroupingStrategy,
   GroupStudentsResponse,
+  EnableColumnResponse,
+  Column,
+  DisableColumnResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -59,124 +62,9 @@ import { MoveStudentDetail } from './models/move-student-detail';
 import { MoveColumnDetail } from './models/move-column-detail';
 import { warnOnValueMismatch } from './logic/warn-on-value-mismatch';
 import { environment } from 'environments/environment';
+import { ClassroomSelectors } from './classrooms.selectors';
 
-class ClassroomSelectors {
-  constructor(private _state: Signal<ClassroomsState>) {}
-
-  public readonly classroomDetails = computed(() =>
-    this._state().classroomDetails.sort((a, b) =>
-      a.label.localeCompare(b.label)
-    )
-  );
-
-  public readonly classroomDetail = (classroomId?: string) =>
-    computed(() => this.classroomDetails().find((c) => c.id === classroomId));
-
-  public readonly configurationDetail = (configurationId?: string) =>
-    computed(() =>
-      this._state().configurationDetails.find((c) => c.id === configurationId)
-    );
-
-  public readonly configurationDetails = (classroomId?: string) =>
-    computed(() =>
-      this._state().configurationDetails.filter(
-        (c) => c.classroomId === classroomId
-      )
-    );
-
-  public readonly configurations = (classroomId?: string) =>
-    computed(() =>
-      this._state()
-        .configurations.filter((c) => c.classroomId === classroomId)
-        .sort((a, b) => a.label.localeCompare(b.label))
-    );
-
-  public readonly configuration = (
-    classroomId?: string,
-    configurationId?: string
-  ) =>
-    computed(() =>
-      this.configurations(classroomId)()?.find((c) => c.id == configurationId)
-    );
-
-  public readonly classroomsLoading = computed(
-    () => this._state().classroomsLoading
-  );
-
-  public readonly loadingConfigurationDetailIds = computed(
-    () => this._state().loadingConfigurationDetailIds
-  );
-
-  public readonly configurationsLoading = computed(
-    () => this._state().configurationsLoading
-  );
-
-  public readonly configurationLoading = (configurationId?: string) =>
-    computed(() =>
-      configurationId
-        ? this._state().loadingConfigurationDetailIds.has(configurationId)
-        : false
-    );
-
-  public readonly columnDetails = (configurationId?: string) =>
-    computed(
-      () => this.configurationDetail(configurationId)()?.columnDetails
-    )() ?? [];
-
-  public readonly groupDetails = (configurationId?: string) =>
-    computed(
-      () => this.configurationDetail(configurationId)()?.groupDetails ?? []
-    );
-
-  public readonly listGroupDetails = (configurationId?: string) =>
-    computed(() =>
-      this.groupDetails(configurationId)().filter(
-        (g) =>
-          g.id !== this.configurationDetail(configurationId)()?.defaultGroupId
-      )
-    );
-
-  public readonly groupIds = (configurationId?: string) =>
-    computed(() => this.groupDetails(configurationId)().map(({ id }) => id));
-
-  public readonly configurationUpdating = (configurationId?: string) =>
-    computed(() =>
-      configurationId
-        ? this._state().updatingConfigurationIds.has(configurationId)
-        : false
-    );
-
-  public readonly classroomUpdating = (classroomId?: string) =>
-    computed(() =>
-      classroomId ? this._state().updatingClassroomIds.has(classroomId) : false
-    );
-
-  public readonly groupUpdating = (groupId?: string) =>
-    computed(() =>
-      groupId ? this._state().updatingGroupIds.has(groupId) : false
-    );
-
-  public readonly configurationIds = (classroomId?: string) =>
-    computed(() => this.configurations(classroomId)().map(({ id }) => id));
-
-  public readonly defaultGroup = (configurationId?: string) =>
-    computed(() => {
-      const configurationDetail = this.configurationDetail(configurationId)();
-      return configurationDetail?.groupDetails.find(
-        (g) => g.id === configurationDetail.defaultGroupId
-      );
-    });
-
-  public readonly studentsInConfiguration = (configurationId?: string) =>
-    computed(
-      () =>
-        this.configurationDetail(configurationId)()?.groupDetails?.flatMap(
-          (g) => g.studentDetails
-        ) || []
-    );
-}
-
-interface ClassroomsState {
+export interface ClassroomsState {
   classroomDetails: ClassroomDetail[];
   configurationDetails: ConfigurationDetail[];
   configurations: Configuration[];
@@ -1159,6 +1047,108 @@ export class ClassroomsService {
       .subscribe();
   }
 
+  public enableColumn(
+    classroomId: string,
+    configurationId: string,
+    columnId: string
+  ) {
+    const getUpdateStrategy =
+      (classroomId: string, columnId: string) => (draft: ClassroomsState) => {
+        draft.configurationDetails.forEach((configurationDetail) => {
+          if (configurationDetail.classroomId === classroomId) {
+            configurationDetail.columnDetails.forEach((columnDetail) => {
+              if (columnDetail.id === columnId) {
+                columnDetail.enabled = true;
+              }
+            });
+          }
+        });
+      };
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+      getUpdateStrategy(classroomId, columnId);
+    });
+    this.#httpClient
+      .post<EnableColumnResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/enable`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ enabledColumn }) => {
+          console.log('[Enabled Column]', enabledColumn);
+          getUpdateStrategy(classroomId, enabledColumn.id);
+        }),
+        catchError((error) => {
+          console.log('[Enable Column Failed]', error);
+          this.#matSnackBar.open('Error enabling column', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public disableColumn(
+    classroomId: string,
+    configurationId: string,
+    columnId: string
+  ) {
+    const getUpdateStrategy =
+      (classroomId: string, columnId: string) => (draft: ClassroomsState) => {
+        draft.configurationDetails.forEach((configurationDetail) => {
+          if (configurationDetail.classroomId === classroomId) {
+            configurationDetail.columnDetails.forEach((columnDetail) => {
+              if (columnDetail.id === columnId) {
+                columnDetail.enabled = false;
+              }
+            });
+          }
+        });
+      };
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+      getUpdateStrategy(classroomId, columnId);
+    });
+    this.#httpClient
+      .post<DisableColumnResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/disable`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ disabledColumn }) => {
+          console.log('[Disabled Column]', disabledColumn);
+          getUpdateStrategy(classroomId, disabledColumn.id);
+        }),
+        catchError((error) => {
+          console.log('[Disable Column Failed]', error);
+          this.#matSnackBar.open('Error disabling column', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
   sortGroups(
     classroomId: string,
     configurationId: string,
@@ -1342,7 +1332,7 @@ export class ClassroomsService {
       .subscribe();
   }
 
-  moveColumn(
+  public moveColumn(
     classroomId: string,
     configurationId: string,
     columnId: string,

@@ -115,3 +115,11 @@ export interface GroupStudentsResponse {
   updatedGroupDetails: GroupDetail[];
   errorMessage?: string;
 }
+
+export interface EnableColumnResponse {
+  enabledColumn: Column;
+}
+
+export interface DisableColumnResponse {
+  disabledColumn: Column;
+}

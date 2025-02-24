@@ -98,9 +98,14 @@
     },
     "ui-inputs": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "src/shared/ui-inputs",
       "sourceRoot": "src/shared/ui-inputs/src",
-      "prefix": "lib",
+      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",

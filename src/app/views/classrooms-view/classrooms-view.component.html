@@ -6,43 +6,16 @@
 
         <span class="flex-auto"></span>
 
-        <button matTooltip="Home" mat-icon-button [routerLink]="['/']">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
+        <app-home-button></app-home-button>
 
-        <div class="flex flex-col justify-around">
-          <button
-            mat-icon-button
-            [matMenuTriggerFor]="codeMenu"
-            matTooltip="Our code"
-          >
-            <mat-icon>code</mat-icon>
-          </button>
-        </div>
+        <app-code-links-menu-button></app-code-links-menu-button>
 
-        <button
-          [matTooltip]="theme() === Themes.LIGHT ? 'Dark mode' : 'Light mode'"
-          mat-icon-button
-          (click)="toggleTheme()"
-        >
-          <mat-icon>{{
-            theme() === Themes.LIGHT ? 'dark_mode' : 'light_mode'
-          }}</mat-icon>
-        </button>
+        <app-toggle-theme-button></app-toggle-theme-button>
 
-        <button
-          class="mr-2"
-          matTooltip="Account settings"
-          mat-icon-button
-          [matMenuTriggerFor]="accountMenu"
-          (menuOpened)="markMenuAsOpen()"
-          (menuClosed)="markMenuAsClosed()"
-        >
-          <mat-icon>account_circle</mat-icon>
-        </button>
+        <app-account-menu-button></app-account-menu-button>
 
         <div
-          class="flex flex-col justify-around"
+          class="flex flex-col justify-around ml-2"
           [matTooltip]="
             classroomDetails().length >=
             (account()?.subscription?.maxClassrooms ?? 0)
@@ -110,7 +83,7 @@
                     color="warn"
                     (click)="openDeleteClassroomModal(element)"
                   >
-                    <mat-icon>delete</mat-icon>
+                    <mat-icon class="!text-red-500">delete</mat-icon>
                   </button>
                 </td>
               </ng-container>
@@ -187,11 +160,3 @@
     [mode]="classroomsLoading() ? 'indeterminate' : 'determinate'"
   ></mat-progress-bar>
 </div>
-
-<mat-menu #accountMenu="matMenu">
-  <app-account-menu [menuIsOpen]="menuIsOpen()"></app-account-menu>
-</mat-menu>
-
-<mat-menu #codeMenu="matMenu">
-  <app-code-links-menu></app-code-links-menu>
-</mat-menu>
