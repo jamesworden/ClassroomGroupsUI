@@ -266,4 +266,8 @@ export class ClassroomViewComponent {
   setConfigurationViewMode(configurationViewMode: ConfigurationViewMode) {
     this.configurationViewMode.set(configurationViewMode);
   }
+
+  goToClassrooms() {
+    this.#router.navigate(['/classrooms']);
+  }
 }

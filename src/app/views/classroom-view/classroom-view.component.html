@@ -1,5 +1,6 @@
 <div class="w-full h-full flex grid-bg">
-  <div class="flex-1 w-full h-full flex">
+  <!-- Large Resolution -->
+  <div class="flex-1 w-full h-full flex hidden lg:flex">
     @if (configurationId(); as selectedConfigurationId) {
       <app-configurations-panel
         [classroomId]="classroomId()"
@@ -78,6 +79,52 @@
           </section>
         </div>
       }
+    </div>
+  </div>
+
+  <!-- Smaller Resolutions -->
+  <div
+    class="flex lg:hidden flex-col items-center justify-center min-h-[60vh] w-full px-6 py-12 rounded-lg shadow-sm"
+  >
+    <div class="flex flex-col items-center space-y-6 max-w-md">
+      <div
+        class="text-amber-500 animate-pulse flex items-center justify-center h-20 w-20"
+      >
+        <mat-icon
+          class="text-6xl"
+          style="font-size: 48px; width: 48px; height: 48px; line-height: 48px"
+          >devices</mat-icon
+        >
+      </div>
+
+      <!-- Main Message -->
+      <h2 class="text-2xl font-semibold text-center">
+        Classroom Data Requires Larger Screen
+      </h2>
+
+      <!-- Descriptive Text -->
+      <p class="text-center opacity-80">
+        Your classroom analytics dashboard is optimized for desktop viewing.
+        Please access this content on a device with a larger screen for the best
+        experience.
+      </p>
+
+      <!-- Back Button with Router Navigation -->
+      <button
+        mat-raised-button
+        color="primary"
+        class="mt-4 px-6 py-2"
+        (click)="goToClassrooms()"
+      >
+        <mat-icon class="mr-2">arrow_back</mat-icon>
+        Go back to classrooms
+      </button>
+
+      <!-- Alternative Option -->
+      <!-- <div class="text-center text-sm text-gray-500 mt-4">
+        <span>Need immediate access? </span>
+        <a href="#" class="text-blue-600 hover:underline">View simplified mobile version</a>
+      </div> -->
     </div>
   </div>
 </div>
