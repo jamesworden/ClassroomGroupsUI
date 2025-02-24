@@ -106,7 +106,7 @@ export class ConfigurationPreviewComponent {
       }
       for (let j = 0; j < textGroup.students.length; j++) {
         const student = textGroup.students[j];
-        if (student && j + 1 < textGroup.students.length) {
+        if (student && j < textGroup.students.length) {
           plainText += `${student}\n`;
         }
       }
@@ -117,7 +117,6 @@ export class ConfigurationPreviewComponent {
         plainText += '\n';
       }
     }
-    console.log(plainText);
     return plainText;
   });
 

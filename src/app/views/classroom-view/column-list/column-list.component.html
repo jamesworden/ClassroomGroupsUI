@@ -9,7 +9,7 @@
 >
   @for (column of editingColumnDetails; track column.id) {
     <div
-      class="draggable-field grow justify-between flex grid-row border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48"
+      class="draggable-field justify-between flex grid-row border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48 flex-1"
       cdkDrag
       [cdkDragData]="column"
       [cdkContextMenuTriggerFor]="
