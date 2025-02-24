@@ -92,7 +92,7 @@
                     class="bg-white/25 dark:bg-white/10 rounded-lg p-4 shadow-sm dark:shadow-lg"
                   >
                     @if (showGroupNames()) {
-                      <h6
+                      <span
                         class="text-lg"
                         [ngClass]="{
                           underline: underlineGroupNames(),
@@ -103,14 +103,14 @@
                             ? 'Ungrouped Students'
                             : groupDetail.label
                         }}
-                      </h6>
+                      </span>
                     }
-                    <ul>
+                    <div>
                       @for (
                         studentDetail of groupDetail.studentDetails;
                         track studentDetail.id
                       ) {
-                        <li>
+                        <div>
                           @for (
                             columnDetail of columnDetails();
                             track columnDetail.id
@@ -123,9 +123,9 @@
                               }}
                             }
                           }
-                        </li>
+                        </div>
                       }
-                    </ul>
+                    </div>
                     <br />
                   </div>
                 }
