@@ -41,6 +41,9 @@ import {
   UnlockGroupResponse,
   StudentGroupingStrategy,
   GroupStudentsResponse,
+  EnableColumnResponse,
+  Column,
+  DisableColumnResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -1039,6 +1042,108 @@ export class ClassroomsService {
           });
         }),
         map((res) => res?.deletedColumn),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public enableColumn(
+    classroomId: string,
+    configurationId: string,
+    columnId: string
+  ) {
+    const getUpdateStrategy =
+      (classroomId: string, columnId: string) => (draft: ClassroomsState) => {
+        draft.configurationDetails.forEach((configurationDetail) => {
+          if (configurationDetail.classroomId === classroomId) {
+            configurationDetail.columnDetails.forEach((columnDetail) => {
+              if (columnDetail.id === columnId) {
+                columnDetail.enabled = true;
+              }
+            });
+          }
+        });
+      };
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+      getUpdateStrategy(classroomId, columnId);
+    });
+    this.#httpClient
+      .post<EnableColumnResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/enable`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ enabledColumn }) => {
+          console.log('[Enabled Column]', enabledColumn);
+          getUpdateStrategy(classroomId, enabledColumn.id);
+        }),
+        catchError((error) => {
+          console.log('[Enable Column Failed]', error);
+          this.#matSnackBar.open('Error enabling column', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public disableColumn(
+    classroomId: string,
+    configurationId: string,
+    columnId: string
+  ) {
+    const getUpdateStrategy =
+      (classroomId: string, columnId: string) => (draft: ClassroomsState) => {
+        draft.configurationDetails.forEach((configurationDetail) => {
+          if (configurationDetail.classroomId === classroomId) {
+            configurationDetail.columnDetails.forEach((columnDetail) => {
+              if (columnDetail.id === columnId) {
+                columnDetail.enabled = false;
+              }
+            });
+          }
+        });
+      };
+    this.patchState((draft) => {
+      draft.updatingClassroomIds.add(classroomId);
+      getUpdateStrategy(classroomId, columnId);
+    });
+    this.#httpClient
+      .post<DisableColumnResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/disable`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ disabledColumn }) => {
+          console.log('[Disabled Column]', disabledColumn);
+          getUpdateStrategy(classroomId, disabledColumn.id);
+        }),
+        catchError((error) => {
+          console.log('[Disable Column Failed]', error);
+          this.#matSnackBar.open('Error disabling column', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.delete(classroomId);
+          });
+        }),
         take(1)
       )
       .subscribe();

@@ -35,12 +35,17 @@ import {
   Column,
   ColumnDetail,
   ConfigurationDetail,
+  FieldType,
   GroupDetail,
   MoveColumnDetail,
   StudentGroupingStrategy,
 } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
+import {
+  MatCheckboxChange,
+  MatCheckboxModule,
+} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -61,6 +66,7 @@ import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
     CdkContextMenuTrigger,
     CdkMenu,
     CdkMenuItem,
+    MatCheckboxModule,
   ],
   templateUrl: './configuration-panel-top.component.html',
   styleUrl: './configuration-panel-top.component.scss',
@@ -112,12 +118,11 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   );
 
   readonly StudentGroupingStrategy = StudentGroupingStrategy;
+  readonly FieldType = FieldType;
 
   groupingByDivision = false;
   groupingValue = 0;
   columns: ColumnDetail[] = [];
-  editingFieldId?: string;
-  editingField = '';
 
   constructor() {
     effect(() => (this.columns = this.columnDetails()));
@@ -151,28 +156,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     if (configurationId) {
       this.deletedConfiguration.emit(configurationId);
     }
-  }
-
-  startEditing(fieldId: string) {
-    this.editingFieldId = fieldId;
-    this.editingField =
-      this.columnDetails().find((c) => c.fieldId === fieldId)?.label ?? '';
-  }
-
-  saveEdits() {
-    const classroomId = this.classroomId();
-    const column = this.columnDetails().find(
-      (c) => c.fieldId === this.editingFieldId
-    );
-    if (classroomId && column) {
-      this.#classroomsService.patchField(
-        classroomId,
-        column.fieldId,
-        this.editingField
-      );
-    }
-    this.editingFieldId = undefined;
-    this.editingField = '';
   }
 
   drop(event: CdkDragDrop<Column>) {
@@ -268,5 +251,19 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
         studentsPerGroup
       );
     }
+  }
+
+  toggleColumnEnabled(columnId: string, { checked }: MatCheckboxChange) {
+    checked
+      ? this.#classroomsService.enableColumn(
+          this.classroomId(),
+          this.configurationId(),
+          columnId
+        )
+      : this.#classroomsService.disableColumn(
+          this.classroomId(),
+          this.configurationId(),
+          columnId
+        );
   }
 }
