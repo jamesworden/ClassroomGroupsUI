@@ -5,6 +5,7 @@ import { Account, GetAccountResponse } from './models';
 import { create } from 'mutative';
 import { environment } from 'environments/environment';
 import { AccountSelectors } from './accounts.selectors';
+import { Router } from '@angular/router';
 
 export interface AccountsState {
   accountLoading: boolean;
@@ -16,6 +17,7 @@ export interface AccountsState {
 })
 export class AccountsService {
   readonly #httpClient = inject(HttpClient);
+  readonly #router = inject(Router);
 
   private readonly _state = signal<AccountsState>({
     accountLoading: true,
@@ -77,6 +79,9 @@ export class AccountsService {
         withCredentials: true,
       })
       .pipe(
+        tap(() => {
+          this.#router.navigate(['/']);
+        }),
         finalize(() => {
           this.patchState((draft) => {
             draft.account = undefined;
