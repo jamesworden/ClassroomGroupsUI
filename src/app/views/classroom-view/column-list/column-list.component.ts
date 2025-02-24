@@ -53,6 +53,7 @@ export class ColumnListComponent {
   readonly columnDetails = input.required<ColumnDetail[]>();
   readonly enableDrag = input(true);
   readonly rightHeaderTemplate = input<TemplateRef<ColumnDetail>>();
+  readonly roundBottom = input(false);
 
   readonly FieldType = FieldType;
 

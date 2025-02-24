@@ -3,7 +3,7 @@
   cdkDropListOrientation="horizontal"
   class="grid-row border-t border-x border-neutral-200 dark:border-neutral-600 flex flex-row rounded-t-md min-h-16"
   [ngClass]="{
-    'rounded-b-md': defaultGroup().studentDetails.length <= 0,
+    'rounded-b-md': roundBottom(),
   }"
   (cdkDropListDropped)="drop($event)"
 >
