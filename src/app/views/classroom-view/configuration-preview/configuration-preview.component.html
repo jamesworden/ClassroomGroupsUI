@@ -12,13 +12,20 @@
     </div>
 
     <div class="flex flex-col justify-around">
-      <mat-chip-listbox>
+      <mat-chip-listbox [multiple]="true">
         <mat-chip-option
           class="border border-zinc-400 dark:border-zinc-600"
           [selected]="showGroupNames()"
           (click)="toggleShowGroupNames()"
         >
           Group names
+        </mat-chip-option>
+        <mat-chip-option
+          class="border border-zinc-400 dark:border-zinc-600"
+          [selected]="showUnassignedStudents()"
+          (click)="toggleShowUnassignedStudents()"
+        >
+          Unassigned students
         </mat-chip-option>
       </mat-chip-listbox>
     </div>
@@ -34,6 +41,8 @@
     [rightHeaderTemplate]="columnRightHeaderTemplate"
   ></app-column-list>
 </div>
+
+<div class="panel mx-4 flex-auto"></div>
 
 <ng-template
   #columnRightHeaderTemplate

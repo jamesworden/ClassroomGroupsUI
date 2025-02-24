@@ -25,6 +25,7 @@ export class ConfigurationPreviewComponent {
   readonly defaultGroup = input.required<GroupDetail>();
 
   readonly showGroupNames = signal(true);
+  readonly showUnassignedStudents = signal(true);
 
   visibleColumnIds = new Set<string>();
 
@@ -37,6 +38,10 @@ export class ConfigurationPreviewComponent {
 
   toggleShowGroupNames() {
     this.showGroupNames.set(!this.showGroupNames());
+  }
+
+  toggleShowUnassignedStudents() {
+    this.showUnassignedStudents.set(!this.showUnassignedStudents());
   }
 
   toggleVisibleColumn(columnId: string, { checked }: MatSlideToggleChange) {
