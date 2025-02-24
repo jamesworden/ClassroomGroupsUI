@@ -166,12 +166,10 @@ export class ClassroomViewComponent {
 
   readonly ConfigurationViewMode = ConfigurationViewMode;
 
-  editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
 
   constructor() {
     effect(() => (this.editingGroups = this.listGroupDetails()));
-    effect(() => (this.editingDefaultGroup = this.defaultGroup()));
 
     this.classroomId$.pipe(takeUntilDestroyed()).subscribe((classroomId) => {
       if (classroomId) {
