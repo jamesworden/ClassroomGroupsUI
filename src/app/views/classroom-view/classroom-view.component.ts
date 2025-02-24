@@ -205,9 +205,9 @@ export class ClassroomViewComponent {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete the classroom ${
+        subtitle: `Are you sure you want to delete classroom '${
           this.classroom()?.label
-        } and all of it's data?`,
+        }' and all of it's data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success) => {
@@ -336,9 +336,9 @@ export class ClassroomViewComponent {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete configuration',
-        subtitle: `Are you sure you want to delete the configuration ${
+        subtitle: `Are you sure you want to delete configuration '${
           configuration.label
-        } and all of it's data?`,
+        }' and all of it's data?`,
       },
     });
 

@@ -80,7 +80,7 @@ export class ClassroomsViewComponent {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
         title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete the classroom ${classroomDetail.label} and all of it's data?`,
+        subtitle: `Are you sure you want to delete classroom '${classroomDetail.label}' and all of it's data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success: boolean) => {

@@ -6,6 +6,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
+  ClassroomsService,
   ColumnDetail,
   GroupDetail,
   MoveStudentDetail,
@@ -14,6 +15,8 @@ import {
 } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { GroupFooterComponent } from '../group-footer/group-footer.component';
+import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-group-panel',
@@ -32,6 +35,9 @@ import { GroupFooterComponent } from '../group-footer/group-footer.component';
   styleUrl: './group-panel.component.scss',
 })
 export class GroupPanelComponent {
+  readonly #matDialog = inject(MatDialog);
+  readonly #classroomsService = inject(ClassroomsService);
+
   readonly classroomId = input.required<string>();
   readonly groupDetail = input.required<GroupDetail>();
   readonly groupIndex = input.required<number>();
@@ -57,10 +63,33 @@ export class GroupPanelComponent {
   }
 
   deleteGroup() {
-    const groupDetail = this.groupDetail();
-    if (groupDetail) {
+    if (this.groupDetail().isLocked) {
+      this.openDeleteGroupModal();
+    } else {
       this.groupDeleted.emit();
     }
+  }
+
+  openDeleteGroupModal() {
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete locked group',
+        subtitle: `Are you sure you want to delete group '${
+          this.groupDetail()?.label
+        }' and all of it's data?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success) => {
+      const classroomId = this.classroomId();
+      if (success && classroomId) {
+        this.#classroomsService.deleteGroup(
+          classroomId,
+          this.groupDetail().configurationId,
+          this.groupDetail().id
+        );
+      }
+    });
   }
 
   updateLabel(event: Event) {
