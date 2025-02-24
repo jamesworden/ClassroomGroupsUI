@@ -203,6 +203,7 @@
 >
   @if (type === FieldType.NUMBER) {
     <mat-checkbox
+      class="pr-2"
       [checked]="enabled"
       (change)="toggleColumnEnabled(id, $event)"
     ></mat-checkbox>
