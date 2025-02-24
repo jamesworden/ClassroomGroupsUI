@@ -29,6 +29,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-student-list',
@@ -52,6 +54,7 @@ import { MatMenuModule } from '@angular/material/menu';
 export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
+  readonly #matDialog = inject(MatDialog);
 
   readonly classroomId = input.required<string>();
   readonly configurationId = input.required<string>();
@@ -111,7 +114,27 @@ export class StudentListComponent {
   }
 
   deleteStudent(studentDetail: StudentDetail) {
-    this.studentDeleted.emit(studentDetail);
+    if (this.groupDetail().isLocked) {
+      this.openDeleteStudentModal(studentDetail);
+    } else {
+      this.studentDeleted.emit(studentDetail);
+    }
+  }
+
+  openDeleteStudentModal(studentDetail: StudentDetail) {
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete student in locked group',
+        subtitle: `Are you sure you want to delete this student and all of their data?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success) => {
+      const classroomId = this.classroomId();
+      if (success && classroomId) {
+        this.#classroomsService.deleteStudent(classroomId, studentDetail.id);
+      }
+    });
   }
 
   createStudent() {
