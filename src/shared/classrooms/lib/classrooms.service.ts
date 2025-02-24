@@ -1,11 +1,4 @@
-import {
-  computed,
-  inject,
-  Injectable,
-  isDevMode,
-  Signal,
-  signal,
-} from '@angular/core';
+import { inject, Injectable, isDevMode, signal } from '@angular/core';
 import {
   Classroom,
   ClassroomDetail,
@@ -42,7 +35,6 @@ import {
   StudentGroupingStrategy,
   GroupStudentsResponse,
   EnableColumnResponse,
-  Column,
   DisableColumnResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
