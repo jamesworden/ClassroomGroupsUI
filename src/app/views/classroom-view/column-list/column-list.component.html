@@ -1,7 +1,7 @@
 <div
   cdkDropList
   cdkDropListOrientation="horizontal"
-  class="grid-row border-t border-x border-neutral-200 dark:border-neutral-600 flex flex-row rounded-t-md min-h-16"
+  class="panel-light border-t border-x border-neutral-200 dark:border-neutral-600 flex flex-row rounded-t-md min-h-16"
   [ngClass]="{
     'rounded-b-md': roundBottom(),
   }"
@@ -9,7 +9,7 @@
 >
   @for (column of editingColumnDetails; track column.id) {
     <div
-      class="draggable-field justify-between flex grid-row border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48 flex-1"
+      class="draggable-field justify-between flex panel-light border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48 flex-1"
       cdkDrag
       [cdkDragData]="column"
       [cdkContextMenuTriggerFor]="

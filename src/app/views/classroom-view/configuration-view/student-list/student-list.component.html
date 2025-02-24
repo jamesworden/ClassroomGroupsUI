@@ -2,7 +2,7 @@
   cdkDropList
   [id]="groupId()!"
   [cdkDropListConnectedTo]="groupIds()"
-  class="grid-row student-list overflow-hidden w-full border"
+  class="panel-light student-list overflow-hidden w-full border"
   [cdkContextMenuTriggerFor]="noStudentsMenu"
   [ngClass]="{
     'min-h-8 border-3 border-dashed border-gray-300 dark:border-gray-500':
@@ -15,7 +15,7 @@
 >
   @for (student of editingStudents; track student.id; let rowIndex = $index) {
     <div
-      class="grid-row student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 flex"
+      class="panel-light student-row text-sm cursor-move flex border-b border-neutral-200 dark:border-neutral-600 flex"
       cdkDrag
       [cdkDragData]="student"
       [cdkContextMenuTriggerFor]="studentMenu"
