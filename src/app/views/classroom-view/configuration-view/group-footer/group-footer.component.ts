@@ -20,6 +20,7 @@ export class GroupFooterComponent {
   readonly classroomId = input.required<string>();
   readonly groupId = input.required<string>();
   readonly groupDetail = input.required<GroupDetail>();
+  readonly showLockButton = input(true);
 
   readonly account = this.#accountsService.select.account;
 

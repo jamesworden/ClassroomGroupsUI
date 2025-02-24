@@ -23,25 +23,27 @@
     </button>
   </div>
 
-  @if (groupDetail().isLocked) {
-    <button
-      [tabindex]="-1"
-      matSuffix
-      mat-raised-button
-      (click)="!updatingGroup() && toggleGroupLocked()"
-    >
-      <mat-icon class="text-md">lock_open_right</mat-icon>
-      <span class="text-sm opacity-80">Unlock group</span>
-    </button>
-  } @else {
-    <button
-      [tabindex]="-1"
-      matSuffix
-      mat-button
-      (click)="!updatingGroup() && toggleGroupLocked()"
-    >
-      <mat-icon class="text-md">lock_person</mat-icon>
-      <span class="text-sm opacity-80">Lock group</span>
-    </button>
+  @if (showLockButton()) {
+    @if (groupDetail().isLocked) {
+      <button
+        [tabindex]="-1"
+        matSuffix
+        mat-raised-button
+        (click)="!updatingGroup() && toggleGroupLocked()"
+      >
+        <mat-icon class="text-md">lock_open_right</mat-icon>
+        <span class="text-sm opacity-80">Unlock group</span>
+      </button>
+    } @else {
+      <button
+        [tabindex]="-1"
+        matSuffix
+        mat-button
+        (click)="!updatingGroup() && toggleGroupLocked()"
+      >
+        <mat-icon class="text-md">lock_person</mat-icon>
+        <span class="text-sm opacity-80">Lock group</span>
+      </button>
+    }
   }
 </div>
