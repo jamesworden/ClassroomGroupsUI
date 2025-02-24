@@ -12,7 +12,9 @@
       class="draggable-field grow justify-between flex grid-row border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48"
       cdkDrag
       [cdkDragData]="column"
-      [cdkContextMenuTriggerFor]="columnHeaderMenu"
+      [cdkContextMenuTriggerFor]="
+        enableContextMenu() ? columnHeaderMenu : undefined
+      "
       [cdkDragDisabled]="!enableDrag()"
       [ngClass]="{
         'rounded-b-md': roundBottom(),

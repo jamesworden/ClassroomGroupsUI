@@ -54,6 +54,7 @@ export class ColumnListComponent {
   readonly enableDrag = input(true);
   readonly rightHeaderTemplate = input<TemplateRef<ColumnDetail>>();
   readonly roundBottom = input(true);
+  readonly enableContextMenu = input(true);
 
   readonly FieldType = FieldType;
 
