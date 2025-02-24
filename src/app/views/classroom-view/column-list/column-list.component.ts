@@ -21,10 +21,7 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
-import {
-  MatCheckboxChange,
-  MatCheckboxModule,
-} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
