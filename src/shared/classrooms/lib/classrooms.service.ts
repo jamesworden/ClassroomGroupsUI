@@ -1376,7 +1376,7 @@ export class ClassroomsService {
       .subscribe();
   }
 
-  patchField(
+  public patchField(
     classroomId: string,
     fieldId: string,
     label: string,
@@ -1426,6 +1426,9 @@ export class ClassroomsService {
         tap(({ updatedFieldDetail }) => {
           console.log('[Patched Field]', updatedFieldDetail);
           this.patchState(getUpdateStrategy(updatedFieldDetail));
+          this.#matSnackBar.open('Column updated', undefined, {
+            duration: 3000,
+          });
         }),
         catchError((error) => {
           console.log('[Patch Field Failed]', error);
