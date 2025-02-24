@@ -15,32 +15,41 @@
           </div>
         </div>
 
-        <div class="flex flex-col justify-around">
-          <mat-chip-listbox [multiple]="true">
-            @if (showGroupNames()) {
+        <div class="flex">
+          <div class="flex flex-col justify-around">
+            <mat-chip-listbox [multiple]="true">
+              @if (showGroupNames()) {
+                <mat-chip-option
+                  class="border border-zinc-400 dark:border-zinc-600"
+                  [selected]="underlineGroupNames()"
+                  (click)="toggleUnderlineGroupNames()"
+                >
+                  Underline group names
+                </mat-chip-option>
+              }
               <mat-chip-option
                 class="border border-zinc-400 dark:border-zinc-600"
-                [selected]="underlineGroupNames()"
-                (click)="toggleUnderlineGroupNames()"
+                [selected]="showGroupNames()"
+                (click)="toggleShowGroupNames()"
               >
-                Underline group names
+                Group names
               </mat-chip-option>
-            }
-            <mat-chip-option
-              class="border border-zinc-400 dark:border-zinc-600"
-              [selected]="showGroupNames()"
-              (click)="toggleShowGroupNames()"
-            >
-              Group names
-            </mat-chip-option>
-            <mat-chip-option
-              class="border border-zinc-400 dark:border-zinc-600"
-              [selected]="showUngroupedStudents()"
-              (click)="toggleShowUngroupedStudents()"
-            >
-              Ungrouped students
-            </mat-chip-option>
-          </mat-chip-listbox>
+              <mat-chip-option
+                class="border border-zinc-400 dark:border-zinc-600"
+                [selected]="showUngroupedStudents()"
+                (click)="toggleShowUngroupedStudents()"
+              >
+                Ungrouped students
+              </mat-chip-option>
+            </mat-chip-listbox>
+          </div>
+
+          <div class="flex flex-col justify-around ml-4">
+            <button [tabindex]="-1" matSuffix mat-raised-button>
+              <mat-icon class="text-md">content_copy</mat-icon>
+              <span class="text-sm opacity-80">Copy Text</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -59,70 +68,56 @@
       <div class="flex flex-1">
         <mat-tab-group class="flex-1">
           <mat-tab label="Text Visualization">
-            <div class="flex flex-col">
-              <div>
-                <button
-                  [tabindex]="-1"
-                  matSuffix
-                  mat-raised-button
-                  class="mt-5 ml-2"
-                >
-                  <mat-icon class="text-md">content_copy</mat-icon>
-                  <span class="text-sm opacity-80">Copy</span>
-                </button>
-              </div>
-
-              <div class="p-4 flex flex-wrap gap-8 flex-auto">
-                @for (
-                  groupDetail of configurationDetail().groupDetails;
-                  track groupDetail.id
+            <div class="p-4 flex flex-wrap gap-8 flex-auto">
+              @for (
+                groupDetail of configurationDetail().groupDetails;
+                track groupDetail.id
+              ) {
+                @if (
+                  (showUngroupedStudents() &&
+                    groupDetail.studentDetails.length) ||
+                  groupDetail.id !== defaultGroup().id
                 ) {
-                  @if (
-                    (showUngroupedStudents() &&
-                      groupDetail.studentDetails.length) ||
-                    groupDetail.id !== defaultGroup().id
-                  ) {
-                    <div>
-                      @if (showGroupNames()) {
-                        <h6
-                          class="text-lg"
-                          [ngClass]="{
-                            underline: underlineGroupNames(),
-                          }"
-                        >
-                          {{
-                            groupDetail.id === defaultGroup().id
-                              ? 'Ungrouped Students'
-                              : groupDetail.label
-                          }}
-                        </h6>
-                      }
-                      <ul>
-                        @for (
-                          studentDetail of groupDetail.studentDetails;
-                          track studentDetail.id
-                        ) {
-                          <li>
-                            @for (
-                              columnDetail of columnDetails();
-                              track columnDetail.id
-                            ) {
-                              @if (visibleColumnIds.has(columnDetail.id)) {
-                                {{
-                                  studentDetail.fieldIdsToValues[
-                                    columnDetail.fieldId
-                                  ]
-                                }}
-                              }
+                  <div>
+                    @if (showGroupNames()) {
+                      <h6
+                        class="text-lg"
+                        [ngClass]="{
+                          underline: underlineGroupNames(),
+                        }"
+                      >
+                        {{
+                          groupDetail.id === defaultGroup().id
+                            ? 'Ungrouped Students'
+                            : groupDetail.label
+                        }}
+                      </h6>
+                    }
+                    <ul>
+                      @for (
+                        studentDetail of groupDetail.studentDetails;
+                        track studentDetail.id
+                      ) {
+                        <li>
+                          @for (
+                            columnDetail of columnDetails();
+                            track columnDetail.id
+                          ) {
+                            @if (visibleColumnIds.has(columnDetail.id)) {
+                              {{
+                                studentDetail.fieldIdsToValues[
+                                  columnDetail.fieldId
+                                ]
+                              }}
                             }
-                          </li>
-                        }
-                      </ul>
-                      <br />
-                    </div>
-                  }
+                          }
+                        </li>
+                      }
+                    </ul>
+                    <br />
+                  </div>
                 }
-              </div>
+              }
             </div>
           </mat-tab>
         </mat-tab-group>
