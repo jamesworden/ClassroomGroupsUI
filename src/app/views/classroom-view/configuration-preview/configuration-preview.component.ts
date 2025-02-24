@@ -12,7 +12,6 @@ import {
   Classroom,
   ColumnDetail,
   ConfigurationDetail,
-  FieldDetail,
   FieldType,
   GroupDetail,
 } from '@shared/classrooms';
@@ -27,6 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { MatMenuModule } from '@angular/material/menu';
 
 interface TextGroup {
   name?: string;
@@ -44,6 +44,7 @@ interface TextGroup {
     MatTabsModule,
     CommonModule,
     ClipboardModule,
+    MatMenuModule,
   ],
   templateUrl: './configuration-preview.component.html',
   styleUrl: './configuration-preview.component.scss',
@@ -163,5 +164,18 @@ export class ConfigurationPreviewComponent {
         this.showingCopiedMessage.set(false);
       }, 3000)
     );
+  }
+
+  exportToTextFile() {
+    const blob = new Blob([this.plainText()], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const fileName = this.configurationDetail().label || 'Groups';
+    a.download = `${fileName}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 }
