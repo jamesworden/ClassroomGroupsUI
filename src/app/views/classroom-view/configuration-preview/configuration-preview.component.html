@@ -73,7 +73,7 @@
       <div class="flex flex-1">
         <mat-tab-group class="flex-1">
           <mat-tab label="Text Visualization">
-            <div #textVisualization class="p-4 flex flex-wrap gap-8 flex-auto">
+            <div #textVisualization class="p-4 flex flex-wrap gap-4 flex-auto">
               @for (
                 groupDetail of configurationDetail().groupDetails;
                 track groupDetail.id
@@ -83,7 +83,9 @@
                     groupDetail.studentDetails.length) ||
                   groupDetail.id !== defaultGroup().id
                 ) {
-                  <div>
+                  <div
+                    class="bg-white/25 dark:bg-white/10 rounded-lg p-4 shadow-sm dark:shadow-lg"
+                  >
                     @if (showGroupNames()) {
                       <h6
                         class="text-lg"
