@@ -27,13 +27,15 @@
         [value]="ConfigurationViewMode.List"
         (change)="setConfigurationViewMode($event)"
       >
-        <mat-icon class="opacity-80"> edit </mat-icon>
+        <mat-icon class="opacity-80" matTooltip="Edit"> edit </mat-icon>
       </mat-button-toggle>
       <mat-button-toggle
         [value]="ConfigurationViewMode.View"
         (change)="setConfigurationViewMode($event)"
       >
-        <mat-icon class="opacity-80"> visibility </mat-icon>
+        <mat-icon class="opacity-80" matTooltip="Preview">
+          visibility
+        </mat-icon>
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>
