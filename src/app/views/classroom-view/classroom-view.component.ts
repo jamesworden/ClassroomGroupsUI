@@ -168,12 +168,10 @@ export class ClassroomViewComponent {
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
-  editingColumnDetails: ColumnDetail[] = [];
 
   constructor() {
     effect(() => (this.editingGroups = this.listGroupDetails()));
     effect(() => (this.editingDefaultGroup = this.defaultGroup()));
-    effect(() => (this.editingColumnDetails = this.columnDetails()));
 
     this.classroomId$.pipe(takeUntilDestroyed()).subscribe((classroomId) => {
       if (classroomId) {

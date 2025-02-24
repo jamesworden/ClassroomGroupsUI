@@ -16,7 +16,7 @@
           <app-classroom-header
             [classroom]="classroom"
             [groupDetails]="editingGroups"
-            [columnDetails]="editingColumnDetails"
+            [columnDetails]="columnDetails()"
             [studentDetails]="allStudentDetails()"
             [configurationViewMode]="configurationViewMode()"
             (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
@@ -30,7 +30,7 @@
                 [configurationDetail]="configurationDetail"
                 [defaultGroup]="defaultGroup()!"
                 [classroomId]="classroomId()"
-                [columnDetails]="editingColumnDetails"
+                [columnDetails]="columnDetails()"
                 [groupDetails]="editingGroups"
                 [groupLimitReached]="
                   listGroupDetails().length >= maxStudentsPerClassroom()
