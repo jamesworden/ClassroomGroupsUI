@@ -3,7 +3,9 @@ import {
   Classroom,
   ColumnDetail,
   ConfigurationDetail,
+  FieldType,
   GroupDetail,
+  StudentDetail,
 } from '@shared/classrooms';
 import { MatChipsModule } from '@angular/material/chips';
 import { ColumnListComponent } from '../column-list/column-list.component';
@@ -11,10 +13,18 @@ import {
   MatSlideToggleChange,
   MatSlideToggleModule,
 } from '@angular/material/slide-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-configuration-preview',
-  imports: [MatChipsModule, ColumnListComponent, MatSlideToggleModule],
+  imports: [
+    MatChipsModule,
+    ColumnListComponent,
+    MatSlideToggleModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
   templateUrl: './configuration-preview.component.html',
   styleUrl: './configuration-preview.component.scss',
 })
@@ -31,8 +41,13 @@ export class ConfigurationPreviewComponent {
 
   constructor() {
     effect(() => {
-      const columnIds = this.columnDetails().map(({ id }) => id);
-      this.visibleColumnIds = new Set(columnIds);
+      this.visibleColumnIds.clear();
+      const firstTextColumn = this.columnDetails().find(
+        ({ type }) => type === FieldType.TEXT
+      );
+      if (firstTextColumn) {
+        this.visibleColumnIds.add(firstTextColumn.id);
+      }
     });
   }
 

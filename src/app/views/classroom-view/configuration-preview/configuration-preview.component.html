@@ -1,48 +1,90 @@
-<div class="mx-4 py-4 px-2 panel rounded-b-lg flex flex-col">
-  <div class="px-2 flex justify-between">
-    <div class="flex flex-col justify-around">
-      <div>
-        <h3 class="text-2xl">
-          {{ configurationDetail().label }}
-        </h3>
-        <h4 class="text-sm opacity-80">
-          {{ configurationDetail().description }}
-        </h4>
+<div class="flex w-full h-full flex-col">
+  <div class="mx-4 pt-3 b-2 px-2 panel rounded-b-lg flex flex-col">
+    <div class="px-2 flex justify-between">
+      <div class="flex flex-col justify-around">
+        <div>
+          <h3 class="text-2xl">
+            {{ configurationDetail().label }}
+          </h3>
+          <h4 class="text-sm opacity-80">
+            {{ configurationDetail().description }}
+          </h4>
+        </div>
+      </div>
+
+      <div class="flex flex-col justify-around">
+        <mat-chip-listbox [multiple]="true">
+          <mat-chip-option
+            class="border border-zinc-400 dark:border-zinc-600"
+            [selected]="showGroupNames()"
+            (click)="toggleShowGroupNames()"
+          >
+            Group names
+          </mat-chip-option>
+          <mat-chip-option
+            class="border border-zinc-400 dark:border-zinc-600"
+            [selected]="showUnassignedStudents()"
+            (click)="toggleShowUnassignedStudents()"
+          >
+            Unassigned students
+          </mat-chip-option>
+        </mat-chip-listbox>
       </div>
     </div>
 
-    <div class="flex flex-col justify-around">
-      <mat-chip-listbox [multiple]="true">
-        <mat-chip-option
-          class="border border-zinc-400 dark:border-zinc-600"
-          [selected]="showGroupNames()"
-          (click)="toggleShowGroupNames()"
-        >
-          Group names
-        </mat-chip-option>
-        <mat-chip-option
-          class="border border-zinc-400 dark:border-zinc-600"
-          [selected]="showUnassignedStudents()"
-          (click)="toggleShowUnassignedStudents()"
-        >
-          Unassigned students
-        </mat-chip-option>
-      </mat-chip-listbox>
-    </div>
+    <app-column-list
+      class="py-4"
+      [classroomId]="classroom().id"
+      [columnDetails]="columnDetails()"
+      [configurationId]="configurationDetail().id"
+      [defaultGroup]="defaultGroup()"
+      [enableDrag]="false"
+      [rightHeaderTemplate]="columnRightHeaderTemplate"
+    ></app-column-list>
   </div>
 
-  <app-column-list
-    class="py-4"
-    [classroomId]="classroom().id"
-    [columnDetails]="columnDetails()"
-    [configurationId]="configurationDetail().id"
-    [defaultGroup]="defaultGroup()"
-    [enableDrag]="false"
-    [rightHeaderTemplate]="columnRightHeaderTemplate"
-  ></app-column-list>
-</div>
+  <div class="panel m-4 p-4 flex-auto rounded-lg shadow-lg flex flex-col">
+    <!-- <div class="items-center flex justify-end p-4 opacity-80">
+      <button [tabindex]="-1" matSuffix mat-button>
+        <mat-icon class="text-md">content_copy</mat-icon>
+        <span class="text-sm opacity-80">Copy</span>
+      </button>
+    </div> -->
 
-<div class="panel mx-4 flex-auto"></div>
+    @for (
+      groupDetail of configurationDetail().groupDetails;
+      track groupDetail.id
+    ) {
+      @if (
+        (showUnassignedStudents() && groupDetail.studentDetails.length) ||
+        groupDetail.id !== defaultGroup().id
+      ) {
+        <h6 class="text-lg underline">
+          {{
+            groupDetail.id === defaultGroup().id
+              ? 'Unassigned Students'
+              : groupDetail.label
+          }}
+        </h6>
+        <ul>
+          @for (
+            studentDetail of groupDetail.studentDetails;
+            track studentDetail.id
+          ) {
+            <li>
+              @for (columnDetail of columnDetails(); track columnDetail.id) {
+                @if (visibleColumnIds.has(columnDetail.id)) {
+                  {{ studentDetail.fieldIdsToValues[columnDetail.fieldId] }}
+                }
+              }
+            </li>
+          }
+        </ul>
+        <br />
+      }
+    }
+  </div>
+</div>
 
 <ng-template
   #columnRightHeaderTemplate
