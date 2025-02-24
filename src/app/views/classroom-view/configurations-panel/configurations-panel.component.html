@@ -63,6 +63,15 @@
                   class="context-menu-item"
                   cdkMenuItem
                   (click)="deleteConfiguration(configuration.id)"
+                  [matTooltip]="
+                    configurations().length <= 1
+                      ? 'You can\'t delete the last configuration'
+                      : ''
+                  "
+                  [disabled]="configurations().length <= 1"
+                  [ngClass]="{
+                    '!opacity-50': configurations().length <= 1,
+                  }"
                 >
                   <mat-icon class="mr-3 !text-red-500">group_remove</mat-icon>
                   <span>Delete configuration</span>
