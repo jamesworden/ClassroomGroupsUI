@@ -55,6 +55,8 @@ export class ConfigurationPreviewComponent {
   readonly showGroupNames = signal(true);
   readonly showUngroupedStudents = signal(true);
   readonly underlineGroupNames = signal(true);
+  readonly showingCopiedMessage = signal(false);
+  readonly showingCopiedTimeout = signal<number | undefined>(undefined);
 
   visibleFieldIds = new Set<string>();
 
@@ -115,7 +117,21 @@ export class ConfigurationPreviewComponent {
 
       // Copy to clipboard
       this.#clipboard.copy(formattedText);
-      console.log('Formatted text copied:', formattedText);
+
+      this.brieflyShowCopiedMessage();
     }
+  }
+
+  brieflyShowCopiedMessage() {
+    if (this.showingCopiedTimeout()) {
+      window.clearTimeout(this.showingCopiedTimeout());
+    }
+    this.showingCopiedMessage.set(true);
+
+    this.showingCopiedTimeout.set(
+      window.setTimeout(() => {
+        this.showingCopiedMessage.set(false);
+      }, 3000)
+    );
   }
 }

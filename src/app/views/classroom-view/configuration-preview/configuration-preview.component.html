@@ -51,8 +51,12 @@
               mat-raised-button
               (click)="copyText()"
             >
-              <mat-icon class="text-md">content_copy</mat-icon>
-              <span class="text-sm opacity-80">Copy Text</span>
+              <mat-icon class="text-md">{{
+                showingCopiedMessage() ? 'check' : 'content_copy'
+              }}</mat-icon>
+              <span class="text-sm opacity-80">{{
+                showingCopiedMessage() ? 'Copied!' : 'Copy Text'
+              }}</span>
             </button>
           </div>
         </div>
