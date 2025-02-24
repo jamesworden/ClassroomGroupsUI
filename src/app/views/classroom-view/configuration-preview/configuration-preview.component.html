@@ -1,5 +1,5 @@
 <div class="flex flex-col h-full relative">
-  <div class="absolute inset-0 overflow-auto">
+  <div class="absolute inset-0 overflow-auto flex flex-col">
     <div class="mx-4 pt-3 b-2 px-2 panel rounded-b-lg flex flex-col">
       <div class="px-2 flex justify-between">
         <div class="flex flex-col justify-around">
@@ -33,10 +33,10 @@
             </mat-chip-option>
             <mat-chip-option
               class="border border-zinc-400 dark:border-zinc-600"
-              [selected]="showUnassignedStudents()"
-              (click)="toggleShowUnassignedStudents()"
+              [selected]="showUngroupedStudents()"
+              (click)="toggleShowUngroupedStudents()"
             >
-              Unassigned students
+              Ungrouped students
             </mat-chip-option>
           </mat-chip-listbox>
         </div>
@@ -64,7 +64,7 @@
                   track groupDetail.id
                 ) {
                   @if (
-                    (showUnassignedStudents() &&
+                    (showUngroupedStudents() &&
                       groupDetail.studentDetails.length) ||
                     groupDetail.id !== defaultGroup().id
                   ) {
@@ -78,7 +78,7 @@
                         >
                           {{
                             groupDetail.id === defaultGroup().id
-                              ? 'Unassigned Students'
+                              ? 'Ungrouped Students'
                               : groupDetail.label
                           }}
                         </h6>

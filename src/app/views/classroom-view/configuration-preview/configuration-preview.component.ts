@@ -39,7 +39,7 @@ export class ConfigurationPreviewComponent {
   readonly defaultGroup = input.required<GroupDetail>();
 
   readonly showGroupNames = signal(true);
-  readonly showUnassignedStudents = signal(true);
+  readonly showUngroupedStudents = signal(true);
   readonly underlineGroupNames = signal(true);
 
   visibleColumnIds = new Set<string>();
@@ -60,8 +60,8 @@ export class ConfigurationPreviewComponent {
     this.showGroupNames.set(!this.showGroupNames());
   }
 
-  toggleShowUnassignedStudents() {
-    this.showUnassignedStudents.set(!this.showUnassignedStudents());
+  toggleShowUngroupedStudents() {
+    this.showUngroupedStudents.set(!this.showUngroupedStudents());
   }
 
   toggleUnderlineGroupNames() {
