@@ -73,20 +73,6 @@
   </div>
 
   <div class="flex flex-col justify-around">
-    <button
-      class="!flex"
-      [matTooltip]="collapsePanelDetails() ? 'Show details' : 'Hide details'"
-      mat-icon-button
-      (click)="toggleCollapsedPanels()"
-      [tabIndex]="-1"
-    >
-      <mat-icon>{{
-        collapsePanelDetails() ? 'unfold_more' : 'unfold_less'
-      }}</mat-icon>
-    </button>
-  </div>
-
-  <div class="flex flex-col justify-around">
     <app-toggle-theme-button></app-toggle-theme-button>
   </div>
 

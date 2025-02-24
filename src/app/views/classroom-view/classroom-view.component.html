@@ -16,10 +16,8 @@
           <app-classroom-header
             [classroom]="classroom"
             [groupDetails]="editingGroups"
-            [collapsePanelDetails]="collapsePanelDetails()"
             [columnDetails]="editingColumnDetails"
             [studentDetails]="allStudentDetails()"
-            (collapsedPanelsToggled)="toggleCollapsedPanels()"
             (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
           ></app-classroom-header>
 
@@ -30,7 +28,6 @@
               [defaultGroup]="defaultGroup()!"
               [classroomId]="classroomId()"
               [columnDetails]="editingColumnDetails"
-              [collapsePanelDetails]="collapsePanelDetails()"
               [groupDetails]="editingGroups"
               [groupLimitReached]="
                 listGroupDetails().length >= maxStudentsPerClassroom()

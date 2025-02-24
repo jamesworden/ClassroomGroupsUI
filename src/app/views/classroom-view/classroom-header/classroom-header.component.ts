@@ -45,9 +45,7 @@ export class ClassroomHeaderComponent {
   readonly groupDetails = input.required<GroupDetail[]>();
   readonly studentDetails = input.required<StudentDetail[]>();
   readonly columnDetails = input.required<ColumnDetail[]>();
-  readonly collapsePanelDetails = input.required<boolean>();
 
-  readonly collapsedPanelsToggled = output();
   readonly deleteClassroomDialogOpened = output();
 
   readonly theme = this.#themeService.theme;
@@ -74,10 +72,6 @@ export class ClassroomHeaderComponent {
       this.classroom().label,
       description
     );
-  }
-
-  toggleCollapsedPanels() {
-    this.collapsedPanelsToggled.emit();
   }
 
   toggleTheme() {

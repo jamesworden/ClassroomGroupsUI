@@ -73,8 +73,6 @@ export class ClassroomViewComponent {
   readonly accountLoading = this.#accountsService.select.accountLoading;
   readonly account = this.#accountsService.select.account;
 
-  readonly collapsePanelDetails = signal(false);
-
   readonly Themes = Themes;
 
   readonly queryParams = toSignal(this.#activatedRoute.params, {
@@ -349,9 +347,5 @@ export class ClassroomViewComponent {
           .subscribe(() => this.selectFirstConfiguration());
       }
     });
-  }
-
-  toggleCollapsedPanels() {
-    this.collapsePanelDetails.set(!this.collapsePanelDetails());
   }
 }

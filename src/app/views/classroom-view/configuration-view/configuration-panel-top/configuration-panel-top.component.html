@@ -75,16 +75,32 @@
             </button>
           </div>
 
-          <div class="flex flex-col justify-around">
-            <button
-              [tabindex]="-1"
-              matTooltip="More"
-              mat-icon-button
-              [matMenuTriggerFor]="configurationMenu"
-              class="!flex"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
+          <div class="flex">
+            <div class="flex flex-col justify-around">
+              <button
+                class="!flex"
+                [matTooltip]="collapsed() ? 'Show details' : 'Hide details'"
+                mat-icon-button
+                (click)="toggleCollapsedPanels()"
+                [tabIndex]="-1"
+              >
+                <mat-icon>{{
+                  collapsed() ? 'unfold_more' : 'unfold_less'
+                }}</mat-icon>
+              </button>
+            </div>
+
+            <div class="flex flex-col justify-around">
+              <button
+                [tabindex]="-1"
+                matTooltip="More"
+                mat-icon-button
+                [matMenuTriggerFor]="configurationMenu"
+                class="!flex"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </div>

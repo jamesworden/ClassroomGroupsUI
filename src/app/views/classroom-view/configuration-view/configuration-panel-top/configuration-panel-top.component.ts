@@ -87,6 +87,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly labelUpdated = output<string>();
   readonly descriptionUpdated = output<string>();
   readonly deletedConfiguration = output<string>();
+  readonly collapsePanelsToggled = output();
 
   readonly account = this.#accountsService.select.account;
 
@@ -275,5 +276,9 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
           this.configurationId(),
           columnId
         );
+  }
+
+  toggleCollapsedPanels() {
+    this.collapsePanelsToggled.emit();
   }
 }

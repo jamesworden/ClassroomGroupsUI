@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { GroupPanelComponent } from './group-panel/group-panel.component';
 import {
   CdkDrag,
@@ -50,7 +50,6 @@ export class ConfigurationViewComponent {
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly defaultGroup = input.required<GroupDetail>();
   readonly columnDetails = input.required<ColumnDetail[]>();
-  readonly collapsePanelDetails = input.required<boolean>();
   readonly classroomId = input.required<string>();
   readonly groupDetails = input.required<GroupDetail[]>();
   readonly groupLimitReached = input.required<boolean>();
@@ -60,6 +59,8 @@ export class ConfigurationViewComponent {
   readonly deleteConfigurationModalOpened = output<string>();
   readonly studentPositionUpdated = output<MoveStudentDetail>();
   readonly groupDropped = output<CdkDragDrop<Group[]>>();
+
+  readonly collapsePanelDetails = signal(false);
 
   updateConfigurationLabel(label: string) {
     this.#classroomsService.patchConfiguration(
@@ -125,5 +126,9 @@ export class ConfigurationViewComponent {
       group.id,
       label
     );
+  }
+
+  toggleCollapsedPanels() {
+    this.collapsePanelDetails.set(!this.collapsePanelDetails());
   }
 }
