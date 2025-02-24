@@ -45,6 +45,12 @@
             class="context-menu-item"
             cdkMenuItem
             (click)="openCreateColumnDialog(column, 'left')"
+            [disabled]="reachedColumnLimit()"
+            [ngClass]="{
+              'opacity-50': reachedColumnLimit(),
+            }"
+            [matTooltip]="reachedColumnLimit() ? 'Column limit reached!' : null"
+            matTooltipPosition="left"
           >
             <mat-icon class="mr-3 opacity-80">chevron_left</mat-icon>
             <span>Insert column left</span>
@@ -54,6 +60,12 @@
             class="context-menu-item"
             cdkMenuItem
             (click)="openCreateColumnDialog(column, 'right')"
+            [disabled]="reachedColumnLimit()"
+            [ngClass]="{
+              'opacity-50': reachedColumnLimit(),
+            }"
+            [matTooltip]="reachedColumnLimit() ? 'Column limit reached!' : null"
+            matTooltipPosition="left"
           >
             <mat-icon class="mr-3 opacity-80">chevron_right</mat-icon>
             <span>Insert column right</span>
