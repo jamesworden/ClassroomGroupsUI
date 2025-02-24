@@ -94,28 +94,30 @@ export class ConfigurationPreviewComponent {
 
   copyText() {
     if (this.textVisualization) {
-      // Get all text nodes while preserving structure
-      const textElements =
-        this.textVisualization.nativeElement.querySelectorAll('h6, li');
-      let textParts: string[] = [];
+      const groups =
+        this.textVisualization.nativeElement.querySelectorAll('.group-detail');
+      let groupTextBlocks: string[] = [];
 
-      textElements.forEach((element: Element) => {
-        const htmlElement = element as HTMLElement;
-        // Handle headers (group names)
-        if (htmlElement.tagName.toLowerCase() === 'h6') {
-          textParts.push(htmlElement.textContent?.trim() || '');
-          textParts.push(''); // Add blank line after header
+      groups.forEach((group: Element, i) => {
+        // Add line for group name
+        const groupName = group.querySelector('.group-detail-name');
+        if (groupName) {
+          groupTextBlocks.push(groupName.textContent?.trim() || '');
         }
-        // Handle list items
-        else if (htmlElement.tagName.toLowerCase() === 'li') {
-          textParts.push(htmlElement.textContent?.trim() || '');
+        // Add line for student text
+        const studentSpans = group.querySelectorAll('.student-detail');
+        studentSpans.forEach((span: Element) => {
+          groupTextBlocks.push(span.textContent?.trim() || '');
+        });
+        // Add an extra line break after each group that isn't the last group
+        if (i + 1 !== groups.length) {
+          groupTextBlocks.push('\r');
         }
       });
+      const formattedText = groupTextBlocks
+        .filter((text) => text !== '')
+        .join('\n');
 
-      // Join with Windows-style line endings for cross-platform compatibility
-      const formattedText = textParts.join('\r\n');
-
-      // Copy to clipboard
       this.#clipboard.copy(formattedText);
 
       this.brieflyShowCopiedMessage();
