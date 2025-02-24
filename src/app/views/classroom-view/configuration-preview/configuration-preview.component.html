@@ -18,15 +18,6 @@
         <div class="flex">
           <div class="flex flex-col justify-around">
             <mat-chip-listbox [multiple]="true">
-              @if (showGroupNames()) {
-                <mat-chip-option
-                  class="border border-zinc-400 dark:border-zinc-600"
-                  [selected]="underlineGroupNames()"
-                  (click)="toggleUnderlineGroupNames()"
-                >
-                  Underline group names
-                </mat-chip-option>
-              }
               <mat-chip-option
                 class="border border-zinc-400 dark:border-zinc-600"
                 [selected]="showGroupNames()"
@@ -55,7 +46,7 @@
                 showingCopiedMessage() ? 'check' : 'content_copy'
               }}</mat-icon>
               <span class="text-sm opacity-80">{{
-                showingCopiedMessage() ? 'Copied!' : 'Copy Text'
+                showingCopiedMessage() ? 'Copied!' : 'Copy text'
               }}</span>
             </button>
           </div>
@@ -76,62 +67,11 @@
 
     <div class="panel m-4 flex-auto rounded-lg shadow-lg flex flex-col flex-1">
       <div class="flex flex-1">
-        <mat-tab-group class="flex-1">
-          <mat-tab label="Text Visualization">
-            <div #textVisualization class="p-4 flex flex-wrap gap-4 flex-auto">
-              @for (
-                groupDetail of configurationDetail().groupDetails;
-                track groupDetail.id
-              ) {
-                @if (
-                  (showUngroupedStudents() &&
-                    groupDetail.studentDetails.length) ||
-                  groupDetail.id !== defaultGroup().id
-                ) {
-                  <div
-                    class="bg-white/25 dark:bg-white/10 rounded-lg p-4 shadow-sm dark:shadow-lg group-detail"
-                  >
-                    @if (showGroupNames()) {
-                      <span
-                        class="text-lg group-detail-name"
-                        [ngClass]="{
-                          underline: underlineGroupNames(),
-                        }"
-                      >
-                        {{
-                          groupDetail.id === defaultGroup().id
-                            ? 'Ungrouped Students'
-                            : groupDetail.label
-                        }}
-                      </span>
-                    }
-                    <div>
-                      @for (
-                        studentDetail of groupDetail.studentDetails;
-                        track studentDetail.id
-                      ) {
-                        <div class="student-detail">
-                          @for (
-                            columnDetail of columnDetails();
-                            track columnDetail.id
-                          ) {
-                            @if (visibleFieldIds.has(columnDetail.fieldId)) {
-                              {{
-                                studentDetail.fieldIdsToValues[
-                                  columnDetail.fieldId
-                                ]
-                              }}
-                            }
-                          }
-                        </div>
-                      }
-                    </div>
-                  </div>
-                }
-              }
-            </div>
-          </mat-tab>
-        </mat-tab-group>
+        <div
+          class="p-4 bg-white dark:bg-zinc-700 flex-auto m-4 rounded-lg shadow-sm dark:shadow-lg whitespace-pre"
+        >
+          <p class="text-wrap">{{ plainText() }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -141,7 +81,7 @@
   <div class="flex flex-col justify-around">
     <mat-slide-toggle
       class="scale-75"
-      [checked]="visibleFieldIds!.has(fieldId)"
+      [checked]="visibleFieldIds().includes(fieldId)"
       (change)="toggleVisibleField(fieldId, $event)"
     >
     </mat-slide-toggle>

@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -11,6 +12,7 @@ import {
   Classroom,
   ColumnDetail,
   ConfigurationDetail,
+  FieldDetail,
   FieldType,
   GroupDetail,
 } from '@shared/classrooms';
@@ -25,6 +27,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+
+interface TextGroup {
+  name?: string;
+  students: string[];
+}
 
 @Component({
   selector: 'app-configuration-preview',
@@ -54,23 +61,76 @@ export class ConfigurationPreviewComponent {
 
   readonly showGroupNames = signal(true);
   readonly showUngroupedStudents = signal(true);
-  readonly underlineGroupNames = signal(true);
   readonly showingCopiedMessage = signal(false);
   readonly showingCopiedTimeout = signal<number | undefined>(undefined);
+  readonly visibleFieldIds = signal<string[]>([]);
 
-  visibleFieldIds = new Set<string>();
+  readonly textGroups = computed(() => {
+    const textGroups: TextGroup[] = [];
+    for (const groupDetail of this.configurationDetail().groupDetails) {
+      const textGroup: TextGroup = {
+        students: [],
+      };
+      if (
+        (this.showUngroupedStudents() && groupDetail.studentDetails.length) ||
+        groupDetail.id !== this.defaultGroup().id
+      ) {
+        if (this.showGroupNames()) {
+          const groupName =
+            groupDetail.id === this.defaultGroup().id
+              ? 'Ungrouped Students'
+              : groupDetail.label.trim();
+          textGroup.name = groupName;
+        }
+        for (const studentDetail of groupDetail.studentDetails) {
+          let student = '';
+          for (const fieldId of this.visibleFieldIds()) {
+            const value = studentDetail.fieldIdsToValues[fieldId]?.trim() || '';
+            student += value ? `${value} ` : '';
+          }
+          student && textGroup.students.push(student);
+        }
+      }
+      textGroups.push(textGroup);
+    }
+    return textGroups;
+  });
+
+  readonly plainText = computed(() => {
+    let plainText = '';
+    const textGroups = this.textGroups();
+    for (let i = 0; i < textGroups.length; i++) {
+      const textGroup = textGroups[i];
+      if (textGroup.name) {
+        plainText += `${textGroup.name}\n`;
+      }
+      for (let j = 0; j < textGroup.students.length; j++) {
+        const student = textGroup.students[j];
+        if (student && j + 1 < textGroup.students.length) {
+          plainText += `${student}\n`;
+        }
+      }
+      if (
+        (textGroup.name || textGroup.students.length) &&
+        i + 1 < textGroups.length
+      ) {
+        plainText += '\n';
+      }
+    }
+    console.log(plainText);
+    return plainText;
+  });
 
   constructor() {
     effect(() => {
-      if (!this.visibleFieldIds.size) {
-        this.visibleFieldIds.clear();
-        const firstTextColumn = this.columnDetails().find(
-          ({ type }) => type === FieldType.TEXT
-        );
-        if (firstTextColumn) {
-          this.visibleFieldIds.add(firstTextColumn.fieldId);
-        }
+      const visibleFieldIds: string[] = [];
+      const firstTextColumn = this.columnDetails().find(
+        ({ type }) => type === FieldType.TEXT
+      );
+      if (firstTextColumn) {
+        visibleFieldIds.push(firstTextColumn.fieldId);
       }
+      this.visibleFieldIds.set(visibleFieldIds);
     });
   }
 
@@ -82,46 +142,15 @@ export class ConfigurationPreviewComponent {
     this.showUngroupedStudents.set(!this.showUngroupedStudents());
   }
 
-  toggleUnderlineGroupNames() {
-    this.underlineGroupNames.set(!this.underlineGroupNames());
-  }
-
   toggleVisibleField(fieldId: string, { checked }: MatSlideToggleChange) {
-    checked
-      ? this.visibleFieldIds.add(fieldId)
-      : this.visibleFieldIds.delete(fieldId);
+    const visibleFieldIds = new Set(this.visibleFieldIds());
+    checked ? visibleFieldIds.add(fieldId) : visibleFieldIds.delete(fieldId);
+    this.visibleFieldIds.set(Array.from(visibleFieldIds));
   }
 
   copyText() {
-    if (this.textVisualization) {
-      const groups =
-        this.textVisualization.nativeElement.querySelectorAll('.group-detail');
-      let groupTextBlocks: string[] = [];
-
-      groups.forEach((group: Element, i) => {
-        // Add line for group name
-        const groupName = group.querySelector('.group-detail-name');
-        if (groupName) {
-          groupTextBlocks.push(groupName.textContent?.trim() || '');
-        }
-        // Add line for student text
-        const studentSpans = group.querySelectorAll('.student-detail');
-        studentSpans.forEach((span: Element) => {
-          groupTextBlocks.push(span.textContent?.trim() || '');
-        });
-        // Add an extra line break after each group that isn't the last group
-        if (i + 1 !== groups.length) {
-          groupTextBlocks.push('\r');
-        }
-      });
-      const formattedText = groupTextBlocks
-        .filter((text) => text !== '')
-        .join('\n');
-
-      this.#clipboard.copy(formattedText);
-
-      this.brieflyShowCopiedMessage();
-    }
+    this.#clipboard.copy(this.plainText());
+    this.brieflyShowCopiedMessage();
   }
 
   brieflyShowCopiedMessage() {
