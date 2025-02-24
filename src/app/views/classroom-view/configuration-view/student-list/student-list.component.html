@@ -70,7 +70,17 @@
 
 <ng-template #noStudentsMenu>
   <div class="context-menu" cdkMenu>
-    <button class="context-menu-item" cdkMenuItem (click)="createStudent()">
+    <button
+      class="context-menu-item"
+      cdkMenuItem
+      (click)="createStudent()"
+      [disabled]="studentLimitReached()"
+      matTooltip="Student limit reached!"
+      matTooltipPosition="left"
+      [ngClass]="{
+        'opacity-50': studentLimitReached(),
+      }"
+    >
       <mat-icon class="mr-3 opacity-80">person_add</mat-icon>
       <span>Add student</span>
     </button>

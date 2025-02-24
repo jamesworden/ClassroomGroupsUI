@@ -80,6 +80,13 @@ export class StudentListComponent {
       this.configurationId()
     )()
   );
+  readonly maxStudentsPerClassroom = computed(() =>
+    this.#accountsService.select.maxStudentsPerClassroom()
+  );
+  readonly studentLimitReached = computed(
+    () =>
+      this.maxStudentsPerClassroom() <= this.studentsInConfiguration().length
+  );
 
   readonly FieldType = FieldType;
 
