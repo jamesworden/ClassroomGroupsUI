@@ -152,19 +152,13 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   }
 
   openDeleteConfigurationModal() {
-    const configurationId = this.configurationId();
-    if (configurationId) {
-      this.deletedConfiguration.emit(configurationId);
-    }
+    this.deletedConfiguration.emit(this.configurationId());
   }
 
   drop(event: CdkDragDrop<Column>) {
     const column = event.item.data as ColumnDetail;
     const classroomId = this.classroomId();
     const configurationId = this.configurationId();
-    if (!classroomId || !configurationId || !column) {
-      return;
-    }
 
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
 
@@ -230,52 +224,43 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   }
 
   createGroup() {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createGroup(classroomId, configurationId);
-    }
+    this.#classroomsService.createGroup(
+      this.classroomId(),
+      this.configurationId()
+    );
   }
 
   createStudent() {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.createStudent(classroomId, configurationId);
-    }
+    this.#classroomsService.createStudent(
+      this.classroomId(),
+      this.configurationId()
+    );
   }
 
   deleteColumn(columnId: string) {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    if (classroomId && configurationId) {
-      this.#classroomsService.deleteColumn(
-        classroomId,
-        configurationId,
-        columnId
-      );
-    }
+    this.#classroomsService.deleteColumn(
+      this.classroomId(),
+      this.configurationId(),
+      columnId
+    );
   }
 
   groupStudents(studentGroupingStrategy: StudentGroupingStrategy) {
     const classroomId = this.classroomId();
     const configurationId = this.configurationId();
-    if (classroomId && configurationId) {
-      const studentsPerGroup = this.groupingByDivision
-        ? undefined
-        : this.groupingValue;
-      const numberOfGroups = this.groupingByDivision
-        ? this.groupingValue
-        : undefined;
-
-      this.#classroomsService.groupStudents(
-        classroomId,
-        configurationId,
-        studentGroupingStrategy,
-        numberOfGroups,
-        studentsPerGroup
-      );
-    }
+    const studentsPerGroup = this.groupingByDivision
+      ? undefined
+      : this.groupingValue;
+    const numberOfGroups = this.groupingByDivision
+      ? this.groupingValue
+      : undefined;
+    this.#classroomsService.groupStudents(
+      classroomId,
+      configurationId,
+      studentGroupingStrategy,
+      numberOfGroups,
+      studentsPerGroup
+    );
   }
 
   toggleColumnEnabled(columnId: string, { checked }: MatCheckboxChange) {

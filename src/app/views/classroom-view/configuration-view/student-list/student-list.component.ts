@@ -28,6 +28,7 @@ import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-student-list',
@@ -43,6 +44,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CdkMenuItem,
     MatTooltipModule,
     MatButtonModule,
+    MatMenuModule,
   ],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss',
@@ -97,11 +99,6 @@ export class StudentListComponent {
   }
 
   drop(event: CdkDragDrop<StudentDetail[]>) {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    if (!classroomId || !configurationId) {
-      return;
-    }
     const studentDetail = event.item.data as StudentDetail;
     const updatedStudentPosition: MoveStudentDetail = {
       prevIndex: event.previousIndex,
@@ -115,5 +112,13 @@ export class StudentListComponent {
 
   deleteStudent(studentDetail: StudentDetail) {
     this.studentDeleted.emit(studentDetail);
+  }
+
+  createStudent() {
+    this.#classroomsService.createStudent(
+      this.classroomId(),
+      this.configurationId(),
+      this.groupId()
+    );
   }
 }

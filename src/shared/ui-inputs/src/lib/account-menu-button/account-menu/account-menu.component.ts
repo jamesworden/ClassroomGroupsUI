@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AccountsService } from '@shared/accounts';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
 

@@ -3,6 +3,7 @@
   [id]="groupId()!"
   [cdkDropListConnectedTo]="groupIds()"
   class="grid-row student-list overflow-hidden w-full border"
+  [cdkContextMenuTriggerFor]="noStudentsMenu"
   [ngClass]="{
     'min-h-8 border-3 border-dashed border-gray-300 dark:border-gray-500':
       editingStudents.length <= 0,
@@ -67,3 +68,12 @@
     </div>
   }
 </div>
+
+<ng-template #noStudentsMenu>
+  <div class="context-menu" cdkMenu>
+    <button class="context-menu-item" cdkMenuItem (click)="createStudent()">
+      <mat-icon class="mr-3 opacity-80">person_add</mat-icon>
+      <span>Add student</span>
+    </button>
+  </div>
+</ng-template>
