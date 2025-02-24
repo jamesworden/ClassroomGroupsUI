@@ -31,13 +31,15 @@ import {
   GroupDetail,
   MoveStudentDetail,
 } from '@shared/classrooms';
-import { combineLatest, filter, take } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
 import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
 import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
+import { ConfigurationViewMode } from '@app/models';
+import { ConfigurationPreviewComponent } from './configuration-preview/configuration-preview.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -56,6 +58,7 @@ import { ClassroomHeaderComponent } from './classroom-header/classroom-header.co
     MatTooltipModule,
     ConfigurationViewComponent,
     ClassroomHeaderComponent,
+    ConfigurationPreviewComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
@@ -158,6 +161,10 @@ export class ClassroomViewComponent {
 
   readonly maxStudentsPerClassroom =
     this.#accountsService.select.maxStudentsPerClassroom;
+
+  readonly configurationViewMode = signal(ConfigurationViewMode.List);
+
+  readonly ConfigurationViewMode = ConfigurationViewMode;
 
   editingDefaultGroup: GroupDetail | undefined = undefined;
   editingGroups: GroupDetail[] = [];
@@ -347,5 +354,9 @@ export class ClassroomViewComponent {
           .subscribe(() => this.selectFirstConfiguration());
       }
     });
+  }
+
+  setConfigurationViewMode(configurationViewMode: ConfigurationViewMode) {
+    this.configurationViewMode.set(configurationViewMode);
   }
 }

@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   computed,
-  effect,
   ElementRef,
   inject,
   input,
@@ -18,12 +17,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
-  CdkDragDrop,
-  CdkDrag,
-  CdkDropList,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
-import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
@@ -32,20 +25,15 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import {
   ClassroomsService,
-  Column,
   ColumnDetail,
   ConfigurationDetail,
   FieldType,
   GroupDetail,
-  MoveColumnDetail,
   StudentGroupingStrategy,
 } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
-import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
-import {
-  MatCheckboxChange,
-  MatCheckboxModule,
-} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ColumnListComponent } from '../../column-list/column-list.component';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -57,16 +45,12 @@ import {
     MatButtonModule,
     MatDialogModule,
     MatTooltipModule,
-    CdkDrag,
-    CdkDropList,
     MatSlideToggleModule,
     MatMenuModule,
     CommonModule,
     MatTooltipModule,
-    CdkContextMenuTrigger,
-    CdkMenu,
-    CdkMenuItem,
     MatCheckboxModule,
+    ColumnListComponent,
   ],
   templateUrl: './configuration-panel-top.component.html',
   styleUrl: './configuration-panel-top.component.scss',
@@ -123,11 +107,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
 
   groupingByDivision = false;
   groupingValue = 0;
-  columns: ColumnDetail[] = [];
-
-  constructor() {
-    effect(() => (this.columns = this.columnDetails()));
-  }
 
   ngAfterViewInit() {
     const observer = new ResizeObserver(() => {
@@ -156,26 +135,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     this.deletedConfiguration.emit(this.configurationId());
   }
 
-  drop(event: CdkDragDrop<Column>) {
-    const column = event.item.data as ColumnDetail;
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-
-    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
-
-    const moveColumnDetail: MoveColumnDetail = {
-      currIndex: event.currentIndex,
-      prevIndex: event.previousIndex,
-    };
-
-    this.#classroomsService.moveColumn(
-      classroomId,
-      configurationId,
-      column.id,
-      moveColumnDetail
-    );
-  }
-
   openCreateColumnDialog() {
     const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
       restoreFocus: false,
@@ -199,31 +158,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
       });
   }
 
-  openEditColumnDialog(columnDetail: ColumnDetail) {
-    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-      restoreFocus: false,
-      data: <CreateEditColumnDialogInputs>{
-        title: 'Edit Column',
-        existingData: {
-          columnDetail,
-        },
-      },
-    });
-    dialogRef
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        const classroomId = this.classroomId();
-        const configurationId = this.configurationId();
-        if (outputs && classroomId && configurationId) {
-          this.#classroomsService.patchField(
-            classroomId,
-            configurationId,
-            outputs.label
-          );
-        }
-      });
-  }
-
   createGroup() {
     this.#classroomsService.createGroup(
       this.classroomId(),
@@ -235,14 +169,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     this.#classroomsService.createStudent(
       this.classroomId(),
       this.configurationId()
-    );
-  }
-
-  deleteColumn(columnId: string) {
-    this.#classroomsService.deleteColumn(
-      this.classroomId(),
-      this.configurationId(),
-      columnId
     );
   }
 
@@ -262,20 +188,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
       numberOfGroups,
       studentsPerGroup
     );
-  }
-
-  toggleColumnEnabled(columnId: string, { checked }: MatCheckboxChange) {
-    checked
-      ? this.#classroomsService.enableColumn(
-          this.classroomId(),
-          this.configurationId(),
-          columnId
-        )
-      : this.#classroomsService.disableColumn(
-          this.classroomId(),
-          this.configurationId(),
-          columnId
-        );
   }
 
   toggleCollapsedPanels() {

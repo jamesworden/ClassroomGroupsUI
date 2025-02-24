@@ -1,0 +1,68 @@
+<div
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  class="grid-row border-t border-x border-neutral-200 dark:border-neutral-600 flex flex-row rounded-t-md min-h-16"
+  [ngClass]="{
+    'rounded-b-md': defaultGroup().studentDetails.length <= 0,
+  }"
+  (cdkDropListDropped)="drop($event)"
+>
+  @for (column of editingColumnDetails; track column.id) {
+    <div
+      class="draggable-field grid-row border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48"
+      cdkDrag
+      [cdkDragData]="column"
+      [cdkContextMenuTriggerFor]="columnHeaderMenu"
+      [ngClass]="{
+        'rounded-b-md': defaultGroup().studentDetails.length <= 0,
+      }"
+    >
+      <ng-template #columnHeaderMenu>
+        <div class="context-menu" cdkMenu>
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="deleteColumn(column.id)"
+          >
+            <mat-icon class="mr-3 !text-red-500">delete</mat-icon>
+            <span>Delete column</span>
+          </button>
+
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="openEditColumnDialog(column)"
+          >
+            <mat-icon class="mr-3 opacity-80">edit</mat-icon>
+            <span>Edit column</span>
+          </button>
+        </div>
+      </ng-template>
+
+      <div class="flex justify-between w-full">
+        <div class="flex flex-col justify-around flex-1">
+          <div class="flex">
+            <div class="flex flex-col justify-around flex-1 pl-2">
+              <span
+                [ngClass]="{
+                  'opacity-50': !column.label,
+                }"
+              >
+                {{ column.label || 'Add value' }}
+              </span>
+            </div>
+
+            @if (showCheckboxes() && column.type === FieldType.NUMBER) {
+              <div class="flex flex-col justify-around">
+                <mat-checkbox
+                  [checked]="column.enabled"
+                  (change)="toggleColumnEnabled(column.id, $event)"
+                ></mat-checkbox>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

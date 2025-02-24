@@ -10,6 +10,9 @@
       "@app/metadata": [
         "app/metadata"
       ],
+      "@app/models": [
+        "app/models"
+      ],
       "@app/themes": [
         "app/themes"
       ],

@@ -18,6 +18,26 @@
     />
   </div>
 
+  <div class="flex flex-col justify-around mr-6">
+    <mat-button-toggle-group
+      [value]="configurationViewMode()"
+      [hideSingleSelectionIndicator]="true"
+    >
+      <mat-button-toggle
+        [value]="ConfigurationViewMode.List"
+        (change)="setConfigurationViewMode($event)"
+      >
+        <mat-icon> edit </mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle
+        [value]="ConfigurationViewMode.View"
+        (change)="setConfigurationViewMode($event)"
+      >
+        <mat-icon> preview </mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
   <app-counter-card
     class="mr-4"
     [count]="groupDetails().length"

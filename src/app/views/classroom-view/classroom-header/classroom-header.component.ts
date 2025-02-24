@@ -19,6 +19,11 @@ import {
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 import { AccountsService } from '@shared/accounts';
+import {
+  MatButtonToggleChange,
+  MatButtonToggleModule,
+} from '@angular/material/button-toggle';
+import { ConfigurationViewMode } from '@app/models';
 
 @Component({
   selector: 'app-classroom-header',
@@ -32,6 +37,7 @@ import { AccountsService } from '@shared/accounts';
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
     CodeLinksMenuButtonComponent,
+    MatButtonToggleModule,
   ],
   templateUrl: './classroom-header.component.html',
   styleUrl: './classroom-header.component.scss',
@@ -45,8 +51,10 @@ export class ClassroomHeaderComponent {
   readonly groupDetails = input.required<GroupDetail[]>();
   readonly studentDetails = input.required<StudentDetail[]>();
   readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly configurationViewMode = input.required<ConfigurationViewMode>();
 
   readonly deleteClassroomDialogOpened = output();
+  readonly configurationViewModeSet = output<ConfigurationViewMode>();
 
   readonly theme = this.#themeService.theme;
   readonly maxStudentsPerClassroom =
@@ -55,6 +63,7 @@ export class ClassroomHeaderComponent {
     this.#accountsService.select.maxFieldsPerClassroom;
 
   readonly Themes = Themes;
+  readonly ConfigurationViewMode = ConfigurationViewMode;
 
   updateClassroomLabel(event: Event) {
     const label = (event.target as HTMLInputElement)?.value || '';
@@ -80,5 +89,10 @@ export class ClassroomHeaderComponent {
 
   openDeleteClassroomDialog() {
     this.deleteClassroomDialogOpened.emit();
+  }
+
+  setConfigurationViewMode({ value }: MatButtonToggleChange) {
+    const configurationViewMode = value as ConfigurationViewMode;
+    this.configurationViewModeSet.emit(configurationViewMode);
   }
 }

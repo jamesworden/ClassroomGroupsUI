@@ -1,0 +1,28 @@
+<div class="mx-4 py-4 px-6 panel rounded-b-lg flex flex-col">
+  <div class="flex justify-between">
+    <div class="flex flex-col justify-around">
+      <div>
+        <h3 class="text-2xl">
+          {{ configurationDetail().label }}
+        </h3>
+        <h4 class="text-sm opacity-80">
+          {{ configurationDetail().description }}
+        </h4>
+      </div>
+    </div>
+
+    <div class="flex flex-col justify-around">
+      <mat-chip-listbox>
+        <mat-chip-option
+          class="border border-zinc-400 dark:border-zinc-600"
+          [selected]="showGroupNames()"
+          (click)="toggleShowGroupNames()"
+        >
+          Group names
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+  </div>
+
+  <!-- Column Headers -->
+</div>

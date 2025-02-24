@@ -18,28 +18,38 @@
             [groupDetails]="editingGroups"
             [columnDetails]="editingColumnDetails"
             [studentDetails]="allStudentDetails()"
+            [configurationViewMode]="configurationViewMode()"
             (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
+            (configurationViewModeSet)="setConfigurationViewMode($event)"
           ></app-classroom-header>
 
           @if (configurationDetail(); as configurationDetail) {
-            <app-configuration-view
-              class="flex-1"
-              [configurationDetail]="configurationDetail"
-              [defaultGroup]="defaultGroup()!"
-              [classroomId]="classroomId()"
-              [columnDetails]="editingColumnDetails"
-              [groupDetails]="editingGroups"
-              [groupLimitReached]="
-                listGroupDetails().length >= maxStudentsPerClassroom()
-              "
-              [anyAverageScores]="anyAverageScores()"
-              [averageScores]="averageScores()"
-              (deleteConfigurationModalOpened)="
-                openDeleteConfigurationModal($event)
-              "
-              (studentPositionUpdated)="updateStudentPosition($event)"
-              (groupDropped)="dropGroup($event)"
-            ></app-configuration-view>
+            @if (configurationViewMode() === ConfigurationViewMode.List) {
+              <app-configuration-view
+                class="flex-1"
+                [configurationDetail]="configurationDetail"
+                [defaultGroup]="defaultGroup()!"
+                [classroomId]="classroomId()"
+                [columnDetails]="editingColumnDetails"
+                [groupDetails]="editingGroups"
+                [groupLimitReached]="
+                  listGroupDetails().length >= maxStudentsPerClassroom()
+                "
+                [anyAverageScores]="anyAverageScores()"
+                [averageScores]="averageScores()"
+                (deleteConfigurationModalOpened)="
+                  openDeleteConfigurationModal($event)
+                "
+                (studentPositionUpdated)="updateStudentPosition($event)"
+                (groupDropped)="dropGroup($event)"
+              ></app-configuration-view>
+            } @else {
+              <app-configuration-preview
+                class="flex-1"
+                [configurationDetail]="configurationDetail"
+                [classroom]="classroom"
+              ></app-configuration-preview>
+            }
           } @else if (configurationLoading()) {
             <div class="flex-1">
               <img
