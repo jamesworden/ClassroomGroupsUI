@@ -59,56 +59,65 @@
       <div class="flex flex-1">
         <mat-tab-group class="flex-1">
           <mat-tab label="Text Visualization">
-            <div class="p-4 flex flex-wrap gap-8 flex-auto -mt-2">
-              @for (
-                groupDetail of configurationDetail().groupDetails;
-                track groupDetail.id
-              ) {
-                @if (
-                  (showUngroupedStudents() &&
-                    groupDetail.studentDetails.length) ||
-                  groupDetail.id !== defaultGroup().id
+            <div class="flex flex-col">
+              <div>
+                <button [tabindex]="-1" matSuffix mat-button class="mt-2 ml-2">
+                  <mat-icon class="text-md">content_copy</mat-icon>
+                  <span class="text-sm opacity-80">Copy</span>
+                </button>
+              </div>
+
+              <div class="p-4 flex flex-wrap gap-8 flex-auto">
+                @for (
+                  groupDetail of configurationDetail().groupDetails;
+                  track groupDetail.id
                 ) {
-                  <div>
-                    @if (showGroupNames()) {
-                      <h6
-                        class="text-lg"
-                        [ngClass]="{
-                          underline: underlineGroupNames(),
-                        }"
-                      >
-                        {{
-                          groupDetail.id === defaultGroup().id
-                            ? 'Ungrouped Students'
-                            : groupDetail.label
-                        }}
-                      </h6>
-                    }
-                    <ul>
-                      @for (
-                        studentDetail of groupDetail.studentDetails;
-                        track studentDetail.id
-                      ) {
-                        <li>
-                          @for (
-                            columnDetail of columnDetails();
-                            track columnDetail.id
-                          ) {
-                            @if (visibleColumnIds.has(columnDetail.id)) {
-                              {{
-                                studentDetail.fieldIdsToValues[
-                                  columnDetail.fieldId
-                                ]
-                              }}
-                            }
-                          }
-                        </li>
+                  @if (
+                    (showUngroupedStudents() &&
+                      groupDetail.studentDetails.length) ||
+                    groupDetail.id !== defaultGroup().id
+                  ) {
+                    <div>
+                      @if (showGroupNames()) {
+                        <h6
+                          class="text-lg"
+                          [ngClass]="{
+                            underline: underlineGroupNames(),
+                          }"
+                        >
+                          {{
+                            groupDetail.id === defaultGroup().id
+                              ? 'Ungrouped Students'
+                              : groupDetail.label
+                          }}
+                        </h6>
                       }
-                    </ul>
-                    <br />
-                  </div>
+                      <ul>
+                        @for (
+                          studentDetail of groupDetail.studentDetails;
+                          track studentDetail.id
+                        ) {
+                          <li>
+                            @for (
+                              columnDetail of columnDetails();
+                              track columnDetail.id
+                            ) {
+                              @if (visibleColumnIds.has(columnDetail.id)) {
+                                {{
+                                  studentDetail.fieldIdsToValues[
+                                    columnDetail.fieldId
+                                  ]
+                                }}
+                              }
+                            }
+                          </li>
+                        }
+                      </ul>
+                      <br />
+                    </div>
+                  }
                 }
-              }
+              </div>
             </div>
           </mat-tab>
         </mat-tab-group>
