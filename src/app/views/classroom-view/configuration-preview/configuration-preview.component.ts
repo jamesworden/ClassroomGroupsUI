@@ -2,11 +2,9 @@ import {
   Component,
   computed,
   effect,
-  ElementRef,
   inject,
   input,
   signal,
-  ViewChild,
 } from '@angular/core';
 import {
   Classroom,
@@ -56,9 +54,6 @@ export class ConfigurationPreviewComponent {
   readonly classroom = input.required<Classroom>();
   readonly columnDetails = input.required<ColumnDetail[]>();
   readonly defaultGroup = input.required<GroupDetail>();
-
-  @ViewChild('textVisualization')
-  textVisualization?: ElementRef<HTMLElement>;
 
   readonly showGroupNames = signal(true);
   readonly showUngroupedStudents = signal(true);
