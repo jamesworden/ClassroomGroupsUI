@@ -15,7 +15,7 @@
         <div class="flex-1 flex flex-col">
           <app-classroom-header
             [classroom]="classroom"
-            [groupDetails]="editingGroups"
+            [groupDetails]="listGroupDetails()"
             [columnDetails]="columnDetails()"
             [studentDetails]="allStudentDetails()"
             [configurationViewMode]="configurationViewMode()"
@@ -31,7 +31,7 @@
                 [defaultGroup]="defaultGroup()!"
                 [classroomId]="classroomId()"
                 [columnDetails]="columnDetails()"
-                [groupDetails]="editingGroups"
+                [groupDetails]="listGroupDetails()"
                 [groupLimitReached]="
                   listGroupDetails().length >= maxStudentsPerClassroom()
                 "
@@ -40,8 +40,6 @@
                 (deleteConfigurationModalOpened)="
                   openDeleteConfigurationModal($event)
                 "
-                (studentPositionUpdated)="updateStudentPosition($event)"
-                (groupDropped)="dropGroup($event)"
               ></app-configuration-view>
             } @else {
               <app-configuration-preview

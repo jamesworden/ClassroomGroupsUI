@@ -166,11 +166,7 @@ export class ClassroomViewComponent {
 
   readonly ConfigurationViewMode = ConfigurationViewMode;
 
-  editingGroups: GroupDetail[] = [];
-
   constructor() {
-    effect(() => (this.editingGroups = this.listGroupDetails()));
-
     this.classroomId$.pipe(takeUntilDestroyed()).subscribe((classroomId) => {
       if (classroomId) {
         this.#classroomsService.getConfigurations(classroomId);
@@ -221,25 +217,6 @@ export class ClassroomViewComponent {
     });
   }
 
-  dropGroup(event: CdkDragDrop<Group[]>) {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationDetail()?.id;
-    if (!classroomId || !configurationId) {
-      return;
-    }
-    moveItemInArray(
-      this.editingGroups,
-      event.previousIndex,
-      event.currentIndex
-    );
-    const sortedGroupIds = this.editingGroups.map(({ id }) => id);
-    this.#classroomsService.sortGroups(
-      classroomId,
-      configurationId,
-      sortedGroupIds
-    );
-  }
-
   selectConfigurationId(configurationId: string) {
     this.#router.navigate([
       `/classrooms/${this.classroomId()}/configurations/${configurationId}`,
@@ -251,72 +228,6 @@ export class ClassroomViewComponent {
     if (firstConfigurationId) {
       this.selectConfigurationId(firstConfigurationId);
     }
-  }
-
-  updateStudentPosition(position: MoveStudentDetail) {
-    position.prevGroupId === position.currGroupId
-      ? this.moveStudentInGroup(position)
-      : this.moveStudentToGroup(position);
-  }
-
-  moveStudentInGroup(position: MoveStudentDetail) {
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    if (!classroomId || !configurationId) {
-      return;
-    }
-
-    const allGroups = this.editingGroups.concat(this.defaultGroup() || []);
-
-    for (const group of allGroups) {
-      if (group.id === position.prevGroupId && group.studentDetails) {
-        moveItemInArray(
-          group.studentDetails,
-          position.prevIndex,
-          position.currIndex
-        );
-      }
-    }
-
-    this.#classroomsService.moveStudent(classroomId, configurationId, position);
-  }
-
-  moveStudentToGroup(position: MoveStudentDetail) {
-    let fromGroup: GroupDetail | undefined;
-    let toGroup: GroupDetail | undefined;
-
-    const allGroups = this.editingGroups.concat(this.defaultGroup() || []);
-
-    for (const group of allGroups) {
-      if (group.id === position.prevGroupId) {
-        fromGroup = group;
-      }
-      if (group.id === position.currGroupId) {
-        toGroup = group;
-      }
-    }
-
-    const fromStudentDetails = fromGroup?.studentDetails;
-    const toStudentDetails = toGroup?.studentDetails;
-
-    if (!fromStudentDetails || !toStudentDetails) {
-      return;
-    }
-
-    transferArrayItem(
-      fromStudentDetails,
-      toStudentDetails,
-      position.prevIndex,
-      position.currIndex
-    );
-
-    const classroomId = this.classroomId();
-    const configurationId = this.configurationId();
-    if (!classroomId || !configurationId) {
-      return;
-    }
-
-    this.#classroomsService.moveStudent(classroomId, configurationId, position);
   }
 
   openDeleteConfigurationModal(configurationId: string) {

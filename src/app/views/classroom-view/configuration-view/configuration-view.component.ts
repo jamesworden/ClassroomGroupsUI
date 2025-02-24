@@ -1,10 +1,19 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { GroupPanelComponent } from './group-panel/group-panel.component';
 import {
   CdkDrag,
   CdkDragDrop,
   CdkDragHandle,
   CdkDropList,
+  moveItemInArray,
+  transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { ConfigurationPanelBottomComponent } from './configuration-panel-bottom/configuration-panel-bottom.component';
 import { ConfigurationPanelTopComponent } from './configuration-panel-top/configuration-panel-top.component';
@@ -57,10 +66,14 @@ export class ConfigurationViewComponent {
   readonly averageScores = input.required<Record<string, number>>();
 
   readonly deleteConfigurationModalOpened = output<string>();
-  readonly studentPositionUpdated = output<MoveStudentDetail>();
-  readonly groupDropped = output<CdkDragDrop<Group[]>>();
 
   readonly collapsePanelDetails = signal(false);
+
+  editingGroups: GroupDetail[] = [];
+
+  constructor() {
+    effect(() => (this.editingGroups = this.groupDetails()));
+  }
 
   updateConfigurationLabel(label: string) {
     this.#classroomsService.patchConfiguration(
@@ -95,14 +108,6 @@ export class ConfigurationViewComponent {
     this.#classroomsService.deleteStudent(this.classroomId(), studentDetail.id);
   }
 
-  updateStudentPosition(position: MoveStudentDetail) {
-    this.studentPositionUpdated.emit(position);
-  }
-
-  dropGroup(event: CdkDragDrop<Group[]>) {
-    this.groupDropped.emit(event);
-  }
-
   deleteGroup(groupId: string) {
     this.#classroomsService.deleteGroup(
       this.classroomId(),
@@ -130,5 +135,86 @@ export class ConfigurationViewComponent {
 
   toggleCollapsedPanels() {
     this.collapsePanelDetails.set(!this.collapsePanelDetails());
+  }
+
+  updateStudentPosition(position: MoveStudentDetail) {
+    position.prevGroupId === position.currGroupId
+      ? this.moveStudentInGroup(position)
+      : this.moveStudentToGroup(position);
+  }
+
+  dropGroup(event: CdkDragDrop<Group[]>) {
+    const classroomId = this.classroomId();
+    const configurationId = this.configurationDetail()?.id;
+    if (!classroomId || !configurationId) {
+      return;
+    }
+    moveItemInArray(
+      this.editingGroups,
+      event.previousIndex,
+      event.currentIndex
+    );
+    const sortedGroupIds = this.editingGroups.map(({ id }) => id);
+    this.#classroomsService.sortGroups(
+      classroomId,
+      configurationId,
+      sortedGroupIds
+    );
+  }
+
+  moveStudentInGroup(position: MoveStudentDetail) {
+    const allGroups = this.editingGroups.concat(this.defaultGroup() || []);
+
+    for (const group of allGroups) {
+      if (group.id === position.prevGroupId && group.studentDetails) {
+        moveItemInArray(
+          group.studentDetails,
+          position.prevIndex,
+          position.currIndex
+        );
+      }
+    }
+
+    this.#classroomsService.moveStudent(
+      this.classroomId(),
+      this.configurationDetail().id,
+      position
+    );
+  }
+
+  moveStudentToGroup(position: MoveStudentDetail) {
+    let fromGroup: GroupDetail | undefined;
+    let toGroup: GroupDetail | undefined;
+
+    const allGroups = this.editingGroups.concat(this.defaultGroup() || []);
+
+    for (const group of allGroups) {
+      if (group.id === position.prevGroupId) {
+        fromGroup = group;
+      }
+      if (group.id === position.currGroupId) {
+        toGroup = group;
+      }
+    }
+
+    const fromStudentDetails = fromGroup?.studentDetails;
+    const toStudentDetails = toGroup?.studentDetails;
+
+    if (!fromStudentDetails || !toStudentDetails) {
+      return;
+    }
+
+    transferArrayItem(
+      fromStudentDetails,
+      toStudentDetails,
+      position.prevIndex,
+      position.currIndex
+    );
+
+    this.#classroomsService.moveStudent(
+      this.classroomId(),
+      this.configurationDetail().id,
+      position
+    );
   }
 }
