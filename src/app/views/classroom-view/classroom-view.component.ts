@@ -1,10 +1,4 @@
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -25,11 +19,7 @@ import { AccountsService } from '@shared/accounts';
 import {
   calculateAverageScores,
   ClassroomsService,
-  ColumnDetail,
   getConfigurationFromDetail,
-  Group,
-  GroupDetail,
-  MoveStudentDetail,
 } from '@shared/classrooms';
 import { combineLatest } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -40,6 +30,7 @@ import { ConfigurationViewComponent } from './configuration-view/configuration-v
 import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
 import { ConfigurationViewMode } from '@app/models';
 import { ConfigurationPreviewComponent } from './configuration-preview/configuration-preview.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-classroom-view',

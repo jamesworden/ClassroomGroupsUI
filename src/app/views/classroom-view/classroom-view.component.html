@@ -1,85 +1,98 @@
-<div class="w-full h-full flex grid-bg">
-  <!-- Large Resolution -->
+<div class="w-full h-full flex">
   <div class="flex-1 w-full h-full flex hidden lg:flex">
-    @if (configurationId(); as selectedConfigurationId) {
-      <app-configurations-panel
-        [classroomId]="classroomId()"
-        [selectedConfigurationId]="selectedConfigurationId"
-        (configurationIdSelected)="selectConfigurationId($event)"
-        class="flex-1 max-w-xs shadow-lg border-r border-zinc-400"
-        (deletedConfiguration)="openDeleteConfigurationModal($event)"
-      ></app-configurations-panel>
-    }
+    <mat-sidenav-container class="w-full h-full grid-bg">
+      <mat-sidenav
+        #configurationsSidenav
+        [mode]="'side'"
+        [opened]="true"
+        class="max-w-xs shadow-lg border-r border-zinc-400"
+      >
+        @if (configurationId(); as selectedConfigurationId) {
+          <app-configurations-panel
+            [classroomId]="classroomId()"
+            [selectedConfigurationId]="selectedConfigurationId"
+            (configurationIdSelected)="selectConfigurationId($event)"
+            class="flex-1 w-full h-full"
+            (deletedConfiguration)="openDeleteConfigurationModal($event)"
+          ></app-configurations-panel>
+        }
+      </mat-sidenav>
 
-    <div class="flex flex-col flex-1">
-      @if (classroom(); as classroom) {
-        <div class="flex-1 flex flex-col">
-          <app-classroom-header
-            [classroom]="classroom"
-            [groupDetails]="listGroupDetails()"
-            [columnDetails]="columnDetails()"
-            [studentDetails]="allStudentDetails()"
-            [configurationViewMode]="configurationViewMode()"
-            (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
-            (configurationViewModeSet)="setConfigurationViewMode($event)"
-          ></app-classroom-header>
-
-          @if (configurationDetail(); as configurationDetail) {
-            @if (configurationViewMode() === ConfigurationViewMode.List) {
-              <app-configuration-view
-                class="flex-1"
-                [configurationDetail]="configurationDetail"
-                [defaultGroup]="defaultGroup()!"
-                [classroomId]="classroomId()"
-                [columnDetails]="columnDetails()"
-                [groupDetails]="listGroupDetails()"
-                [groupLimitReached]="
-                  listGroupDetails().length >= maxStudentsPerClassroom()
-                "
-                [anyAverageScores]="anyAverageScores()"
-                [averageScores]="averageScores()"
-                (deleteConfigurationModalOpened)="
-                  openDeleteConfigurationModal($event)
-                "
-              ></app-configuration-view>
-            } @else {
-              <app-configuration-preview
-                class="flex-1"
-                [configurationDetail]="configurationDetail"
+      <!-- Main Content Area -->
+      <mat-sidenav-content>
+        <div class="flex flex-col flex-1 h-full">
+          @if (classroom(); as classroom) {
+            <div class="flex-1 flex flex-col">
+              <app-classroom-header
                 [classroom]="classroom"
+                [groupDetails]="listGroupDetails()"
                 [columnDetails]="columnDetails()"
-                [defaultGroup]="defaultGroup()!"
-              ></app-configuration-preview>
-            }
-          } @else if (configurationLoading()) {
-            <div class="flex-1">
-              <img
-                class="p-12 max-w-3xl"
-                [src]="
-                  theme() === Themes.LIGHT
-                    ? 'assets/single-post-light.svg'
-                    : 'assets/single-post-dark.svg'
-                "
-                alt="Icon"
-              />
+                [studentDetails]="allStudentDetails()"
+                [configurationViewMode]="configurationViewMode()"
+                [sidenavOpen]="configurationsSidenav.opened"
+                (toggleSidenav)="configurationsSidenav.toggle()"
+                (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
+                (configurationViewModeSet)="setConfigurationViewMode($event)"
+              ></app-classroom-header>
 
-              <mat-spinner class="pl-12"></mat-spinner>
+              @if (configurationDetail(); as configurationDetail) {
+                @if (configurationViewMode() === ConfigurationViewMode.List) {
+                  <app-configuration-view
+                    class="flex-1"
+                    [configurationDetail]="configurationDetail"
+                    [defaultGroup]="defaultGroup()!"
+                    [classroomId]="classroomId()"
+                    [columnDetails]="columnDetails()"
+                    [groupDetails]="listGroupDetails()"
+                    [groupLimitReached]="
+                      listGroupDetails().length >= maxStudentsPerClassroom()
+                    "
+                    [anyAverageScores]="anyAverageScores()"
+                    [averageScores]="averageScores()"
+                    (deleteConfigurationModalOpened)="
+                      openDeleteConfigurationModal($event)
+                    "
+                  ></app-configuration-view>
+                } @else {
+                  <app-configuration-preview
+                    class="flex-1"
+                    [configurationDetail]="configurationDetail"
+                    [classroom]="classroom"
+                    [columnDetails]="columnDetails()"
+                    [defaultGroup]="defaultGroup()!"
+                  ></app-configuration-preview>
+                }
+              } @else if (configurationLoading()) {
+                <div class="flex-1">
+                  <img
+                    class="p-12 max-w-3xl"
+                    [src]="
+                      theme() === Themes.LIGHT
+                        ? 'assets/single-post-light.svg'
+                        : 'assets/single-post-dark.svg'
+                    "
+                    alt="Icon"
+                  />
+
+                  <mat-spinner class="pl-12"></mat-spinner>
+                </div>
+              }
+
+              <section class="sticky bottom-0 flex pl-4">
+                <mat-progress-bar
+                  class="flex-1"
+                  [mode]="
+                    configurationUpdating() || classroomUpdating()
+                      ? 'indeterminate'
+                      : 'determinate'
+                  "
+                ></mat-progress-bar>
+              </section>
             </div>
           }
-
-          <section class="sticky bottom-0 flex">
-            <mat-progress-bar
-              class="flex-1"
-              [mode]="
-                configurationUpdating() || classroomUpdating()
-                  ? 'indeterminate'
-                  : 'determinate'
-              "
-            ></mat-progress-bar>
-          </section>
         </div>
-      }
-    </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
   </div>
 
   <!-- Smaller Resolutions -->
