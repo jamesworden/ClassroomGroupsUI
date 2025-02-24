@@ -118,4 +118,30 @@ export class ColumnListComponent {
         }
       });
   }
+
+  openCreateColumnDialog(columnDetail: ColumnDetail, side: 'left' | 'right') {
+    const targetOrdinal =
+      side === 'left'
+        ? Math.max(columnDetail.ordinal - 1, 0)
+        : columnDetail.ordinal + 1;
+    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+      restoreFocus: false,
+      data: <CreateEditColumnDialogInputs>{
+        title: 'Create Column',
+      },
+    });
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createColumn(
+            this.classroomId(),
+            this.configurationId(),
+            outputs.label,
+            outputs.type,
+            targetOrdinal
+          );
+        }
+      });
+  }
 }

@@ -40,6 +40,24 @@
             <mat-icon class="mr-3 opacity-80">edit</mat-icon>
             <span>Edit column</span>
           </button>
+
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="openCreateColumnDialog(column, 'left')"
+          >
+            <mat-icon class="mr-3 opacity-80">chevron_left</mat-icon>
+            <span>Insert column left</span>
+          </button>
+
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="openCreateColumnDialog(column, 'right')"
+          >
+            <mat-icon class="mr-3 opacity-80">chevron_right</mat-icon>
+            <span>Insert column right</span>
+          </button>
         </div>
       </ng-template>
 
