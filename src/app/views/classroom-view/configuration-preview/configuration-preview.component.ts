@@ -15,6 +15,8 @@ import {
 } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-configuration-preview',
@@ -24,6 +26,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatSlideToggleModule,
     MatIconModule,
     MatButtonModule,
+    MatTabsModule,
+    CommonModule,
   ],
   templateUrl: './configuration-preview.component.html',
   styleUrl: './configuration-preview.component.scss',
@@ -36,6 +40,7 @@ export class ConfigurationPreviewComponent {
 
   readonly showGroupNames = signal(true);
   readonly showUnassignedStudents = signal(true);
+  readonly underlineGroupNames = signal(true);
 
   visibleColumnIds = new Set<string>();
 
@@ -57,6 +62,10 @@ export class ConfigurationPreviewComponent {
 
   toggleShowUnassignedStudents() {
     this.showUnassignedStudents.set(!this.showUnassignedStudents());
+  }
+
+  toggleUnderlineGroupNames() {
+    this.underlineGroupNames.set(!this.underlineGroupNames());
   }
 
   toggleVisibleColumn(columnId: string, { checked }: MatSlideToggleChange) {
