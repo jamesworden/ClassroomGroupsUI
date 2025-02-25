@@ -52,9 +52,11 @@ export class ClassroomHeaderComponent {
   readonly studentDetails = input.required<StudentDetail[]>();
   readonly columnDetails = input.required<ColumnDetail[]>();
   readonly configurationViewMode = input.required<ConfigurationViewMode>();
+  readonly sidenavOpen = input.required<boolean>();
 
   readonly deleteClassroomDialogOpened = output();
   readonly configurationViewModeSet = output<ConfigurationViewMode>();
+  readonly toggleSidenav = output();
 
   readonly theme = this.#themeService.theme;
   readonly maxStudentsPerClassroom =
@@ -94,5 +96,9 @@ export class ClassroomHeaderComponent {
   setConfigurationViewMode({ value }: MatButtonToggleChange) {
     const configurationViewMode = value as ConfigurationViewMode;
     this.configurationViewModeSet.emit(configurationViewMode);
+  }
+
+  toggleSidenavPanel(): void {
+    this.toggleSidenav.emit();
   }
 }

@@ -77,7 +77,7 @@ export class GroupPanelComponent {
         title: 'Delete locked group',
         subtitle: `Are you sure you want to delete group '${
           this.groupDetail()?.label
-        }' and all of it's data?`,
+        }' and all of its data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success) => {

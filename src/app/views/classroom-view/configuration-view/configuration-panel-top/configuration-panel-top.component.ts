@@ -142,18 +142,16 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
       restoreFocus: false,
       data: <CreateEditColumnDialogInputs>{
-        title: 'Create Column',
+        title: 'Create column',
       },
     });
     dialogRef
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        const classroomId = this.classroomId();
-        const configurationId = this.configurationId();
-        if (outputs && classroomId && configurationId) {
+        if (outputs) {
           this.#classroomsService.createColumn(
-            classroomId,
-            configurationId,
+            this.classroomId(),
+            this.configurationId(),
             outputs.label,
             outputs.type
           );

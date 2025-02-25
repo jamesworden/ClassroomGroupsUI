@@ -1,11 +1,11 @@
-@use "sass:map";
-@use "@angular/material" as mat;
+@use 'sass:map';
+@use '@angular/material' as mat;
 
 @mixin lightColor($theme) {
   .panel {
     background-color: mat.get-theme-color($theme, neutral, 90);
   }
-  .grid-row {
+  .panel-light {
     background-color: mat.get-theme-color($theme, neutral, 100);
   }
 }
@@ -20,7 +20,7 @@
   .panel {
     background-color: mat.get-theme-color($theme, neutral, 20);
   }
-  .grid-row {
+  .panel-light {
     background-color: mat.get-theme-color($theme, neutral, 30);
   }
 }

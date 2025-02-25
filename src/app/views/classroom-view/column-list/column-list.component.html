@@ -1,7 +1,7 @@
 <div
   cdkDropList
   cdkDropListOrientation="horizontal"
-  class="grid-row border-t border-x border-neutral-200 dark:border-neutral-600 flex flex-row rounded-t-md min-h-16"
+  class="panel-light border-t border-x border-neutral-200 dark:border-neutral-600 flex flex-row rounded-t-md min-h-16"
   [ngClass]="{
     'rounded-b-md': roundBottom(),
   }"
@@ -9,7 +9,7 @@
 >
   @for (column of editingColumnDetails; track column.id) {
     <div
-      class="draggable-field justify-between flex grid-row border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48 flex-1"
+      class="draggable-field justify-between flex panel-light border-r border-neutral-200 dark:border-neutral-600 rounded-t-md min-w-48 flex-1"
       cdkDrag
       [cdkDragData]="column"
       [cdkContextMenuTriggerFor]="
@@ -26,7 +26,7 @@
           <button
             class="context-menu-item"
             cdkMenuItem
-            (click)="deleteColumn(column.id)"
+            (click)="openDeleteColumnDialog(column)"
           >
             <mat-icon class="mr-3 !text-red-500">delete</mat-icon>
             <span>Delete column</span>
@@ -39,6 +39,36 @@
           >
             <mat-icon class="mr-3 opacity-80">edit</mat-icon>
             <span>Edit column</span>
+          </button>
+
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="openCreateSideColumnDialog(column, 'left')"
+            [disabled]="reachedColumnLimit()"
+            [ngClass]="{
+              'opacity-50': reachedColumnLimit(),
+            }"
+            [matTooltip]="reachedColumnLimit() ? 'Column limit reached!' : null"
+            matTooltipPosition="left"
+          >
+            <mat-icon class="mr-3 opacity-80">chevron_left</mat-icon>
+            <span>Insert column left</span>
+          </button>
+
+          <button
+            class="context-menu-item"
+            cdkMenuItem
+            (click)="openCreateSideColumnDialog(column, 'right')"
+            [disabled]="reachedColumnLimit()"
+            [ngClass]="{
+              'opacity-50': reachedColumnLimit(),
+            }"
+            [matTooltip]="reachedColumnLimit() ? 'Column limit reached!' : null"
+            matTooltipPosition="left"
+          >
+            <mat-icon class="mr-3 opacity-80">chevron_right</mat-icon>
+            <span>Insert column right</span>
           </button>
         </div>
       </ng-template>
@@ -63,6 +93,21 @@
             }
           </div>
         </div>
+      </div>
+    </div>
+  }
+  @if (!editingColumnDetails.length) {
+    <div class="flex-1 flex justify-around">
+      <div class="flex flex-col justify-around">
+        <button
+          [tabindex]="-1"
+          matSuffix
+          mat-button
+          (click)="openCreateColumnDialog()"
+        >
+          <mat-icon class="text-md">add</mat-icon>
+          Create column
+        </button>
       </div>
     </div>
   }

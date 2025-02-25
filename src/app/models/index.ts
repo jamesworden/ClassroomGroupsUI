@@ -1,4 +1,4 @@
 export enum ConfigurationViewMode {
-  List,
-  View,
+  Edit = 'edit',
+  Text = 'text',
 }

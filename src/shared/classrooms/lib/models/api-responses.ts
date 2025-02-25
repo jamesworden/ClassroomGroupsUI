@@ -66,8 +66,8 @@ export interface DeletedConfigurationResponse {
 }
 
 export interface CreateColumnResponse {
-  createdColumnDetail: ColumnDetail;
-  createdFieldDetail: FieldDetail;
+  updatedColumnDetails: ColumnDetail[];
+  updatedFieldDetails: FieldDetail[];
 }
 
 export interface UpsertStudentFieldResponse {

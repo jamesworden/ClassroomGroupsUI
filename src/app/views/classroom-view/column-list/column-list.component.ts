@@ -6,7 +6,14 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, TemplateRef } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  TemplateRef,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -21,11 +28,12 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
-import {
-  MatCheckboxChange,
-  MatCheckboxModule,
-} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AccountsService } from '@shared/accounts';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-column-list',
@@ -39,6 +47,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatIconModule,
     MatCheckboxModule,
     MatSlideToggleModule,
+    MatTooltipModule,
+    MatButtonModule,
   ],
   templateUrl: './column-list.component.html',
   styleUrl: './column-list.component.scss',
@@ -46,6 +56,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 export class ColumnListComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #matDialog = inject(MatDialog);
+  readonly #accountsService = inject(AccountsService);
 
   readonly classroomId = input.required<string>();
   readonly configurationId = input.required<string>();
@@ -55,6 +66,13 @@ export class ColumnListComponent {
   readonly rightHeaderTemplate = input<TemplateRef<ColumnDetail>>();
   readonly roundBottom = input(true);
   readonly enableContextMenu = input(true);
+
+  readonly maxFieldsPerClassroom = computed(() =>
+    this.#accountsService.select.maxFieldsPerClassroom()
+  );
+  readonly reachedColumnLimit = computed(
+    () => this.columnDetails().length >= this.maxFieldsPerClassroom()
+  );
 
   readonly FieldType = FieldType;
 
@@ -88,19 +106,32 @@ export class ColumnListComponent {
     );
   }
 
-  deleteColumn(columnId: string) {
-    this.#classroomsService.deleteColumn(
-      this.classroomId(),
-      this.configurationId(),
-      columnId
-    );
+  openDeleteColumnDialog(columnDetail: ColumnDetail) {
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete classroom',
+        subtitle: `Are you sure you want to delete column '${
+          columnDetail.label
+        }' and all of its related student data?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success) => {
+      if (success) {
+        this.#classroomsService.deleteColumn(
+          this.classroomId(),
+          this.configurationId(),
+          columnDetail.id
+        );
+      }
+    });
   }
 
   openEditColumnDialog(columnDetail: ColumnDetail) {
     const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
       restoreFocus: false,
       data: <CreateEditColumnDialogInputs>{
-        title: 'Edit Column',
+        title: 'Edit column',
         existingData: {
           columnDetail,
         },
@@ -114,6 +145,54 @@ export class ColumnListComponent {
             this.classroomId(),
             columnDetail.fieldId,
             outputs.label
+          );
+        }
+      });
+  }
+
+  openCreateSideColumnDialog(
+    columnDetail: ColumnDetail,
+    side: 'left' | 'right'
+  ) {
+    const targetOrdinal =
+      side === 'left' ? columnDetail.ordinal : columnDetail.ordinal + 1;
+    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+      restoreFocus: false,
+      data: <CreateEditColumnDialogInputs>{
+        title: 'Create column',
+      },
+    });
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createColumn(
+            this.classroomId(),
+            this.configurationId(),
+            outputs.label,
+            outputs.type,
+            targetOrdinal
+          );
+        }
+      });
+  }
+
+  openCreateColumnDialog() {
+    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+      restoreFocus: false,
+      data: <CreateEditColumnDialogInputs>{
+        title: 'Create column',
+      },
+    });
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createColumn(
+            this.classroomId(),
+            this.configurationId(),
+            outputs.label,
+            outputs.type
           );
         }
       });

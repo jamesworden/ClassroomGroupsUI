@@ -1,18 +1,14 @@
 import {
   Component,
   computed,
-  ElementRef,
-  HostListener,
   inject,
   input,
   output,
   Signal,
   signal,
-  ViewChild,
 } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -23,13 +19,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateEditConfigurationDialogComponent } from '@app/components';
+import {
+  CreateEditColumnDialogInputs,
+  CreateEditColumnDialogOutputs,
+} from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 
 @Component({
   selector: 'app-configurations-panel',
   imports: [
     MatFormFieldModule,
     MatListModule,
-    MatSnackBarModule,
     MatIconModule,
     FormsModule,
     MatInputModule,
@@ -45,17 +46,11 @@ import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
   styleUrl: './configurations-panel.component.scss',
 })
 export class ConfigurationsPanelComponent {
-  readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
+  readonly #matDialog = inject(MatDialog);
 
-  @ViewChild('scrollContainer')
-  scrollContainer: ElementRef<HTMLElement> | undefined;
-
-  @ViewChild('addConfigurationInput')
-  addConfigurationInput: ElementRef<HTMLInputElement> | undefined;
-
-  readonly selectedConfigurationId = input.required<string>();
+  readonly selectedConfigurationId = input<string>();
   readonly classroomId = input.required<string>();
 
   readonly configurationIdSelected = output<string>();
@@ -77,54 +72,31 @@ export class ConfigurationsPanelComponent {
     this.#classroomsService.select.configurationsLoading;
 
   readonly searchQuery = signal('');
-  readonly addingConfiguration = signal(false);
-
-  createConfigurationLabel = '';
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const clickedElement = event.target as HTMLElement;
-    const clickedInput =
-      this.addConfigurationInput?.nativeElement.contains(clickedElement);
-    if (clickedInput) {
-      return;
-    }
-
-    this.stopAddingConfiguration();
-  }
 
   selectConfiguration(configurationId: string) {
     this.configurationIdSelected.emit(configurationId);
   }
 
-  createConfiguration() {
-    if (this.createConfigurationLabel.trim().length <= 0) {
-      this.#matSnackBar.open(
-        'Please enter the name of the configuration.',
-        'Hide',
-        {
-          duration: 3000,
-        }
-      );
-      return;
-    }
-    this.#classroomsService.createConfiguration(
-      this.classroomId()!,
-      this.createConfigurationLabel
+  openCreateConfigurationModal() {
+    const dialogRef = this.#matDialog.open(
+      CreateEditConfigurationDialogComponent,
+      {
+        restoreFocus: false,
+        data: <CreateEditColumnDialogInputs>{
+          title: 'Create configuration',
+        },
+      }
     );
-    this.createConfigurationLabel = '';
-    this.stopAddingConfiguration();
-  }
-
-  startAddingConfiguration() {
-    setTimeout(() => {
-      this.addConfigurationInput?.nativeElement.focus();
-    });
-    this.addingConfiguration.set(true);
-  }
-
-  stopAddingConfiguration() {
-    this.addingConfiguration.set(false);
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createConfiguration(
+            this.classroomId(),
+            outputs.label
+          );
+        }
+      });
   }
 
   deleteConfiguration(configurationId: string) {

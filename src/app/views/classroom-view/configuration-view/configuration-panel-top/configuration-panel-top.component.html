@@ -116,7 +116,9 @@
         [configurationId]="configurationId()"
         [defaultGroup]="defaultGroup()"
         [rightHeaderTemplate]="columnRightHeaderTemplate"
-        [roundBottom]="defaultGroup().studentDetails.length <= 0"
+        [roundBottom]="
+          !defaultGroup().studentDetails.length || !columnDetails().length
+        "
       ></app-column-list>
     </div>
   </div>
@@ -178,17 +180,7 @@
       <mat-icon>add_column_right</mat-icon>
       <span>Add column</span>
     </button>
-    <button
-      mat-menu-item
-      (click)="openDeleteConfigurationModal()"
-      [matTooltip]="
-        configurations().length <= 1
-          ? 'You can\'t delete the last configuration'
-          : ''
-      "
-      matTooltipPosition="left"
-      [disabled]="configurations().length <= 1"
-    >
+    <button mat-menu-item (click)="openDeleteConfigurationModal()">
       <mat-icon class="!text-red-500">delete</mat-icon>
       <span>Delete configuration</span>
     </button>
@@ -203,6 +195,7 @@
 >
   @if (type === FieldType.NUMBER) {
     <mat-checkbox
+      class="pr-2"
       [checked]="enabled"
       (change)="toggleColumnEnabled(id, $event)"
     ></mat-checkbox>

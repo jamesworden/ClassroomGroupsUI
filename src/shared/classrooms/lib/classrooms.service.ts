@@ -1,11 +1,4 @@
-import {
-  computed,
-  inject,
-  Injectable,
-  isDevMode,
-  Signal,
-  signal,
-} from '@angular/core';
+import { inject, Injectable, isDevMode, signal } from '@angular/core';
 import {
   Classroom,
   ClassroomDetail,
@@ -42,7 +35,6 @@ import {
   StudentGroupingStrategy,
   GroupStudentsResponse,
   EnableColumnResponse,
-  Column,
   DisableColumnResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
@@ -765,7 +757,8 @@ export class ClassroomsService {
     classroomId: string,
     configurationId: string,
     label: string,
-    type: FieldType
+    type: FieldType,
+    ordinal?: number
   ) {
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroomId);
@@ -776,24 +769,25 @@ export class ClassroomsService {
         {
           label,
           type,
+          ordinal,
         },
         {
           withCredentials: true,
         }
       )
       .pipe(
-        tap(({ createdColumnDetail, createdFieldDetail }) => {
-          console.log('[Created Column]', createdColumnDetail);
-          console.log('[Created Field]', createdFieldDetail);
+        tap(({ updatedColumnDetails, updatedFieldDetails }) => {
+          console.log('[Updated Column Details]', updatedColumnDetails);
+          console.log('[Updated Field Details]', updatedFieldDetails);
           this.patchState((draft) => {
             draft.configurationDetails.forEach((configurationDetail) => {
               if (configurationDetail.classroomId === classroomId) {
-                configurationDetail.columnDetails.push(createdColumnDetail);
+                configurationDetail.columnDetails = updatedColumnDetails;
               }
             });
             draft.classroomDetails.forEach((classroomDetail) => {
               if (classroomDetail.id === classroomId) {
-                classroomDetail.fieldDetails.push(createdFieldDetail);
+                classroomDetail.fieldDetails = updatedFieldDetails;
               }
             });
           });
@@ -1376,7 +1370,7 @@ export class ClassroomsService {
       .subscribe();
   }
 
-  patchField(
+  public patchField(
     classroomId: string,
     fieldId: string,
     label: string,
@@ -1426,6 +1420,9 @@ export class ClassroomsService {
         tap(({ updatedFieldDetail }) => {
           console.log('[Patched Field]', updatedFieldDetail);
           this.patchState(getUpdateStrategy(updatedFieldDetail));
+          this.#matSnackBar.open('Column updated', undefined, {
+            duration: 3000,
+          });
         }),
         catchError((error) => {
           console.log('[Patch Field Failed]', error);

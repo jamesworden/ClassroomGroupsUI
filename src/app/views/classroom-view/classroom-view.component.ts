@@ -1,10 +1,4 @@
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -25,21 +19,27 @@ import { AccountsService } from '@shared/accounts';
 import {
   calculateAverageScores,
   ClassroomsService,
-  ColumnDetail,
   getConfigurationFromDetail,
-  Group,
-  GroupDetail,
-  MoveStudentDetail,
 } from '@shared/classrooms';
 import { combineLatest } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
-import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
+import {
+  CreateEditConfigurationDialogComponent,
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
 import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
 import { ConfigurationViewMode } from '@app/models';
 import { ConfigurationPreviewComponent } from './configuration-preview/configuration-preview.component';
+import { CommonModule } from '@angular/common';
+import {
+  CreateEditColumnDialogInputs,
+  CreateEditColumnDialogOutputs,
+} from './configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
+import { ClassroomViewServiceService } from './classroom-view-service.service';
 
 @Component({
   selector: 'app-classroom-view',
@@ -60,6 +60,7 @@ import { ConfigurationPreviewComponent } from './configuration-preview/configura
     ClassroomHeaderComponent,
     ConfigurationPreviewComponent,
   ],
+  providers: [ClassroomViewServiceService],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
 })
@@ -70,6 +71,7 @@ export class ClassroomViewComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #activatedRoute = inject(ActivatedRoute);
   readonly #router = inject(Router);
+  readonly #classroomViewService = inject(ClassroomViewServiceService);
 
   readonly theme = this.#themeService.theme;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
@@ -82,6 +84,7 @@ export class ClassroomViewComponent {
     initialValue: {
       classroomId: null,
       configurationId: null,
+      configurationViewMode: ConfigurationViewMode,
     },
   });
   readonly classroomId = computed(
@@ -89,6 +92,9 @@ export class ClassroomViewComponent {
   );
   readonly configurationId = computed(
     () => this.queryParams().configurationId as string
+  );
+  readonly configurationViewMode = computed(
+    () => this.queryParams().configurationViewMode as ConfigurationViewMode
   );
   readonly classroom = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
@@ -158,11 +164,10 @@ export class ClassroomViewComponent {
   readonly classroomId$ = toObservable(this.classroomId);
   readonly configurationId$ = toObservable(this.configurationId);
   readonly configurations$ = toObservable(this.configurations);
+  readonly configurationDetail$ = toObservable(this.configurationDetail);
 
   readonly maxStudentsPerClassroom =
     this.#accountsService.select.maxStudentsPerClassroom;
-
-  readonly configurationViewMode = signal(ConfigurationViewMode.List);
 
   readonly ConfigurationViewMode = ConfigurationViewMode;
 
@@ -181,7 +186,7 @@ export class ClassroomViewComponent {
         const configurationId = this.configurationId();
         if (classroomId && firstConfiguration && !configurationId) {
           this.#router.navigate([
-            `/classrooms/${classroomId}/configurations/${firstConfiguration.id}`,
+            `/classrooms/${classroomId}/configurations/${firstConfiguration.id}/${ConfigurationViewMode.Edit}`,
           ]);
         }
       });
@@ -198,28 +203,14 @@ export class ClassroomViewComponent {
   }
 
   openDeleteClassroomDialog() {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete classroom '${
-          this.classroom()?.label
-        }' and all of it's data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      const classroomId = this.classroomId();
-      if (success && classroomId) {
-        this.#classroomsService.deleteClassroom(classroomId).subscribe(() => {
-          this.#router.navigate(['/classrooms']);
-        });
-      }
-    });
+    const classroom = this.classroom();
+    classroom &&
+      this.#classroomViewService.openDeleteClassroomDialog(classroom);
   }
 
   selectConfigurationId(configurationId: string) {
     this.#router.navigate([
-      `/classrooms/${this.classroomId()}/configurations/${configurationId}`,
+      `/classrooms/${this.classroomId()}/configurations/${configurationId}/${this.configurationViewMode()}`,
     ]);
   }
 
@@ -250,7 +241,7 @@ export class ClassroomViewComponent {
         title: 'Delete configuration',
         subtitle: `Are you sure you want to delete configuration '${
           configuration.label
-        }' and all of it's data?`,
+        }' and all of its data?`,
       },
     });
 
@@ -264,6 +255,38 @@ export class ClassroomViewComponent {
   }
 
   setConfigurationViewMode(configurationViewMode: ConfigurationViewMode) {
-    this.configurationViewMode.set(configurationViewMode);
+    this.#router.navigate([
+      'classrooms',
+      this.classroomId(),
+      'configurations',
+      this.configurationId(),
+      configurationViewMode,
+    ]);
+  }
+
+  goToClassrooms() {
+    this.#router.navigate(['/classrooms']);
+  }
+
+  openCreateConfigurationModal() {
+    const dialogRef = this.#matDialog.open(
+      CreateEditConfigurationDialogComponent,
+      {
+        restoreFocus: false,
+        data: <CreateEditColumnDialogInputs>{
+          title: 'Create configuration',
+        },
+      }
+    );
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createConfiguration(
+            this.classroomId(),
+            outputs.label
+          );
+        }
+      });
   }
 }

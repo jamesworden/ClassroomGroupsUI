@@ -50,6 +50,18 @@
               }}</span>
             </button>
           </div>
+
+          <div class="flex flex-col justify-around">
+            <button
+              [tabindex]="-1"
+              matTooltip="More"
+              mat-icon-button
+              [matMenuTriggerFor]="moreMenu"
+              class="!flex ml-2"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -67,10 +79,12 @@
 
     <div class="panel m-4 flex-auto rounded-lg shadow-lg flex flex-col flex-1">
       <div class="flex flex-1">
-        <div
-          class="p-4 grid-row flex-auto m-4 rounded-lg shadow-sm dark:shadow-lg whitespace-pre"
-        >
-          <p class="text-wrap">{{ plainText() }}</p>
+        <div class="max-w-3xl mx-auto flex-auto flex">
+          <div
+            class="p-4 m-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-600 flex-1 rounded-lg whitespace-pre"
+          >
+            <p class="text-wrap">{{ plainText() }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -87,3 +101,17 @@
     </mat-slide-toggle>
   </div>
 </ng-template>
+
+<mat-menu #moreMenu="matMenu">
+  <ng-template matMenuContent>
+    <button
+      mat-menu-item
+      (click)="exportToTextFile()"
+      matTooltipPosition="left"
+      class="!flex"
+    >
+      <mat-icon>text_rotation_none</mat-icon>
+      <span>Export to text file</span>
+    </button>
+  </ng-template>
+</mat-menu>

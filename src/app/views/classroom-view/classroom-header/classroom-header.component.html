@@ -1,21 +1,32 @@
 <section class="flex justify-between p-4">
-  <div class="flex flex-col flex-1">
-    <input
-      class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-      type="text"
-      maxlength="150"
-      [value]="classroom().label"
-      (change)="updateClassroomLabel($event)"
-      placeholder="Untitled"
-    />
-    <input
-      class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-      type="text"
-      maxlength="150"
-      [value]="classroom().description"
-      (change)="updateClassroomDescription($event)"
-      placeholder="Add a description for your classroom"
-    />
+  <div class="flex items-center flex-1">
+    <button
+      mat-icon-button
+      matTooltip="{{ sidenavOpen() ? 'Hide' : 'Show' }} configurations"
+      (click)="toggleSidenavPanel()"
+      class="mr-2 !flex"
+    >
+      <mat-icon>{{ sidenavOpen() ? 'menu_open' : 'menu' }}</mat-icon>
+    </button>
+
+    <div class="flex flex-col flex-1">
+      <input
+        class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+        type="text"
+        maxlength="150"
+        [value]="classroom().label"
+        (change)="updateClassroomLabel($event)"
+        placeholder="Untitled"
+      />
+      <input
+        class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+        type="text"
+        maxlength="150"
+        [value]="classroom().description"
+        (change)="updateClassroomDescription($event)"
+        placeholder="Add a description for your classroom"
+      />
+    </div>
   </div>
 
   <div class="flex flex-col justify-around mr-6">
@@ -24,13 +35,13 @@
       [hideSingleSelectionIndicator]="true"
     >
       <mat-button-toggle
-        [value]="ConfigurationViewMode.List"
+        [value]="ConfigurationViewMode.Edit"
         (change)="setConfigurationViewMode($event)"
       >
         <mat-icon class="opacity-80" matTooltip="Edit"> edit </mat-icon>
       </mat-button-toggle>
       <mat-button-toggle
-        [value]="ConfigurationViewMode.View"
+        [value]="ConfigurationViewMode.Text"
         (change)="setConfigurationViewMode($event)"
       >
         <mat-icon class="opacity-80" matTooltip="Text"> text_fields </mat-icon>
@@ -79,7 +90,7 @@
 
   <div class="flex flex-col justify-around">
     <button
-      matTooltip="Classrooms"
+      matTooltip="Back to Classrooms"
       mat-icon-button
       [routerLink]="['/classrooms']"
       class="!flex"
