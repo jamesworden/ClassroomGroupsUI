@@ -32,6 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 
 @Component({
   selector: 'app-column-list',
@@ -103,19 +104,32 @@ export class ColumnListComponent {
     );
   }
 
-  deleteColumn(columnId: string) {
-    this.#classroomsService.deleteColumn(
-      this.classroomId(),
-      this.configurationId(),
-      columnId
-    );
+  openDeleteColumnDialog(columnDetail: ColumnDetail) {
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete classroom',
+        subtitle: `Are you sure you want to delete column '${
+          columnDetail.label
+        }' and all of its related student data?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success) => {
+      if (success) {
+        this.#classroomsService.deleteColumn(
+          this.classroomId(),
+          this.configurationId(),
+          columnDetail.id
+        );
+      }
+    });
   }
 
   openEditColumnDialog(columnDetail: ColumnDetail) {
     const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
       restoreFocus: false,
       data: <CreateEditColumnDialogInputs>{
-        title: 'Edit Column',
+        title: 'Edit column',
         existingData: {
           columnDetail,
         },
@@ -142,7 +156,7 @@ export class ColumnListComponent {
     const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
       restoreFocus: false,
       data: <CreateEditColumnDialogInputs>{
-        title: 'Create Column',
+        title: 'Create column',
       },
     });
     dialogRef

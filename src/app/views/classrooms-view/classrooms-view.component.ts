@@ -79,8 +79,8 @@ export class ClassroomsViewComponent {
     const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
       restoreFocus: false,
       data: <YesNoDialogInputs>{
-        title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete classroom '${classroomDetail.label}' and all of it's data?`,
+        title: 'Delete column',
+        subtitle: `Are you sure you want to delete classroom '${classroomDetail.label}' and all of its data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success: boolean) => {

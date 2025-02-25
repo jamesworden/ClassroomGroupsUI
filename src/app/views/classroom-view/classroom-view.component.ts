@@ -198,7 +198,7 @@ export class ClassroomViewComponent {
         title: 'Delete classroom',
         subtitle: `Are you sure you want to delete classroom '${
           this.classroom()?.label
-        }' and all of it's data?`,
+        }' and all of its data?`,
       },
     });
     dialogRef.afterClosed().subscribe((success) => {
@@ -244,7 +244,7 @@ export class ClassroomViewComponent {
         title: 'Delete configuration',
         subtitle: `Are you sure you want to delete configuration '${
           configuration.label
-        }' and all of it's data?`,
+        }' and all of its data?`,
       },
     });
 

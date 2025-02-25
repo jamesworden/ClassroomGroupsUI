@@ -142,7 +142,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
       restoreFocus: false,
       data: <CreateEditColumnDialogInputs>{
-        title: 'Create Column',
+        title: 'Create column',
       },
     });
     dialogRef
