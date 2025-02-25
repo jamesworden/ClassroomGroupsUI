@@ -109,7 +109,12 @@
                         Open sidebar
                       </button>
 
-                      <button mat-button color="primary" class="mt-4 px-6 py-2">
+                      <button
+                        mat-button
+                        color="primary"
+                        class="mt-4 px-6 py-2"
+                        (click)="openCreateConfigurationModal()"
+                      >
                         <mat-icon class="mr-2">add</mat-icon>
                         Create configuration
                       </button>

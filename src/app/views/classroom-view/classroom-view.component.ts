@@ -24,13 +24,21 @@ import {
 import { combineLatest } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
-import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
+import {
+  CreateEditConfigurationDialogComponent,
+  YesNoDialogComponent,
+  YesNoDialogInputs,
+} from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
 import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
 import { ConfigurationViewMode } from '@app/models';
 import { ConfigurationPreviewComponent } from './configuration-preview/configuration-preview.component';
 import { CommonModule } from '@angular/common';
+import {
+  CreateEditColumnDialogInputs,
+  CreateEditColumnDialogOutputs,
+} from './configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -269,5 +277,27 @@ export class ClassroomViewComponent {
 
   goToClassrooms() {
     this.#router.navigate(['/classrooms']);
+  }
+
+  openCreateConfigurationModal() {
+    const dialogRef = this.#matDialog.open(
+      CreateEditConfigurationDialogComponent,
+      {
+        restoreFocus: false,
+        data: <CreateEditColumnDialogInputs>{
+          title: 'Create column',
+        },
+      }
+    );
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createConfiguration(
+            this.classroomId(),
+            outputs.label
+          );
+        }
+      });
   }
 }
