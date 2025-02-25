@@ -178,17 +178,7 @@
       <mat-icon>add_column_right</mat-icon>
       <span>Add column</span>
     </button>
-    <button
-      mat-menu-item
-      (click)="openDeleteConfigurationModal()"
-      [matTooltip]="
-        configurations().length <= 1
-          ? 'You can\'t delete the last configuration'
-          : ''
-      "
-      matTooltipPosition="left"
-      [disabled]="configurations().length <= 1"
-    >
+    <button mat-menu-item (click)="openDeleteConfigurationModal()">
       <mat-icon class="!text-red-500">delete</mat-icon>
       <span>Delete configuration</span>
     </button>

@@ -55,7 +55,7 @@ export class ConfigurationsPanelComponent {
   @ViewChild('addConfigurationInput')
   addConfigurationInput: ElementRef<HTMLInputElement> | undefined;
 
-  readonly selectedConfigurationId = input.required<string>();
+  readonly selectedConfigurationId = input<string>();
   readonly classroomId = input.required<string>();
 
   readonly configurationIdSelected = output<string>();
