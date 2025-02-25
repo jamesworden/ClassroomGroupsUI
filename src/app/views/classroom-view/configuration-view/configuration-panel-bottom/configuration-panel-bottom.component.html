@@ -1,5 +1,5 @@
-<div class="px-2 panel rounded-b-md w-full shadow-lg flex flex-col min-h-2">
-  @if (defaultGroup().studentDetails.length > 0) {
+<div class="px-2 panel rounded-b-md w-full shadow-lg flex flex-col">
+  @if (defaultGroup().studentDetails.length && columnDetails().length) {
     <app-student-list
       [classroomId]="classroomId()"
       [configurationId]="configurationId()"

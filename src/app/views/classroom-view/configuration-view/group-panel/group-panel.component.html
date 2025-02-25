@@ -38,20 +38,22 @@
     </div>
   }
 
-  <app-student-list
-    [roundedTop]="true"
-    [roundedBottom]="true"
-    [classroomId]="classroomId()"
-    [configurationId]="groupDetail().configurationId"
-    [groupId]="groupDetail().id"
-    [groupDetail]="groupDetail()"
-    [studentDetails]="groupDetail().studentDetails"
-    [groupIndex]="groupIndex()"
-    [columnDetails]="columnDetails()"
-    (studentFieldUpdated)="updateStudentField($event)"
-    (studentDeleted)="deleteStudent($event)"
-    (studentPositionUpdated)="updateStudentPosition($event)"
-  ></app-student-list>
+  @if (columnDetails().length) {
+    <app-student-list
+      [roundedTop]="true"
+      [roundedBottom]="true"
+      [classroomId]="classroomId()"
+      [configurationId]="groupDetail().configurationId"
+      [groupId]="groupDetail().id"
+      [groupDetail]="groupDetail()"
+      [studentDetails]="groupDetail().studentDetails"
+      [groupIndex]="groupIndex()"
+      [columnDetails]="columnDetails()"
+      (studentFieldUpdated)="updateStudentField($event)"
+      (studentDeleted)="deleteStudent($event)"
+      (studentPositionUpdated)="updateStudentPosition($event)"
+    ></app-student-list>
+  }
 
   @if (!collapsed()) {
     <app-group-footer

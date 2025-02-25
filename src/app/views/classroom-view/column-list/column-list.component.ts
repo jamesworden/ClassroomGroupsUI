@@ -33,6 +33,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-column-list',
@@ -47,6 +48,7 @@ import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
     MatCheckboxModule,
     MatSlideToggleModule,
     MatTooltipModule,
+    MatButtonModule,
   ],
   templateUrl: './column-list.component.html',
   styleUrl: './column-list.component.scss',
@@ -148,7 +150,10 @@ export class ColumnListComponent {
       });
   }
 
-  openCreateColumnDialog(columnDetail: ColumnDetail, side: 'left' | 'right') {
+  openCreateSideColumnDialog(
+    columnDetail: ColumnDetail,
+    side: 'left' | 'right'
+  ) {
     const targetOrdinal =
       side === 'left' ? columnDetail.ordinal : columnDetail.ordinal + 1;
     const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
@@ -167,6 +172,27 @@ export class ColumnListComponent {
             outputs.label,
             outputs.type,
             targetOrdinal
+          );
+        }
+      });
+  }
+
+  openCreateColumnDialog() {
+    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+      restoreFocus: false,
+      data: <CreateEditColumnDialogInputs>{
+        title: 'Create column',
+      },
+    });
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createColumn(
+            this.classroomId(),
+            this.configurationId(),
+            outputs.label,
+            outputs.type
           );
         }
       });

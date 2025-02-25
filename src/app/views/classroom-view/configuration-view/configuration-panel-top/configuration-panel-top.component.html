@@ -116,7 +116,9 @@
         [configurationId]="configurationId()"
         [defaultGroup]="defaultGroup()"
         [rightHeaderTemplate]="columnRightHeaderTemplate"
-        [roundBottom]="defaultGroup().studentDetails.length <= 0"
+        [roundBottom]="
+          !defaultGroup().studentDetails.length || !columnDetails().length
+        "
       ></app-column-list>
     </div>
   </div>
