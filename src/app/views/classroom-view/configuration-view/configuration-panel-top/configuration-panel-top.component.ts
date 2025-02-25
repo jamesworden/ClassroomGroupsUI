@@ -148,12 +148,10 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     dialogRef
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        const classroomId = this.classroomId();
-        const configurationId = this.configurationId();
-        if (outputs && classroomId && configurationId) {
+        if (outputs) {
           this.#classroomsService.createColumn(
-            classroomId,
-            configurationId,
+            this.classroomId(),
+            this.configurationId(),
             outputs.label,
             outputs.type
           );

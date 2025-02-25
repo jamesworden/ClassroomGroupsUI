@@ -75,41 +75,29 @@
     </mat-action-list>
 
     <div class="flex">
-      @if (addingConfiguration()) {
-        <input
-          #addConfigurationInput
-          type="text"
-          [(ngModel)]="createConfigurationLabel"
-          (keydown.enter)="createConfiguration()"
-          placeholder="Add configuration"
-          class="outline-none border border-primary bg-transparent mx-6 p-2 flex-1"
-        />
-      } @else {
-        <div
-          class="flex flex-col justify-around"
-          [matTooltip]="
+      <div
+        class="flex flex-col justify-around"
+        [matTooltip]="
+          this.configurations().length >=
+          (account()?.subscription?.maxConfigurationsPerClassroom ?? 0)
+            ? 'Configuration limit reached!'
+            : ''
+        "
+      >
+        <button
+          class="ml-6"
+          matSuffix
+          mat-button
+          (click)="openCreateConfigurationModal()"
+          [disabled]="
             this.configurations().length >=
             (account()?.subscription?.maxConfigurationsPerClassroom ?? 0)
-              ? 'Configuration limit reached!'
-              : ''
           "
         >
-          <button
-            class="ml-6"
-            #addConfigurationButton
-            matSuffix
-            mat-button
-            (click)="startAddingConfiguration(); $event.stopPropagation()"
-            [disabled]="
-              this.configurations().length >=
-              (account()?.subscription?.maxConfigurationsPerClassroom ?? 0)
-            "
-          >
-            <mat-icon class="text-md">group_add</mat-icon>
-            <span class="text-sm opacity-80">Add configuration</span>
-          </button>
-        </div>
-      }
+          <mat-icon class="text-md">group_add</mat-icon>
+          <span class="text-sm opacity-80">Add configuration</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
