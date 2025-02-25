@@ -15,7 +15,9 @@
     ></app-student-list>
   }
 
-  @if (!collapsed()) {
+  @if (collapsed()) {
+    <div class="min-h-2"></div>
+  } @else {
     <app-group-footer
       [classroomId]="classroomId()"
       [configurationId]="configurationId()"
