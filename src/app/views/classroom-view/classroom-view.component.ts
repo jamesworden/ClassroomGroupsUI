@@ -39,6 +39,7 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from './configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
+import { ClassroomViewServiceService } from './classroom-view-service.service';
 
 @Component({
   selector: 'app-classroom-view',
@@ -59,6 +60,7 @@ import {
     ClassroomHeaderComponent,
     ConfigurationPreviewComponent,
   ],
+  providers: [ClassroomViewServiceService],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
 })
@@ -69,6 +71,7 @@ export class ClassroomViewComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #activatedRoute = inject(ActivatedRoute);
   readonly #router = inject(Router);
+  readonly #classroomViewService = inject(ClassroomViewServiceService);
 
   readonly theme = this.#themeService.theme;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
@@ -200,23 +203,9 @@ export class ClassroomViewComponent {
   }
 
   openDeleteClassroomDialog() {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete classroom '${
-          this.classroom()?.label
-        }' and all of its data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      const classroomId = this.classroomId();
-      if (success && classroomId) {
-        this.#classroomsService.deleteClassroom(classroomId).subscribe(() => {
-          this.#router.navigate(['/classrooms']);
-        });
-      }
-    });
+    const classroom = this.classroom();
+    classroom &&
+      this.#classroomViewService.openDeleteClassroomDialog(classroom);
   }
 
   selectConfigurationId(configurationId: string) {
