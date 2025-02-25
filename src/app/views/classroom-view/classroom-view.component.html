@@ -36,7 +36,7 @@
               ></app-classroom-header>
 
               @if (configurationDetail(); as configurationDetail) {
-                @if (configurationViewMode() === ConfigurationViewMode.List) {
+                @if (configurationViewMode() === ConfigurationViewMode.Edit) {
                   <app-configuration-view
                     class="flex-1"
                     [configurationDetail]="configurationDetail"

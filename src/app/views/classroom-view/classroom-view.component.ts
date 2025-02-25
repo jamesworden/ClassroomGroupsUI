@@ -73,6 +73,7 @@ export class ClassroomViewComponent {
     initialValue: {
       classroomId: null,
       configurationId: null,
+      configurationViewMode: ConfigurationViewMode,
     },
   });
   readonly classroomId = computed(
@@ -80,6 +81,9 @@ export class ClassroomViewComponent {
   );
   readonly configurationId = computed(
     () => this.queryParams().configurationId as string
+  );
+  readonly configurationViewMode = computed(
+    () => this.queryParams().configurationViewMode as ConfigurationViewMode
   );
   readonly classroom = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
@@ -149,11 +153,10 @@ export class ClassroomViewComponent {
   readonly classroomId$ = toObservable(this.classroomId);
   readonly configurationId$ = toObservable(this.configurationId);
   readonly configurations$ = toObservable(this.configurations);
+  readonly configurationDetail$ = toObservable(this.configurationDetail);
 
   readonly maxStudentsPerClassroom =
     this.#accountsService.select.maxStudentsPerClassroom;
-
-  readonly configurationViewMode = signal(ConfigurationViewMode.List);
 
   readonly ConfigurationViewMode = ConfigurationViewMode;
 
@@ -172,7 +175,7 @@ export class ClassroomViewComponent {
         const configurationId = this.configurationId();
         if (classroomId && firstConfiguration && !configurationId) {
           this.#router.navigate([
-            `/classrooms/${classroomId}/configurations/${firstConfiguration.id}`,
+            `/classrooms/${classroomId}/configurations/${firstConfiguration.id}/${ConfigurationViewMode.Edit}`,
           ]);
         }
       });
@@ -255,7 +258,13 @@ export class ClassroomViewComponent {
   }
 
   setConfigurationViewMode(configurationViewMode: ConfigurationViewMode) {
-    this.configurationViewMode.set(configurationViewMode);
+    this.#router.navigate([
+      'classrooms',
+      this.classroomId(),
+      'configurations',
+      this.configurationId(),
+      configurationViewMode,
+    ]);
   }
 
   goToClassrooms() {
