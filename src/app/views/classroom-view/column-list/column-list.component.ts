@@ -150,9 +150,7 @@ export class ColumnListComponent {
 
   openCreateColumnDialog(columnDetail: ColumnDetail, side: 'left' | 'right') {
     const targetOrdinal =
-      side === 'left'
-        ? Math.max(columnDetail.ordinal, 0)
-        : columnDetail.ordinal + 1;
+      side === 'left' ? columnDetail.ordinal : columnDetail.ordinal + 1;
     const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
       restoreFocus: false,
       data: <CreateEditColumnDialogInputs>{
