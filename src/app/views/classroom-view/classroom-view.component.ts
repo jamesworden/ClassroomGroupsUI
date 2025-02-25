@@ -213,7 +213,7 @@ export class ClassroomViewComponent {
 
   selectConfigurationId(configurationId: string) {
     this.#router.navigate([
-      `/classrooms/${this.classroomId()}/configurations/${configurationId}`,
+      `/classrooms/${this.classroomId()}/configurations/${configurationId}/${this.configurationViewMode()}`,
     ]);
   }
 
