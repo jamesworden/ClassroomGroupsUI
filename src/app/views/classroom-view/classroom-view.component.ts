@@ -285,7 +285,7 @@ export class ClassroomViewComponent {
       {
         restoreFocus: false,
         data: <CreateEditColumnDialogInputs>{
-          title: 'Create column',
+          title: 'Create configuration',
         },
       }
     );

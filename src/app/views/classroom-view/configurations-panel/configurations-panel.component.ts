@@ -83,7 +83,7 @@ export class ConfigurationsPanelComponent {
       {
         restoreFocus: false,
         data: <CreateEditColumnDialogInputs>{
-          title: 'Create column',
+          title: 'Create configuration',
         },
       }
     );
