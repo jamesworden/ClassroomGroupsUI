@@ -6,10 +6,10 @@ import { Themes, ThemeService } from '@app/themes';
 import { AccountsService } from '@shared/accounts';
 
 @Component({
-  selector: 'app-page-not-found-view',
+  selector: 'page-not-found-page',
   imports: [RouterModule, ToolbarComponent, MatIconModule],
-  templateUrl: './page-not-found-view.component.html',
-  styleUrl: './page-not-found-view.component.scss',
+  templateUrl: './page-not-found-page.component.html',
+  styleUrl: './page-not-found-page.component.scss',
 })
 export class NotFoundPageComponent {
   readonly #themeService = inject(ThemeService);
