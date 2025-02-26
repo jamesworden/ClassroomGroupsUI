@@ -1,5 +1,4 @@
 import { Component, computed, inject, input, output } from '@angular/core';
-import { ConfigurationPreviewComponent } from '../configuration-preview/configuration-preview.component';
 import { NoSelectedConfigurationViewComponent } from '../no-selected-configuration-view/no-selected-configuration-view.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -14,6 +13,7 @@ import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewMode } from '@app/models';
 import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
 import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
+import { ConfigurationPreviewComponent } from './configuration-preview/configuration-preview.component';
 
 @Component({
   selector: 'app-classroom-view',

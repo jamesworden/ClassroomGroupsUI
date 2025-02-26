@@ -24,7 +24,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatMenuModule } from '@angular/material/menu';
-import { ColumnListComponent } from '../classroom-view/column-list/column-list.component';
+import { ColumnListComponent } from '../column-list/column-list.component';
 
 interface TextGroup {
   name?: string;
