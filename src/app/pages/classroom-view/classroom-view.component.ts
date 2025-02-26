@@ -49,7 +49,7 @@ import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/class
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
 })
-export class ClassroomViewComponent {
+export class ClassroomPageComponent {
   readonly #themeService = inject(ThemeService);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);

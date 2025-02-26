@@ -18,7 +18,7 @@ import { FeatureCardComponent } from './feature-card/feature-card.component';
   templateUrl: './landing-view.component.html',
   styleUrl: './landing-view.component.scss',
 })
-export class LandingViewComponent {
+export class LandingPageComponent {
   readonly #accountsService = inject(AccountsService);
 
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;

@@ -11,7 +11,7 @@ import { AccountsService } from '@shared/accounts';
   templateUrl: './page-not-found-view.component.html',
   styleUrl: './page-not-found-view.component.scss',
 })
-export class PageNotFoundViewComponent {
+export class NotFoundPageComponent {
   readonly #themeService = inject(ThemeService);
   readonly #accountService = inject(AccountsService);
 

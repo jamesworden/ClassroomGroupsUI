@@ -45,7 +45,7 @@ import {
   styleUrl: './classrooms-view.component.scss',
   providers: [provideNativeDateAdapter()],
 })
-export class ClassroomsViewComponent {
+export class ClassroomsPageComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #router = inject(Router);
   readonly #themeService = inject(ThemeService);

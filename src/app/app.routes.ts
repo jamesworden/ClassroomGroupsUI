@@ -1,16 +1,16 @@
 import { Routes } from '@angular/router';
-import { LandingViewComponent } from './views/landing-view/landing-view.component';
-import { ClassroomsViewComponent } from './views/classrooms-view/classrooms-view.component';
-import { ClassroomViewComponent } from './views/classroom-view/classroom-view.component';
-import { PageNotFoundViewComponent } from './views/page-not-found-view/page-not-found-view.component';
-import { SignInViewComponent } from './views/sign-in-view/sign-in-view.component';
-import { SignUpViewComponent } from './views/sign-up-view/sign-up-view.component';
+import { LandingPageComponent } from './pages/landing-view/landing-view.component';
+import { ClassroomsPageComponent } from './pages/classrooms-view/classrooms-view.component';
+import { ClassroomPageComponent } from './pages/classroom-view/classroom-view.component';
+import { NotFoundPageComponent } from './pages/page-not-found-view/page-not-found-view.component';
+import { SignInPageComponent } from './pages/sign-in-view/sign-in-view.component';
+import { SignUpViewComponent } from './pages/sign-up-view/sign-up-view.component';
 
 export const routes: Routes = [
-  { path: '', component: LandingViewComponent },
+  { path: '', component: LandingPageComponent },
   {
     path: 'sign-in',
-    component: SignInViewComponent,
+    component: SignInPageComponent,
   },
   {
     path: 'sign-up',
@@ -18,15 +18,15 @@ export const routes: Routes = [
   },
   {
     path: 'classrooms',
-    component: ClassroomsViewComponent,
+    component: ClassroomsPageComponent,
   },
   {
     path: 'classrooms/:classroomId',
-    component: ClassroomViewComponent,
+    component: ClassroomPageComponent,
   },
   {
     path: 'classrooms/:classroomId/configurations/:configurationId/:configurationViewMode',
-    component: ClassroomViewComponent,
+    component: ClassroomPageComponent,
   },
-  { path: '**', component: PageNotFoundViewComponent },
+  { path: '**', component: NotFoundPageComponent },
 ];

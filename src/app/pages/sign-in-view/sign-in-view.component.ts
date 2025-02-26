@@ -16,7 +16,7 @@ import { GoogleSignInButtonComponent } from '@ui-inputs';
   templateUrl: './sign-in-view.component.html',
   styleUrl: './sign-in-view.component.scss',
 })
-export class SignInViewComponent {
+export class SignInPageComponent {
   readonly #themeService = inject(ThemeService);
 
   readonly theme = this.#themeService.theme;
