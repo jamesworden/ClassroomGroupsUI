@@ -20,6 +20,7 @@ import { ConfigurationViewMode } from '@app/models';
 import { ConfigurationPreviewComponent } from './configuration-preview/configuration-preview.component';
 import { CommonModule } from '@angular/common';
 import { ClassroomViewService } from './classroom-view.service';
+import { MobileWarningViewComponent } from './mobile-warning-view/mobile-warning-view.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -40,6 +41,7 @@ import { ClassroomViewService } from './classroom-view.service';
     ClassroomHeaderComponent,
     ConfigurationPreviewComponent,
     RouterLink,
+    MobileWarningViewComponent,
   ],
   providers: [ClassroomViewService],
   templateUrl: './classroom-view.component.html',
