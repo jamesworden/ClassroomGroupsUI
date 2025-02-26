@@ -1,10 +1,11 @@
 import {
   Component,
   effect,
+  ElementRef,
   inject,
   input,
-  output,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { GroupPanelComponent } from './group-panel/group-panel.component';
 import {
@@ -67,12 +68,24 @@ export class ConfigurationViewComponent {
   readonly anyAverageScores = input.required<boolean>();
   readonly averageScores = input.required<Record<string, number>>();
 
+  @ViewChild('scrollContainer')
+  scrollContainer!: ElementRef<HTMLElement>;
+
   readonly collapsePanelDetails = signal(false);
 
   editingGroups: GroupDetail[] = [];
 
   constructor() {
     effect(() => (this.editingGroups = this.groupDetails()));
+
+    this.#classroomViewService.scrollToBottom$.subscribe(() => {
+      setTimeout(() => {
+        this.scrollContainer.nativeElement.scrollTo({
+          top: this.scrollContainer.nativeElement.scrollHeight,
+          behavior: 'smooth',
+        });
+      }, 0);
+    });
   }
 
   updateConfigurationLabel(label: string) {

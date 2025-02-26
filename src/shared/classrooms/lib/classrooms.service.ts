@@ -36,6 +36,7 @@ import {
   GroupStudentsResponse,
   EnableColumnResponse,
   DisableColumnResponse,
+  Group,
 } from './models';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -493,7 +494,8 @@ export class ClassroomsService {
     this.patchState((draft) => {
       draft.updatingConfigurationIds.add(configurationId);
     });
-    return this.#httpClient
+
+    const group$ = this.#httpClient
       .post<CreateGroupResponse>(
         `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
         {
@@ -530,9 +532,13 @@ export class ClassroomsService {
             draft.updatingConfigurationIds.delete(configurationId);
           });
         }),
+        map((res) => res?.createdGroupDetail),
         take(1)
-      )
-      .subscribe();
+      );
+
+    const value$ = new BehaviorSubject<Group | undefined>(undefined);
+    group$.subscribe((createdGroupDetail) => value$.next(createdGroupDetail));
+    return value$.asObservable();
   }
 
   public deleteGroup(

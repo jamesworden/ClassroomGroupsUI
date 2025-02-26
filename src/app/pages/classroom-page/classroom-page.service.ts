@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -15,7 +15,7 @@ import {
   Configuration,
   GroupDetail,
 } from '@shared/classrooms';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
@@ -64,6 +64,8 @@ export class ClassroomPageService {
   private readonly classroomId$ = toObservable(this.classroomId);
   private readonly configurationId$ = toObservable(this.configurationId);
   private readonly configurations$ = toObservable(this.configurations);
+
+  public readonly scrollToBottom$ = new Subject<void>();
 
   constructor() {
     this.classroomId$
@@ -284,11 +286,13 @@ export class ClassroomPageService {
       .afterClosed()
       .subscribe((outputs?: CreateEditGroupDialogOutputs) => {
         if (outputs) {
-          this.#classroomsService.createGroup(
-            this.classroomId(),
-            this.configurationId(),
-            outputs.label
-          );
+          this.#classroomsService
+            .createGroup(
+              this.classroomId(),
+              this.configurationId(),
+              outputs.label
+            )
+            .subscribe(() => this.scrollToBottom$.next());
         }
       });
   }
