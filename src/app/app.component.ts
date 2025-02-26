@@ -22,7 +22,8 @@ export class AppComponent {
     this.#accountsService.select.accountLoading
   );
 
-  constructor() {
+  // While unused, this `_themeService` ensures our theme is always applied.
+  constructor(_themeService: ThemeService) {
     combineLatest([this.isLoggedIn$, this.accountLoading$])
       .pipe(
         takeUntilDestroyed(),
