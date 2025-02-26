@@ -23,7 +23,7 @@ import {
   MatButtonToggleModule,
 } from '@angular/material/button-toggle';
 import { ConfigurationViewMode } from '@app/models';
-import { CounterCardComponent } from '../../counter-card/counter-card.component';
+import { CounterCardComponent } from './counter-card/counter-card.component';
 import { ClassroomPageService } from '../../classroom-page.service';
 
 @Component({
