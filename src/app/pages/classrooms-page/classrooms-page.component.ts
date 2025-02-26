@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { ClassroomDetail, ClassroomsService } from '@shared/classrooms';
 import { Router, RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
@@ -40,9 +39,9 @@ import { ClassroomPageService } from '../classroom-page/classroom-page.service';
     AccountMenuButtonComponent,
     CodeLinksMenuButtonComponent,
   ],
-  templateUrl: './classrooms-view.component.html',
-  styleUrl: './classrooms-view.component.scss',
-  providers: [provideNativeDateAdapter()],
+  templateUrl: './classrooms-page.component.html',
+  styleUrl: './classrooms-page.component.scss',
+  providers: [ClassroomPageService],
 })
 export class ClassroomsPageComponent {
   readonly #classroomsService = inject(ClassroomsService);
