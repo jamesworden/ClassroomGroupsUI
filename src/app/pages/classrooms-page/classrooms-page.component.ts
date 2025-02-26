@@ -19,7 +19,7 @@ import {
   CodeLinksMenuButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
-import { ClassroomPageService } from '../classroom-page/classroom-page.service';
+import { ClassroomsPageService } from './classrooms-page.service';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -41,14 +41,14 @@ import { ClassroomPageService } from '../classroom-page/classroom-page.service';
   ],
   templateUrl: './classrooms-page.component.html',
   styleUrl: './classrooms-page.component.scss',
-  providers: [ClassroomPageService],
+  providers: [ClassroomsPageService],
 })
 export class ClassroomsPageComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #router = inject(Router);
   readonly #themeService = inject(ThemeService);
-  readonly #classroomPageService = inject(ClassroomPageService);
   readonly #accountService = inject(AccountsService);
+  readonly #classroomsPageService = inject(ClassroomsPageService);
 
   readonly classroomDetails = this.#classroomsService.select.classroomDetails;
   readonly classroomsLoading = this.#classroomsService.select.classroomsLoading;
@@ -72,6 +72,6 @@ export class ClassroomsPageComponent {
   }
 
   openDeleteClassroomDialog(classroomDetail: ClassroomDetail) {
-    this.#classroomPageService.openDeleteClassroomDialog(classroomDetail);
+    this.#classroomsPageService.openDeleteClassroomDialog(classroomDetail);
   }
 }
