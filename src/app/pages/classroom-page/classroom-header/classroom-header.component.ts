@@ -24,7 +24,7 @@ import {
   MatButtonToggleModule,
 } from '@angular/material/button-toggle';
 import { ConfigurationViewMode } from '@app/models';
-import { ClassroomPageService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-page.service';
 
 @Component({
   selector: 'app-classroom-header',

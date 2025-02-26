@@ -25,7 +25,7 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
-import { ClassroomPageService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-page.service';
 
 @Component({
   selector: 'app-configurations-panel',

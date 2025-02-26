@@ -33,7 +33,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AddGroupPanelComponent } from './add-group-panel/add-group-panel.component';
 import { AverageScoresPanelComponent } from './average-scores-panel/average-scores-panel.component';
-import { ClassroomPageService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-page.service';
 
 @Component({
   selector: 'app-configuration-view',

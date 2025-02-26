@@ -11,7 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
 import { CommonModule } from '@angular/common';
-import { ClassroomPageService } from './classroom-view.service';
+import { ClassroomPageService } from './classroom-page.service';
 import { MobileWarningViewComponent } from './mobile-warning-view/mobile-warning-view.component';
 import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/classroom-not-found-view.component';
 import { ClassroomViewComponent } from './classroom-view/classroom-view.component';

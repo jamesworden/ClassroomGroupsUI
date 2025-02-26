@@ -10,7 +10,7 @@ import {
   ClassroomDetail,
   ClassroomsService,
 } from '@shared/classrooms';
-import { ClassroomPageService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-page.service';
 import { AccountsService } from '@shared/accounts';
 import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewMode } from '@app/models';
