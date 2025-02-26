@@ -14,13 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  CreateEditColumnDialogComponent,
-  CreateEditColumnDialogInputs,
-  CreateEditColumnDialogOutputs,
-} from '../create-edit-column-dialog/create-edit-column-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import {
@@ -37,6 +31,7 @@ import {
   MatCheckboxModule,
 } from '@angular/material/checkbox';
 import { ColumnListComponent } from '../../column-list/column-list.component';
+import { ClassroomPageService } from 'app/pages/classroom-page/classroom-page.service';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -46,7 +41,6 @@ import { ColumnListComponent } from '../../column-list/column-list.component';
     FormsModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule,
     MatTooltipModule,
     MatSlideToggleModule,
     MatMenuModule,
@@ -59,7 +53,7 @@ import { ColumnListComponent } from '../../column-list/column-list.component';
   styleUrl: './configuration-panel-top.component.scss',
 })
 export class ConfigurationPanelTopComponent implements AfterViewInit {
-  readonly #matDialog = inject(MatDialog);
+  readonly #classroomPageService = inject(ClassroomPageService);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
 
@@ -139,24 +133,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   }
 
   openCreateColumnDialog() {
-    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-      restoreFocus: false,
-      data: <CreateEditColumnDialogInputs>{
-        title: 'Create column',
-      },
-    });
-    dialogRef
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.createColumn(
-            this.classroomId(),
-            this.configurationId(),
-            outputs.label,
-            outputs.type
-          );
-        }
-      });
+    this.#classroomPageService.openCreateColumnDialog();
   }
 
   createGroup() {
