@@ -6,7 +6,14 @@
 
         <span class="flex-auto"></span>
 
-        <app-home-button></app-home-button>
+        <button
+          matTooltip="Home"
+          mat-icon-button
+          [routerLink]="['/']"
+          class="!flex"
+        >
+          <mat-icon>arrow_back</mat-icon>
+        </button>
 
         <app-code-links-menu-button></app-code-links-menu-button>
 

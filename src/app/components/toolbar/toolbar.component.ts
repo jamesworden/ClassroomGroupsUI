@@ -9,7 +9,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   AccountMenuButtonComponent,
   CodeLinksMenuButtonComponent,
-  HomeButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 
@@ -25,7 +24,6 @@ import {
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
     CodeLinksMenuButtonComponent,
-    HomeButtonComponent,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
