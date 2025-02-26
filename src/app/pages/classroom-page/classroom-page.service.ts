@@ -88,55 +88,11 @@ export class ClassroomPageService {
       });
   }
 
-  openDeleteClassroomDialog({ label, id }: ClassroomDetail) {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete classroom '${
-          label
-        }' and all of its data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      if (success) {
-        this.#classroomsService.deleteClassroom(id).subscribe(() => {
-          this.#router.navigate(['/classrooms']);
-        });
-      }
-    });
-  }
-
   selectFirstConfiguration() {
     const [firstConfigurationId] = this.configurationIds();
     if (firstConfigurationId) {
       this.selectConfiguration(firstConfigurationId);
     }
-  }
-
-  selectConfiguration(configurationId: string) {
-    this.#router.navigate([
-      `/classrooms/${this.classroomId()}/configurations/${configurationId}/${this.configurationViewMode()}`,
-    ]);
-  }
-
-  openDeleteConfigurationModal(configuration: Configuration) {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete configuration',
-        subtitle: `Are you sure you want to delete configuration '${
-          configuration.label
-        }' and all of its data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      if (success) {
-        this.#classroomsService
-          .deleteConfiguration(configuration.classroomId, configuration.id)
-          .subscribe(() => this.selectFirstConfiguration());
-      }
-    });
   }
 
   setConfigurationViewMode(configurationViewMode: ConfigurationViewMode) {
@@ -149,17 +105,62 @@ export class ClassroomPageService {
     ]);
   }
 
+  selectConfiguration(configurationId: string) {
+    this.#router.navigate([
+      `/classrooms/${this.classroomId()}/configurations/${configurationId}/${this.configurationViewMode()}`,
+    ]);
+  }
+
+  openDeleteConfigurationModal(configuration: Configuration) {
+    this.#matDialog
+      .open(YesNoDialogComponent, {
+        restoreFocus: false,
+        data: <YesNoDialogInputs>{
+          title: 'Delete configuration',
+          subtitle: `Are you sure you want to delete configuration '${
+            configuration.label
+          }' and all of its data?`,
+        },
+      })
+      .afterClosed()
+      .subscribe((success) => {
+        if (success) {
+          this.#classroomsService
+            .deleteConfiguration(configuration.classroomId, configuration.id)
+            .subscribe(() => this.selectFirstConfiguration());
+        }
+      });
+  }
+
+  openDeleteClassroomDialog({ label, id }: ClassroomDetail) {
+    this.#matDialog
+      .open(YesNoDialogComponent, {
+        restoreFocus: false,
+        data: <YesNoDialogInputs>{
+          title: 'Delete classroom',
+          subtitle: `Are you sure you want to delete classroom '${
+            label
+          }' and all of its data?`,
+        },
+      })
+      .afterClosed()
+      .subscribe((success) => {
+        if (success) {
+          this.#classroomsService.deleteClassroom(id).subscribe(() => {
+            this.#router.navigate(['/classrooms']);
+          });
+        }
+      });
+  }
+
   openCreateConfigurationDialog() {
-    const dialogRef = this.#matDialog.open(
-      CreateEditConfigurationDialogComponent,
-      {
+    this.#matDialog
+      .open(CreateEditConfigurationDialogComponent, {
         restoreFocus: false,
         data: <CreateEditColumnDialogInputs>{
           title: 'Create configuration',
         },
-      }
-    );
-    dialogRef
+      })
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
         if (outputs) {
@@ -172,37 +173,39 @@ export class ClassroomPageService {
   }
 
   openDeleteColumnDialog(columnDetail: ColumnDetail) {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete column '${
-          columnDetail.label
-        }' and all of its related student data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      if (success) {
-        this.#classroomsService.deleteColumn(
-          this.classroomId(),
-          this.configurationId(),
-          columnDetail.id
-        );
-      }
-    });
+    this.#matDialog
+      .open(YesNoDialogComponent, {
+        restoreFocus: false,
+        data: <YesNoDialogInputs>{
+          title: 'Delete classroom',
+          subtitle: `Are you sure you want to delete column '${
+            columnDetail.label
+          }' and all of its related student data?`,
+        },
+      })
+      .afterClosed()
+      .subscribe((success) => {
+        if (success) {
+          this.#classroomsService.deleteColumn(
+            this.classroomId(),
+            this.configurationId(),
+            columnDetail.id
+          );
+        }
+      });
   }
 
   openEditColumnDialog(columnDetail: ColumnDetail) {
-    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-      restoreFocus: false,
-      data: <CreateEditColumnDialogInputs>{
-        title: 'Edit column',
-        existingData: {
-          columnDetail,
+    this.#matDialog
+      .open(CreateEditColumnDialogComponent, {
+        restoreFocus: false,
+        data: <CreateEditColumnDialogInputs>{
+          title: 'Edit column',
+          existingData: {
+            columnDetail,
+          },
         },
-      },
-    });
-    dialogRef
+      })
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
         if (outputs) {
@@ -216,13 +219,13 @@ export class ClassroomPageService {
   }
 
   openCreateColumnDialog(targetOrdinal?: number) {
-    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-      restoreFocus: false,
-      data: <CreateEditColumnDialogInputs>{
-        title: 'Create column',
-      },
-    });
-    dialogRef
+    this.#matDialog
+      .open(CreateEditColumnDialogComponent, {
+        restoreFocus: false,
+        data: <CreateEditColumnDialogInputs>{
+          title: 'Create column',
+        },
+      })
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
         if (outputs) {
@@ -238,16 +241,13 @@ export class ClassroomPageService {
   }
 
   openCreateConfigurationModal() {
-    const dialogRef = this.#matDialog.open(
-      CreateEditConfigurationDialogComponent,
-      {
+    this.#matDialog
+      .open(CreateEditConfigurationDialogComponent, {
         restoreFocus: false,
         data: <CreateEditColumnDialogInputs>{
           title: 'Create configuration',
         },
-      }
-    );
-    dialogRef
+      })
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
         if (outputs) {
