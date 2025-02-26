@@ -6,11 +6,7 @@ import {
 } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  CreateEditConfigurationDialogComponent,
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from '@app/components';
+import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { ConfigurationViewMode } from '@app/models';
 import {
   ClassroomDetail,
@@ -24,6 +20,7 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from './classroom-view/configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
+import { CreateEditConfigurationDialogComponent } from './create-edit-configuration-dialog/create-edit-configuration-dialog.component';
 
 @Injectable({
   providedIn: 'root',
@@ -235,6 +232,28 @@ export class ClassroomPageService {
             outputs.label,
             outputs.type,
             targetOrdinal
+          );
+        }
+      });
+  }
+
+  openCreateConfigurationModal() {
+    const dialogRef = this.#matDialog.open(
+      CreateEditConfigurationDialogComponent,
+      {
+        restoreFocus: false,
+        data: <CreateEditColumnDialogInputs>{
+          title: 'Create configuration',
+        },
+      }
+    );
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createConfiguration(
+            this.classroomId(),
+            outputs.label
           );
         }
       });

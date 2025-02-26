@@ -3,7 +3,6 @@ import {
   computed,
   inject,
   input,
-  output,
   Signal,
   signal,
 } from '@angular/core';
@@ -19,13 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
-import { MatDialog } from '@angular/material/dialog';
-import { CreateEditConfigurationDialogComponent } from '@app/components';
 import { ClassroomPageService } from '../classroom-page.service';
-import {
-  CreateEditColumnDialogInputs,
-  CreateEditColumnDialogOutputs,
-} from '../classroom-view/configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -49,8 +42,7 @@ import {
 export class ConfigurationsPanelComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
-  readonly #matDialog = inject(MatDialog);
-  readonly #classroomViewService = inject(ClassroomPageService);
+  readonly #classroomPageService = inject(ClassroomPageService);
 
   readonly classroomId = input.required<string>();
 
@@ -64,7 +56,7 @@ export class ConfigurationsPanelComponent {
     this.#classroomsService.select.configurations(this.classroomId())()
   );
 
-  readonly selectedConfigurationId = this.#classroomViewService.configurationId;
+  readonly selectedConfigurationId = this.#classroomPageService.configurationId;
   readonly account = this.#accountsService.select.account;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly configurationsLoading =
@@ -73,29 +65,11 @@ export class ConfigurationsPanelComponent {
   readonly searchQuery = signal('');
 
   selectConfiguration(configurationId: string) {
-    this.#classroomViewService.selectConfiguration(configurationId);
+    this.#classroomPageService.selectConfiguration(configurationId);
   }
 
   openCreateConfigurationModal() {
-    const dialogRef = this.#matDialog.open(
-      CreateEditConfigurationDialogComponent,
-      {
-        restoreFocus: false,
-        data: <CreateEditColumnDialogInputs>{
-          title: 'Create configuration',
-        },
-      }
-    );
-    dialogRef
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.createConfiguration(
-            this.classroomId(),
-            outputs.label
-          );
-        }
-      });
+    this.#classroomPageService.openCreateConfigurationModal();
   }
 
   openDeleteConfigurationModal(configurationId: string) {
@@ -107,6 +81,6 @@ export class ConfigurationsPanelComponent {
     if (!configuration) {
       return;
     }
-    this.#classroomViewService.openDeleteConfigurationModal(configuration);
+    this.#classroomPageService.openDeleteConfigurationModal(configuration);
   }
 }
