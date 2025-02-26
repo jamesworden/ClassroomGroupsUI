@@ -56,7 +56,6 @@ export class ClassroomHeaderComponent {
   readonly configurationViewMode = input.required<ConfigurationViewMode>();
   readonly sidenavOpen = input.required<boolean>();
 
-  readonly deleteClassroomDialogOpened = output();
   readonly configurationViewModeSet = output<ConfigurationViewMode>();
   readonly toggleSidenav = output();
 
@@ -92,7 +91,7 @@ export class ClassroomHeaderComponent {
   }
 
   openDeleteClassroomDialog() {
-    this.deleteClassroomDialogOpened.emit();
+    this.#classroomViewService.openDeleteClassroomDialog(this.classroom());
   }
 
   setConfigurationViewMode({ value }: MatButtonToggleChange) {

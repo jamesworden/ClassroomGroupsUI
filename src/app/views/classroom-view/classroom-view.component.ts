@@ -118,12 +118,6 @@ export class ClassroomViewComponent {
   readonly ConfigurationViewMode = ConfigurationViewMode;
   readonly Themes = Themes;
 
-  openDeleteClassroomDialog() {
-    const classroom = this.classroom();
-    classroom &&
-      this.#classroomViewService.openDeleteClassroomDialog(classroom);
-  }
-
   openDeleteConfigurationModal(configurationId: string) {
     const classroomId = this.classroomId();
     if (!classroomId) {
