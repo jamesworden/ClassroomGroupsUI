@@ -14,7 +14,6 @@ import {
   input,
   TemplateRef,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import {
   ClassroomsService,
@@ -27,13 +26,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  CreateEditColumnDialogComponent,
-  CreateEditColumnDialogInputs,
-  CreateEditColumnDialogOutputs,
-} from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 import { ClassroomPageService } from '../../classroom-page.service';
 
 @Component({
@@ -56,7 +49,6 @@ import { ClassroomPageService } from '../../classroom-page.service';
 })
 export class ColumnListComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #matDialog = inject(MatDialog);
   readonly #accountsService = inject(AccountsService);
   readonly #classroomPageService = inject(ClassroomPageService);
 
