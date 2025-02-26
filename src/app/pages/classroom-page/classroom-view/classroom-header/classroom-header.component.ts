@@ -6,7 +6,6 @@ import {
   GroupDetail,
   StudentDetail,
 } from '@shared/classrooms';
-import { CounterCardComponent } from '../counter-card/counter-card.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
@@ -24,7 +23,8 @@ import {
   MatButtonToggleModule,
 } from '@angular/material/button-toggle';
 import { ConfigurationViewMode } from '@app/models';
-import { ClassroomPageService } from '../classroom-page.service';
+import { CounterCardComponent } from '../../counter-card/counter-card.component';
+import { ClassroomPageService } from '../../classroom-page.service';
 
 @Component({
   selector: 'app-classroom-header',
