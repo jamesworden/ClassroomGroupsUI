@@ -6,15 +6,15 @@ import { Themes, ThemeService } from '@app/themes';
 import { GoogleSignInButtonComponent } from '@ui-inputs';
 
 @Component({
-  selector: 'app-sign-up-view',
+  selector: 'app-sign-up-page',
   imports: [
     CommonModule,
     ToolbarComponent,
     GoogleSignInButtonComponent,
     RouterModule,
   ],
-  templateUrl: './sign-up-view.component.html',
-  styleUrl: './sign-up-view.component.scss',
+  templateUrl: './sign-up-page.component.html',
+  styleUrl: './sign-up-page.component.scss',
 })
 export class SignUpViewComponent {
   readonly #themeService = inject(ThemeService);

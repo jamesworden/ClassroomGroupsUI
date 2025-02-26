@@ -4,7 +4,7 @@ import { ClassroomsPageComponent } from './pages/classrooms-view/classrooms-view
 import { ClassroomPageComponent } from './pages/classroom-view/classroom-view.component';
 import { NotFoundPageComponent } from './pages/page-not-found-view/page-not-found-view.component';
 import { SignInPageComponent } from './pages/sign-in-view/sign-in-view.component';
-import { SignUpViewComponent } from './pages/sign-up-view/sign-up-view.component';
+import { SignUpViewComponent } from './pages/sign-up-page/sign-up-page.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },
