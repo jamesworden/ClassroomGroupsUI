@@ -137,10 +137,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   }
 
   createGroup() {
-    this.#classroomsService.createGroup(
-      this.classroomId(),
-      this.configurationId()
-    );
+    this.#classroomPageService.openCreateGroupDialog();
   }
 
   createStudent() {

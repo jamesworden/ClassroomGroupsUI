@@ -487,7 +487,8 @@ export class ClassroomsService {
   public createGroup(
     classroomId: string,
     configurationId: string,
-    label?: string
+    label?: string,
+    description?: string
   ) {
     this.patchState((draft) => {
       draft.updatingConfigurationIds.add(configurationId);
@@ -497,6 +498,7 @@ export class ClassroomsService {
         `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/groups`,
         {
           label,
+          description,
         },
         {
           withCredentials: true,

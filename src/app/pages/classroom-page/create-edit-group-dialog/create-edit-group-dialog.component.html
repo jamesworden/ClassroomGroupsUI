@@ -1,0 +1,41 @@
+<div class="p-6">
+  <h2 class="text-xl font-semibold mb-4">{{ data.title }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="space-y-4 mb-6">
+      <div class="w-full">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Group Name</mat-label>
+          <input
+            matInput
+            formControlName="label"
+            #labelInput
+            placeholder="Enter group name"
+            maxlength="50"
+          />
+          @if (form.get('label')?.hasError('maxlength')) {
+            <mat-error> Group name cannot exceed 50 characters </mat-error>
+          }
+          <mat-hint align="end"
+            >{{ form.get('label')?.value?.length || 0 }}/50</mat-hint
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 mt-4">
+      <button mat-button type="button" class="px-4 py-1" (click)="onCancel()">
+        Cancel
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="px-4 py-1"
+        [disabled]="form.invalid"
+      >
+        {{ data.isEditing ? 'Update' : 'Create' }}
+      </button>
+    </div>
+  </form>
+</div>

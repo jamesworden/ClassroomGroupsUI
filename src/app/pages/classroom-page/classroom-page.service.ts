@@ -22,6 +22,11 @@ import {
   CreateEditColumnDialogOutputs,
 } from './create-edit-column-dialog/create-edit-column-dialog.component';
 import { CreateEditConfigurationDialogComponent } from './create-edit-configuration-dialog/create-edit-configuration-dialog.component';
+import {
+  CreateEditGroupDialogComponent,
+  CreateEditGroupDialogInputs,
+  CreateEditGroupDialogOutputs,
+} from './create-edit-group-dialog/create-edit-group-dialog.component';
 
 @Injectable({
   providedIn: 'root',
@@ -263,6 +268,26 @@ export class ClassroomPageService {
             this.classroomId(),
             groupDetail.configurationId,
             groupDetail.id
+          );
+        }
+      });
+  }
+
+  public openCreateGroupDialog() {
+    this.#matDialog
+      .open(CreateEditGroupDialogComponent, {
+        restoreFocus: false,
+        data: <CreateEditGroupDialogInputs>{
+          title: 'Create group',
+        },
+      })
+      .afterClosed()
+      .subscribe((outputs?: CreateEditGroupDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.createGroup(
+            this.classroomId(),
+            this.configurationId(),
+            outputs.label
           );
         }
       });
