@@ -21,7 +21,7 @@ import { combineLatest } from 'rxjs';
 import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
-} from './configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
+} from './classroom-view/configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 
 @Injectable({
   providedIn: 'root',

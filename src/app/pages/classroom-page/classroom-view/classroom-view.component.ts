@@ -1,5 +1,4 @@
 import { Component, computed, inject, input, output } from '@angular/core';
-import { ConfigurationViewComponent } from '../configuration-view/configuration-view.component';
 import { ConfigurationPreviewComponent } from '../configuration-preview/configuration-preview.component';
 import { NoSelectedConfigurationViewComponent } from '../no-selected-configuration-view/no-selected-configuration-view.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -14,16 +13,17 @@ import { AccountsService } from '@shared/accounts';
 import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewMode } from '@app/models';
 import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
+import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
 
 @Component({
   selector: 'app-classroom-view',
   imports: [
     ClassroomHeaderComponent,
-    ConfigurationViewComponent,
     ConfigurationPreviewComponent,
     NoSelectedConfigurationViewComponent,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    ConfigurationViewComponent,
   ],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',

@@ -33,7 +33,7 @@ import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
-} from '../../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
+} from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 
 @Component({
   selector: 'app-column-list',

@@ -21,11 +21,11 @@ import { CommonModule } from '@angular/common';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateEditConfigurationDialogComponent } from '@app/components';
+import { ClassroomPageService } from '../classroom-page.service';
 import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
-} from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
-import { ClassroomPageService } from '../classroom-page.service';
+} from '../classroom-view/configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 
 @Component({
   selector: 'app-configurations-panel',
