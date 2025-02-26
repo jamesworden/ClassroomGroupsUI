@@ -21,6 +21,7 @@ import { ConfigurationPreviewComponent } from './configuration-preview/configura
 import { CommonModule } from '@angular/common';
 import { ClassroomViewService } from './classroom-view.service';
 import { MobileWarningViewComponent } from './mobile-warning-view/mobile-warning-view.component';
+import { NoSelectedConfigurationViewComponent } from './no-selected-configuration-view/no-selected-configuration-view.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -42,6 +43,7 @@ import { MobileWarningViewComponent } from './mobile-warning-view/mobile-warning
     ConfigurationPreviewComponent,
     RouterLink,
     MobileWarningViewComponent,
+    NoSelectedConfigurationViewComponent,
   ],
   providers: [ClassroomViewService],
   templateUrl: './classroom-view.component.html',
@@ -133,9 +135,5 @@ export class ClassroomViewComponent {
       return;
     }
     this.#classroomViewService.openDeleteConfigurationModal(configuration);
-  }
-
-  openCreateConfigurationModal() {
-    this.#classroomViewService.openCreateConfigurationDialog();
   }
 }

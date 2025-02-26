@@ -73,52 +73,10 @@
                   <mat-spinner class="pl-12"></mat-spinner>
                 </div>
               } @else {
-                <div
-                  class="flex flex-col items-center justify-center w-full px-6 rounded-lg shadow-sm flex-auto"
-                >
-                  <div
-                    class="flex flex-col items-center space-y-6 max-w-md -mt-32"
-                  >
-                    <div
-                      class="text-primary animate-pulse flex items-center justify-center h-20 w-20"
-                    >
-                      <mat-icon class="text-6xl big-icon">assignment</mat-icon>
-                    </div>
-
-                    <h2 class="text-2xl font-semibold text-center">
-                      No Configuration Selected
-                    </h2>
-
-                    <p class="text-center opacity-80">
-                      Select a configuration from the sidebar or create a new
-                      one to get started. Configurations allow you to organize
-                      your classroom data in different ways.
-                    </p>
-
-                    <div class="flex space-x-4">
-                      <button
-                        mat-button
-                        color="primary"
-                        class="mt-4 px-6 py-2"
-                        (click)="configurationsSidenav.toggle()"
-                        *ngIf="!configurationsSidenav.opened"
-                      >
-                        <mat-icon class="mr-2">menu</mat-icon>
-                        Open sidebar
-                      </button>
-
-                      <button
-                        mat-button
-                        color="primary"
-                        class="mt-4 px-6 py-2"
-                        (click)="openCreateConfigurationModal()"
-                      >
-                        <mat-icon class="mr-2">add</mat-icon>
-                        Create configuration
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <app-no-selected-configuration-view
+                  [sidenavOpen]="configurationsSidenav.opened"
+                  (sidenavOpened)="configurationsSidenav.toggle()"
+                ></app-no-selected-configuration-view>
               }
 
               <section class="sticky bottom-0 flex pl-4">
