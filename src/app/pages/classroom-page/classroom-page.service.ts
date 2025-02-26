@@ -20,7 +20,7 @@ import {
   CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
-} from './classroom-view/configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
+} from './create-edit-column-dialog/create-edit-column-dialog.component';
 import { CreateEditConfigurationDialogComponent } from './create-edit-configuration-dialog/create-edit-configuration-dialog.component';
 
 @Injectable({
