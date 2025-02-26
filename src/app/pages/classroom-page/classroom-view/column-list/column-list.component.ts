@@ -94,12 +94,10 @@ export class ColumnListComponent {
       event.previousIndex,
       event.currentIndex
     );
-
     const moveColumnDetail: MoveColumnDetail = {
       currIndex: event.currentIndex,
       prevIndex: event.previousIndex,
     };
-
     this.#classroomsService.moveColumn(
       classroomId,
       configurationId,
