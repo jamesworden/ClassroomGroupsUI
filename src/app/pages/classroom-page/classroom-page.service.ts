@@ -32,31 +32,33 @@ export class ClassroomPageService {
   readonly #router = inject(Router);
   readonly #activatedRoute = inject(ActivatedRoute);
 
-  readonly queryParams = toSignal(this.#activatedRoute.params, {
+  private readonly queryParams = toSignal(this.#activatedRoute.params, {
     initialValue: {
       classroomId: null,
       configurationId: null,
       configurationViewMode: ConfigurationViewMode,
     },
   });
-  readonly classroomId = computed(
+
+  public readonly classroomId = computed(
     () => this.queryParams().classroomId as string
   );
-  readonly configurationId = computed(
+  public readonly configurationId = computed(
     () => this.queryParams().configurationId as string
   );
-  readonly configurationViewMode = computed(
+  public readonly configurationViewMode = computed(
     () => this.queryParams().configurationViewMode as ConfigurationViewMode
   );
-  readonly configurations = computed(() =>
+
+  private readonly configurations = computed(() =>
     this.#classroomsService.select.configurations(this.classroomId())()
   );
-  readonly configurationIds = computed(() =>
+  private readonly configurationIds = computed(() =>
     this.#classroomsService.select.configurationIds(this.classroomId())()
   );
-  readonly classroomId$ = toObservable(this.classroomId);
-  readonly configurationId$ = toObservable(this.configurationId);
-  readonly configurations$ = toObservable(this.configurations);
+  private readonly classroomId$ = toObservable(this.classroomId);
+  private readonly configurationId$ = toObservable(this.configurationId);
+  private readonly configurations$ = toObservable(this.configurations);
 
   constructor() {
     this.classroomId$
@@ -89,14 +91,16 @@ export class ClassroomPageService {
       });
   }
 
-  selectFirstConfiguration() {
+  public selectFirstConfiguration() {
     const [firstConfigurationId] = this.configurationIds();
     if (firstConfigurationId) {
       this.selectConfiguration(firstConfigurationId);
     }
   }
 
-  setConfigurationViewMode(configurationViewMode: ConfigurationViewMode) {
+  public setConfigurationViewMode(
+    configurationViewMode: ConfigurationViewMode
+  ) {
     this.#router.navigate([
       'classrooms',
       this.classroomId(),
@@ -106,13 +110,13 @@ export class ClassroomPageService {
     ]);
   }
 
-  selectConfiguration(configurationId: string) {
+  public selectConfiguration(configurationId: string) {
     this.#router.navigate([
       `/classrooms/${this.classroomId()}/configurations/${configurationId}/${this.configurationViewMode()}`,
     ]);
   }
 
-  openDeleteConfigurationDialog(configuration: Configuration) {
+  public openDeleteConfigurationDialog(configuration: Configuration) {
     this.#matDialog
       .open(YesNoDialogComponent, {
         restoreFocus: false,
@@ -133,7 +137,7 @@ export class ClassroomPageService {
       });
   }
 
-  openDeleteClassroomDialog({ label, id }: ClassroomDetail) {
+  public openDeleteClassroomDialog({ label, id }: ClassroomDetail) {
     this.#matDialog
       .open(YesNoDialogComponent, {
         restoreFocus: false,
@@ -154,7 +158,7 @@ export class ClassroomPageService {
       });
   }
 
-  openCreateConfigurationDialog() {
+  public openCreateConfigurationDialog() {
     this.#matDialog
       .open(CreateEditConfigurationDialogComponent, {
         restoreFocus: false,
@@ -173,7 +177,7 @@ export class ClassroomPageService {
       });
   }
 
-  openDeleteColumnDialog(columnDetail: ColumnDetail) {
+  public openDeleteColumnDialog(columnDetail: ColumnDetail) {
     this.#matDialog
       .open(YesNoDialogComponent, {
         restoreFocus: false,
@@ -196,7 +200,7 @@ export class ClassroomPageService {
       });
   }
 
-  openEditColumnDialog(columnDetail: ColumnDetail) {
+  public openEditColumnDialog(columnDetail: ColumnDetail) {
     this.#matDialog
       .open(CreateEditColumnDialogComponent, {
         restoreFocus: false,
@@ -219,7 +223,7 @@ export class ClassroomPageService {
       });
   }
 
-  openCreateColumnDialog(targetOrdinal?: number) {
+  public openCreateColumnDialog(targetOrdinal?: number) {
     this.#matDialog
       .open(CreateEditColumnDialogComponent, {
         restoreFocus: false,
@@ -241,7 +245,7 @@ export class ClassroomPageService {
       });
   }
 
-  openDeleteGroupDialog(groupDetail: GroupDetail) {
+  public openDeleteGroupDialog(groupDetail: GroupDetail) {
     this.#matDialog
       .open(YesNoDialogComponent, {
         restoreFocus: false,
