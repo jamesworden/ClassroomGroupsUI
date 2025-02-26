@@ -7,7 +7,7 @@ import { AccountsService } from '@shared/accounts';
 import { FeatureCardComponent } from './feature-card/feature-card.component';
 
 @Component({
-  selector: 'app-landing-view',
+  selector: 'app-landing-page',
   imports: [
     MatIconModule,
     CommonModule,
@@ -15,8 +15,8 @@ import { FeatureCardComponent } from './feature-card/feature-card.component';
     RouterModule,
     FeatureCardComponent,
   ],
-  templateUrl: './landing-view.component.html',
-  styleUrl: './landing-view.component.scss',
+  templateUrl: './landing-page.component.html',
+  styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent {
   readonly #accountsService = inject(AccountsService);

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { LandingPageComponent } from './pages/landing-view/landing-view.component';
+import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { ClassroomsPageComponent } from './pages/classrooms-view/classrooms-view.component';
 import { ClassroomPageComponent } from './pages/classroom-view/classroom-view.component';
 import { NotFoundPageComponent } from './pages/page-not-found-page/page-not-found-page.component';
