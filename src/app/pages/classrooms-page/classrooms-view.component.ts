@@ -7,7 +7,6 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { ClassroomDetail, ClassroomsService } from '@shared/classrooms';
 import { Router, RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -15,13 +14,13 @@ import { AccountsService } from '@shared/accounts';
 import { CommonModule } from '@angular/common';
 import { SubscriptionPlanCardComponent } from './subscription-plan-card/subscription-plan-card.component';
 import { subscriptionPlans } from '@app/metadata';
-import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import {
   AccountMenuButtonComponent,
   CodeLinksMenuButtonComponent,
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
+import { ClassroomPageService } from '../classroom-page/classroom-page.service';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -49,7 +48,7 @@ export class ClassroomsPageComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #router = inject(Router);
   readonly #themeService = inject(ThemeService);
-  readonly #matDialog = inject(MatDialog);
+  readonly #classroomPageService = inject(ClassroomPageService);
   readonly #accountService = inject(AccountsService);
 
   readonly classroomDetails = this.#classroomsService.select.classroomDetails;
@@ -74,17 +73,6 @@ export class ClassroomsPageComponent {
   }
 
   openDeleteClassroomModal(classroomDetail: ClassroomDetail) {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete column',
-        subtitle: `Are you sure you want to delete classroom '${classroomDetail.label}' and all of its data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success: boolean) => {
-      if (success) {
-        this.#classroomsService.deleteClassroom(classroomDetail.id);
-      }
-    });
+    this.#classroomPageService.openDeleteClassroomDialog(classroomDetail);
   }
 }
