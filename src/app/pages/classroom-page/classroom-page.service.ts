@@ -112,7 +112,7 @@ export class ClassroomPageService {
     ]);
   }
 
-  openDeleteConfigurationModal(configuration: Configuration) {
+  openDeleteConfigurationDialog(configuration: Configuration) {
     this.#matDialog
       .open(YesNoDialogComponent, {
         restoreFocus: false,
@@ -236,25 +236,6 @@ export class ClassroomPageService {
             outputs.label,
             outputs.type,
             targetOrdinal
-          );
-        }
-      });
-  }
-
-  openCreateConfigurationModal() {
-    this.#matDialog
-      .open(CreateEditConfigurationDialogComponent, {
-        restoreFocus: false,
-        data: <CreateEditColumnDialogInputs>{
-          title: 'Create configuration',
-        },
-      })
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.createConfiguration(
-            this.classroomId(),
-            outputs.label
           );
         }
       });

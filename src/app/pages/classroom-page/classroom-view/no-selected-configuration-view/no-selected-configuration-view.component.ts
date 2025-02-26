@@ -16,7 +16,7 @@ export class NoSelectedConfigurationViewComponent {
 
   readonly sidenavToggled = output();
 
-  openCreateConfigurationModal() {
+  openCreateConfigurationDialog() {
     this.#classroomViewService.openCreateConfigurationDialog();
   }
 

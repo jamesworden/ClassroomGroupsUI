@@ -68,11 +68,11 @@ export class ConfigurationsPanelComponent {
     this.#classroomPageService.selectConfiguration(configurationId);
   }
 
-  openCreateConfigurationModal() {
-    this.#classroomPageService.openCreateConfigurationModal();
+  openCreateConfigurationDialog() {
+    this.#classroomPageService.openCreateConfigurationDialog();
   }
 
-  openDeleteConfigurationModal(configurationId: string) {
+  openDeleteConfigurationDialog(configurationId: string) {
     const classroomId = this.classroomId();
     const configuration = this.#classroomsService.select.configuration(
       classroomId,
@@ -81,6 +81,6 @@ export class ConfigurationsPanelComponent {
     if (!configuration) {
       return;
     }
-    this.#classroomPageService.openDeleteConfigurationModal(configuration);
+    this.#classroomPageService.openDeleteConfigurationDialog(configuration);
   }
 }

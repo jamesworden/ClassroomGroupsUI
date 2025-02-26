@@ -72,7 +72,7 @@ export class ClassroomsPageComponent {
     });
   }
 
-  openDeleteClassroomModal(classroomDetail: ClassroomDetail) {
+  openDeleteClassroomDialog(classroomDetail: ClassroomDetail) {
     this.#classroomPageService.openDeleteClassroomDialog(classroomDetail);
   }
 }

@@ -62,7 +62,7 @@
                 <button
                   class="context-menu-item"
                   cdkMenuItem
-                  (click)="openDeleteConfigurationModal(configuration.id)"
+                  (click)="openDeleteConfigurationDialog(configuration.id)"
                 >
                   <mat-icon class="mr-3 !text-red-500">group_remove</mat-icon>
                   <span>Delete configuration</span>
@@ -88,7 +88,7 @@
           class="ml-6"
           matSuffix
           mat-button
-          (click)="openCreateConfigurationModal()"
+          (click)="openCreateConfigurationDialog()"
           [disabled]="
             this.configurations().length >=
             (account()?.subscription?.maxConfigurationsPerClassroom ?? 0)

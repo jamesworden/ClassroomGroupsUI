@@ -128,7 +128,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     this.labelUpdated.emit(label);
   }
 
-  openDeleteConfigurationModal() {
+  openDeleteConfigurationDialog() {
     this.deletedConfiguration.emit(this.configurationId());
   }
 

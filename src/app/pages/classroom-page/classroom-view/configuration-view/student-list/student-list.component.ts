@@ -122,13 +122,13 @@ export class StudentListComponent {
 
   deleteStudent(studentDetail: StudentDetail) {
     if (this.groupDetail().isLocked) {
-      this.openDeleteStudentModal(studentDetail);
+      this.openDeleteStudentDialog(studentDetail);
     } else {
       this.studentDeleted.emit(studentDetail);
     }
   }
 
-  openDeleteStudentModal(studentDetail: StudentDetail) {
+  openDeleteStudentDialog(studentDetail: StudentDetail) {
     const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
       restoreFocus: false,
       data: <YesNoDialogInputs>{

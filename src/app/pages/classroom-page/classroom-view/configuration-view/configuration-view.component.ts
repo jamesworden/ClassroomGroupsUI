@@ -93,7 +93,7 @@ export class ConfigurationViewComponent {
     );
   }
 
-  openDeleteConfigurationModal(configurationId: string) {
+  openDeleteConfigurationDialog(configurationId: string) {
     const classroomId = this.classroomId();
     const configuration = this.#classroomsService.select.configuration(
       classroomId,
@@ -102,7 +102,7 @@ export class ConfigurationViewComponent {
     if (!configuration) {
       return;
     }
-    this.#classroomViewService.openDeleteConfigurationModal(configuration);
+    this.#classroomViewService.openDeleteConfigurationDialog(configuration);
   }
 
   updateStudentField(studentField: StudentField) {
