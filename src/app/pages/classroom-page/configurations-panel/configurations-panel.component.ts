@@ -52,7 +52,6 @@ export class ConfigurationsPanelComponent {
   readonly #matDialog = inject(MatDialog);
   readonly #classroomViewService = inject(ClassroomViewService);
 
-  readonly selectedConfigurationId = input<string>();
   readonly classroomId = input.required<string>();
 
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
@@ -65,6 +64,7 @@ export class ConfigurationsPanelComponent {
     this.#classroomsService.select.configurations(this.classroomId())()
   );
 
+  readonly selectedConfigurationId = this.#classroomViewService.configurationId;
   readonly account = this.#accountsService.select.account;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly configurationsLoading =
