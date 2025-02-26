@@ -12,84 +12,18 @@
           [classroomId]="classroomId()"
           [selectedConfigurationId]="configurationId()"
           class="flex-1 w-full h-full"
-          (deletedConfiguration)="openDeleteConfigurationModal($event)"
         ></app-configurations-panel>
       </mat-sidenav>
 
       <!-- Main Content Area -->
       <mat-sidenav-content>
         <div class="flex flex-col flex-1 h-full">
-          @if (classroom(); as classroom) {
-            <div class="flex-1 flex flex-col">
-              <app-classroom-header
-                [classroom]="classroom"
-                [groupDetails]="listGroupDetails()"
-                [columnDetails]="columnDetails()"
-                [studentDetails]="allStudentDetails()"
-                [configurationViewMode]="configurationViewMode()"
-                [sidenavOpen]="configurationsSidenav.opened"
-                (toggleSidenav)="configurationsSidenav.toggle()"
-              ></app-classroom-header>
-
-              @if (configurationDetail(); as configurationDetail) {
-                @if (configurationViewMode() === ConfigurationViewMode.Edit) {
-                  <app-configuration-view
-                    class="flex-1"
-                    [configurationDetail]="configurationDetail"
-                    [defaultGroup]="defaultGroup()!"
-                    [classroomId]="classroomId()"
-                    [columnDetails]="columnDetails()"
-                    [groupDetails]="listGroupDetails()"
-                    [groupLimitReached]="
-                      listGroupDetails().length >= maxStudentsPerClassroom()
-                    "
-                    [anyAverageScores]="anyAverageScores()"
-                    [averageScores]="averageScores()"
-                    (deleteConfigurationModalOpened)="
-                      openDeleteConfigurationModal($event)
-                    "
-                  ></app-configuration-view>
-                } @else {
-                  <app-configuration-preview
-                    class="flex-1"
-                    [configurationDetail]="configurationDetail"
-                    [classroom]="classroom"
-                    [columnDetails]="columnDetails()"
-                    [defaultGroup]="defaultGroup()!"
-                  ></app-configuration-preview>
-                }
-              } @else if (configurationLoading()) {
-                <div class="flex-1">
-                  <img
-                    class="p-12 max-w-3xl"
-                    [src]="
-                      theme() === Themes.LIGHT
-                        ? 'assets/single-post-light.svg'
-                        : 'assets/single-post-dark.svg'
-                    "
-                    alt="Icon"
-                  />
-
-                  <mat-spinner class="pl-12"></mat-spinner>
-                </div>
-              } @else {
-                <app-no-selected-configuration-view
-                  [sidenavOpen]="configurationsSidenav.opened"
-                  (sidenavOpened)="configurationsSidenav.toggle()"
-                ></app-no-selected-configuration-view>
-              }
-
-              <section class="sticky bottom-0 flex pl-4">
-                <mat-progress-bar
-                  class="flex-1"
-                  [mode]="
-                    configurationUpdating() || classroomUpdating()
-                      ? 'indeterminate'
-                      : 'determinate'
-                  "
-                ></mat-progress-bar>
-              </section>
-            </div>
+          @if (classroomDetail(); as classroomDetail) {
+            <app-classroom-view
+              [classroomDetail]="classroomDetail"
+              [sidenavOpen]="configurationsSidenav.opened"
+              (sidenavToggled)="configurationsSidenav.toggle()"
+            ></app-classroom-view>
           } @else {
             <app-classroom-not-found-view></app-classroom-not-found-view>
           }

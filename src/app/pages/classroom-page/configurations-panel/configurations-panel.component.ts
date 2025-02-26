@@ -55,8 +55,6 @@ export class ConfigurationsPanelComponent {
   readonly selectedConfigurationId = input<string>();
   readonly classroomId = input.required<string>();
 
-  readonly deletedConfiguration = output<string>();
-
   readonly filteredConfigurations: Signal<Configuration[]> = computed(
     () =>
       this.configurations()?.filter(({ label }) =>
@@ -100,7 +98,15 @@ export class ConfigurationsPanelComponent {
       });
   }
 
-  deleteConfiguration(configurationId: string) {
-    this.deletedConfiguration.emit(configurationId);
+  openDeleteConfigurationModal(configurationId: string) {
+    const classroomId = this.classroomId();
+    const configuration = this.#classroomsService.select.configuration(
+      classroomId,
+      configurationId
+    )();
+    if (!configuration) {
+      return;
+    }
+    this.#classroomViewService.openDeleteConfigurationModal(configuration);
   }
 }

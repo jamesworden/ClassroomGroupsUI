@@ -14,13 +14,13 @@ export class NoSelectedConfigurationViewComponent {
 
   readonly sidenavOpen = input.required<boolean>();
 
-  readonly sidenavOpened = output();
+  readonly sidenavToggled = output();
 
   openCreateConfigurationModal() {
     this.#classroomViewService.openCreateConfigurationDialog();
   }
 
   openSidenav() {
-    this.sidenavOpened.emit();
+    this.sidenavToggled.emit();
   }
 }

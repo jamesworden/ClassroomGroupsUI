@@ -33,6 +33,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AddGroupPanelComponent } from './add-group-panel/add-group-panel.component';
 import { AverageScoresPanelComponent } from './average-scores-panel/average-scores-panel.component';
+import { ClassroomViewService } from '../classroom-view.service';
 
 @Component({
   selector: 'app-configuration-view',
@@ -55,6 +56,7 @@ import { AverageScoresPanelComponent } from './average-scores-panel/average-scor
 })
 export class ConfigurationViewComponent {
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #classroomViewService = inject(ClassroomViewService);
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly defaultGroup = input.required<GroupDetail>();
@@ -64,8 +66,6 @@ export class ConfigurationViewComponent {
   readonly groupLimitReached = input.required<boolean>();
   readonly anyAverageScores = input.required<boolean>();
   readonly averageScores = input.required<Record<string, number>>();
-
-  readonly deleteConfigurationModalOpened = output<string>();
 
   readonly collapsePanelDetails = signal(false);
 
@@ -94,7 +94,15 @@ export class ConfigurationViewComponent {
   }
 
   openDeleteConfigurationModal(configurationId: string) {
-    this.deleteConfigurationModalOpened.emit(configurationId);
+    const classroomId = this.classroomId();
+    const configuration = this.#classroomsService.select.configuration(
+      classroomId,
+      configurationId
+    )();
+    if (!configuration) {
+      return;
+    }
+    this.#classroomViewService.openDeleteConfigurationModal(configuration);
   }
 
   updateStudentField(studentField: StudentField) {

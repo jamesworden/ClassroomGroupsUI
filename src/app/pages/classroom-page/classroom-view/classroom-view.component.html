@@ -1,0 +1,67 @@
+<div class="flex-1 flex flex-col h-full">
+  <app-classroom-header
+    [classroom]="classroomDetail()"
+    [groupDetails]="listGroupDetails()"
+    [columnDetails]="columnDetails()"
+    [studentDetails]="allStudentDetails()"
+    [configurationViewMode]="configurationViewMode()"
+    [sidenavOpen]="sidenavOpen()"
+    (sidenavToggled)="toggleSidenav()"
+  ></app-classroom-header>
+
+  @if (configurationDetail(); as configurationDetail) {
+    @if (configurationViewMode() === ConfigurationViewMode.Edit) {
+      <app-configuration-view
+        class="flex-1"
+        [configurationDetail]="configurationDetail"
+        [defaultGroup]="defaultGroup()!"
+        [classroomId]="classroomId()"
+        [columnDetails]="columnDetails()"
+        [groupDetails]="listGroupDetails()"
+        [groupLimitReached]="
+          listGroupDetails().length >= maxStudentsPerClassroom()
+        "
+        [anyAverageScores]="anyAverageScores()"
+        [averageScores]="averageScores()"
+      ></app-configuration-view>
+    } @else {
+      <app-configuration-preview
+        class="flex-1"
+        [configurationDetail]="configurationDetail"
+        [classroom]="classroomDetail()"
+        [columnDetails]="columnDetails()"
+        [defaultGroup]="defaultGroup()!"
+      ></app-configuration-preview>
+    }
+  } @else if (configurationLoading()) {
+    <div class="flex-1">
+      <img
+        class="p-12 max-w-3xl"
+        [src]="
+          theme() === Themes.LIGHT
+            ? 'assets/single-post-light.svg'
+            : 'assets/single-post-dark.svg'
+        "
+        alt="Icon"
+      />
+
+      <mat-spinner class="pl-12"></mat-spinner>
+    </div>
+  } @else {
+    <app-no-selected-configuration-view
+      [sidenavOpen]="sidenavOpen()"
+      (sidenavToggled)="toggleSidenav()"
+    ></app-no-selected-configuration-view>
+  }
+
+  <section class="sticky bottom-0 flex pl-4">
+    <mat-progress-bar
+      class="flex-1"
+      [mode]="
+        configurationUpdating() || classroomUpdating()
+          ? 'indeterminate'
+          : 'determinate'
+      "
+    ></mat-progress-bar>
+  </section>
+</div>

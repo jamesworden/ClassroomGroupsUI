@@ -57,7 +57,7 @@ export class ClassroomHeaderComponent {
   readonly sidenavOpen = input.required<boolean>();
 
   readonly configurationViewModeSet = output<ConfigurationViewMode>();
-  readonly toggleSidenav = output();
+  readonly sidenavToggled = output();
 
   readonly theme = this.#themeService.theme;
   readonly maxStudentsPerClassroom =
@@ -101,6 +101,6 @@ export class ClassroomHeaderComponent {
   }
 
   toggleSidenavPanel(): void {
-    this.toggleSidenav.emit();
+    this.sidenavToggled.emit();
   }
 }

@@ -22,6 +22,7 @@ import { ClassroomViewService } from './classroom-view.service';
 import { MobileWarningViewComponent } from './mobile-warning-view/mobile-warning-view.component';
 import { NoSelectedConfigurationViewComponent } from './no-selected-configuration-view/no-selected-configuration-view.component';
 import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/classroom-not-found-view.component';
+import { ClassroomViewComponent } from './classroom-view/classroom-view.component';
 
 @Component({
   selector: 'app-classroom-page',
@@ -38,12 +39,9 @@ import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/class
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTooltipModule,
-    ConfigurationViewComponent,
-    ClassroomHeaderComponent,
-    ConfigurationPreviewComponent,
     MobileWarningViewComponent,
-    NoSelectedConfigurationViewComponent,
     ClassroomNotFoundViewComponent,
+    ClassroomViewComponent,
   ],
   providers: [ClassroomViewService],
   templateUrl: './classroom-page.component.html',
@@ -55,85 +53,13 @@ export class ClassroomPageComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #classroomViewService = inject(ClassroomViewService);
 
-  readonly theme = this.#themeService.theme;
-  readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
-  readonly accountLoading = this.#accountsService.select.accountLoading;
-  readonly account = this.#accountsService.select.account;
   readonly classroomId = this.#classroomViewService.classroomId;
   readonly configurationId = this.#classroomViewService.configurationId;
-  readonly configurationViewMode =
-    this.#classroomViewService.configurationViewMode;
-  readonly maxStudentsPerClassroom =
-    this.#accountsService.select.maxStudentsPerClassroom;
 
-  readonly classroom = computed(() =>
+  readonly classroomDetail = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
   );
   readonly configurationDetail = computed(() =>
     this.#classroomsService.select.configurationDetail(this.configurationId())()
   );
-  readonly configurationLoading = computed(() =>
-    this.#classroomsService.select.configurationLoading(
-      this.configurationId()
-    )()
-  );
-  readonly listGroupDetails = computed(() =>
-    this.#classroomsService.select.listGroupDetails(this.configurationId())()
-  );
-  readonly configurationUpdating = computed(() =>
-    this.#classroomsService.select.configurationUpdating(
-      this.configurationId()
-    )()
-  );
-  readonly classroomUpdating = computed(() =>
-    this.#classroomsService.select.classroomUpdating(this.classroomId())()
-  );
-  readonly classroomLabel = computed(() => this.classroom()?.label ?? '');
-  readonly classroomDescription = computed(
-    () => this.classroom()?.description ?? ''
-  );
-  readonly defaultGroup = computed(() =>
-    this.#classroomsService.select.defaultGroup(this.configurationId())()
-  );
-  readonly columnDetails = computed(() =>
-    this.#classroomsService.select.columnDetails(
-      this.defaultGroup()?.configurationId
-    )
-  );
-  readonly allGroupDetails = computed(() => {
-    const listGroupDetails = this.listGroupDetails();
-    const defaultGroupDetail = this.defaultGroup();
-    if (defaultGroupDetail) {
-      return [defaultGroupDetail, ...listGroupDetails];
-    } else {
-      return listGroupDetails;
-    }
-  });
-  readonly allStudentDetails = computed(() =>
-    this.allGroupDetails().flatMap(({ studentDetails }) => studentDetails)
-  );
-  readonly averageScores = computed(() =>
-    calculateAverageScores(this.allStudentDetails(), this.columnDetails())
-  );
-  readonly anyAverageScores = computed(
-    () => Object.keys(this.averageScores()).length > 0
-  );
-
-  readonly ConfigurationViewMode = ConfigurationViewMode;
-  readonly Themes = Themes;
-
-  openDeleteConfigurationModal(configurationId: string) {
-    const classroomId = this.classroomId();
-    if (!classroomId) {
-      return;
-    }
-    const configuration = this.#classroomsService.select.configuration(
-      classroomId,
-      configurationId
-    )();
-    if (!configuration) {
-      return;
-    }
-    this.#classroomViewService.openDeleteConfigurationModal(configuration);
-  }
 }
