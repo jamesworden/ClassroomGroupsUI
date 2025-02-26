@@ -24,6 +24,7 @@ import {
   MatButtonToggleModule,
 } from '@angular/material/button-toggle';
 import { ConfigurationViewMode } from '@app/models';
+import { ClassroomViewService } from '../classroom-view.service';
 
 @Component({
   selector: 'app-classroom-header',
@@ -46,6 +47,7 @@ export class ClassroomHeaderComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #themeService = inject(ThemeService);
   readonly #accountsService = inject(AccountsService);
+  readonly #classroomViewService = inject(ClassroomViewService);
 
   readonly classroom = input.required<ClassroomDetail>();
   readonly groupDetails = input.required<GroupDetail[]>();
@@ -94,8 +96,9 @@ export class ClassroomHeaderComponent {
   }
 
   setConfigurationViewMode({ value }: MatButtonToggleChange) {
-    const configurationViewMode = value as ConfigurationViewMode;
-    this.configurationViewModeSet.emit(configurationViewMode);
+    this.#classroomViewService.setConfigurationViewMode(
+      value as ConfigurationViewMode
+    );
   }
 
   toggleSidenavPanel(): void {

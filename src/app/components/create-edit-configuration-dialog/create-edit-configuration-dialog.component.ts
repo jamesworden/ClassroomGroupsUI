@@ -1,10 +1,10 @@
 import {
-  AfterViewInit,
   Component,
   Inject,
   inject,
   ViewChild,
   ElementRef,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -48,7 +48,7 @@ export interface CreateEditConfigurationDialogOutputs {
   templateUrl: './create-edit-configuration-dialog.component.html',
   styleUrl: './create-edit-configuration-dialog.component.scss',
 })
-export class CreateEditConfigurationDialogComponent implements AfterViewInit {
+export class CreateEditConfigurationDialogComponent implements OnInit {
   readonly #fb = inject(FormBuilder);
   readonly #matDialogRef = inject(MatDialogRef);
 
@@ -67,7 +67,7 @@ export class CreateEditConfigurationDialogComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.labelInput?.nativeElement.focus();
   }
 

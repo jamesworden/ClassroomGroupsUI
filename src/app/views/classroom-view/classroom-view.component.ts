@@ -14,7 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import {
   calculateAverageScores,
@@ -59,6 +59,7 @@ import { ClassroomViewService } from './classroom-view.service';
     ConfigurationViewComponent,
     ClassroomHeaderComponent,
     ConfigurationPreviewComponent,
+    RouterLink,
   ],
   providers: [ClassroomViewService],
   templateUrl: './classroom-view.component.html',
@@ -69,7 +70,6 @@ export class ClassroomViewComponent {
   readonly #matDialog = inject(MatDialog);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
-  readonly #activatedRoute = inject(ActivatedRoute);
   readonly #router = inject(Router);
   readonly #classroomViewService = inject(ClassroomViewService);
 
@@ -77,25 +77,13 @@ export class ClassroomViewComponent {
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly accountLoading = this.#accountsService.select.accountLoading;
   readonly account = this.#accountsService.select.account;
+  readonly classroomId = this.#classroomViewService.classroomId;
+  readonly configurationId = this.#classroomViewService.configurationId;
+  readonly configurationViewMode =
+    this.#classroomViewService.configurationViewMode;
+  readonly maxStudentsPerClassroom =
+    this.#accountsService.select.maxStudentsPerClassroom;
 
-  readonly Themes = Themes;
-
-  readonly queryParams = toSignal(this.#activatedRoute.params, {
-    initialValue: {
-      classroomId: null,
-      configurationId: null,
-      configurationViewMode: ConfigurationViewMode,
-    },
-  });
-  readonly classroomId = computed(
-    () => this.queryParams().classroomId as string
-  );
-  readonly configurationId = computed(
-    () => this.queryParams().configurationId as string
-  );
-  readonly configurationViewMode = computed(
-    () => this.queryParams().configurationViewMode as ConfigurationViewMode
-  );
   readonly classroom = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
   );
@@ -107,12 +95,6 @@ export class ClassroomViewComponent {
       this.configurationId()
     )()
   );
-  readonly selectedConfiguration = computed(() => {
-    const detail = this.#classroomsService.select.configurationDetail(
-      this.configurationId()
-    )();
-    return detail ? getConfigurationFromDetail(detail) : undefined;
-  });
   readonly listGroupDetails = computed(() =>
     this.#classroomsService.select.listGroupDetails(this.configurationId())()
   );
@@ -123,12 +105,6 @@ export class ClassroomViewComponent {
   );
   readonly classroomUpdating = computed(() =>
     this.#classroomsService.select.classroomUpdating(this.classroomId())()
-  );
-  readonly configurations = computed(() =>
-    this.#classroomsService.select.configurations(this.classroomId())()
-  );
-  readonly configurationIds = computed(() =>
-    this.#classroomsService.select.configurationIds(this.classroomId())()
   );
   readonly classroomLabel = computed(() => this.classroom()?.label ?? '');
   readonly classroomDescription = computed(
@@ -161,46 +137,8 @@ export class ClassroomViewComponent {
     () => Object.keys(this.averageScores()).length > 0
   );
 
-  readonly classroomId$ = toObservable(this.classroomId);
-  readonly configurationId$ = toObservable(this.configurationId);
-  readonly configurations$ = toObservable(this.configurations);
-  readonly configurationDetail$ = toObservable(this.configurationDetail);
-
-  readonly maxStudentsPerClassroom =
-    this.#accountsService.select.maxStudentsPerClassroom;
-
   readonly ConfigurationViewMode = ConfigurationViewMode;
-
-  constructor() {
-    this.classroomId$.pipe(takeUntilDestroyed()).subscribe((classroomId) => {
-      if (classroomId) {
-        this.#classroomsService.getConfigurations(classroomId);
-      } else {
-        this.#router.navigate(['/classrooms']);
-      }
-    });
-    this.configurations$
-      .pipe(takeUntilDestroyed())
-      .subscribe(([firstConfiguration]) => {
-        const classroomId = this.classroomId();
-        const configurationId = this.configurationId();
-        if (classroomId && firstConfiguration && !configurationId) {
-          this.#router.navigate([
-            `/classrooms/${classroomId}/configurations/${firstConfiguration.id}/${ConfigurationViewMode.Edit}`,
-          ]);
-        }
-      });
-    combineLatest([this.classroomId$, this.configurationId$])
-      .pipe(takeUntilDestroyed())
-      .subscribe(([classroomId, configurationId]) => {
-        if (classroomId && configurationId) {
-          this.#classroomsService.getConfigurationDetail(
-            classroomId,
-            configurationId
-          );
-        }
-      });
-  }
+  readonly Themes = Themes;
 
   openDeleteClassroomDialog() {
     const classroom = this.classroom();
@@ -208,25 +146,11 @@ export class ClassroomViewComponent {
       this.#classroomViewService.openDeleteClassroomDialog(classroom);
   }
 
-  selectConfigurationId(configurationId: string) {
-    this.#router.navigate([
-      `/classrooms/${this.classroomId()}/configurations/${configurationId}/${this.configurationViewMode()}`,
-    ]);
-  }
-
-  selectFirstConfiguration() {
-    const [firstConfigurationId] = this.configurationIds();
-    if (firstConfigurationId) {
-      this.selectConfigurationId(firstConfigurationId);
-    }
-  }
-
   openDeleteConfigurationModal(configurationId: string) {
     const classroomId = this.classroomId();
     if (!classroomId) {
       return;
     }
-
     const configuration = this.#classroomsService.select.configuration(
       classroomId,
       configurationId
@@ -234,59 +158,10 @@ export class ClassroomViewComponent {
     if (!configuration) {
       return;
     }
-
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete configuration',
-        subtitle: `Are you sure you want to delete configuration '${
-          configuration.label
-        }' and all of its data?`,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((success) => {
-      if (success && classroomId && configurationId) {
-        this.#classroomsService
-          .deleteConfiguration(classroomId, configurationId)
-          .subscribe(() => this.selectFirstConfiguration());
-      }
-    });
-  }
-
-  setConfigurationViewMode(configurationViewMode: ConfigurationViewMode) {
-    this.#router.navigate([
-      'classrooms',
-      this.classroomId(),
-      'configurations',
-      this.configurationId(),
-      configurationViewMode,
-    ]);
-  }
-
-  goToClassrooms() {
-    this.#router.navigate(['/classrooms']);
+    this.#classroomViewService.openDeleteConfigurationModal(configuration);
   }
 
   openCreateConfigurationModal() {
-    const dialogRef = this.#matDialog.open(
-      CreateEditConfigurationDialogComponent,
-      {
-        restoreFocus: false,
-        data: <CreateEditColumnDialogInputs>{
-          title: 'Create configuration',
-        },
-      }
-    );
-    dialogRef
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.createConfiguration(
-            this.classroomId(),
-            outputs.label
-          );
-        }
-      });
+    this.#classroomViewService.openCreateConfigurationDialog();
   }
 }

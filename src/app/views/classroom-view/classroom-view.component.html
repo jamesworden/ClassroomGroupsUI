@@ -10,7 +10,6 @@
         <app-configurations-panel
           [classroomId]="classroomId()"
           [selectedConfigurationId]="configurationId()"
-          (configurationIdSelected)="selectConfigurationId($event)"
           class="flex-1 w-full h-full"
           (deletedConfiguration)="openDeleteConfigurationModal($event)"
         ></app-configurations-panel>
@@ -30,7 +29,6 @@
                 [sidenavOpen]="configurationsSidenav.opened"
                 (toggleSidenav)="configurationsSidenav.toggle()"
                 (deleteClassroomDialogOpened)="openDeleteClassroomDialog()"
-                (configurationViewModeSet)="setConfigurationViewMode($event)"
               ></app-classroom-header>
 
               @if (configurationDetail(); as configurationDetail) {
@@ -159,7 +157,7 @@
                   mat-button
                   color="primary"
                   class="mt-4 px-6 py-2"
-                  (click)="goToClassrooms()"
+                  routerLink="/classrooms"
                 >
                   <mat-icon class="mr-2">arrow_back</mat-icon>
                   Go back to classrooms
@@ -197,7 +195,7 @@
         mat-button
         color="primary"
         class="mt-4 px-6 py-2"
-        (click)="goToClassrooms()"
+        routerLink="/classrooms"
       >
         <mat-icon class="mr-2">arrow_back</mat-icon>
         Go back to classrooms
