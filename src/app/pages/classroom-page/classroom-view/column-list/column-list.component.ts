@@ -23,17 +23,17 @@ import {
   GroupDetail,
   MoveColumnDetail,
 } from '@shared/classrooms';
-import {
-  CreateEditColumnDialogComponent,
-  CreateEditColumnDialogInputs,
-  CreateEditColumnDialogOutputs,
-} from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { MatButtonModule } from '@angular/material/button';
+import {
+  CreateEditColumnDialogComponent,
+  CreateEditColumnDialogInputs,
+  CreateEditColumnDialogOutputs,
+} from '../../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 
 @Component({
   selector: 'app-column-list',

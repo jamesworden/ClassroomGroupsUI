@@ -14,7 +14,6 @@ import {
   GroupDetail,
 } from '@shared/classrooms';
 import { MatChipsModule } from '@angular/material/chips';
-import { ColumnListComponent } from '../column-list/column-list.component';
 import {
   MatSlideToggleChange,
   MatSlideToggleModule,
@@ -25,6 +24,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatMenuModule } from '@angular/material/menu';
+import { ColumnListComponent } from '../classroom-view/column-list/column-list.component';
 
 interface TextGroup {
   name?: string;
@@ -35,7 +35,6 @@ interface TextGroup {
   selector: 'app-configuration-preview',
   imports: [
     MatChipsModule,
-    ColumnListComponent,
     MatSlideToggleModule,
     MatIconModule,
     MatButtonModule,
@@ -43,6 +42,7 @@ interface TextGroup {
     CommonModule,
     ClipboardModule,
     MatMenuModule,
+    ColumnListComponent,
   ],
   templateUrl: './configuration-preview.component.html',
   styleUrl: './configuration-preview.component.scss',

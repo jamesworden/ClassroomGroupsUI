@@ -36,7 +36,7 @@ import {
   MatCheckboxChange,
   MatCheckboxModule,
 } from '@angular/material/checkbox';
-import { ColumnListComponent } from '../../column-list/column-list.component';
+import { ColumnListComponent } from '../../classroom-view/column-list/column-list.component';
 
 @Component({
   selector: 'app-configuration-panel-top',
