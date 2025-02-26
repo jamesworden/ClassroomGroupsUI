@@ -1,0 +1,29 @@
+<div
+  class="flex flex-col items-center justify-center h-full w-full px-6 py-12 rounded-lg shadow-sm"
+>
+  <div class="flex flex-col items-center space-y-6 max-w-md -mt-32">
+    <div
+      class="text-primary animate-pulse flex items-center justify-center h-20 w-20"
+    >
+      <mat-icon class="text-6xl big-icon">school</mat-icon>
+    </div>
+
+    <h2 class="text-2xl font-semibold text-center">Classroom Not Found</h2>
+
+    <p class="text-center opacity-80">
+      It looks like you haven't created any classrooms yet or the selected
+      classroom doesn't exist. Get started by creating a new classroom or
+      selecting an existing one.
+    </p>
+
+    <button
+      mat-button
+      color="primary"
+      class="mt-4 px-6 py-2"
+      routerLink="/classrooms"
+    >
+      <mat-icon class="mr-2">arrow_back</mat-icon>
+      Go back to classrooms
+    </button>
+  </div>
+</div>

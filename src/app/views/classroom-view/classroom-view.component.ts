@@ -8,7 +8,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterLink } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 import { calculateAverageScores, ClassroomsService } from '@shared/classrooms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -22,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { ClassroomViewService } from './classroom-view.service';
 import { MobileWarningViewComponent } from './mobile-warning-view/mobile-warning-view.component';
 import { NoSelectedConfigurationViewComponent } from './no-selected-configuration-view/no-selected-configuration-view.component';
+import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/classroom-not-found-view.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -41,9 +41,9 @@ import { NoSelectedConfigurationViewComponent } from './no-selected-configuratio
     ConfigurationViewComponent,
     ClassroomHeaderComponent,
     ConfigurationPreviewComponent,
-    RouterLink,
     MobileWarningViewComponent,
     NoSelectedConfigurationViewComponent,
+    ClassroomNotFoundViewComponent,
   ],
   providers: [ClassroomViewService],
   templateUrl: './classroom-view.component.html',
