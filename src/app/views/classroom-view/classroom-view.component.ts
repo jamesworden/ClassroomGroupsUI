@@ -39,7 +39,7 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from './configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
-import { ClassroomViewServiceService } from './classroom-view-service.service';
+import { ClassroomViewService } from './classroom-view.service';
 
 @Component({
   selector: 'app-classroom-view',
@@ -60,7 +60,7 @@ import { ClassroomViewServiceService } from './classroom-view-service.service';
     ClassroomHeaderComponent,
     ConfigurationPreviewComponent,
   ],
-  providers: [ClassroomViewServiceService],
+  providers: [ClassroomViewService],
   templateUrl: './classroom-view.component.html',
   styleUrl: './classroom-view.component.scss',
 })
@@ -71,7 +71,7 @@ export class ClassroomViewComponent {
   readonly #accountsService = inject(AccountsService);
   readonly #activatedRoute = inject(ActivatedRoute);
   readonly #router = inject(Router);
-  readonly #classroomViewService = inject(ClassroomViewServiceService);
+  readonly #classroomViewService = inject(ClassroomViewService);
 
   readonly theme = this.#themeService.theme;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;

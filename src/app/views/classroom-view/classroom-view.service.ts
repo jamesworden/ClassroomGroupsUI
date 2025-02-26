@@ -7,7 +7,7 @@ import { ClassroomDetail, ClassroomsService } from '@shared/classrooms';
 @Injectable({
   providedIn: 'root',
 })
-export class ClassroomViewServiceService {
+export class ClassroomViewService {
   readonly #matDialog = inject(MatDialog);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #router = inject(Router);
