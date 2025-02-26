@@ -10,14 +10,14 @@ import { ClassroomPageService } from '../../classroom-page.service';
   styleUrl: './no-selected-configuration-view.component.scss',
 })
 export class NoSelectedConfigurationViewComponent {
-  readonly #classroomViewService = inject(ClassroomPageService);
+  readonly #classroomPageService = inject(ClassroomPageService);
 
   readonly sidenavOpen = input.required<boolean>();
 
   readonly sidenavToggled = output();
 
   openCreateConfigurationDialog() {
-    this.#classroomViewService.openCreateConfigurationDialog();
+    this.#classroomPageService.openCreateConfigurationDialog();
   }
 
   openSidenav() {

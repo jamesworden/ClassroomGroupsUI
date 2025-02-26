@@ -30,7 +30,7 @@ import { NoSelectedConfigurationViewComponent } from './no-selected-configuratio
 })
 export class ClassroomViewComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #classroomViewService = inject(ClassroomPageService);
+  readonly #classroomPageService = inject(ClassroomPageService);
   readonly #accountsService = inject(AccountsService);
   readonly #themeService = inject(ThemeService);
 
@@ -39,9 +39,9 @@ export class ClassroomViewComponent {
 
   readonly sidenavToggled = output();
 
-  readonly configurationId = this.#classroomViewService.configurationId;
+  readonly configurationId = this.#classroomPageService.configurationId;
   readonly configurationViewMode =
-    this.#classroomViewService.configurationViewMode;
+    this.#classroomPageService.configurationViewMode;
   readonly maxStudentsPerClassroom =
     this.#accountsService.select.maxStudentsPerClassroom;
   readonly theme = this.#themeService.theme;

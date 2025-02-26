@@ -42,10 +42,10 @@ import { ClassroomsService } from '@shared/classrooms';
 })
 export class ClassroomPageComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #classroomViewService = inject(ClassroomPageService);
+  readonly #classroomPageService = inject(ClassroomPageService);
 
-  readonly classroomId = this.#classroomViewService.classroomId;
-  readonly configurationId = this.#classroomViewService.configurationId;
+  readonly classroomId = this.#classroomPageService.classroomId;
+  readonly configurationId = this.#classroomPageService.configurationId;
 
   readonly classroomDetail = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()

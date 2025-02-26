@@ -47,7 +47,7 @@ export class ClassroomHeaderComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #themeService = inject(ThemeService);
   readonly #accountsService = inject(AccountsService);
-  readonly #classroomViewService = inject(ClassroomPageService);
+  readonly #classroomPageService = inject(ClassroomPageService);
 
   readonly classroom = input.required<ClassroomDetail>();
   readonly groupDetails = input.required<GroupDetail[]>();
@@ -91,11 +91,11 @@ export class ClassroomHeaderComponent {
   }
 
   openDeleteClassroomDialog() {
-    this.#classroomViewService.openDeleteClassroomDialog(this.classroom());
+    this.#classroomPageService.openDeleteClassroomDialog(this.classroom());
   }
 
   setConfigurationViewMode({ value }: MatButtonToggleChange) {
-    this.#classroomViewService.setConfigurationViewMode(
+    this.#classroomPageService.setConfigurationViewMode(
       value as ConfigurationViewMode
     );
   }

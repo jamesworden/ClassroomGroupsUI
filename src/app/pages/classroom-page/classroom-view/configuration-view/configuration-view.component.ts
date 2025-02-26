@@ -57,7 +57,7 @@ import { ClassroomPageService } from '../../classroom-page.service';
 })
 export class ConfigurationViewComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #classroomViewService = inject(ClassroomPageService);
+  readonly #classroomPageService = inject(ClassroomPageService);
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly defaultGroup = input.required<GroupDetail>();
@@ -78,7 +78,7 @@ export class ConfigurationViewComponent {
   constructor() {
     effect(() => (this.editingGroups = this.groupDetails()));
 
-    this.#classroomViewService.scrollToBottom$.subscribe(() => {
+    this.#classroomPageService.scrollToBottom$.subscribe(() => {
       setTimeout(() => {
         this.scrollContainer.nativeElement.scrollTo({
           top: this.scrollContainer.nativeElement.scrollHeight,
@@ -115,7 +115,7 @@ export class ConfigurationViewComponent {
     if (!configuration) {
       return;
     }
-    this.#classroomViewService.openDeleteConfigurationDialog(configuration);
+    this.#classroomPageService.openDeleteConfigurationDialog(configuration);
   }
 
   updateStudentField(studentField: StudentField) {
