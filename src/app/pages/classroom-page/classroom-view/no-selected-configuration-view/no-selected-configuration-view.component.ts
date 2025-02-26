@@ -1,7 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { ClassroomPageService } from '../classroom-page.service';
 import { MatButtonModule } from '@angular/material/button';
+import { ClassroomPageService } from '../../classroom-page.service';
 
 @Component({
   selector: 'app-no-selected-configuration-view',
