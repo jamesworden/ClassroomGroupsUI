@@ -26,7 +26,7 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class ClassroomViewService {
+export class ClassroomPageService {
   readonly #matDialog = inject(MatDialog);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #router = inject(Router);

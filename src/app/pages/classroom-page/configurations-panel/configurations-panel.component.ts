@@ -25,7 +25,7 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
-import { ClassroomViewService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-view.service';
 
 @Component({
   selector: 'app-configurations-panel',
@@ -50,7 +50,7 @@ export class ConfigurationsPanelComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
   readonly #matDialog = inject(MatDialog);
-  readonly #classroomViewService = inject(ClassroomViewService);
+  readonly #classroomViewService = inject(ClassroomPageService);
 
   readonly classroomId = input.required<string>();
 

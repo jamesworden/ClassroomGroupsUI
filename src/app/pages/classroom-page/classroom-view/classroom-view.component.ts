@@ -10,7 +10,7 @@ import {
   ClassroomDetail,
   ClassroomsService,
 } from '@shared/classrooms';
-import { ClassroomViewService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-view.service';
 import { AccountsService } from '@shared/accounts';
 import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewMode } from '@app/models';
@@ -30,7 +30,7 @@ import { ConfigurationViewMode } from '@app/models';
 })
 export class ClassroomViewComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #classroomViewService = inject(ClassroomViewService);
+  readonly #classroomViewService = inject(ClassroomPageService);
   readonly #accountsService = inject(AccountsService);
   readonly #themeService = inject(ThemeService);
 

@@ -1,6 +1,6 @@
 import { Component, inject, input, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { ClassroomViewService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-view.service';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './no-selected-configuration-view.component.scss',
 })
 export class NoSelectedConfigurationViewComponent {
-  readonly #classroomViewService = inject(ClassroomViewService);
+  readonly #classroomViewService = inject(ClassroomPageService);
 
   readonly sidenavOpen = input.required<boolean>();
 

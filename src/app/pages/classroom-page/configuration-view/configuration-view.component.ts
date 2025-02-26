@@ -33,7 +33,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AddGroupPanelComponent } from './add-group-panel/add-group-panel.component';
 import { AverageScoresPanelComponent } from './average-scores-panel/average-scores-panel.component';
-import { ClassroomViewService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-view.service';
 
 @Component({
   selector: 'app-configuration-view',
@@ -56,7 +56,7 @@ import { ClassroomViewService } from '../classroom-view.service';
 })
 export class ConfigurationViewComponent {
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #classroomViewService = inject(ClassroomViewService);
+  readonly #classroomViewService = inject(ClassroomPageService);
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly defaultGroup = input.required<GroupDetail>();

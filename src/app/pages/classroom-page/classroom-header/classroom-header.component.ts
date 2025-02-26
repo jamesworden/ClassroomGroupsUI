@@ -24,7 +24,7 @@ import {
   MatButtonToggleModule,
 } from '@angular/material/button-toggle';
 import { ConfigurationViewMode } from '@app/models';
-import { ClassroomViewService } from '../classroom-view.service';
+import { ClassroomPageService } from '../classroom-view.service';
 
 @Component({
   selector: 'app-classroom-header',
@@ -47,7 +47,7 @@ export class ClassroomHeaderComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #themeService = inject(ThemeService);
   readonly #accountsService = inject(AccountsService);
-  readonly #classroomViewService = inject(ClassroomViewService);
+  readonly #classroomViewService = inject(ClassroomPageService);
 
   readonly classroom = input.required<ClassroomDetail>();
   readonly groupDetails = input.required<GroupDetail[]>();
