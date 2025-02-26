@@ -6,7 +6,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  ClassroomsService,
   ColumnDetail,
   GroupDetail,
   MoveStudentDetail,
@@ -15,8 +14,7 @@ import {
 } from '@shared/classrooms';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { GroupFooterComponent } from '../group-footer/group-footer.component';
-import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
-import { MatDialog } from '@angular/material/dialog';
+import { ClassroomPageService } from 'app/pages/classroom-page/classroom-page.service';
 
 @Component({
   selector: 'app-group-panel',
@@ -35,8 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './group-panel.component.scss',
 })
 export class GroupPanelComponent {
-  readonly #matDialog = inject(MatDialog);
-  readonly #classroomsService = inject(ClassroomsService);
+  readonly #classroomPageService = inject(ClassroomPageService);
 
   readonly classroomId = input.required<string>();
   readonly groupDetail = input.required<GroupDetail>();
@@ -64,32 +61,14 @@ export class GroupPanelComponent {
 
   deleteGroup() {
     if (this.groupDetail().isLocked) {
-      this.openDeleteGroupModal();
+      this.openDeleteGroupDialog();
     } else {
       this.groupDeleted.emit();
     }
   }
 
-  openDeleteGroupModal() {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete locked group',
-        subtitle: `Are you sure you want to delete group '${
-          this.groupDetail()?.label
-        }' and all of its data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      const classroomId = this.classroomId();
-      if (success && classroomId) {
-        this.#classroomsService.deleteGroup(
-          classroomId,
-          this.groupDetail().configurationId,
-          this.groupDetail().id
-        );
-      }
-    });
+  openDeleteGroupDialog() {
+    this.#classroomPageService.openDeleteGroupDialog(this.groupDetail());
   }
 
   updateLabel(event: Event) {

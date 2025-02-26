@@ -13,6 +13,7 @@ import {
   ClassroomsService,
   ColumnDetail,
   Configuration,
+  GroupDetail,
 } from '@shared/classrooms';
 import { combineLatest } from 'rxjs';
 import {
@@ -254,6 +255,29 @@ export class ClassroomPageService {
           this.#classroomsService.createConfiguration(
             this.classroomId(),
             outputs.label
+          );
+        }
+      });
+  }
+
+  openDeleteGroupDialog(groupDetail: GroupDetail) {
+    this.#matDialog
+      .open(YesNoDialogComponent, {
+        restoreFocus: false,
+        data: <YesNoDialogInputs>{
+          title: 'Delete locked group',
+          subtitle: `Are you sure you want to delete group '${
+            groupDetail.label
+          }' and all of its data?`,
+        },
+      })
+      .afterClosed()
+      .subscribe((success) => {
+        if (success) {
+          this.#classroomsService.deleteGroup(
+            this.classroomId(),
+            groupDetail.configurationId,
+            groupDetail.id
           );
         }
       });
