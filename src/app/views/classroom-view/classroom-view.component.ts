@@ -1,12 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import {
-  takeUntilDestroyed,
-  toObservable,
-  toSignal,
-} from '@angular/core/rxjs-interop';
+import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -14,31 +8,17 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
-import {
-  calculateAverageScores,
-  ClassroomsService,
-  getConfigurationFromDetail,
-} from '@shared/classrooms';
-import { combineLatest } from 'rxjs';
+import { calculateAverageScores, ClassroomsService } from '@shared/classrooms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfigurationsPanelComponent } from './configurations-panel/configurations-panel.component';
-import {
-  CreateEditConfigurationDialogComponent,
-  YesNoDialogComponent,
-  YesNoDialogInputs,
-} from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
 import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
 import { ConfigurationViewMode } from '@app/models';
 import { ConfigurationPreviewComponent } from './configuration-preview/configuration-preview.component';
 import { CommonModule } from '@angular/common';
-import {
-  CreateEditColumnDialogInputs,
-  CreateEditColumnDialogOutputs,
-} from './configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
 import { ClassroomViewService } from './classroom-view.service';
 
 @Component({
@@ -67,10 +47,8 @@ import { ClassroomViewService } from './classroom-view.service';
 })
 export class ClassroomViewComponent {
   readonly #themeService = inject(ThemeService);
-  readonly #matDialog = inject(MatDialog);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
-  readonly #router = inject(Router);
   readonly #classroomViewService = inject(ClassroomViewService);
 
   readonly theme = this.#themeService.theme;
