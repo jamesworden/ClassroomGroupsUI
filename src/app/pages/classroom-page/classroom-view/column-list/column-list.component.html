@@ -44,7 +44,7 @@
           <button
             class="context-menu-item"
             cdkMenuItem
-            (click)="openCreateSideColumnDialog(column, 'left')"
+            (click)="openCreateColumnDialog(column.ordinal)"
             [disabled]="reachedColumnLimit()"
             [ngClass]="{
               'opacity-50': reachedColumnLimit(),
@@ -59,7 +59,7 @@
           <button
             class="context-menu-item"
             cdkMenuItem
-            (click)="openCreateSideColumnDialog(column, 'right')"
+            (click)="openCreateColumnDialog(column.ordinal + 1)"
             [disabled]="reachedColumnLimit()"
             [ngClass]="{
               'opacity-50': reachedColumnLimit(),

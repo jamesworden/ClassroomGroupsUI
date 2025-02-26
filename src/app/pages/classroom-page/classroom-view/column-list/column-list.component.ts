@@ -116,51 +116,7 @@ export class ColumnListComponent {
     this.#classroomPageService.openEditColumnDialog(columnDetail);
   }
 
-  openCreateSideColumnDialog(
-    columnDetail: ColumnDetail,
-    side: 'left' | 'right'
-  ) {
-    const targetOrdinal =
-      side === 'left' ? columnDetail.ordinal : columnDetail.ordinal + 1;
-    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-      restoreFocus: false,
-      data: <CreateEditColumnDialogInputs>{
-        title: 'Create column',
-      },
-    });
-    dialogRef
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.createColumn(
-            this.classroomId(),
-            this.configurationId(),
-            outputs.label,
-            outputs.type,
-            targetOrdinal
-          );
-        }
-      });
-  }
-
-  openCreateColumnDialog() {
-    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-      restoreFocus: false,
-      data: <CreateEditColumnDialogInputs>{
-        title: 'Create column',
-      },
-    });
-    dialogRef
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.createColumn(
-            this.classroomId(),
-            this.configurationId(),
-            outputs.label,
-            outputs.type
-          );
-        }
-      });
+  openCreateColumnDialog(targetOrdinal?: number) {
+    this.#classroomPageService.openCreateColumnDialog(targetOrdinal);
   }
 }
