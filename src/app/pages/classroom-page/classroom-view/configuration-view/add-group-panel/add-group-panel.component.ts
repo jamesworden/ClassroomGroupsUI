@@ -2,7 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ClassroomPageService } from 'app/pages/classroom-page/classroom-page.service';
+import { ClassroomsService } from '@shared/classrooms';
 
 @Component({
   selector: 'app-add-group-panel',
@@ -11,13 +11,16 @@ import { ClassroomPageService } from 'app/pages/classroom-page/classroom-page.se
   styleUrl: './add-group-panel.component.scss',
 })
 export class AddGroupPanelComponent {
-  readonly #classroomPageService = inject(ClassroomPageService);
+  readonly #classroomsService = inject(ClassroomsService);
 
   readonly groupLimitReached = input.required<boolean>();
   readonly classroomId = input.required<string>();
   readonly configurationId = input.required<string>();
 
   createGroup() {
-    this.#classroomPageService.openCreateGroupDialog();
+    this.#classroomsService.createGroup(
+      this.classroomId(),
+      this.configurationId()
+    );
   }
 }
