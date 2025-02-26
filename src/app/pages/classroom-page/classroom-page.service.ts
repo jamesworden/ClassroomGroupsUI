@@ -15,10 +15,12 @@ import { ConfigurationViewMode } from '@app/models';
 import {
   ClassroomDetail,
   ClassroomsService,
+  ColumnDetail,
   Configuration,
 } from '@shared/classrooms';
 import { combineLatest } from 'rxjs';
 import {
+  CreateEditColumnDialogComponent,
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from './classroom-view/configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
@@ -166,6 +168,50 @@ export class ClassroomPageService {
         if (outputs) {
           this.#classroomsService.createConfiguration(
             this.classroomId(),
+            outputs.label
+          );
+        }
+      });
+  }
+
+  openDeleteColumnDialog(columnDetail: ColumnDetail) {
+    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
+      restoreFocus: false,
+      data: <YesNoDialogInputs>{
+        title: 'Delete classroom',
+        subtitle: `Are you sure you want to delete column '${
+          columnDetail.label
+        }' and all of its related student data?`,
+      },
+    });
+    dialogRef.afterClosed().subscribe((success) => {
+      if (success) {
+        this.#classroomsService.deleteColumn(
+          this.classroomId(),
+          this.configurationId(),
+          columnDetail.id
+        );
+      }
+    });
+  }
+
+  openEditColumnDialog(columnDetail: ColumnDetail) {
+    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
+      restoreFocus: false,
+      data: <CreateEditColumnDialogInputs>{
+        title: 'Edit column',
+        existingData: {
+          columnDetail,
+        },
+      },
+    });
+    dialogRef
+      .afterClosed()
+      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
+        if (outputs) {
+          this.#classroomsService.patchField(
+            this.classroomId(),
+            columnDetail.fieldId,
             outputs.label
           );
         }

@@ -34,6 +34,7 @@ import {
   CreateEditColumnDialogInputs,
   CreateEditColumnDialogOutputs,
 } from '../configuration-view/create-edit-column-dialog/create-edit-column-dialog.component';
+import { ClassroomPageService } from '../../classroom-page.service';
 
 @Component({
   selector: 'app-column-list',
@@ -57,6 +58,7 @@ export class ColumnListComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #matDialog = inject(MatDialog);
   readonly #accountsService = inject(AccountsService);
+  readonly #classroomPageService = inject(ClassroomPageService);
 
   readonly classroomId = input.required<string>();
   readonly configurationId = input.required<string>();
@@ -107,47 +109,11 @@ export class ColumnListComponent {
   }
 
   openDeleteColumnDialog(columnDetail: ColumnDetail) {
-    const dialogRef = this.#matDialog.open(YesNoDialogComponent, {
-      restoreFocus: false,
-      data: <YesNoDialogInputs>{
-        title: 'Delete classroom',
-        subtitle: `Are you sure you want to delete column '${
-          columnDetail.label
-        }' and all of its related student data?`,
-      },
-    });
-    dialogRef.afterClosed().subscribe((success) => {
-      if (success) {
-        this.#classroomsService.deleteColumn(
-          this.classroomId(),
-          this.configurationId(),
-          columnDetail.id
-        );
-      }
-    });
+    this.#classroomPageService.openDeleteColumnDialog(columnDetail);
   }
 
   openEditColumnDialog(columnDetail: ColumnDetail) {
-    const dialogRef = this.#matDialog.open(CreateEditColumnDialogComponent, {
-      restoreFocus: false,
-      data: <CreateEditColumnDialogInputs>{
-        title: 'Edit column',
-        existingData: {
-          columnDetail,
-        },
-      },
-    });
-    dialogRef
-      .afterClosed()
-      .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
-        if (outputs) {
-          this.#classroomsService.patchField(
-            this.classroomId(),
-            columnDetail.fieldId,
-            outputs.label
-          );
-        }
-      });
+    this.#classroomPageService.openEditColumnDialog(columnDetail);
   }
 
   openCreateSideColumnDialog(
