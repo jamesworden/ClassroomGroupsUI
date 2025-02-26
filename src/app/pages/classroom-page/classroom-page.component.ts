@@ -24,7 +24,7 @@ import { NoSelectedConfigurationViewComponent } from './no-selected-configuratio
 import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/classroom-not-found-view.component';
 
 @Component({
-  selector: 'app-classroom-view',
+  selector: 'app-classroom-page',
   imports: [
     CommonModule,
     MatButtonModule,
@@ -46,8 +46,8 @@ import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/class
     ClassroomNotFoundViewComponent,
   ],
   providers: [ClassroomViewService],
-  templateUrl: './classroom-view.component.html',
-  styleUrl: './classroom-view.component.scss',
+  templateUrl: './classroom-page.component.html',
+  styleUrl: './classroom-page.component.scss',
 })
 export class ClassroomPageComponent {
   readonly #themeService = inject(ThemeService);
