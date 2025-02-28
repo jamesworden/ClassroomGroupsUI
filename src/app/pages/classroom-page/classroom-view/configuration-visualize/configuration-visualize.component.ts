@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -6,6 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import {
   provideCharts,
@@ -33,6 +34,7 @@ import {
     MatFormFieldModule,
     MatSelectModule,
     MatButtonToggleModule,
+    MatIconModule,
     FormsModule,
     BaseChartDirective,
   ],
@@ -41,6 +43,7 @@ import {
   providers: [provideCharts(withDefaultRegisterables())],
 })
 export class ConfigurationVisualizeComponent {
+  // Input properties
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly classroom = input.required<ClassroomDetail>();
   readonly columnDetails = input.required<ColumnDetail[]>();
@@ -48,9 +51,10 @@ export class ConfigurationVisualizeComponent {
   readonly groupDetails = input.required<GroupDetail[]>();
   readonly averageScores = input.required<{ [id: string]: number }>();
 
-  viewMode: 'students' | 'groups' = 'students';
-  selectedColumn: string | 'average' = 'average';
-  chartType: ChartType = 'bar';
+  // Signal state properties
+  readonly viewMode = signal<'students' | 'groups'>('students');
+  readonly selectedColumn = signal<string | 'average'>('average');
+  readonly chartType = signal<ChartType>('bar');
 
   // Computed properties
   readonly allGroupDetails = computed(() => {
@@ -61,8 +65,28 @@ export class ConfigurationVisualizeComponent {
     return this.allGroupDetails().flatMap((group) => group.studentDetails);
   });
 
+  readonly numberColumns = computed(() => {
+    return this.columnDetails().filter((col) => col.type === 'NUMBER');
+  });
+
+  readonly noDataAvailable = computed(() => {
+    return this.numberColumns().length === 0;
+  });
+
+  readonly selectedColumnLabel = computed(() => {
+    if (this.selectedColumn() === 'average') {
+      return 'Average Score';
+    } else {
+      return (
+        this.columnDetails().find(
+          (col) => col.fieldId === this.selectedColumn()
+        )?.label || ''
+      );
+    }
+  });
+
   readonly chartData = computed((): ChartData => {
-    if (this.viewMode === 'students') {
+    if (this.viewMode() === 'students') {
       return this.getStudentChartData();
     } else {
       return this.getGroupChartData();
@@ -76,10 +100,33 @@ export class ConfigurationVisualizeComponent {
       plugins: {
         legend: {
           display: true,
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            padding: 20,
+          },
         },
         title: {
           display: true,
           text: this.getChartTitle(),
+          font: {
+            size: 16,
+            weight: 'bold',
+          },
+          padding: {
+            top: 10,
+            bottom: 20,
+          },
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          titleFont: {
+            size: 14,
+          },
+          bodyFont: {
+            size: 13,
+          },
+          padding: 12,
         },
       },
       scales: {
@@ -88,43 +135,117 @@ export class ConfigurationVisualizeComponent {
           title: {
             display: true,
             text: 'Score',
+            font: {
+              size: 14,
+              weight: 'bold',
+            },
           },
           min: 0,
           max: 100,
+          grid: {
+            color: 'rgba(0,0,0,0.05)',
+          },
         },
         x: {
           title: {
             display: true,
-            text: this.viewMode === 'students' ? 'Students' : 'Groups',
+            text: this.viewMode() === 'students' ? 'Students' : 'Groups',
+            font: {
+              size: 14,
+              weight: 'bold',
+            },
+          },
+          grid: {
+            display: false,
           },
         },
+      },
+      elements: {
+        line: {
+          tension: 0.4, // Smoother lines
+        },
+        point: {
+          radius: 4,
+          hoverRadius: 6,
+        },
+        bar: {
+          borderRadius: 4,
+        },
+      },
+      animation: {
+        duration: 750,
+        easing: 'easeOutQuart',
       },
     };
   });
 
+  readonly averageClassScore = computed(() => {
+    if (this.selectedColumn() === 'average') {
+      const values = Object.values(this.averageScores());
+      return values.length > 0
+        ? values.reduce((sum, val) => sum + val, 0) / values.length
+        : 0;
+    } else {
+      const scores = this.allStudentDetails()
+        .map((s) =>
+          parseFloat(s.fieldIdsToValues[this.selectedColumn()] || '0')
+        )
+        .filter((v) => !isNaN(v));
+
+      return scores.length > 0
+        ? scores.reduce((sum, val) => sum + val, 0) / scores.length
+        : 0;
+    }
+  });
+
+  // Action methods
+  setViewMode(mode: 'students' | 'groups') {
+    this.viewMode.set(mode);
+  }
+
+  setSelectedColumn(column: string | 'average') {
+    this.selectedColumn.set(column);
+  }
+
+  setChartType(type: ChartType) {
+    this.chartType.set(type);
+  }
+
   // Helper methods
   private getChartTitle(): string {
-    if (this.selectedColumn === 'average') {
-      return `Average Scores by ${this.viewMode === 'students' ? 'Student' : 'Group'}`;
+    if (this.selectedColumn() === 'average') {
+      return `Average Scores by ${this.viewMode() === 'students' ? 'Student' : 'Group'}`;
     } else {
       const columnLabel =
-        this.columnDetails().find((col) => col.fieldId === this.selectedColumn)
-          ?.label || '';
-      return `${columnLabel} Scores by ${this.viewMode === 'students' ? 'Student' : 'Group'}`;
+        this.columnDetails().find(
+          (col) => col.fieldId === this.selectedColumn()
+        )?.label || '';
+      return `${columnLabel} Scores by ${this.viewMode() === 'students' ? 'Student' : 'Group'}`;
     }
   }
 
   private getStudentChartData(): ChartData {
     const students = this.allStudentDetails();
-    const labels = students.map((student, index) => `Student ${index + 1}`);
+
+    // Create more readable student labels
+    const labels = students.map((student) => {
+      // Use student name if available
+      const firstName = student.fieldIdsToValues['firstName'] || '';
+      const lastName = student.fieldIdsToValues['lastName'] || '';
+
+      if (firstName || lastName) {
+        return `${firstName} ${lastName}`.trim();
+      }
+
+      return `Student ${student.id.slice(-4)}`;
+    });
 
     let datasets = [];
 
-    if (this.selectedColumn === 'average') {
+    if (this.selectedColumn() === 'average') {
       // Average scores
       const data = students.map((student) => {
-        const studentScores = this.columnDetails()
-          .filter((col) => col.type === 'NUMBER')
+        const studentScores = this.numberColumns()
           .map((col) =>
             parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
           )
@@ -139,20 +260,29 @@ export class ConfigurationVisualizeComponent {
       datasets.push({
         data,
         label: 'Average Score',
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        hoverBackgroundColor: 'rgba(75, 192, 192, 0.8)',
+        borderWidth: 1,
       });
     } else {
       // Specific column
       const data = students.map((student) => {
-        const value = student.fieldIdsToValues[this.selectedColumn] || '0';
+        const value = student.fieldIdsToValues[this.selectedColumn()] || '0';
         return parseFloat(value) || 0;
       });
 
       const columnLabel =
-        this.columnDetails().find((col) => col.fieldId === this.selectedColumn)
-          ?.label || '';
+        this.columnDetails().find(
+          (col) => col.fieldId === this.selectedColumn()
+        )?.label || '';
       datasets.push({
         data,
         label: columnLabel,
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        hoverBackgroundColor: 'rgba(54, 162, 235, 0.8)',
+        borderWidth: 1,
       });
     }
 
@@ -168,15 +298,14 @@ export class ConfigurationVisualizeComponent {
 
     let datasets = [];
 
-    if (this.selectedColumn === 'average') {
+    if (this.selectedColumn() === 'average') {
       // Average scores
       const data = groups.map((group) => {
         const groupStudents = group.studentDetails;
 
         // Get all number column scores for all students in the group
         const allScores = groupStudents.flatMap((student) =>
-          this.columnDetails()
-            .filter((col) => col.type === 'NUMBER')
+          this.numberColumns()
             .map((col) =>
               parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
             )
@@ -191,6 +320,10 @@ export class ConfigurationVisualizeComponent {
       datasets.push({
         data,
         label: 'Average Score',
+        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        hoverBackgroundColor: 'rgba(153, 102, 255, 0.8)',
+        borderWidth: 1,
       });
     } else {
       // Specific column
@@ -199,7 +332,7 @@ export class ConfigurationVisualizeComponent {
 
         const columnScores = groupStudents
           .map((student) =>
-            parseFloat(student.fieldIdsToValues[this.selectedColumn] || '0')
+            parseFloat(student.fieldIdsToValues[this.selectedColumn()] || '0')
           )
           .filter((score) => !isNaN(score));
 
@@ -210,11 +343,16 @@ export class ConfigurationVisualizeComponent {
       });
 
       const columnLabel =
-        this.columnDetails().find((col) => col.fieldId === this.selectedColumn)
-          ?.label || '';
+        this.columnDetails().find(
+          (col) => col.fieldId === this.selectedColumn()
+        )?.label || '';
       datasets.push({
         data,
         label: columnLabel,
+        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+        borderColor: 'rgba(255, 159, 64, 1)',
+        hoverBackgroundColor: 'rgba(255, 159, 64, 0.8)',
+        borderWidth: 1,
       });
     }
 
@@ -223,27 +361,4 @@ export class ConfigurationVisualizeComponent {
       datasets,
     };
   }
-
-  onChartTypeChange(type: ChartType) {
-    this.chartType = type;
-  }
-
-  // Add this computed value to your ConfigurationVisualizeComponent class:
-
-  readonly averageClassScore = computed(() => {
-    if (this.selectedColumn === 'average') {
-      const values = Object.values(this.averageScores());
-      return values.length > 0
-        ? values.reduce((sum, val) => sum + val, 0) / values.length
-        : 0;
-    } else {
-      const scores = this.allStudentDetails()
-        .map((s) => parseFloat(s.fieldIdsToValues[this.selectedColumn] || '0'))
-        .filter((v) => !isNaN(v));
-
-      return scores.length > 0
-        ? scores.reduce((sum, val) => sum + val, 0) / scores.length
-        : 0;
-    }
-  });
 }

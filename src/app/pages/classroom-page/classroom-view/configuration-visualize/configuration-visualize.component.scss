@@ -2,23 +2,53 @@
   position: relative;
   width: 100%;
   min-height: 400px;
+  max-height: 500px;
+  transition: all 0.2s ease-in-out;
 }
 
 .stat-card {
-  background-color: rgba(0, 0, 0, 0.02);
   transition: all 0.2s ease-in-out;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 }
 
-mat-card {
-  margin-bottom: 1rem;
+// Custom styling for chart toggle buttons
+:host ::ng-deep {
+  .mat-button-toggle-group {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .mat-button-toggle {
+    &.mat-button-toggle-checked {
+      background-color: rgba(var(--color-primary-rgb), 0.1);
+      color: var(--color-primary);
+    }
+  }
+
+  .mat-button-toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: rgba(var(--color-text-rgb), 0.2);
+  }
+
+  // Chart styling
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+// Dark mode adjustments
+:host-context(.dark-theme) {
+  .stat-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
 }

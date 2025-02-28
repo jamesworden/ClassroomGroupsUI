@@ -1,91 +1,190 @@
-<div class="container p-4">
-  <mat-card class="mb-4">
-    <mat-card-header>
-      <mat-card-title>Data Visualization</mat-card-title>
-      <mat-card-subtitle
-        >{{ configurationDetail().label }} -
-        {{ classroom().label }}</mat-card-subtitle
+<div class="flex flex-col h-full relative">
+  <div
+    class="panel mx-4 mb-4 flex-auto rounded-b-lg shadow-lg flex flex-col flex-1"
+  >
+    <div class="flex flex-col flex-1">
+      <div
+        class="px-4 pt-4 flex flex-col border-b border-zinc-300 dark:border-zinc-700"
       >
-    </mat-card-header>
+        <div class="flex justify-between items-center">
+          <!-- Configuration title and description -->
+          <div class="flex-shrink flex-grow overflow-hidden mr-4">
+            <div class="flex flex-col justify-around">
+              <div class="overflow-hidden">
+                <h3
+                  class="text-2xl overflow-hidden text-ellipsis whitespace-nowrap"
+                >
+                  {{ configurationDetail().label }}
+                </h3>
+                <h4
+                  class="text-sm opacity-80 overflow-hidden text-ellipsis whitespace-nowrap"
+                >
+                  {{ classroom().label }} - Data Visualization
+                </h4>
+              </div>
+            </div>
+          </div>
 
-    <mat-card-content>
-      <div class="flex flex-wrap gap-4 mb-4">
-        <mat-form-field appearance="outline">
-          <mat-label>View By</mat-label>
-          <mat-select [(ngModel)]="viewMode">
-            <mat-option value="students">Students</mat-option>
-            <mat-option value="groups">Groups</mat-option>
-          </mat-select>
-        </mat-form-field>
+          <!-- Chart Type Toggle -->
+          <div class="flex gap-x-2 flex-shrink-0">
+            <mat-button-toggle-group
+              [value]="chartType()"
+              (change)="setChartType($event.value)"
+              aria-label="Chart Type"
+              class="border border-zinc-400 dark:border-zinc-600"
+            >
+              <mat-button-toggle value="bar">
+                <mat-icon class="text-sm">bar_chart</mat-icon>
+                <span class="text-sm hidden sm:inline ml-1">Bar</span>
+              </mat-button-toggle>
+              <mat-button-toggle value="line">
+                <mat-icon class="text-sm">show_chart</mat-icon>
+                <span class="text-sm hidden sm:inline ml-1">Line</span>
+              </mat-button-toggle>
+              <mat-button-toggle value="radar">
+                <mat-icon class="text-sm">radar</mat-icon>
+                <span class="text-sm hidden sm:inline ml-1">Radar</span>
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Data Column</mat-label>
-          <mat-select [(ngModel)]="selectedColumn">
-            <mat-option value="average">Average Score</mat-option>
-            @for (column of columnDetails(); track column.id) {
-              @if (column.type === 'NUMBER') {
-                <mat-option [value]="column.fieldId">{{
-                  column.label
-                }}</mat-option>
+        <!-- View options row -->
+        <div class="flex flex-wrap gap-4 my-4">
+          <mat-form-field appearance="outline" class="w-40">
+            <mat-label>View By</mat-label>
+            <mat-select
+              [value]="viewMode()"
+              (selectionChange)="setViewMode($event.value)"
+            >
+              <mat-option value="students">
+                <div class="flex items-center">
+                  <mat-icon class="mr-2 text-sm">person</mat-icon>
+                  <span>Students</span>
+                </div>
+              </mat-option>
+              <mat-option value="groups">
+                <div class="flex items-center">
+                  <mat-icon class="mr-2 text-sm">groups</mat-icon>
+                  <span>Groups</span>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-1 min-w-60">
+            <mat-label>Data Column</mat-label>
+            <mat-select
+              [value]="selectedColumn()"
+              (selectionChange)="setSelectedColumn($event.value)"
+            >
+              <mat-option value="average">
+                <div class="flex items-center">
+                  <mat-icon class="mr-2 text-sm">calculate</mat-icon>
+                  <span>Average Score</span>
+                </div>
+              </mat-option>
+              @for (column of numberColumns(); track column.id) {
+                <mat-option [value]="column.fieldId">
+                  <span>{{ column.label }}</span>
+                </mat-option>
               }
-            }
-          </mat-select>
-        </mat-form-field>
-
-        <div class="flex items-center">
-          <span class="mr-2">Chart Type:</span>
-          <mat-button-toggle-group
-            [value]="chartType"
-            (change)="onChartTypeChange($event.value)"
-          >
-            <mat-button-toggle value="bar">Bar</mat-button-toggle>
-            <mat-button-toggle value="line">Line</mat-button-toggle>
-            <mat-button-toggle value="radar">Radar</mat-button-toggle>
-          </mat-button-toggle-group>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
 
-      <mat-divider class="mb-4"></mat-divider>
-
-      <div class="chart-container" style="height: 500px">
-        <canvas
-          baseChart
-          [data]="chartData()"
-          [options]="chartOptions()"
-          [type]="chartType"
+      <!-- Main content area -->
+      <div class="flex flex-col p-4 w-full h-full">
+        <div
+          class="chart-container bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg p-4"
         >
-        </canvas>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Stats Summary</mat-card-title>
-    </mat-card-header>
-
-    <mat-card-content>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="stat-card p-4 border rounded">
-          <div class="text-lg font-bold">Total Students</div>
-          <div class="text-2xl">{{ allStudentDetails().length }}</div>
+          <canvas
+            baseChart
+            [data]="chartData()"
+            [options]="chartOptions()"
+            [type]="chartType()"
+          >
+          </canvas>
         </div>
 
-        <div class="stat-card p-4 border rounded">
-          <div class="text-lg font-bold">Total Groups</div>
-          <div class="text-2xl">{{ allGroupDetails().length }}</div>
-        </div>
+        <!-- Stats cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div
+            class="stat-card bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg p-4 flex items-center"
+          >
+            <div
+              class="mr-4 bg-amber-100 dark:bg-amber-900/30 p-3 rounded-full"
+            >
+              <mat-icon class="text-amber-700 dark:text-amber-500"
+                >person</mat-icon
+              >
+            </div>
+            <div>
+              <div class="text-sm font-medium opacity-80">Total Students</div>
+              <div class="text-2xl font-semibold">
+                {{ allStudentDetails().length }}
+              </div>
+            </div>
+          </div>
 
-        <div class="stat-card p-4 border rounded">
-          <div class="text-lg font-bold">Average Class Score</div>
-          <div class="stat-card p-4 border rounded">
-            <div class="text-lg font-bold">Average Class Score</div>
-            <div class="text-2xl">
-              {{ averageClassScore() | number: '1.1-1' }}%
+          <div
+            class="stat-card bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg p-4 flex items-center"
+          >
+            <div class="mr-4 bg-blue-100 dark:bg-blue-900/30 p-3 rounded-full">
+              <mat-icon class="text-blue-700 dark:text-blue-500"
+                >groups</mat-icon
+              >
+            </div>
+            <div>
+              <div class="text-sm font-medium opacity-80">Total Groups</div>
+              <div class="text-2xl font-semibold">
+                {{ allGroupDetails().length }}
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stat-card bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg p-4 flex items-center"
+          >
+            <div
+              class="mr-4 bg-green-100 dark:bg-green-900/30 p-3 rounded-full"
+            >
+              <mat-icon class="text-green-700 dark:text-green-500"
+                >trending_up</mat-icon
+              >
+            </div>
+            <div>
+              <div class="text-sm font-medium opacity-80">
+                {{
+                  selectedColumnLabel() === 'Average Score'
+                    ? 'Class Average'
+                    : selectedColumnLabel() + ' Average'
+                }}
+              </div>
+              <div class="text-2xl font-semibold">
+                {{ averageClassScore() | number: '1.1-1' }}%
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Empty state -->
+        @if (noDataAvailable()) {
+          <div
+            class="flex flex-col items-center justify-center text-center p-8 mt-4 bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg"
+          >
+            <mat-icon class="text-6xl mb-4 text-zinc-400 dark:text-zinc-600"
+              >data_array</mat-icon
+            >
+            <h3 class="text-xl font-medium mb-2">No numeric data available</h3>
+            <p class="opacity-70 max-w-md">
+              Add number columns to your configuration to visualize data.
+              Numeric data allows you to track and analyze student performance.
+            </p>
+          </div>
+        }
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </div>
 </div>
