@@ -1,0 +1,91 @@
+<div class="container p-4">
+  <mat-card class="mb-4">
+    <mat-card-header>
+      <mat-card-title>Data Visualization</mat-card-title>
+      <mat-card-subtitle
+        >{{ configurationDetail().label }} -
+        {{ classroom().label }}</mat-card-subtitle
+      >
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="flex flex-wrap gap-4 mb-4">
+        <mat-form-field appearance="outline">
+          <mat-label>View By</mat-label>
+          <mat-select [(ngModel)]="viewMode">
+            <mat-option value="students">Students</mat-option>
+            <mat-option value="groups">Groups</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data Column</mat-label>
+          <mat-select [(ngModel)]="selectedColumn">
+            <mat-option value="average">Average Score</mat-option>
+            @for (column of columnDetails(); track column.id) {
+              @if (column.type === 'NUMBER') {
+                <mat-option [value]="column.fieldId">{{
+                  column.label
+                }}</mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="flex items-center">
+          <span class="mr-2">Chart Type:</span>
+          <mat-button-toggle-group
+            [value]="chartType"
+            (change)="onChartTypeChange($event.value)"
+          >
+            <mat-button-toggle value="bar">Bar</mat-button-toggle>
+            <mat-button-toggle value="line">Line</mat-button-toggle>
+            <mat-button-toggle value="radar">Radar</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+
+      <mat-divider class="mb-4"></mat-divider>
+
+      <div class="chart-container" style="height: 500px">
+        <canvas
+          baseChart
+          [data]="chartData()"
+          [options]="chartOptions()"
+          [type]="chartType"
+        >
+        </canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Stats Summary</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="stat-card p-4 border rounded">
+          <div class="text-lg font-bold">Total Students</div>
+          <div class="text-2xl">{{ allStudentDetails().length }}</div>
+        </div>
+
+        <div class="stat-card p-4 border rounded">
+          <div class="text-lg font-bold">Total Groups</div>
+          <div class="text-2xl">{{ allGroupDetails().length }}</div>
+        </div>
+
+        <div class="stat-card p-4 border rounded">
+          <div class="text-lg font-bold">Average Class Score</div>
+          <div class="stat-card p-4 border rounded">
+            <div class="text-lg font-bold">Average Class Score</div>
+            <div class="text-2xl">
+              {{ averageClassScore() | number: '1.1-1' }}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

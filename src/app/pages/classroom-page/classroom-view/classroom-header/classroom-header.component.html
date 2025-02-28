@@ -46,6 +46,14 @@
       >
         <mat-icon class="opacity-80" matTooltip="Text"> text_fields </mat-icon>
       </mat-button-toggle>
+      <mat-button-toggle
+        [value]="ConfigurationViewMode.Visualize"
+        (change)="setConfigurationViewMode($event)"
+      >
+        <mat-icon class="opacity-80" matTooltip="Visualize">
+          bar_chart
+        </mat-icon>
+      </mat-button-toggle>
     </mat-button-toggle-group>
   </div>
 

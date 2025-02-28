@@ -21,6 +21,16 @@
         [anyAverageScores]="anyAverageScores()"
         [averageScores]="averageScores()"
       ></app-configuration-view>
+    } @else if (configurationViewMode() === ConfigurationViewMode.Visualize) {
+      <app-configuration-visualize
+        class="flex-1"
+        [configurationDetail]="configurationDetail"
+        [classroom]="classroomDetail()"
+        [columnDetails]="columnDetails()"
+        [defaultGroup]="defaultGroup()!"
+        [groupDetails]="listGroupDetails()"
+        [averageScores]="averageScores()"
+      ></app-configuration-visualize>
     } @else {
       <app-configuration-preview
         class="flex-1"
