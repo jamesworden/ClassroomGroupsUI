@@ -11,11 +11,14 @@
         #labelInput
         autocomplete="off"
       />
-      <mat-error *ngIf="form.get('label')?.errors?.['required']">
-        Configuration name is required
+      <mat-hint align="end"
+        >{{ form.get('label')?.value?.length || 0 }}/50</mat-hint
+      >
+      <mat-error *ngIf="form.get('label')?.errors?.['required']"
+        >Configuration name is required
       </mat-error>
-      <mat-error *ngIf="form.get('label')?.errors?.['maxlength']">
-        Configuration name must be 50 characters or less
+      <mat-error *ngIf="form.get('label')?.errors?.['maxlength']"
+        >Configuration name must be 50 characters or less
       </mat-error>
     </mat-form-field>
 
