@@ -71,6 +71,9 @@
               (click)="regenerateText()"
               class="!flex"
               matTooltip="Refresh"
+              [ngClass]="{
+                '!text-amber-500': isTextModified(),
+              }"
             >
               <mat-icon>refresh</mat-icon>
             </button>
@@ -104,6 +107,9 @@
           <div class="flex flex-col w-full">
             <textarea
               class="p-4 bg-gray-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-lg w-full flex-1 min-h-[300px] font-mono text-sm"
+              [ngClass]="{
+                '!border-amber-500': isTextModified(),
+              }"
               [value]="editableText()"
               (input)="updateEditableText($event)"
             ></textarea>
