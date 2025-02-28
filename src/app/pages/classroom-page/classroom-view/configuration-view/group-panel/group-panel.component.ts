@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import {
   ColumnDetail,
   GroupDetail,
+  MAX_GROUP_NAME_LENGTH,
   MoveStudentDetail,
   StudentDetail,
   StudentField,
@@ -54,6 +55,8 @@ export class GroupPanelComponent {
       (student) => student.groupId === this.groupDetail()?.id
     )
   );
+
+  readonly MAX_GROUP_NAME_LENGTH = MAX_GROUP_NAME_LENGTH;
 
   createStudent() {
     this.studentCreated.emit();

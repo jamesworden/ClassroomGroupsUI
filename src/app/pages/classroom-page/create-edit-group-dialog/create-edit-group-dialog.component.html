@@ -11,13 +11,15 @@
             formControlName="label"
             #labelInput
             placeholder="Enter group name"
-            maxlength="50"
+            [maxlength]="MAX_GROUP_NAME_LENGTH"
           />
           @if (form.get('label')?.hasError('maxlength')) {
             <mat-error> Group name cannot exceed 50 characters </mat-error>
           }
           <mat-hint align="end"
-            >{{ form.get('label')?.value?.length || 0 }}/50</mat-hint
+            >{{ form.get('label')?.value?.length || 0 }}/{{
+              MAX_GROUP_NAME_LENGTH
+            }}</mat-hint
           >
         </mat-form-field>
       </div>
