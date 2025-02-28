@@ -137,7 +137,15 @@ export class ConfigurationVisualizeComponent {
 
           // Create gradient based on chart type
           if (this.chartType() === 'bar') {
-            return 'rgba(94, 129, 244, 0.8)';
+            const gradient = ctx.createLinearGradient(
+              0,
+              chartArea.bottom,
+              0,
+              chartArea.top
+            );
+            gradient.addColorStop(0, 'rgba(94, 129, 244, 0.2)');
+            gradient.addColorStop(1, 'rgba(94, 129, 244, 0.8)');
+            return gradient;
           } else if (this.chartType() === 'line') {
             const gradient = ctx.createLinearGradient(
               0,
@@ -174,12 +182,20 @@ export class ConfigurationVisualizeComponent {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
           if (!chartArea) {
-            return 'rgba(66, 186, 255, 0.8)';
+            return 'rgba(94, 129, 244, 0.8)';
           }
 
           // Create gradient based on chart type
           if (this.chartType() === 'bar') {
-            return 'rgba(66, 186, 255, 0.8)';
+            const gradient = ctx.createLinearGradient(
+              0,
+              chartArea.bottom,
+              0,
+              chartArea.top
+            );
+            gradient.addColorStop(0, 'rgba(94, 129, 244, 0.2)');
+            gradient.addColorStop(1, 'rgba(94, 129, 244, 0.8)');
+            return gradient;
           } else if (this.chartType() === 'line') {
             const gradient = ctx.createLinearGradient(
               0,
@@ -187,11 +203,11 @@ export class ConfigurationVisualizeComponent {
               0,
               chartArea.top
             );
-            gradient.addColorStop(0, 'rgba(66, 186, 255, 0.1)');
-            gradient.addColorStop(1, 'rgba(66, 186, 255, 0.6)');
+            gradient.addColorStop(0, 'rgba(94, 129, 244, 0.1)');
+            gradient.addColorStop(1, 'rgba(94, 129, 244, 0.6)');
             return gradient;
           } else {
-            return 'rgba(66, 186, 255, 0.7)';
+            return 'rgba(94, 129, 244, 0.7)';
           }
         },
         borderColor: 'rgba(66, 186, 255, 1)',
@@ -239,7 +255,15 @@ export class ConfigurationVisualizeComponent {
 
           // Create gradient based on chart type
           if (this.chartType() === 'bar') {
-            return 'rgba(137, 111, 255, 0.8)';
+            const gradient = ctx.createLinearGradient(
+              0,
+              chartArea.bottom,
+              0,
+              chartArea.top
+            );
+            gradient.addColorStop(0, 'rgba(137, 111, 255, 0.2)');
+            gradient.addColorStop(1, 'rgba(137, 111, 255, 0.8)');
+            return gradient;
           } else if (this.chartType() === 'line') {
             const gradient = ctx.createLinearGradient(
               0,
@@ -286,12 +310,20 @@ export class ConfigurationVisualizeComponent {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
           if (!chartArea) {
-            return 'rgba(255, 126, 146, 0.8)';
+            return 'rgba(137, 111, 255, 0.8)';
           }
 
           // Create gradient based on chart type
           if (this.chartType() === 'bar') {
-            return 'rgba(255, 126, 146, 0.8)';
+            const gradient = ctx.createLinearGradient(
+              0,
+              chartArea.bottom,
+              0,
+              chartArea.top
+            );
+            gradient.addColorStop(0, 'rgba(137, 111, 255, 0.2)');
+            gradient.addColorStop(1, 'rgba(137, 111, 255, 0.8)');
+            return gradient;
           } else if (this.chartType() === 'line') {
             const gradient = ctx.createLinearGradient(
               0,
@@ -299,11 +331,11 @@ export class ConfigurationVisualizeComponent {
               0,
               chartArea.top
             );
-            gradient.addColorStop(0, 'rgba(255, 126, 146, 0.1)');
-            gradient.addColorStop(1, 'rgba(255, 126, 146, 0.6)');
+            gradient.addColorStop(0, 'rgba(137, 111, 255, 0.1)');
+            gradient.addColorStop(1, 'rgba(137, 111, 255, 0.6)');
             return gradient;
           } else {
-            return 'rgba(255, 126, 146, 0.7)';
+            return 'rgba(137, 111, 255, 0.7)';
           }
         },
         borderColor: 'rgba(255, 126, 146, 1)',
