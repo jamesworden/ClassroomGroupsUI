@@ -287,7 +287,7 @@ export class ClassroomsService {
     this.patchState((draft) => {
       draft.updatingClassroomIds.add(classroomId);
     });
-    return this.#httpClient
+    const configuration$ = this.#httpClient
       .post<CreatedConfigurationResponse>(
         `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations`,
         {
@@ -325,9 +325,16 @@ export class ClassroomsService {
             draft.updatingClassroomIds.delete(classroomId);
           });
         }),
+        map((res) => res?.createdConfigurationDetail),
         take(1)
-      )
-      .subscribe();
+      );
+    const value$ = new BehaviorSubject<ConfigurationDetail | undefined>(
+      undefined
+    );
+    configuration$.subscribe((createdConfigurationDetail) =>
+      value$.next(createdConfigurationDetail)
+    );
+    return value$.asObservable();
   }
 
   public getConfigurations(classroomId: string) {

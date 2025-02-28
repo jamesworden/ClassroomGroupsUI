@@ -176,10 +176,13 @@ export class ClassroomPageService {
       .afterClosed()
       .subscribe((outputs?: CreateEditColumnDialogOutputs) => {
         if (outputs) {
-          this.#classroomsService.createConfiguration(
-            this.classroomId(),
-            outputs.label
-          );
+          this.#classroomsService
+            .createConfiguration(this.classroomId(), outputs.label)
+            .subscribe(
+              (createdConfiguration) =>
+                createdConfiguration?.id &&
+                this.selectConfiguration(createdConfiguration.id)
+            );
         }
       });
   }
