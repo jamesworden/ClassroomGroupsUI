@@ -28,6 +28,7 @@ import {
   ConfigurationDetail,
   FieldType,
   GroupDetail,
+  MAX_CLASSROOM_NAME_LENGTH,
   MAX_CONFIGURATION_NAME_LENGTH,
   StudentGroupingStrategy,
 } from '@shared/classrooms';
@@ -123,6 +124,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly StudentGroupingStrategy = StudentGroupingStrategy;
   readonly FieldType = FieldType;
   readonly MAX_CONFIGURATION_NAME_LENGTH = MAX_CONFIGURATION_NAME_LENGTH;
+  readonly MAX_CLASSROOM_NAME_LENGTH = MAX_CLASSROOM_NAME_LENGTH;
 
   readonly groupingValue = signal(3);
   readonly groupingByDivision = signal(true);
