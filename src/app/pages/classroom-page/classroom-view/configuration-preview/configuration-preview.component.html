@@ -117,41 +117,57 @@
             </ul>
           </div>
 
-          <div class="mt-auto text-sm text-gray-600 dark:text-gray-400 italic">
+          <div
+            class="mt-auto text-sm text-gray-600 dark:text-gray-400 italic mb-1"
+          >
             Changes made here won't affect your actual classroom groups.
           </div>
         </div>
 
-        <div class="relative w-full flex-1 min-h-[300px]">
-          <textarea
-            class="p-4 bg-gray-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg w-full h-full min-h-[300px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 dark:focus:ring-amber-500 focus:border-amber-600 dark:focus:border-amber-500 relative"
-            [ngClass]="{
-              '!border-amber-700 dark:!border-amber-500 !ring-1 !ring-amber-700 dark:!ring-amber-500':
-                isTextModified(),
-            }"
-            [value]="editableText()"
-            (input)="updateEditableText($event)"
-            aria-label="Student groups text editor"
-          ></textarea>
+        <div class="flex flex-col flex-1">
+          <div class="relative w-full flex-1 min-h-[300px]">
+            <textarea
+              class="p-4 bg-gray-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg w-full h-full min-h-[300px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 dark:focus:ring-amber-500 focus:border-amber-600 dark:focus:border-amber-500 relative"
+              [ngClass]="{
+                '!border-amber-700 dark:!border-amber-500 !ring-1 !ring-amber-700 dark:!ring-amber-500':
+                  isTextModified(),
+              }"
+              [value]="editableText()"
+              (input)="updateEditableText($event)"
+              aria-label="Student groups text editor"
+            ></textarea>
 
-          <!-- Watermark Element -->
-          <div
-            class="absolute inset-0 pointer-events-none flex items-center justify-center"
-            [ngClass]="{
-              'opacity-30': editableText().length,
-              'opacity-60': !editableText() || editableText().length === 0,
-            }"
-          >
-            <div class="flex flex-col items-center">
-              <mat-icon
-                class="text-8xl text-zinc-400 dark:text-zinc-600 watermark-icon"
-                >groups</mat-icon
-              >
-              <span
-                class="mt-2 text-2xl font-semibold text-zinc-400 dark:text-zinc-600"
-                >Student Groups</span
-              >
+            <!-- Watermark Element -->
+            <div
+              class="absolute inset-0 pointer-events-none flex items-center justify-center"
+              [ngClass]="{
+                'opacity-30': editableText().length,
+                'opacity-60': !editableText() || editableText().length === 0,
+              }"
+            >
+              <div class="flex flex-col items-center">
+                <mat-icon
+                  class="text-8xl text-zinc-400 dark:text-zinc-600 watermark-icon"
+                  >groups</mat-icon
+                >
+                <span
+                  class="mt-2 text-2xl font-semibold text-zinc-400 dark:text-zinc-600"
+                  >Student Groups</span
+                >
+              </div>
             </div>
+          </div>
+
+          <div class="flex justify-between mt-3 text-sm opacity-70">
+            <span>{{ characterCount() }} characters</span>
+            <span>{{ lineCount() }} lines</span>
+            <span *ngIf="isTextModified()">
+              <mat-icon
+                class="text-amber-700 dark:text-amber-500 align-middle text-sm"
+                >warning</mat-icon
+              >
+              Modified
+            </span>
           </div>
         </div>
       </div>
