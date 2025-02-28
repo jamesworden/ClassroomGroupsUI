@@ -173,7 +173,7 @@ export class ConfigurationVisualizeComponent {
         },
       },
       animation: {
-        duration: 750,
+        duration: 500, // Reduced animation time for better performance
         easing: 'easeOutQuart',
       },
     };

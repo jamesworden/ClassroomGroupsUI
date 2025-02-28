@@ -3,11 +3,11 @@
   width: 100%;
   min-height: 400px;
   max-height: 500px;
-  transition: all 0.2s ease-in-out;
+  /* Removed transition to prevent animation during theme changes */
 }
 
 .stat-card {
-  transition: all 0.2s ease-in-out;
+  /* Keep hover effect but disable general transitions */
 
   &:hover {
     transform: translateY(-2px);
@@ -17,6 +17,11 @@
 
 // Custom styling for chart toggle buttons
 :host ::ng-deep {
+  /* Disable transitions for theme changes */
+  * {
+    transition: none !important;
+  }
+
   .mat-button-toggle-group {
     border-radius: 4px;
     overflow: hidden;
@@ -28,7 +33,6 @@
       color: var(--color-primary);
     }
   }
-
   .mat-button-toggle-button {
     display: flex;
     align-items: center;
