@@ -16,7 +16,7 @@
           <input
             class="text-ellipsis text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
             type="text"
-            maxlength="150"
+            [maxLength]="MAX_CONFIGURATION_NAME_LENGTH"
             [value]="configurationDescription()"
             (change)="updateDescription($event)"
             placeholder="Add a description for your configuration"

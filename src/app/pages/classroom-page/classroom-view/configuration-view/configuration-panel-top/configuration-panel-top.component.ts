@@ -28,6 +28,7 @@ import {
   ConfigurationDetail,
   FieldType,
   GroupDetail,
+  MAX_CONFIGURATION_NAME_LENGTH,
   StudentGroupingStrategy,
 } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
@@ -105,13 +106,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly classroomUpdating = computed(() =>
     this.#classroomsService.select.classroomUpdating(this.classroomId())()
   );
-
-  readonly StudentGroupingStrategy = StudentGroupingStrategy;
-  readonly FieldType = FieldType;
-
-  readonly groupingValue = signal(3);
-  readonly groupingByDivision = signal(true);
-
   readonly groupingControl = computed(
     () =>
       new FormControl(this.groupingValue(), [
@@ -125,6 +119,13 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
         },
       ])
   );
+
+  readonly StudentGroupingStrategy = StudentGroupingStrategy;
+  readonly FieldType = FieldType;
+  readonly MAX_CONFIGURATION_NAME_LENGTH = MAX_CONFIGURATION_NAME_LENGTH;
+
+  readonly groupingValue = signal(3);
+  readonly groupingByDivision = signal(true);
 
   ngAfterViewInit() {
     const observer = new ResizeObserver(() => {

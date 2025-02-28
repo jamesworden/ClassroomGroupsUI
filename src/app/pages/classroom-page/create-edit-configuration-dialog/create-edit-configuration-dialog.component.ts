@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MAX_CONFIGURATION_NAME_LENGTH } from '@shared/classrooms';
 
 export interface CreateEditConfigurationDialogInputs {
   title: string;
@@ -55,6 +56,8 @@ export class CreateEditConfigurationDialogComponent implements OnInit {
   @ViewChild('labelInput') labelInput!: ElementRef<HTMLInputElement>;
 
   form: FormGroup;
+
+  readonly MAX_CONFIGURATION_NAME_LENGTH = MAX_CONFIGURATION_NAME_LENGTH;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateEditConfigurationDialogInputs

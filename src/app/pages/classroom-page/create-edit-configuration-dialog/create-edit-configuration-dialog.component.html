@@ -10,15 +10,19 @@
         placeholder="Enter configuration name"
         #labelInput
         autocomplete="off"
+        [maxLength]="MAX_CONFIGURATION_NAME_LENGTH"
       />
       <mat-hint align="end"
-        >{{ form.get('label')?.value?.length || 0 }}/50</mat-hint
+        >{{ form.get('label')?.value?.length || 0 }}/{{
+          MAX_CONFIGURATION_NAME_LENGTH
+        }}</mat-hint
       >
       <mat-error *ngIf="form.get('label')?.errors?.['required']"
         >Configuration name is required
       </mat-error>
       <mat-error *ngIf="form.get('label')?.errors?.['maxlength']"
-        >Configuration name must be 50 characters or less
+        >Configuration name must be
+        {{ MAX_CONFIGURATION_NAME_LENGTH }} characters or less
       </mat-error>
     </mat-form-field>
 
