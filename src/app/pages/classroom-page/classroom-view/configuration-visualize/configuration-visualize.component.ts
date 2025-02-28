@@ -85,11 +85,145 @@ export class ConfigurationVisualizeComponent {
     }
   });
 
+  // New computed signals for chart data generation
+  readonly studentLabels = computed(() => {
+    return this.allStudentDetails().map((student) => {
+      const firstName = student.fieldIdsToValues['firstName'] || '';
+      const lastName = student.fieldIdsToValues['lastName'] || '';
+
+      if (firstName || lastName) {
+        return `${firstName} ${lastName}`.trim();
+      }
+
+      return `Student ${student.id.slice(-4)}`;
+    });
+  });
+
+  readonly groupLabels = computed(() => {
+    return this.allGroupDetails().map((group) => group.label);
+  });
+
+  readonly studentDataset = computed(() => {
+    const students = this.allStudentDetails();
+
+    if (this.selectedColumn() === 'average') {
+      // Average scores for all number columns
+      const data = students.map((student) => {
+        const studentScores = this.numberColumns()
+          .map((col) =>
+            parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
+          )
+          .filter((score) => !isNaN(score));
+
+        return studentScores.length
+          ? studentScores.reduce((sum, score) => sum + score, 0) /
+              studentScores.length
+          : 0;
+      });
+
+      return {
+        data,
+        label: 'Average Score',
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        hoverBackgroundColor: 'rgba(75, 192, 192, 0.8)',
+        borderWidth: 1,
+      };
+    } else {
+      // Specific column data
+      const data = students.map((student) => {
+        const value = student.fieldIdsToValues[this.selectedColumn()] || '0';
+        return parseFloat(value) || 0;
+      });
+
+      return {
+        data,
+        label: this.selectedColumnLabel(),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        hoverBackgroundColor: 'rgba(54, 162, 235, 0.8)',
+        borderWidth: 1,
+      };
+    }
+  });
+
+  readonly groupDataset = computed(() => {
+    const groups = this.allGroupDetails();
+
+    if (this.selectedColumn() === 'average') {
+      // Average scores across all columns for each group
+      const data = groups.map((group) => {
+        const groupStudents = group.studentDetails;
+
+        // Get all number column scores for all students in the group
+        const allScores = groupStudents.flatMap((student) =>
+          this.numberColumns()
+            .map((col) =>
+              parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
+            )
+            .filter((score) => !isNaN(score))
+        );
+
+        return allScores.length
+          ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length
+          : 0;
+      });
+
+      return {
+        data,
+        label: 'Average Score',
+        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        hoverBackgroundColor: 'rgba(153, 102, 255, 0.8)',
+        borderWidth: 1,
+      };
+    } else {
+      // Specific column averages for each group
+      const data = groups.map((group) => {
+        const groupStudents = group.studentDetails;
+
+        const columnScores = groupStudents
+          .map((student) =>
+            parseFloat(student.fieldIdsToValues[this.selectedColumn()] || '0')
+          )
+          .filter((score) => !isNaN(score));
+
+        return columnScores.length
+          ? columnScores.reduce((sum, score) => sum + score, 0) /
+              columnScores.length
+          : 0;
+      });
+
+      return {
+        data,
+        label: this.selectedColumnLabel(),
+        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+        borderColor: 'rgba(255, 159, 64, 1)',
+        hoverBackgroundColor: 'rgba(255, 159, 64, 0.8)',
+        borderWidth: 1,
+      };
+    }
+  });
+
   readonly chartData = computed((): ChartData => {
     if (this.viewMode() === 'students') {
-      return this.getStudentChartData();
+      return {
+        labels: this.studentLabels(),
+        datasets: [this.studentDataset()],
+      };
     } else {
-      return this.getGroupChartData();
+      return {
+        labels: this.groupLabels(),
+        datasets: [this.groupDataset()],
+      };
+    }
+  });
+
+  readonly chartTitle = computed((): string => {
+    if (this.selectedColumn() === 'average') {
+      return `Average Scores by ${this.viewMode() === 'students' ? 'Student' : 'Group'}`;
+    } else {
+      return `${this.selectedColumnLabel()} Scores by ${this.viewMode() === 'students' ? 'Student' : 'Group'}`;
     }
   });
 
@@ -97,7 +231,7 @@ export class ConfigurationVisualizeComponent {
     return {
       responsive: true,
       maintainAspectRatio: false,
-      resizeDelay: 100, // Add resize delay for smoother responsiveness
+      resizeDelay: 100,
       plugins: {
         legend: {
           display: true,
@@ -109,7 +243,7 @@ export class ConfigurationVisualizeComponent {
         },
         title: {
           display: true,
-          text: this.getChartTitle(),
+          text: this.chartTitle(),
           font: {
             size: 16,
             weight: 'bold',
@@ -163,7 +297,7 @@ export class ConfigurationVisualizeComponent {
       },
       elements: {
         line: {
-          tension: 0.4, // Smoother lines
+          tension: 0.4,
         },
         point: {
           radius: 4,
@@ -174,7 +308,7 @@ export class ConfigurationVisualizeComponent {
         },
       },
       animation: {
-        duration: 500, // Reduced animation time for better performance
+        duration: 500,
         easing: 'easeOutQuart',
       },
     };
@@ -210,156 +344,5 @@ export class ConfigurationVisualizeComponent {
 
   setChartType(type: ChartType) {
     this.chartType.set(type);
-  }
-
-  // Helper methods
-  private getChartTitle(): string {
-    if (this.selectedColumn() === 'average') {
-      return `Average Scores by ${this.viewMode() === 'students' ? 'Student' : 'Group'}`;
-    } else {
-      const columnLabel =
-        this.columnDetails().find(
-          (col) => col.fieldId === this.selectedColumn()
-        )?.label || '';
-      return `${columnLabel} Scores by ${this.viewMode() === 'students' ? 'Student' : 'Group'}`;
-    }
-  }
-
-  private getStudentChartData(): ChartData {
-    const students = this.allStudentDetails();
-
-    // Create more readable student labels
-    const labels = students.map((student) => {
-      // Use student name if available
-      const firstName = student.fieldIdsToValues['firstName'] || '';
-      const lastName = student.fieldIdsToValues['lastName'] || '';
-
-      if (firstName || lastName) {
-        return `${firstName} ${lastName}`.trim();
-      }
-
-      return `Student ${student.id.slice(-4)}`;
-    });
-
-    let datasets = [];
-
-    if (this.selectedColumn() === 'average') {
-      // Average scores
-      const data = students.map((student) => {
-        const studentScores = this.numberColumns()
-          .map((col) =>
-            parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
-          )
-          .filter((score) => !isNaN(score));
-
-        return studentScores.length
-          ? studentScores.reduce((sum, score) => sum + score, 0) /
-              studentScores.length
-          : 0;
-      });
-
-      datasets.push({
-        data,
-        label: 'Average Score',
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        hoverBackgroundColor: 'rgba(75, 192, 192, 0.8)',
-        borderWidth: 1,
-      });
-    } else {
-      // Specific column
-      const data = students.map((student) => {
-        const value = student.fieldIdsToValues[this.selectedColumn()] || '0';
-        return parseFloat(value) || 0;
-      });
-
-      const columnLabel =
-        this.columnDetails().find(
-          (col) => col.fieldId === this.selectedColumn()
-        )?.label || '';
-      datasets.push({
-        data,
-        label: columnLabel,
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        hoverBackgroundColor: 'rgba(54, 162, 235, 0.8)',
-        borderWidth: 1,
-      });
-    }
-
-    return {
-      labels,
-      datasets,
-    };
-  }
-
-  private getGroupChartData(): ChartData {
-    const groups = this.allGroupDetails();
-    const labels = groups.map((group) => group.label);
-
-    let datasets = [];
-
-    if (this.selectedColumn() === 'average') {
-      // Average scores
-      const data = groups.map((group) => {
-        const groupStudents = group.studentDetails;
-
-        // Get all number column scores for all students in the group
-        const allScores = groupStudents.flatMap((student) =>
-          this.numberColumns()
-            .map((col) =>
-              parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
-            )
-            .filter((score) => !isNaN(score))
-        );
-
-        return allScores.length
-          ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length
-          : 0;
-      });
-
-      datasets.push({
-        data,
-        label: 'Average Score',
-        backgroundColor: 'rgba(153, 102, 255, 0.6)',
-        borderColor: 'rgba(153, 102, 255, 1)',
-        hoverBackgroundColor: 'rgba(153, 102, 255, 0.8)',
-        borderWidth: 1,
-      });
-    } else {
-      // Specific column
-      const data = groups.map((group) => {
-        const groupStudents = group.studentDetails;
-
-        const columnScores = groupStudents
-          .map((student) =>
-            parseFloat(student.fieldIdsToValues[this.selectedColumn()] || '0')
-          )
-          .filter((score) => !isNaN(score));
-
-        return columnScores.length
-          ? columnScores.reduce((sum, score) => sum + score, 0) /
-              columnScores.length
-          : 0;
-      });
-
-      const columnLabel =
-        this.columnDetails().find(
-          (col) => col.fieldId === this.selectedColumn()
-        )?.label || '';
-      datasets.push({
-        data,
-        label: columnLabel,
-        backgroundColor: 'rgba(255, 159, 64, 0.6)',
-        borderColor: 'rgba(255, 159, 64, 1)',
-        hoverBackgroundColor: 'rgba(255, 159, 64, 0.8)',
-        borderWidth: 1,
-      });
-    }
-
-    return {
-      labels,
-      datasets,
-    };
   }
 }
