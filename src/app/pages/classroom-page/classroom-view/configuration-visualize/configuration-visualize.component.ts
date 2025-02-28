@@ -377,21 +377,7 @@ export class ConfigurationVisualizeComponent {
     },
     plugins: {
       legend: {
-        display: true,
-        position: 'bottom',
-        align: 'center',
-        labels: {
-          usePointStyle: true,
-          pointStyle: 'rectRounded',
-          padding: 25,
-          font: {
-            family: "'Inter', sans-serif",
-            size: 12,
-            weight: 500,
-          },
-          boxWidth: 10,
-          boxHeight: 10,
-        },
+        display: false,
       },
       title: {
         display: true,
