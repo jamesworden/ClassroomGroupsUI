@@ -6,19 +6,27 @@
       <div
         class="px-4 pt-4 flex flex-col border-b border-zinc-300 dark:border-zinc-700"
       >
-        <div class="flex justify-between">
-          <div class="flex flex-col justify-around">
-            <div>
-              <h3 class="text-2xl">
-                {{ configurationDetail().label }}
-              </h3>
-              <h4 class="text-sm opacity-80">
-                {{ configurationDetail().description }}
-              </h4>
+        <div class="flex justify-between items-center">
+          <!-- Modified div with max-width and truncate classes -->
+          <div class="flex-shrink flex-grow overflow-hidden mr-4">
+            <div class="flex flex-col justify-around">
+              <div class="overflow-hidden">
+                <h3
+                  class="text-2xl overflow-hidden text-ellipsis whitespace-nowrap"
+                >
+                  {{ configurationDetail().label }}
+                </h3>
+                <h4
+                  class="text-sm opacity-80 overflow-hidden text-ellipsis whitespace-nowrap"
+                >
+                  {{ configurationDetail().description }}
+                </h4>
+              </div>
             </div>
           </div>
 
-          <div class="flex gap-x-2">
+          <!-- Button container with flex-shrink-0 to prevent shrinking -->
+          <div class="flex gap-x-2 flex-shrink-0">
             <div class="flex flex-col justify-around">
               <mat-chip-listbox [multiple]="true" class="mr-3">
                 <mat-chip-option
@@ -44,20 +52,19 @@
               [disabled]="!isTextModified()"
               (click)="regenerateText()"
               class="!flex"
-              matTooltip="Refresh"
               [ngClass]="{
                 '!text-amber-700 dark:!text-amber-500': isTextModified(),
               }"
             >
               <mat-icon>refresh</mat-icon>
-              <span class="text-sm">Remove edits</span>
+              <span class="text-sm hidden sm:inline">Remove edits</span>
             </button>
 
             <button [tabindex]="-1" matSuffix mat-button (click)="copyText()">
               <mat-icon class="text-md">{{
                 showingCopiedMessage() ? 'check' : 'content_copy'
               }}</mat-icon>
-              <span class="text-sm">{{
+              <span class="text-sm hidden sm:inline">{{
                 showingCopiedMessage() ? 'Copied!' : 'Copy text'
               }}</span>
             </button>
@@ -86,6 +93,7 @@
         ></app-column-list>
       </div>
 
+      <!-- Rest of the component unchanged -->
       <div class="flex flex-row p-4 w-full h-full">
         <div class="max-w-lg pr-6 flex flex-col">
           <div class="mb-4 flex items-center">
