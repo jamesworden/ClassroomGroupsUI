@@ -1,196 +1,204 @@
-<div class="min-h-screen grid-bg">
-  <div class="p-4 px-2 max-w-7xl mx-auto flex flex-col">
-    <mat-toolbar>
-      <span>Classrooms</span>
+<div class="h-full w-full grid-bg flex flex-col overflow-x-hidden">
+  <div class="flex flex-1 justify-around">
+    <div class="px-4 max-w-7xl flex flex-col flex-1">
+      <mat-toolbar>
+        <span>Classrooms</span>
 
-      <span class="flex-auto"></span>
+        <span class="flex-auto"></span>
 
-      <button
-        matTooltip="Home"
-        mat-icon-button
-        [routerLink]="['/']"
-        class="!flex"
-      >
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-
-      <app-code-links-menu-button></app-code-links-menu-button>
-
-      <app-toggle-theme-button></app-toggle-theme-button>
-
-      <app-account-menu-button></app-account-menu-button>
-
-      <div
-        class="flex flex-col justify-around ml-2"
-        [matTooltip]="
-          classroomDetails().length >=
-          (account()?.subscription?.maxClassrooms ?? 0)
-            ? 'Classroom limit reached!'
-            : ''
-        "
-      >
         <button
-          class="bg-gradient-fade !text-white"
-          matTooltip="Add classroom"
+          matTooltip="Home"
           mat-icon-button
-          (click)="createClassroom()"
-          [disabled]="
+          [routerLink]="['/']"
+          class="!flex"
+        >
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <app-code-links-menu-button></app-code-links-menu-button>
+
+        <app-toggle-theme-button></app-toggle-theme-button>
+
+        <app-account-menu-button></app-account-menu-button>
+
+        <div
+          class="flex flex-col justify-around ml-2"
+          [matTooltip]="
             classroomDetails().length >=
             (account()?.subscription?.maxClassrooms ?? 0)
+              ? 'Classroom limit reached!'
+              : ''
           "
-          [ngClass]="{
-            '!opacity-50':
-              classroomDetails().length >=
-              (account()?.subscription?.maxClassrooms ?? 0),
-          }"
         >
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </mat-toolbar>
-
-    @if (classroomDetails().length > 0) {
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-auto mt-12"
-      >
-        @for (classroom of classroomDetails(); track classroom.id) {
-          <div
-            class="bg-white dark:bg-zinc-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden cursor-pointer border border-gray-100 dark:border-gray-700"
-            (click)="viewClassroom(classroom.id)"
-          >
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center">
-                  <mat-icon class="text-primary mr-3">school</mat-icon>
-                  <h3 class="text-lg font-medium">{{ classroom.label }}</h3>
-                </div>
-
-                <button
-                  mat-icon-button
-                  color="warn"
-                  (click)="
-                    $event.stopPropagation();
-                    openDeleteClassroomDialog(classroom)
-                  "
-                  matTooltip="Delete classroom"
-                >
-                  <mat-icon
-                    class="!text-red-500 opacity-70 hover:opacity-100 !flex"
-                    >delete</mat-icon
-                  >
-                </button>
-              </div>
-
-              <p class="text-zinc-600 dark:text-zinc-300 line-clamp-2">
-                {{ classroom.description || 'No description provided' }}
-              </p>
-            </div>
-
-            <div
-              class="bg-zinc-50 dark:bg-zinc-700 px-6 py-3 flex justify-between items-center"
-            >
-              <span class="text-sm text-gray-500 dark:text-gray-400">
-                <mat-icon class="align-middle text-sm mr-1"
-                  >calendar_today</mat-icon
-                >
-                Created recently
-              </span>
-
-              <button
-                mat-button
-                color="primary"
-                class="!text-sm"
-                (click)="$event.stopPropagation(); viewClassroom(classroom.id)"
-              >
-                View details
-              </button>
-            </div>
-          </div>
-        }
-      </div>
-
-      <div class="flex justify-center">
-        <div class="flex-1 flex-col gap-y-8 my-16">
-          <div class="flex justify-around">
-            <h3 class="!font-semibold text-3xl">
-              Your classroom, <span class="text-primary italic">your</span>
-              <span class="text-secondary italic"> way</span>.
-            </h3>
-          </div>
-
-          <div class="flex justify-around">
-            <div class="flex mt-12 flex-col md:flex-row">
-              @for (plan of subscriptionPlans; let i = $index; track i) {
-                <app-subscription-plan-card
-                  class="rounded-lg border"
-                  [ngClass]="{
-                    'bg-white dark:bg-zinc-800 border-primary': i === 1,
-                    'bg-zinc-50 dark:bg-zinc-900': i !== 1,
-                    'scale-110': i === 1,
-                    'shadow-lg border-zinc-200 dark:border-zinc-700': i !== 1,
-                    'shadow-xl': i === 1,
-                  }"
-                  [subscriptionPlan]="plan"
-                >
-                  @if (i === 1) {
-                    <div
-                      class="absolute -top-3 left-0 right-0 mx-auto w-fit rounded-full bg-gradient-fade px-3 py-0.5 text-xs text-white"
-                    >
-                      Most Popular
-                    </div>
-                  }
-                </app-subscription-plan-card>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    } @else if (!classroomsLoading()) {
-      <div
-        class="flex flex-col lg:flex-row items-center justify-between w-full p-8 rounded-xl bg-white dark:bg-gray-800 shadow-md mt-24"
-      >
-        <div class="flex flex-col items-start max-w-md mb-8 lg:mb-0 lg:pr-8">
-          <div class="mb-2 text-primary">
-            <mat-icon class="text-4xl big-icon">school</mat-icon>
-          </div>
-
-          <h2 class="text-2xl font-semibold mb-4">
-            Your Teaching Journey Starts Here
-          </h2>
-
-          <p class="opacity-80 mb-6">
-            Create your first classroom to begin organizing students,
-            assignments, and educational resources in one place. Managing your
-            teaching has never been easier.
-          </p>
-
           <button
-            mat-raised-button
-            color="primary"
-            class="px-6 py-2 rounded-md flex items-center"
+            class="bg-gradient-fade !text-white"
+            matTooltip="Add classroom"
+            mat-icon-button
             (click)="createClassroom()"
+            [disabled]="
+              classroomDetails().length >=
+              (account()?.subscription?.maxClassrooms ?? 0)
+            "
+            [ngClass]="{
+              '!opacity-50':
+                classroomDetails().length >=
+                (account()?.subscription?.maxClassrooms ?? 0),
+            }"
           >
-            <mat-icon class="mr-2">add</mat-icon>
-            Create classroom
+            <mat-icon>add</mat-icon>
           </button>
         </div>
+      </mat-toolbar>
 
-        <div class="flex-shrink-0 max-w-md w-full lg:max-w-lg">
-          <img
-            class="w-full object-contain"
-            [src]="
-              theme() === Themes.LIGHT
-                ? 'assets/add-classroom-light.svg'
-                : 'assets/add-classroom-dark.svg'
-            "
-            alt="Classroom illustration"
-          />
+      @if (classroomDetails().length > 0) {
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-auto mt-12"
+        >
+          @for (classroom of classroomDetails(); track classroom.id) {
+            <div
+              class="bg-white dark:bg-zinc-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden cursor-pointer border border-gray-100 dark:border-gray-700"
+              (click)="viewClassroom(classroom.id)"
+            >
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center">
+                    <mat-icon class="text-primary mr-3">school</mat-icon>
+                    <h3 class="text-lg font-medium">{{ classroom.label }}</h3>
+                  </div>
+
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="
+                      $event.stopPropagation();
+                      openDeleteClassroomDialog(classroom)
+                    "
+                    matTooltip="Delete classroom"
+                  >
+                    <mat-icon
+                      class="!text-red-500 opacity-70 hover:opacity-100 !flex"
+                      >delete</mat-icon
+                    >
+                  </button>
+                </div>
+
+                <p class="text-zinc-600 dark:text-zinc-300 line-clamp-2">
+                  {{ classroom.description || 'No description provided' }}
+                </p>
+              </div>
+
+              <div
+                class="bg-zinc-50 dark:bg-zinc-700 px-6 py-3 flex justify-between items-center"
+              >
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                  <mat-icon class="align-middle text-sm mr-1"
+                    >calendar_today</mat-icon
+                  >
+                  Created recently
+                </span>
+
+                <button
+                  mat-button
+                  color="primary"
+                  class="!text-sm"
+                  (click)="
+                    $event.stopPropagation(); viewClassroom(classroom.id)
+                  "
+                >
+                  View details
+                </button>
+              </div>
+            </div>
+          }
         </div>
-      </div>
-    } @else {
-      <div class="flex justify-center items-center h-64">
-        <mat-spinner></mat-spinner>
-      </div>
-    }
+
+        <div class="flex justify-center flex-auto">
+          <div class="flex-1 flex-col gap-y-8 my-16">
+            <div class="flex justify-around">
+              <h3 class="!font-semibold text-3xl mb-4">
+                Your classroom, <span class="text-primary italic">your</span>
+                <span class="text-secondary italic"> way</span>.
+              </h3>
+            </div>
+
+            <div class="flex justify-around">
+              <div class="flex mt-12 flex-col md:flex-row">
+                @for (plan of subscriptionPlans; let i = $index; track i) {
+                  <app-subscription-plan-card
+                    class="rounded-lg border"
+                    [ngClass]="{
+                      'bg-white dark:bg-zinc-800 border-primary': i === 1,
+                      'bg-zinc-50 dark:bg-zinc-900': i !== 1,
+                      'scale-110': i === 1,
+                      'shadow-lg border-zinc-200 dark:border-zinc-700': i !== 1,
+                      'shadow-xl': i === 1,
+                    }"
+                    [subscriptionPlan]="plan"
+                  >
+                    @if (i === 1) {
+                      <div
+                        class="absolute -top-3 left-0 right-0 mx-auto w-fit rounded-full bg-gradient-fade px-3 py-0.5 text-xs text-white"
+                      >
+                        Most Popular
+                      </div>
+                    }
+                  </app-subscription-plan-card>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      } @else if (!classroomsLoading()) {
+        <div
+          class="flex flex-col lg:flex-row items-center justify-between w-full p-8 rounded-xl bg-white dark:bg-gray-800 shadow-md mt-24"
+        >
+          <div class="flex flex-col items-start max-w-md mb-8 lg:mb-0 lg:pr-8">
+            <div class="mb-2 text-primary">
+              <mat-icon class="text-4xl big-icon">school</mat-icon>
+            </div>
+
+            <h2 class="text-2xl font-semibold mb-4">
+              Your Teaching Journey Starts Here
+            </h2>
+
+            <p class="opacity-80 mb-6">
+              Create your first classroom to begin organizing students,
+              assignments, and educational resources in one place. Managing your
+              teaching has never been easier.
+            </p>
+
+            <button
+              mat-raised-button
+              color="primary"
+              class="px-6 py-2 rounded-md flex items-center"
+              (click)="createClassroom()"
+            >
+              <mat-icon class="mr-2">add</mat-icon>
+              Create classroom
+            </button>
+          </div>
+
+          <div class="flex-shrink-0 max-w-md w-full lg:max-w-lg">
+            <img
+              class="w-full object-contain"
+              [src]="
+                theme() === Themes.LIGHT
+                  ? 'assets/add-classroom-light.svg'
+                  : 'assets/add-classroom-dark.svg'
+              "
+              alt="Classroom illustration"
+            />
+          </div>
+        </div>
+      } @else {
+        <div class="flex justify-center items-center h-64">
+          <mat-spinner></mat-spinner>
+        </div>
+      }
+    </div>
   </div>
+
+  <footer class="p-4 opacity-70 w-full flex justify-center">
+    <p>© {{ fullYear }} ClassroomGroups. All rights reserved.</p>
+  </footer>
 </div>

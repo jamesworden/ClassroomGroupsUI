@@ -60,6 +60,7 @@ export class ClassroomsPageComponent {
   readonly Themes = Themes;
   readonly subscriptionPlans = subscriptionPlans;
   readonly displayedColumns = ['label', 'description', 'actions'];
+  readonly fullYear = new Date().getFullYear();
 
   viewClassroom(id: string) {
     this.#router.navigate(['/classrooms', id]);
