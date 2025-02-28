@@ -85,11 +85,6 @@ export class ClassroomPageService {
         this.configurationId()
       ).length >= this.#accountsService.select.maxFieldsPerClassroom()
   );
-  public readonly reachedClassroomLimit = computed(
-    () =>
-      this.#classroomsService.select.columnDetails(this.configurationId())
-        .length >= this.#accountsService.select.maxFieldsPerClassroom()
-  );
 
   constructor() {
     this.classroomId$

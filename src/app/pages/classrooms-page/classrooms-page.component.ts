@@ -33,8 +33,8 @@ import { ClassroomsPageService } from './classrooms-page.service';
     MatProgressBarModule,
     MatTooltipModule,
     RouterModule,
-    SubscriptionPlanCardComponent,
     CommonModule,
+    SubscriptionPlanCardComponent,
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
     CodeLinksMenuButtonComponent,
@@ -54,6 +54,8 @@ export class ClassroomsPageComponent {
   readonly classroomsLoading = this.#classroomsService.select.classroomsLoading;
   readonly account = this.#accountService.select.account;
   readonly theme = this.#themeService.theme;
+  readonly reachedClassroomLimit =
+    this.#classroomsPageService.reachedClassroomLimit;
 
   readonly Themes = Themes;
   readonly subscriptionPlans = subscriptionPlans;

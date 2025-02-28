@@ -22,4 +22,8 @@ export class AccountSelectors {
     () =>
       this._state().account?.subscription?.maxConfigurationsPerClassroom ?? 0
   );
+
+  public readonly maxClassrooms = computed(
+    () => this._state().account?.subscription?.maxClassrooms ?? 0
+  );
 }
