@@ -34,34 +34,6 @@
               </mat-chip-option>
             </mat-chip-listbox>
           </div>
-
-          <div class="flex flex-col justify-around ml-4">
-            <button
-              [tabindex]="-1"
-              matSuffix
-              mat-raised-button
-              (click)="copyText()"
-            >
-              <mat-icon class="text-md">{{
-                showingCopiedMessage() ? 'check' : 'content_copy'
-              }}</mat-icon>
-              <span class="text-sm opacity-80">{{
-                showingCopiedMessage() ? 'Copied!' : 'Copy text'
-              }}</span>
-            </button>
-          </div>
-
-          <div class="flex flex-col justify-around">
-            <button
-              [tabindex]="-1"
-              matTooltip="More"
-              mat-icon-button
-              [matMenuTriggerFor]="moreMenu"
-              class="!flex ml-2"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -78,12 +50,74 @@
     </div>
 
     <div class="panel m-4 flex-auto rounded-lg shadow-lg flex flex-col flex-1">
-      <div class="flex flex-1">
-        <div class="max-w-3xl mx-auto flex-auto flex">
-          <div
-            class="p-4 m-4 bg-gray-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 flex-1 rounded-lg whitespace-pre"
-          >
-            <p class="text-wrap">{{ plainText() }}</p>
+      <div class="flex flex-col flex-1">
+        <div
+          class="flex items-center px-4 py-3 border-b border-zinc-300 dark:border-zinc-700"
+        >
+          <div class="text-primary flex items-center justify-center h-10 w-10">
+            <mat-icon class="text-2xl">description</mat-icon>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-lg font-medium">Text Preview</h3>
+            <p class="text-sm opacity-80">
+              Edit the text below or copy it directly to your clipboard
+            </p>
+          </div>
+          <div class="ml-auto flex space-x-2">
+            <button
+              mat-icon-button
+              matTooltip="Regenerate text"
+              [disabled]="!isTextModified()"
+              (click)="regenerateText()"
+              class="!flex"
+              matTooltip="Refresh"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+
+            <button
+              [tabindex]="-1"
+              matTooltip="More"
+              mat-icon-button
+              [matMenuTriggerFor]="moreMenu"
+              class="!flex ml-2"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <button
+              [tabindex]="-1"
+              matSuffix
+              mat-raised-button
+              (click)="copyText()"
+            >
+              <mat-icon class="text-md">{{
+                showingCopiedMessage() ? 'check' : 'content_copy'
+              }}</mat-icon>
+              <span class="text-sm opacity-80">{{
+                showingCopiedMessage() ? 'Copied!' : 'Copy text'
+              }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="max-w-4xl mx-auto flex-auto flex p-4 w-full">
+          <div class="flex flex-col w-full">
+            <textarea
+              class="p-4 bg-gray-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-lg w-full flex-1 min-h-[300px] font-mono text-sm"
+              [value]="editableText()"
+              (input)="updateEditableText($event)"
+            ></textarea>
+
+            <div class="flex justify-between mt-3 text-sm opacity-70">
+              <span>{{ characterCount() }} characters</span>
+              <span>{{ lineCount() }} lines</span>
+              <span *ngIf="isTextModified()">
+                <mat-icon class="text-amber-500 align-middle text-sm mr-1"
+                  >warning</mat-icon
+                >
+                Modified
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -109,8 +143,9 @@
       (click)="exportToTextFile()"
       matTooltipPosition="left"
       class="!flex"
+      matTooltip="More"
     >
-      <mat-icon>text_rotation_none</mat-icon>
+      <mat-icon>file_download</mat-icon>
       <span>Export to text file</span>
     </button>
   </ng-template>

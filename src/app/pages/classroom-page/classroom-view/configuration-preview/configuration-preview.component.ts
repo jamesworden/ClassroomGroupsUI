@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatMenuModule } from '@angular/material/menu';
 import { ColumnListComponent } from '../column-list/column-list.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface TextGroup {
   name?: string;
@@ -43,6 +44,7 @@ interface TextGroup {
     ClipboardModule,
     MatMenuModule,
     ColumnListComponent,
+    MatTooltipModule,
   ],
   templateUrl: './configuration-preview.component.html',
   styleUrl: './configuration-preview.component.scss',
@@ -60,6 +62,14 @@ export class ConfigurationPreviewComponent {
   readonly showingCopiedMessage = signal(false);
   readonly showingCopiedTimeout = signal<number | undefined>(undefined);
   readonly visibleFieldIds = signal<string[]>([]);
+
+  readonly editableText = signal('');
+  readonly isTextModified = signal(false);
+  readonly characterCount = computed(() => this.editableText().length);
+  readonly lineCount = computed(() => {
+    const text = this.editableText();
+    return text ? text.split('\n').length : 0;
+  });
 
   readonly textGroups = computed(() => {
     const textGroups: TextGroup[] = [];
@@ -127,6 +137,30 @@ export class ConfigurationPreviewComponent {
       }
       this.visibleFieldIds.set(visibleFieldIds);
     });
+
+    effect(() => {
+      const text = this.plainText();
+      // Only update the editable text if it hasn't been modified
+      // or if it's empty (first load)
+      if (!this.isTextModified() || !this.editableText()) {
+        this.editableText.set(text);
+      }
+    });
+  }
+
+  updateEditableText(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    const newText = textarea.value;
+    this.editableText.set(newText);
+
+    // Check if the text has been modified from the generated plainText
+    this.isTextModified.set(newText !== this.plainText());
+  }
+
+  // Regenerate text - revert to the generated plainText
+  regenerateText() {
+    this.editableText.set(this.plainText());
+    this.isTextModified.set(false);
   }
 
   toggleShowGroupNames() {
