@@ -6,7 +6,7 @@
       <div
         class="px-4 pt-4 flex flex-col border-b border-zinc-300 dark:border-zinc-700"
       >
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center mb-4">
           <!-- Configuration title and description -->
           <div class="flex-shrink flex-grow overflow-hidden mr-4">
             <div class="flex flex-col justify-around">
@@ -49,115 +49,119 @@
           </div>
         </div>
 
-        <!-- View options row -->
-        <div class="flex flex-wrap gap-4 my-4">
-          <div class="flex flex-col md:flex-row gap-4 w-full">
-            <div class="flex gap-4 md:w-2/5">
-              <div class="flex flex-col justify-around">
-                <mat-form-field appearance="outline" class="w-52">
-                  <mat-label>View By</mat-label>
-                  <mat-select
-                    [value]="viewMode()"
-                    (selectionChange)="setViewMode($event.value)"
-                  >
-                    <mat-option value="students">
-                      <div class="flex items-center">
-                        <mat-icon class="mr-2 text-sm">person</mat-icon>
-                        <span>Students</span>
-                      </div>
-                    </mat-option>
-                    <mat-option value="groups">
-                      <div class="flex items-center">
-                        <mat-icon class="mr-2 text-sm">groups</mat-icon>
-                        <span>Groups</span>
-                      </div>
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+        <!-- Row 2: Stat panels on left, Inputs on right -->
+        <div class="flex flex-wrap justify-between items-center mb-4">
+          <!-- Left side: Stat panels -->
+          <div class="flex gap-3 mt-1 flex-1 mr-3">
+            <!-- Students Stat Card -->
+            <div
+              class="bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg h-14 px-3 py-2 flex items-center flex-1"
+            >
+              <div
+                class="mr-2 bg-amber-100 dark:bg-amber-900/30 p-1.5 rounded-full"
+              >
+                <mat-icon class="text-amber-700 dark:text-amber-500 text-sm"
+                  >person</mat-icon
+                >
               </div>
-
-              <div class="flex flex-col justify-around">
-                <mat-form-field appearance="outline" class="w-52">
-                  <mat-label>Data Column</mat-label>
-                  <mat-select
-                    [value]="selectedColumn()"
-                    (selectionChange)="setSelectedColumn($event.value)"
-                  >
-                    <mat-option value="average">
-                      <div class="flex items-center">
-                        <mat-icon class="mr-2 text-sm">calculate</mat-icon>
-                        <span>Average Score</span>
-                      </div>
-                    </mat-option>
-                    @for (column of numberColumns(); track column.id) {
-                      <mat-option [value]="column.fieldId">
-                        <span>{{ column.label }}</span>
-                      </mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
+              <div class="truncate">
+                <div class="text-xs font-medium opacity-80">Students</div>
+                <div class="text-base font-semibold">
+                  {{ allStudentDetails().length }}
+                </div>
               </div>
             </div>
 
-            <!-- Stats cards, now beside the inputs -->
-            <div class="flex flex-wrap md:flex-1 gap-2">
+            <!-- Groups Stat Card -->
+            <div
+              class="bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg h-14 px-3 py-2 flex items-center flex-1"
+            >
               <div
-                class="stat-card bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg p-2 flex items-center flex-1 min-w-32"
+                class="mr-2 bg-blue-100 dark:bg-blue-900/30 p-1.5 rounded-full"
               >
-                <div
-                  class="mr-3 bg-amber-100 dark:bg-amber-900/30 p-2 rounded-full"
+                <mat-icon class="text-blue-700 dark:text-blue-500 text-sm"
+                  >groups</mat-icon
                 >
-                  <mat-icon class="text-amber-700 dark:text-amber-500 text-sm"
-                    >person</mat-icon
-                  >
-                </div>
-                <div>
-                  <div class="text-xs font-medium opacity-80">Students</div>
-                  <div class="text-lg font-semibold">
-                    {{ allStudentDetails().length }}
-                  </div>
+              </div>
+              <div class="truncate">
+                <div class="text-xs font-medium opacity-80">Groups</div>
+                <div class="text-base font-semibold">
+                  {{ allGroupDetails().length }}
                 </div>
               </div>
+            </div>
 
+            <!-- Average Stat Card -->
+            <div
+              class="bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg h-14 px-3 py-2 flex items-center flex-1"
+            >
               <div
-                class="stat-card bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg p-2 flex items-center flex-1 min-w-32"
+                class="mr-2 bg-green-100 dark:bg-green-900/30 p-1.5 rounded-full"
               >
-                <div
-                  class="mr-3 bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full"
+                <mat-icon class="text-green-700 dark:text-green-500 text-sm"
+                  >trending_up</mat-icon
                 >
-                  <mat-icon class="text-blue-700 dark:text-blue-500 text-sm"
-                    >groups</mat-icon
-                  >
+              </div>
+              <div class="truncate">
+                <div class="text-xs font-medium opacity-80">
+                  {{
+                    selectedColumnLabel() === 'Average Score' ? 'Avg' : 'Avg'
+                  }}
                 </div>
-                <div>
-                  <div class="text-xs font-medium opacity-80">Groups</div>
-                  <div class="text-lg font-semibold">
-                    {{ allGroupDetails().length }}
-                  </div>
+                <div class="text-base font-semibold">
+                  {{ averageClassScore() | number: '1.1-1' }}%
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div
-                class="stat-card bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg p-2 flex items-center flex-1 min-w-32"
-              >
-                <div
-                  class="mr-3 bg-green-100 dark:bg-green-900/30 p-2 rounded-full"
+          <!-- Right side: Form inputs -->
+          <div class="flex gap-3 flex-1 justify-end mt-1">
+            <!-- View By Dropdown -->
+            <div class="w-64">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>View By</mat-label>
+                <mat-select
+                  [value]="viewMode()"
+                  (selectionChange)="setViewMode($event.value)"
                 >
-                  <mat-icon class="text-green-700 dark:text-green-500 text-sm"
-                    >trending_up</mat-icon
-                  >
-                </div>
-                <div>
-                  <div class="text-xs font-medium opacity-80">
-                    {{
-                      selectedColumnLabel() === 'Average Score' ? 'Avg' : 'Avg'
-                    }}
-                  </div>
-                  <div class="text-lg font-semibold">
-                    {{ averageClassScore() | number: '1.1-1' }}%
-                  </div>
-                </div>
-              </div>
+                  <mat-option value="students">
+                    <div class="flex items-center">
+                      <mat-icon class="mr-2 text-sm">person</mat-icon>
+                      <span>Students</span>
+                    </div>
+                  </mat-option>
+                  <mat-option value="groups">
+                    <div class="flex items-center">
+                      <mat-icon class="mr-2 text-sm">groups</mat-icon>
+                      <span>Groups</span>
+                    </div>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Score Dropdown -->
+            <div class="w-64">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Score</mat-label>
+                <mat-select
+                  [value]="selectedColumn()"
+                  (selectionChange)="setSelectedColumn($event.value)"
+                >
+                  <mat-option value="average">
+                    <div class="flex items-center">
+                      <mat-icon class="mr-2 text-md">calculate</mat-icon>
+                      <span>Average Score</span>
+                    </div>
+                  </mat-option>
+                  @for (column of numberColumns(); track column.id) {
+                    <mat-option [value]="column.fieldId">
+                      <span>{{ column.label }}</span>
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
         </div>
