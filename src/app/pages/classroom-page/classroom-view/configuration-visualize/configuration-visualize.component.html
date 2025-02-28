@@ -53,46 +53,50 @@
         <div class="flex flex-wrap gap-4 my-4">
           <div class="flex flex-col md:flex-row gap-4 w-full">
             <div class="flex gap-4 md:w-2/5">
-              <mat-form-field appearance="outline" class="w-40">
-                <mat-label>View By</mat-label>
-                <mat-select
-                  [value]="viewMode()"
-                  (selectionChange)="setViewMode($event.value)"
-                >
-                  <mat-option value="students">
-                    <div class="flex items-center">
-                      <mat-icon class="mr-2 text-sm">person</mat-icon>
-                      <span>Students</span>
-                    </div>
-                  </mat-option>
-                  <mat-option value="groups">
-                    <div class="flex items-center">
-                      <mat-icon class="mr-2 text-sm">groups</mat-icon>
-                      <span>Groups</span>
-                    </div>
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="w-48">
-                <mat-label>Data Column</mat-label>
-                <mat-select
-                  [value]="selectedColumn()"
-                  (selectionChange)="setSelectedColumn($event.value)"
-                >
-                  <mat-option value="average">
-                    <div class="flex items-center">
-                      <mat-icon class="mr-2 text-sm">calculate</mat-icon>
-                      <span>Average Score</span>
-                    </div>
-                  </mat-option>
-                  @for (column of numberColumns(); track column.id) {
-                    <mat-option [value]="column.fieldId">
-                      <span>{{ column.label }}</span>
+              <div class="flex flex-col justify-around">
+                <mat-form-field appearance="outline" class="w-52">
+                  <mat-label>View By</mat-label>
+                  <mat-select
+                    [value]="viewMode()"
+                    (selectionChange)="setViewMode($event.value)"
+                  >
+                    <mat-option value="students">
+                      <div class="flex items-center">
+                        <mat-icon class="mr-2 text-sm">person</mat-icon>
+                        <span>Students</span>
+                      </div>
                     </mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
+                    <mat-option value="groups">
+                      <div class="flex items-center">
+                        <mat-icon class="mr-2 text-sm">groups</mat-icon>
+                        <span>Groups</span>
+                      </div>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="flex flex-col justify-around">
+                <mat-form-field appearance="outline" class="w-52">
+                  <mat-label>Data Column</mat-label>
+                  <mat-select
+                    [value]="selectedColumn()"
+                    (selectionChange)="setSelectedColumn($event.value)"
+                  >
+                    <mat-option value="average">
+                      <div class="flex items-center">
+                        <mat-icon class="mr-2 text-sm">calculate</mat-icon>
+                        <span>Average Score</span>
+                      </div>
+                    </mat-option>
+                    @for (column of numberColumns(); track column.id) {
+                      <mat-option [value]="column.fieldId">
+                        <span>{{ column.label }}</span>
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
 
             <!-- Stats cards, now beside the inputs -->
