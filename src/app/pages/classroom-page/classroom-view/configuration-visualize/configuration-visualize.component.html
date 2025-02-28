@@ -125,16 +125,38 @@
                   [value]="viewingBy()"
                   (selectionChange)="setViewMode($event.value)"
                 >
-                  <mat-option [value]="ViewingBy.Groups">
+                  <!-- Custom display template for the selection value -->
+                  <mat-select-trigger>
                     <div class="flex items-center">
-                      <mat-icon class="mr-2 text-sm">groups</mat-icon>
-                      <span>Groups</span>
+                      <mat-icon
+                        *ngIf="viewingBy() === ViewingBy.Students"
+                        class="mr-2 text-sm"
+                        >person</mat-icon
+                      >
+                      <mat-icon
+                        *ngIf="viewingBy() === ViewingBy.Groups"
+                        class="mr-2 text-sm"
+                        >groups</mat-icon
+                      >
+                      <span>{{
+                        viewingBy() === ViewingBy.Students
+                          ? 'Students'
+                          : 'Groups'
+                      }}</span>
                     </div>
-                  </mat-option>
+                  </mat-select-trigger>
+
+                  <!-- Options in the dropdown -->
                   <mat-option [value]="ViewingBy.Students">
                     <div class="flex items-center">
                       <mat-icon class="mr-2 text-sm">person</mat-icon>
                       <span>Students</span>
+                    </div>
+                  </mat-option>
+                  <mat-option [value]="ViewingBy.Groups">
+                    <div class="flex items-center">
+                      <mat-icon class="mr-2 text-sm">groups</mat-icon>
+                      <span>Groups</span>
                     </div>
                   </mat-option>
                 </mat-select>
@@ -149,9 +171,22 @@
                   [value]="selectedColumn()"
                   (selectionChange)="setSelectedColumn($event.value)"
                 >
+                  <!-- Custom display template for the selection value -->
+                  <mat-select-trigger>
+                    <div class="flex items-center">
+                      <mat-icon
+                        *ngIf="selectedColumn() === 'average'"
+                        class="mr-2 text-sm"
+                        >calculate</mat-icon
+                      >
+                      <span>{{ selectedColumnLabel() }}</span>
+                    </div>
+                  </mat-select-trigger>
+
+                  <!-- Options in the dropdown -->
                   <mat-option value="average">
                     <div class="flex items-center">
-                      <mat-icon class="mr-2 text-md">calculate</mat-icon>
+                      <mat-icon class="mr-2 text-sm">calculate</mat-icon>
                       <span>Average Score</span>
                     </div>
                   </mat-option>
