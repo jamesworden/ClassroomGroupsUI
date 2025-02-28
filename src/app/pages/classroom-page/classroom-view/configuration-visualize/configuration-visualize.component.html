@@ -122,16 +122,16 @@
               <mat-form-field appearance="outline" class="w-full">
                 <mat-label>View By</mat-label>
                 <mat-select
-                  [value]="viewMode()"
+                  [value]="viewingBy()"
                   (selectionChange)="setViewMode($event.value)"
                 >
-                  <mat-option value="students">
+                  <mat-option [value]="ViewingBy.Students">
                     <div class="flex items-center">
                       <mat-icon class="mr-2 text-sm">person</mat-icon>
                       <span>Students</span>
                     </div>
                   </mat-option>
-                  <mat-option value="groups">
+                  <mat-option [value]="ViewingBy.Groups">
                     <div class="flex items-center">
                       <mat-icon class="mr-2 text-sm">groups</mat-icon>
                       <span>Groups</span>

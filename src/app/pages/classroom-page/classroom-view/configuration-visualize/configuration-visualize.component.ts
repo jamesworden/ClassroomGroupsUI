@@ -20,8 +20,12 @@ import {
   GroupDetail,
   ColumnDetail,
   ClassroomDetail,
-  StudentDetail,
 } from '@shared/classrooms';
+
+enum ViewingBy {
+  Students = 'Students',
+  Groups = 'Groups',
+}
 
 @Component({
   selector: 'app-configuration-visualize',
@@ -52,7 +56,7 @@ export class ConfigurationVisualizeComponent {
   readonly averageScores = input.required<{ [id: string]: number }>();
 
   // Signal state properties
-  readonly viewMode = signal<'students' | 'groups'>('students');
+  readonly viewingBy = signal<ViewingBy>(ViewingBy.Groups);
   readonly selectedColumn = signal<string | 'average'>('average');
   readonly chartType = signal<ChartType>('bar');
 
@@ -206,7 +210,7 @@ export class ConfigurationVisualizeComponent {
   });
 
   readonly chartData = computed((): ChartData => {
-    if (this.viewMode() === 'students') {
+    if (this.viewingBy() === ViewingBy.Students) {
       return {
         labels: this.studentLabels(),
         datasets: [this.studentDataset()],
@@ -221,98 +225,96 @@ export class ConfigurationVisualizeComponent {
 
   readonly chartTitle = computed((): string => {
     if (this.selectedColumn() === 'average') {
-      return `Average Scores by ${this.viewMode() === 'students' ? 'Student' : 'Group'}`;
+      return `Average Scores by ${this.viewingBy() === ViewingBy.Students ? 'Student' : 'Group'}`;
     } else {
-      return `${this.selectedColumnLabel()} Scores by ${this.viewMode() === 'students' ? 'Student' : 'Group'}`;
+      return `${this.selectedColumnLabel()} Scores by ${this.viewingBy() === ViewingBy.Students ? 'Student' : 'Group'}`;
     }
   });
 
-  readonly chartOptions = computed((): ChartConfiguration['options'] => {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      resizeDelay: 100,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          labels: {
-            usePointStyle: true,
-            padding: 20,
-          },
+  readonly chartOptions = computed((): ChartConfiguration['options'] => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    resizeDelay: 100,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          usePointStyle: true,
+          padding: 20,
         },
+      },
+      title: {
+        display: true,
+        text: this.chartTitle(),
+        font: {
+          size: 16,
+          weight: 'bold',
+        },
+        padding: {
+          top: 10,
+          bottom: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        titleFont: {
+          size: 14,
+        },
+        bodyFont: {
+          size: 13,
+        },
+        padding: 12,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
         title: {
           display: true,
-          text: this.chartTitle(),
+          text: 'Score',
           font: {
-            size: 16,
+            size: 14,
             weight: 'bold',
           },
-          padding: {
-            top: 10,
-            bottom: 20,
-          },
         },
-        tooltip: {
-          backgroundColor: 'rgba(0,0,0,0.7)',
-          titleFont: {
+        min: 0,
+        max: 100,
+        grid: {
+          color: 'rgba(0,0,0,0.05)',
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: this.viewingBy() === ViewingBy.Students ? 'Students' : 'Groups',
+          font: {
             size: 14,
+            weight: 'bold',
           },
-          bodyFont: {
-            size: 13,
-          },
-          padding: 12,
+        },
+        grid: {
+          display: false,
         },
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'Score',
-            font: {
-              size: 14,
-              weight: 'bold',
-            },
-          },
-          min: 0,
-          max: 100,
-          grid: {
-            color: 'rgba(0,0,0,0.05)',
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: this.viewMode() === 'students' ? 'Students' : 'Groups',
-            font: {
-              size: 14,
-              weight: 'bold',
-            },
-          },
-          grid: {
-            display: false,
-          },
-        },
+    },
+    elements: {
+      line: {
+        tension: 0.4,
       },
-      elements: {
-        line: {
-          tension: 0.4,
-        },
-        point: {
-          radius: 4,
-          hoverRadius: 6,
-        },
-        bar: {
-          borderRadius: 4,
-        },
+      point: {
+        radius: 4,
+        hoverRadius: 6,
       },
-      animation: {
-        duration: 500,
-        easing: 'easeOutQuart',
+      bar: {
+        borderRadius: 4,
       },
-    };
-  });
+    },
+    animation: {
+      duration: 500,
+      easing: 'easeOutQuart',
+    },
+  }));
 
   readonly averageClassScore = computed(() => {
     if (this.selectedColumn() === 'average') {
@@ -333,9 +335,10 @@ export class ConfigurationVisualizeComponent {
     }
   });
 
-  // Action methods
-  setViewMode(mode: 'students' | 'groups') {
-    this.viewMode.set(mode);
+  readonly ViewingBy = ViewingBy;
+
+  setViewMode(mode: ViewingBy) {
+    this.viewingBy.set(mode);
   }
 
   setSelectedColumn(column: string | 'average') {
