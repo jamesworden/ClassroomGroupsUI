@@ -1,7 +1,9 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ClassroomPageService } from '../../classroom-page.service';
+import { ClassroomsService } from '@shared/classrooms';
+import { AccountsService } from '@shared/accounts';
 
 @Component({
   selector: 'app-no-selected-configuration-view',
@@ -11,6 +13,14 @@ import { ClassroomPageService } from '../../classroom-page.service';
 })
 export class NoSelectedConfigurationViewComponent {
   readonly #classroomPageService = inject(ClassroomPageService);
+  readonly #classroomsService = inject(ClassroomsService);
+  readonly #accountsService = inject(AccountsService);
+
+  readonly configurationLimitReached = computed(
+    () =>
+      this.#classroomsService.select.configurationDetails().length >=
+      this.#accountsService.select.maxConfigurationsPerClassroom()
+  );
 
   readonly sidenavOpen = input.required<boolean>();
 
