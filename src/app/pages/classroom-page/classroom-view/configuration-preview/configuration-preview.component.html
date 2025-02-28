@@ -65,17 +65,27 @@
           </div>
           <div class="ml-auto flex space-x-2">
             <button
-              mat-icon-button
+              mat-raised-button
               matTooltip="Regenerate text"
               [disabled]="!isTextModified()"
               (click)="regenerateText()"
               class="!flex"
               matTooltip="Refresh"
               [ngClass]="{
-                '!text-amber-500': isTextModified(),
+                '!text-amber-700 dark:!text-amber-500': isTextModified(),
               }"
             >
               <mat-icon>refresh</mat-icon>
+              <span class="text-sm">Remove edits</span>
+            </button>
+
+            <button [tabindex]="-1" matSuffix mat-button (click)="copyText()">
+              <mat-icon class="text-md">{{
+                showingCopiedMessage() ? 'check' : 'content_copy'
+              }}</mat-icon>
+              <span class="text-sm">{{
+                showingCopiedMessage() ? 'Copied!' : 'Copy text'
+              }}</span>
             </button>
 
             <button
@@ -83,23 +93,9 @@
               matTooltip="More"
               mat-icon-button
               [matMenuTriggerFor]="moreMenu"
-              class="!flex ml-2"
+              class="!flex"
             >
               <mat-icon>more_vert</mat-icon>
-            </button>
-
-            <button
-              [tabindex]="-1"
-              matSuffix
-              mat-raised-button
-              (click)="copyText()"
-            >
-              <mat-icon class="text-md">{{
-                showingCopiedMessage() ? 'check' : 'content_copy'
-              }}</mat-icon>
-              <span class="text-sm opacity-80">{{
-                showingCopiedMessage() ? 'Copied!' : 'Copy text'
-              }}</span>
             </button>
           </div>
         </div>
@@ -108,7 +104,7 @@
             <textarea
               class="p-4 bg-gray-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-lg w-full flex-1 min-h-[300px] font-mono text-sm"
               [ngClass]="{
-                '!border-amber-500': isTextModified(),
+                '!border-amber-700 dark:!border-amber-500': isTextModified(),
               }"
               [value]="editableText()"
               (input)="updateEditableText($event)"
@@ -118,7 +114,8 @@
               <span>{{ characterCount() }} characters</span>
               <span>{{ lineCount() }} lines</span>
               <span *ngIf="isTextModified()">
-                <mat-icon class="text-amber-500 align-middle text-sm mr-1"
+                <mat-icon
+                  class="text-amber-700 dark:text-amber-500 align-middle text-sm"
                   >warning</mat-icon
                 >
                 Modified

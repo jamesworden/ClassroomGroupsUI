@@ -16,6 +16,7 @@ import { MobileWarningViewComponent } from './mobile-warning-view/mobile-warning
 import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/classroom-not-found-view.component';
 import { ClassroomViewComponent } from './classroom-view/classroom-view.component';
 import { ClassroomsService } from '@shared/classrooms';
+import { ConfigurationPreviewService } from './classroom-view/configuration-preview/configuration-preview.service';
 
 @Component({
   selector: 'app-classroom-page',
@@ -36,7 +37,7 @@ import { ClassroomsService } from '@shared/classrooms';
     ClassroomNotFoundViewComponent,
     ClassroomViewComponent,
   ],
-  providers: [ClassroomPageService],
+  providers: [ClassroomPageService, ConfigurationPreviewService],
   templateUrl: './classroom-page.component.html',
   styleUrl: './classroom-page.component.scss',
 })
