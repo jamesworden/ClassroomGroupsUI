@@ -1,11 +1,3 @@
-.chart-container {
-  position: relative;
-  width: 100%;
-  min-height: 400px;
-  max-height: 500px;
-  /* Removed transition to prevent animation during theme changes */
-}
-
 .stat-card {
   /* Keep hover effect but disable general transitions */
 

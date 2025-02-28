@@ -97,6 +97,7 @@ export class ConfigurationVisualizeComponent {
     return {
       responsive: true,
       maintainAspectRatio: false,
+      resizeDelay: 100, // Add resize delay for smoother responsiveness
       plugins: {
         legend: {
           display: true,
