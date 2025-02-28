@@ -1,37 +1,54 @@
-<div class="grid-bg w-full h-full overflow-hidden">
+<div class="grid-bg w-full h-full bg-gray-50 overflow-hidden">
   <div class="max-w-7xl mx-auto w-full h-full">
     <div class="flex-1 flex flex-col justify-between h-full w-full">
       <app-toolbar [showHomeButton]="true"></app-toolbar>
 
-      <div class="flex-1 flex flex-row justify-around">
-        <div class="flex flex-col justify-around">
+      <div class="flex-1 flex items-center justify-center">
+        <div
+          class="flex flex-col md:flex-row items-center justify-between max-w-4xl w-full"
+        >
+          <!-- Login Card -->
           <div
-            class="max-w-md p-8 mx-4 shadow-lg rounded-md bg-white text-black flex flex-col justify-around gap-y-8"
+            class="max-w-md p-8 m-4 shadow-lg rounded-lg bg-white text-black flex flex-col gap-y-6 transition-all hover:shadow-xl"
           >
-            <div>
-              <h4>Log in to your account</h4>
-              <p>
+            <div class="text-center md:text-left">
+              <h2 class="text-2xl font-bold mb-2">Welcome back</h2>
+              <p class="text-gray-600 mb-4">
                 Don't have an account?
-                <a class="underline" [routerLink]="['/sign-up']">Sign Up</a>
+                <a
+                  class="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                  [routerLink]="['/sign-up']"
+                  >Sign Up</a
+                >
               </p>
             </div>
 
-            <app-google-sign-in-button
-              dataContext="signin"
-            ></app-google-sign-in-button>
+            <div class="flex justify-center md:justify-start">
+              <app-google-sign-in-button
+                class="w-full"
+                dataContext="signin"
+              ></app-google-sign-in-button>
+            </div>
+          </div>
 
+          <!-- Illustration -->
+          <div class="hidden md:block p-8">
             <img
-              class="pt-12 sm:max-w-xs md:max-w-sm mt-8"
+              class="max-w-sm"
               [src]="
                 theme() === Themes.LIGHT
                   ? 'assets/sign-in-light.svg'
                   : 'assets/sign-in-dark.svg'
               "
-              alt="Icon"
+              alt="Login illustration"
             />
           </div>
         </div>
       </div>
+
+      <footer class="py-4 text-center text-gray-500 text-sm">
+        <p>© {{ fullYear }} ClassroomGroups. All rights reserved.</p>
+      </footer>
     </div>
   </div>
 </div>

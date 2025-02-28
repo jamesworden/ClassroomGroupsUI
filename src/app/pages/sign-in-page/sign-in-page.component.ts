@@ -22,4 +22,6 @@ export class SignInPageComponent {
   readonly theme = this.#themeService.theme;
 
   readonly Themes = Themes;
+
+  readonly fullYear = new Date().getFullYear();
 }
