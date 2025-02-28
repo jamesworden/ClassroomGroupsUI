@@ -89,9 +89,7 @@
       <div class="flex flex-row p-4 w-full h-full">
         <div class="max-w-lg pr-6 flex flex-col">
           <div class="mb-4 flex items-center">
-            <mat-icon class="mr-2 text-primary description-icon"
-              >description</mat-icon
-            >
+            <mat-icon class="mr-2 text-primary icon">description</mat-icon>
             <h2 class="text-xl font-medium">Text Editor</h2>
           </div>
 
@@ -122,9 +120,9 @@
           </div>
         </div>
 
-        <div class="w-2/3 flex flex-col">
+        <div class="relative w-full flex-1 min-h-[300px]">
           <textarea
-            class="p-4 bg-gray-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-lg w-full flex-1 min-h-[300px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 dark:focus:ring-amber-500 focus:border-amber-600 dark:focus:border-amber-500"
+            class="p-4 bg-gray-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg w-full h-full min-h-[300px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 dark:focus:ring-amber-500 focus:border-amber-600 dark:focus:border-amber-500 relative"
             [ngClass]="{
               '!border-amber-700 dark:!border-amber-500 !ring-1 !ring-amber-700 dark:!ring-amber-500':
                 isTextModified(),
@@ -134,16 +132,23 @@
             aria-label="Student groups text editor"
           ></textarea>
 
-          <div class="flex justify-between mt-3 text-sm opacity-70">
-            <span>{{ characterCount() }} characters</span>
-            <span>{{ lineCount() }} lines</span>
-            <span *ngIf="isTextModified()">
-              <mat-icon
-                class="text-amber-700 dark:text-amber-500 align-middle text-sm"
-                >warning</mat-icon
+          <!-- Watermark Element -->
+          <div
+            class="absolute inset-0 pointer-events-none flex items-center justify-center"
+            [ngClass]="{
+              'opacity-30': editableText().length,
+              'opacity-60': !editableText() || editableText().length === 0,
+            }"
+          >
+            <div class="flex flex-col items-center">
+              <mat-icon class="text-6xl text-zinc-400 dark:text-zinc-600 icon"
+                >groups</mat-icon
               >
-              Modified
-            </span>
+              <span
+                class="mt-2 text-lg font-semibold text-zinc-400 dark:text-zinc-600"
+                >Student Groups</span
+              >
+            </div>
           </div>
         </div>
       </div>
