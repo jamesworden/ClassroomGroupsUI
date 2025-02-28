@@ -1,6 +1,6 @@
 <div class="grid-bg flex flex-col h-full w-full overflow-x-hidden">
   <div class="flex-1 flex flex-col justify-between">
-    <div class="flex flex-col content-container w-full pt-2">
+    <div class="flex flex-col max-w-7xl mx-auto w-full pt-2">
       <mat-toolbar>
         <span>Classrooms</span>
 
@@ -50,7 +50,7 @@
         </div>
       </mat-toolbar>
 
-      <div class="mx-4 flex flex-col mt-12">
+      <div class="mx-4 flex flex-col mt-12 flex-1">
         @if (classroomDetails().length > 0) {
           <section
             class="mat-elevation-z8 rounded-md overflow-hidden shadow-lg"
@@ -102,26 +102,46 @@
             </table>
           </section>
         } @else if (!classroomsLoading()) {
-          <div class="pt-24">
-            <h4>
-              There's no classrooms.
-              <button mat-button (click)="createClassroom()">
-                <mat-icon>group_add</mat-icon>
-                <span class="opacity-80">Add one?</span>
-              </button>
-            </h4>
-          </div>
+          <div
+            class="flex flex-col lg:flex-row items-center justify-between w-full p-8 rounded-xl bg-white dark:bg-gray-800 shadow-md mt-24"
+          >
+            <div
+              class="flex flex-col items-start max-w-md mb-8 lg:mb-0 lg:pr-8"
+            >
+              <div class="mb-2 text-primary">
+                <mat-icon class="text-4xl big-icon">school</mat-icon>
+              </div>
 
-          <div class="flex-1 relative">
-            <div class="absolute w-full h-full overflow-hidden">
+              <h2 class="text-2xl font-semibold mb-4">
+                Your Teaching Journey Starts Here
+              </h2>
+
+              <p class="opacity-80 mb-6">
+                Create your first classroom to begin organizing students,
+                assignments, and educational resources in one place. Managing
+                your teaching has never been easier.
+              </p>
+
+              <button
+                mat-raised-button
+                color="primary"
+                class="px-6 py-2 rounded-md flex items-center"
+                (click)="createClassroom()"
+              >
+                <mat-icon class="mr-2">add</mat-icon>
+                Create classroom
+              </button>
+            </div>
+
+            <div class="flex-shrink-0 max-w-md w-full lg:max-w-lg">
               <img
-                class="pt-12 max-w-3xl"
+                class="w-full object-contain"
                 [src]="
                   theme() === Themes.LIGHT
                     ? 'assets/add-classroom-light.svg'
                     : 'assets/add-classroom-dark.svg'
                 "
-                alt="Icon"
+                alt="Classroom illustration"
               />
             </div>
           </div>
@@ -131,40 +151,42 @@
       </div>
     </div>
 
-    <div class="flex-1 flex-col gap-y-8 my-16">
-      <div class="flex justify-around mx-4">
-        <h3 class="!font-semibold mx-auto text-3xl">
-          Your classroom, <span class="text-primary italic">your</span>
-          <span class="text-secondary italic"> way</span>.
-        </h3>
-      </div>
+    @if (classroomDetails().length && !classroomsLoading()) {
+      <div class="flex-1 flex-col gap-y-8 my-16">
+        <div class="flex justify-around mx-4">
+          <h3 class="!font-semibold mx-auto text-3xl">
+            Your classroom, <span class="text-primary italic">your</span>
+            <span class="text-secondary italic"> way</span>.
+          </h3>
+        </div>
 
-      <div class="flex justify-around">
-        <div class="flex mt-12 mx-4 flex-col md:flex-row">
-          @for (plan of subscriptionPlans; let i = $index; track i) {
-            <app-subscription-plan-card
-              class="rounded-lg border"
-              [ngClass]="{
-                'bg-white dark:bg-zinc-800 border-primary': i === 1,
-                'bg-zinc-50 dark:bg-zinc-900': i !== 1,
-                'scale-110': i === 1,
-                'shadow-lg border-zinc-200 dark:border-zinc-700': i !== 1,
-                'shadow-xl': i === 1,
-              }"
-              [subscriptionPlan]="plan"
-            >
-              @if (i === 1) {
-                <div
-                  class="absolute -top-3 left-0 right-0 mx-auto w-fit rounded-full bg-gradient-fade px-3 py-0.5 text-xs text-white"
-                >
-                  Most Popular
-                </div>
-              }
-            </app-subscription-plan-card>
-          }
+        <div class="flex justify-around">
+          <div class="flex mt-12 mx-4 flex-col md:flex-row">
+            @for (plan of subscriptionPlans; let i = $index; track i) {
+              <app-subscription-plan-card
+                class="rounded-lg border"
+                [ngClass]="{
+                  'bg-white dark:bg-zinc-800 border-primary': i === 1,
+                  'bg-zinc-50 dark:bg-zinc-900': i !== 1,
+                  'scale-110': i === 1,
+                  'shadow-lg border-zinc-200 dark:border-zinc-700': i !== 1,
+                  'shadow-xl': i === 1,
+                }"
+                [subscriptionPlan]="plan"
+              >
+                @if (i === 1) {
+                  <div
+                    class="absolute -top-3 left-0 right-0 mx-auto w-fit rounded-full bg-gradient-fade px-3 py-0.5 text-xs text-white"
+                  >
+                    Most Popular
+                  </div>
+                }
+              </app-subscription-plan-card>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
 
   <mat-progress-bar
