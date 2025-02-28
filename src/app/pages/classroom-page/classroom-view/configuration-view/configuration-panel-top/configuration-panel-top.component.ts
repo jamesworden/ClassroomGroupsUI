@@ -9,7 +9,12 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -48,6 +53,8 @@ import { ClassroomPageService } from 'app/pages/classroom-page/classroom-page.se
     MatTooltipModule,
     MatCheckboxModule,
     ColumnListComponent,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './configuration-panel-top.component.html',
   styleUrl: './configuration-panel-top.component.scss',
@@ -102,8 +109,22 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly StudentGroupingStrategy = StudentGroupingStrategy;
   readonly FieldType = FieldType;
 
-  groupingByDivision = false;
-  groupingValue = 0;
+  readonly groupingValue = signal(3);
+  readonly groupingByDivision = signal(true);
+
+  readonly groupingControl = computed(
+    () =>
+      new FormControl(this.groupingValue(), [
+        Validators.required,
+        Validators.min(0),
+        () => {
+          const maxStudents = this.studentsInConfiguration().length;
+          return this.groupingValue() > maxStudents
+            ? { maxExceeded: true }
+            : null;
+        },
+      ])
+  );
 
   ngAfterViewInit() {
     const observer = new ResizeObserver(() => {
@@ -115,7 +136,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   }
 
   toggleGroupingType() {
-    this.groupingByDivision = !this.groupingByDivision;
+    this.groupingByDivision.set(!this.groupingByDivision());
   }
 
   updateDescription(event: Event) {
@@ -150,11 +171,11 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   groupStudents(studentGroupingStrategy: StudentGroupingStrategy) {
     const classroomId = this.classroomId();
     const configurationId = this.configurationId();
-    const studentsPerGroup = this.groupingByDivision
+    const studentsPerGroup = this.groupingByDivision()
       ? undefined
-      : this.groupingValue;
-    const numberOfGroups = this.groupingByDivision
-      ? this.groupingValue
+      : this.groupingValue();
+    const numberOfGroups = this.groupingByDivision()
+      ? this.groupingValue()
       : undefined;
     this.#classroomsService.groupStudents(
       classroomId,
@@ -181,5 +202,11 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
           this.configurationId(),
           columnId
         );
+  }
+
+  updateGroupingValue({ target }: Event) {
+    const element = target as HTMLInputElement;
+    const number = +element.value;
+    this.groupingValue.set(number);
   }
 }
