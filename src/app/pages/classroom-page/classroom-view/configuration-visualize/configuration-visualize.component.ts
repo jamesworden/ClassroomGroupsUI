@@ -56,7 +56,7 @@ export class ConfigurationVisualizeComponent {
   readonly averageScores = input.required<{ [id: string]: number }>();
 
   // Signal state properties
-  readonly viewingBy = signal<ViewingBy>(ViewingBy.Groups);
+  readonly viewingBy = signal<ViewingBy>(ViewingBy.Students);
   readonly selectedColumn = signal<string | 'average'>('average');
   readonly chartType = signal<ChartType>('bar');
 
