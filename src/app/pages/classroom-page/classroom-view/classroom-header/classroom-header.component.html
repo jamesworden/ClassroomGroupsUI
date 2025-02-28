@@ -41,18 +41,18 @@
         <mat-icon class="opacity-80" matTooltip="Edit"> edit </mat-icon>
       </mat-button-toggle>
       <mat-button-toggle
-        [value]="ConfigurationViewMode.Text"
-        (change)="setConfigurationViewMode($event)"
-      >
-        <mat-icon class="opacity-80" matTooltip="Text"> text_fields </mat-icon>
-      </mat-button-toggle>
-      <mat-button-toggle
         [value]="ConfigurationViewMode.Visualize"
         (change)="setConfigurationViewMode($event)"
       >
         <mat-icon class="opacity-80" matTooltip="Visualize">
           auto_graph
         </mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle
+        [value]="ConfigurationViewMode.Text"
+        (change)="setConfigurationViewMode($event)"
+      >
+        <mat-icon class="opacity-80" matTooltip="Text"> text_fields </mat-icon>
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>
