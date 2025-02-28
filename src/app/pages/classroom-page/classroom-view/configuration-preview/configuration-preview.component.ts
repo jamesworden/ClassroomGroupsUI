@@ -140,8 +140,6 @@ export class ConfigurationPreviewComponent {
 
     effect(() => {
       const text = this.plainText();
-      // Only update the editable text if it hasn't been modified
-      // or if it's empty (first load)
       if (!this.isTextModified() || !this.editableText()) {
         this.editableText.set(text);
       }
@@ -153,11 +151,17 @@ export class ConfigurationPreviewComponent {
     const newText = textarea.value;
     this.editableText.set(newText);
 
-    // Check if the text has been modified from the generated plainText
     this.isTextModified.set(newText !== this.plainText());
+
+    if (this.showingCopiedMessage()) {
+      this.showingCopiedMessage.set(false);
+      if (this.showingCopiedTimeout()) {
+        window.clearTimeout(this.showingCopiedTimeout());
+        this.showingCopiedTimeout.set(undefined);
+      }
+    }
   }
 
-  // Regenerate text - revert to the generated plainText
   regenerateText() {
     this.editableText.set(this.plainText());
     this.isTextModified.set(false);
@@ -178,7 +182,7 @@ export class ConfigurationPreviewComponent {
   }
 
   copyText() {
-    this.#clipboard.copy(this.plainText());
+    this.#clipboard.copy(this.editableText());
     this.brieflyShowCopiedMessage();
   }
 
@@ -196,7 +200,7 @@ export class ConfigurationPreviewComponent {
   }
 
   exportToTextFile() {
-    const blob = new Blob([this.plainText()], { type: 'text/plain' });
+    const blob = new Blob([this.editableText()], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
