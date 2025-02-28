@@ -64,12 +64,13 @@ export class ConfigurationViewComponent {
   readonly columnDetails = input.required<ColumnDetail[]>();
   readonly classroomId = input.required<string>();
   readonly groupDetails = input.required<GroupDetail[]>();
-  readonly groupLimitReached = input.required<boolean>();
   readonly anyAverageScores = input.required<boolean>();
   readonly averageScores = input.required<Record<string, number>>();
 
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLElement>;
+
+  readonly reachedGroupLimit = this.#classroomPageService.reachedGroupLimit;
 
   readonly collapsePanelDetails = signal(false);
 

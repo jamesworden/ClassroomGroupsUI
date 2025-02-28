@@ -74,11 +74,11 @@
       class="context-menu-item"
       cdkMenuItem
       (click)="createStudent()"
-      [disabled]="studentLimitReached()"
+      [disabled]="reachedStudentLimit()"
       matTooltip="Student limit reached!"
       matTooltipPosition="left"
       [ngClass]="{
-        'opacity-50': studentLimitReached(),
+        'opacity-50': reachedStudentLimit(),
       }"
     >
       <mat-icon class="mr-3 opacity-80">person_add</mat-icon>

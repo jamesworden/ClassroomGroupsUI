@@ -15,7 +15,7 @@ export class AddGroupPanelComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #classroomPageService = inject(ClassroomPageService);
 
-  readonly groupLimitReached = input.required<boolean>();
+  readonly reachedGroupLimit = input.required<boolean>();
   readonly classroomId = input.required<string>();
   readonly configurationId = input.required<string>();
 

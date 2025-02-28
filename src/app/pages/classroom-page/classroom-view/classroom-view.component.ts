@@ -42,8 +42,6 @@ export class ClassroomViewComponent {
   readonly configurationId = this.#classroomPageService.configurationId;
   readonly configurationViewMode =
     this.#classroomPageService.configurationViewMode;
-  readonly maxStudentsPerClassroom =
-    this.#accountsService.select.maxStudentsPerClassroom;
   readonly theme = this.#themeService.theme;
   readonly isLoggedIn = this.#accountsService.select.isLoggedIn;
   readonly accountLoading = this.#accountsService.select.accountLoading;

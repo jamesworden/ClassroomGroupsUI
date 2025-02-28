@@ -31,6 +31,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { YesNoDialogComponent, YesNoDialogInputs } from '@app/components';
 import { MatDialog } from '@angular/material/dialog';
+import { ClassroomPageService } from 'app/pages/classroom-page/classroom-page.service';
 
 @Component({
   selector: 'app-student-list',
@@ -55,6 +56,7 @@ export class StudentListComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
   readonly #matDialog = inject(MatDialog);
+  readonly #classroomPageService = inject(ClassroomPageService);
 
   readonly classroomId = input.required<string>();
   readonly configurationId = input.required<string>();
@@ -70,6 +72,7 @@ export class StudentListComponent {
   readonly studentDeleted = output<StudentDetail>();
   readonly studentPositionUpdated = output<MoveStudentDetail>();
 
+  readonly reachedStudentLimit = this.#classroomPageService.reachedStudentLimit;
   readonly account = this.#accountsService.select.account;
 
   readonly groupIds = computed(() =>
@@ -79,13 +82,6 @@ export class StudentListComponent {
     this.#classroomsService.select.studentsInConfiguration(
       this.configurationId()
     )()
-  );
-  readonly maxStudentsPerClassroom = computed(() =>
-    this.#accountsService.select.maxStudentsPerClassroom()
-  );
-  readonly studentLimitReached = computed(
-    () =>
-      this.maxStudentsPerClassroom() <= this.studentsInConfiguration().length
   );
 
   readonly FieldType = FieldType;

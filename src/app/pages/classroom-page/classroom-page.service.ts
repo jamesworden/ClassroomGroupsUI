@@ -27,6 +27,7 @@ import {
   CreateEditGroupDialogInputs,
   CreateEditGroupDialogOutputs,
 } from './create-edit-group-dialog/create-edit-group-dialog.component';
+import { AccountsService } from '@shared/accounts';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,7 @@ export class ClassroomPageService {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #router = inject(Router);
   readonly #activatedRoute = inject(ActivatedRoute);
+  readonly #accountsService = inject(AccountsService);
 
   private readonly queryParams = toSignal(this.#activatedRoute.params, {
     initialValue: {
@@ -66,6 +68,28 @@ export class ClassroomPageService {
   private readonly configurations$ = toObservable(this.configurations);
 
   public readonly scrollToBottom$ = new Subject<void>();
+
+  public readonly reachedColumnLimit = computed(
+    () =>
+      this.#classroomsService.select.columnDetails(this.configurationId())
+        .length >= this.#accountsService.select.maxFieldsPerClassroom()
+  );
+  public readonly reachedGroupLimit = computed(
+    () =>
+      this.#classroomsService.select.listGroupDetails(this.configurationId())
+        .length >= this.#accountsService.select.maxFieldsPerClassroom()
+  );
+  public readonly reachedStudentLimit = computed(
+    () =>
+      this.#classroomsService.select.studentsInConfiguration(
+        this.configurationId()
+      ).length >= this.#accountsService.select.maxFieldsPerClassroom()
+  );
+  public readonly reachedClassroomLimit = computed(
+    () =>
+      this.#classroomsService.select.columnDetails(this.configurationId())
+        .length >= this.#accountsService.select.maxFieldsPerClassroom()
+  );
 
   constructor() {
     this.classroomId$
