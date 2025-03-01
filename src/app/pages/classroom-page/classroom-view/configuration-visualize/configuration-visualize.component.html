@@ -186,11 +186,15 @@
                   <!-- Custom display template for the selection value -->
                   <mat-select-trigger>
                     <div class="flex items-center">
-                      <mat-icon
-                        *ngIf="selectedColumn() === 'average'"
-                        class="mr-2 selected-option-icon"
-                        >ssid_chart</mat-icon
-                      >
+                      @if (selectedColumn() === 'average') {
+                        <mat-icon class="mr-2 selected-option-icon"
+                          >ssid_chart</mat-icon
+                        >
+                      } @else {
+                        <mat-icon class="mr-2 selected-option-icon"
+                          >assignment</mat-icon
+                        >
+                      }
                       <span>{{ selectedColumnLabel() }}</span>
                     </div>
                   </mat-select-trigger>
