@@ -1,9 +1,13 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { ViewingBy } from './configuration-visualize.component';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { ClassroomPageService } from '../../classroom-page.service';
 import {
   calculateAverageScores,
+  calculateClassAverage,
+  calculateClassFieldAverage,
+  calculateClassGroupAverage,
+  calculateClassGroupFieldAverage,
   ClassroomsService,
   FieldType,
 } from '@shared/classrooms';
@@ -53,12 +57,29 @@ export class ConfigurationVisualizeService {
     this.showingGroups().flatMap((group) => group.studentDetails)
   );
 
-  readonly averageStudentScores = computed(() =>
-    calculateAverageScores(this.showingStudentDetails(), this.columnDetails())
-  );
-
   readonly numericColumns = computed(() =>
     this.columnDetails().filter(({ type }) => FieldType.NUMBER === type)
+  );
+
+  readonly averageStudentScore = computed(() =>
+    this.selectedColumn() === 'average'
+      ? calculateClassAverage(
+          this.showingStudentDetails(),
+          this.columnDetails()
+        )
+      : calculateClassFieldAverage(
+          this.showingStudentDetails(),
+          this.selectedColumn()
+        )
+  );
+
+  readonly averageGroupScore = computed(() =>
+    this.selectedColumn() === 'average'
+      ? calculateClassGroupAverage(this.showingGroups(), this.columnDetails())
+      : calculateClassGroupFieldAverage(
+          this.showingGroups(),
+          this.selectedColumn()
+        )
   );
 
   readonly averageScore = computed(() =>
@@ -504,65 +525,9 @@ export class ConfigurationVisualizeService {
     borderColor: 'transparent',
   }));
 
-  readonly averageStudentScore = computed(() => {
-    if (this.selectedColumn() === 'average') {
-      const values = Object.values(this.averageStudentScores());
-      return values.length > 0
-        ? values.reduce((sum, val) => sum + val, 0) / values.length
-        : 0;
-    } else {
-      const scores = this.showingStudentDetails()
-        .map((s) =>
-          parseFloat(s.fieldIdsToValues[this.selectedColumn()] || '0')
-        )
-        .filter((v) => !isNaN(v));
-
-      return scores.length > 0
-        ? scores.reduce((sum, val) => sum + val, 0) / scores.length
-        : 0;
-    }
-  });
-
-  // TODO: Is broken.
-  readonly averageGroupScore = computed(() => {
-    if (this.selectedColumn() === 'average') {
-      // For average column, calculate average of group average scores
-      return this.showingGroups().length > 0
-        ? this.showingGroups()
-            .map((group) => {
-              const studentValues = group.studentDetails
-                .map((s) =>
-                  parseFloat(s.fieldIdsToValues[this.selectedColumn()] || '0')
-                )
-                .filter((v) => !isNaN(v));
-
-              return studentValues.length > 0
-                ? studentValues.reduce((sum, val) => sum + val, 0) /
-                    studentValues.length
-                : 0;
-            })
-            .reduce((sum, val) => sum + val, 0) / this.showingGroups().length
-        : 0;
-    } else {
-      // For other columns, calculate average of group average scores
-      return this.showingGroups().length > 0
-        ? this.showingGroups()
-            .map((group) => {
-              const studentValues = group.studentDetails
-                .map((s) =>
-                  parseFloat(s.fieldIdsToValues[this.selectedColumn()] || '0')
-                )
-                .filter((v) => !isNaN(v));
-
-              return studentValues.length > 0
-                ? studentValues.reduce((sum, val) => sum + val, 0) /
-                    studentValues.length
-                : 0;
-            })
-            .reduce((sum, val) => sum + val, 0) / this.showingGroups().length
-        : 0;
-    }
-  });
+  constructor() {
+    effect(() => console.log(this.averageScore()));
+  }
 
   setViewingBy(viewingBy: ViewingBy) {
     this._viewingBy.set(viewingBy);
