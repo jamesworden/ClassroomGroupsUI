@@ -30,6 +30,9 @@ import {
 import { AccountsService } from '@shared/accounts';
 
 const STORAGE_KEY_SIDENAV_OPEN = 'config-classroom-page-sidenav-open';
+const STORAGE_KEY_GROUPING_VALUE = 'config-classroom-page-grouping-value';
+const STORAGE_KEY_GROUPING_BY_DIVISION =
+  'config-classroom-page-grouping-by-division';
 
 @Injectable({
   providedIn: 'root',
@@ -88,6 +91,16 @@ export class ClassroomPageService {
       ).length >= this.#accountsService.select.maxFieldsPerClassroom()
   );
 
+  private readonly _groupingValue = signal(
+    parseInt(localStorage.getItem(STORAGE_KEY_GROUPING_VALUE) || '0') ?? 3
+  );
+  public readonly groupingValue = this._groupingValue.asReadonly();
+
+  private readonly _groupingByDivision = signal<boolean>(
+    JSON.parse(localStorage.getItem(STORAGE_KEY_GROUPING_BY_DIVISION) || 'true')
+  );
+  public readonly groupingByDivision = this._groupingByDivision.asReadonly();
+
   private readonly _sidenavOpen = signal(
     JSON.parse(localStorage.getItem(STORAGE_KEY_SIDENAV_OPEN) || 'true')
   );
@@ -125,6 +138,20 @@ export class ClassroomPageService {
 
     effect(() => {
       localStorage.setItem(STORAGE_KEY_SIDENAV_OPEN, `${this.sidenavOpen()}`);
+    });
+
+    effect(() => {
+      localStorage.setItem(
+        STORAGE_KEY_GROUPING_VALUE,
+        `${this.groupingValue()}`
+      );
+    });
+
+    effect(() => {
+      localStorage.setItem(
+        STORAGE_KEY_GROUPING_BY_DIVISION,
+        `${this.groupingByDivision()}`
+      );
     });
   }
 
@@ -330,7 +357,15 @@ export class ClassroomPageService {
       });
   }
 
-  public setSidenavOpen(sidenavOpen: boolean) {
+  setSidenavOpen(sidenavOpen: boolean) {
     this._sidenavOpen.set(sidenavOpen);
+  }
+
+  setGroupingByDivision(groupingByDivision: boolean) {
+    this._groupingByDivision.set(groupingByDivision);
+  }
+
+  setGroupingValue(groupingValue: number) {
+    this._groupingValue.set(groupingValue);
   }
 }

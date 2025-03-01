@@ -62,7 +62,7 @@ export class ConfigurationVisualizeService {
   );
   readonly chartType = this._chartType.asReadonly();
 
-  private readonly _showUngroupedStudents = signal(
+  private readonly _showUngroupedStudents = signal<boolean>(
     JSON.parse(
       localStorage.getItem(STORAGE_KEY_SHOW_UNGROUPED_STUDENTS) || 'true'
     )

@@ -80,6 +80,8 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly collapsePanelsToggled = output();
 
   readonly account = this.#accountsService.select.account;
+  readonly groupingValue = this.#classroomPageService.groupingValue;
+  readonly groupingByDivision = this.#classroomPageService.groupingByDivision;
 
   readonly toolbarHeight = signal<number>(0);
 
@@ -126,9 +128,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly MAX_CONFIGURATION_NAME_LENGTH = MAX_CONFIGURATION_NAME_LENGTH;
   readonly MAX_CLASSROOM_NAME_LENGTH = MAX_CLASSROOM_NAME_LENGTH;
 
-  readonly groupingValue = signal(3);
-  readonly groupingByDivision = signal(true);
-
   ngAfterViewInit() {
     const observer = new ResizeObserver(() => {
       if (this.toolbar) {
@@ -139,7 +138,9 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   }
 
   toggleGroupingType() {
-    this.groupingByDivision.set(!this.groupingByDivision());
+    this.#classroomPageService.setGroupingByDivision(
+      !this.groupingByDivision()
+    );
   }
 
   updateDescription(event: Event) {
@@ -210,6 +211,6 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   updateGroupingValue({ target }: Event) {
     const element = target as HTMLInputElement;
     const number = +element.value;
-    this.groupingValue.set(number);
+    this.#classroomPageService.setGroupingValue(number);
   }
 }
