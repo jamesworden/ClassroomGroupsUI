@@ -79,6 +79,10 @@ export class ConfigurationVisualizeService {
     }
   });
 
+  /**
+   * Eventually, we'll need a way where the user can select which column
+   * of the student is the one that ought to be displayed on the x axis.
+   */
   readonly studentLabels = computed(() => {
     return this.showingStudentDetails().map((student) => {
       const firstStringColumn = this.columnDetails().find(
