@@ -39,7 +39,7 @@ import { ConfigurationTextViewService } from './configuration-text-view.service'
 })
 export class ConfigurationTextViewComponent {
   readonly #clipboard = inject(Clipboard);
-  readonly #configurationPreviewService = inject(ConfigurationTextViewService);
+  readonly #configurationTextViewService = inject(ConfigurationTextViewService);
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly classroom = input.required<Classroom>();
@@ -47,32 +47,34 @@ export class ConfigurationTextViewComponent {
   readonly defaultGroup = input.required<GroupDetail>();
 
   readonly showUngroupedStudents =
-    this.#configurationPreviewService.showUngroupedStudents;
-  readonly showGroupNames = this.#configurationPreviewService.showGroupNames;
-  readonly visibleFieldIds = this.#configurationPreviewService.visibleFieldIds;
-  readonly isTextModified = this.#configurationPreviewService.isTextModified;
-  readonly editableText = this.#configurationPreviewService.editableText;
+    this.#configurationTextViewService.showUngroupedStudents;
+  readonly showGroupNames = this.#configurationTextViewService.showGroupNames;
+  readonly visibleFieldIds = this.#configurationTextViewService.visibleFieldIds;
+  readonly isTextModified = this.#configurationTextViewService.isTextModified;
+  readonly editableText = this.#configurationTextViewService.editableText;
   readonly showingCopiedTimeout =
-    this.#configurationPreviewService.showingCopiedTimeout;
+    this.#configurationTextViewService.showingCopiedTimeout;
   readonly showingCopiedMessage =
-    this.#configurationPreviewService.showingCopiedMessage;
-  readonly characterCount = this.#configurationPreviewService.characterCount;
-  readonly lineCount = this.#configurationPreviewService.lineCount;
+    this.#configurationTextViewService.showingCopiedMessage;
+  readonly characterCount = this.#configurationTextViewService.characterCount;
+  readonly lineCount = this.#configurationTextViewService.lineCount;
 
   updateEditableText(event: Event) {
-    this.#configurationPreviewService.updateEditableText(event);
+    this.#configurationTextViewService.updateEditableText(event);
   }
 
   regenerateText() {
-    this.#configurationPreviewService.regenerateText();
+    this.#configurationTextViewService.regenerateText();
   }
 
   toggleShowGroupNames() {
-    this.#configurationPreviewService.setShowGroupNames(!this.showGroupNames());
+    this.#configurationTextViewService.setShowGroupNames(
+      !this.showGroupNames()
+    );
   }
 
   toggleShowUngroupedStudents() {
-    this.#configurationPreviewService.setShowUngroupedStudents(
+    this.#configurationTextViewService.setShowUngroupedStudents(
       !this.showUngroupedStudents()
     );
   }
@@ -80,7 +82,7 @@ export class ConfigurationTextViewComponent {
   toggleVisibleField(fieldId: string, { checked }: MatSlideToggleChange) {
     const visibleFieldIds = new Set(this.visibleFieldIds());
     checked ? visibleFieldIds.add(fieldId) : visibleFieldIds.delete(fieldId);
-    this.#configurationPreviewService.setVisibleFieldIds(
+    this.#configurationTextViewService.setVisibleFieldIds(
       Array.from(visibleFieldIds)
     );
   }
@@ -94,11 +96,11 @@ export class ConfigurationTextViewComponent {
     if (this.showingCopiedTimeout()) {
       window.clearTimeout(this.showingCopiedTimeout());
     }
-    this.#configurationPreviewService.setShowingCopiedMessage(true);
+    this.#configurationTextViewService.setShowingCopiedMessage(true);
 
-    this.#configurationPreviewService.setShowingCopiedTimeout(
+    this.#configurationTextViewService.setShowingCopiedTimeout(
       window.setTimeout(() => {
-        this.#configurationPreviewService.setShowingCopiedMessage(false);
+        this.#configurationTextViewService.setShowingCopiedMessage(false);
       }, 3000)
     );
   }
