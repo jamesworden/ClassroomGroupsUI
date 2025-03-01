@@ -18,10 +18,10 @@ import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatMenuModule } from '@angular/material/menu';
 import { ColumnListComponent } from '../column-list/column-list.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfigurationPreviewService } from './configuration-preview.service';
+import { ConfigurationPreviewService } from './configuration-text-view.service';
 
 @Component({
-  selector: 'app-configuration-preview',
+  selector: 'app-configuration-text-view',
   imports: [
     MatChipsModule,
     MatSlideToggleModule,
@@ -34,8 +34,8 @@ import { ConfigurationPreviewService } from './configuration-preview.service';
     ColumnListComponent,
     MatTooltipModule,
   ],
-  templateUrl: './configuration-preview.component.html',
-  styleUrl: './configuration-preview.component.scss',
+  templateUrl: './configuration-text-view.component.html',
+  styleUrl: './configuration-text-view.component.scss',
 })
 export class ConfigurationPreviewComponent {
   readonly #clipboard = inject(Clipboard);

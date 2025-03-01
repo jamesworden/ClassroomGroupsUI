@@ -29,13 +29,13 @@
         [columnDetails]="columnDetails()"
       ></app-configuration-visualize>
     } @else {
-      <app-configuration-preview
+      <app-configuration-text-view
         class="flex-1"
         [configurationDetail]="configurationDetail"
         [classroom]="classroomDetail()"
         [columnDetails]="columnDetails()"
         [defaultGroup]="defaultGroup()!"
-      ></app-configuration-preview>
+      ></app-configuration-text-view>
     }
   } @else if (configurationLoading()) {
     <div class="flex-1">
