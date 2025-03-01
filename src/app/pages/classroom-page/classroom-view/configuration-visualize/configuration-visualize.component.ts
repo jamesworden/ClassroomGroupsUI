@@ -105,7 +105,9 @@ export class ConfigurationVisualizeComponent {
   });
 
   readonly groupLabels = computed(() => {
-    return this.allGroupDetails().map((group) => group.label);
+    return this.allGroupDetails().map((group) =>
+      group.id === this.defaultGroup().id ? 'Ungrouped Students' : group.label
+    );
   });
 
   readonly studentDataset = computed(() => {
