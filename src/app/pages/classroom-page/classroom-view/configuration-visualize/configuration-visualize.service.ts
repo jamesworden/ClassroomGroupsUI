@@ -81,14 +81,14 @@ export class ConfigurationVisualizeService {
 
   readonly studentLabels = computed(() => {
     return this.showingStudentDetails().map((student) => {
-      const firstName = student.fieldIdsToValues['firstName'] || '';
-      const lastName = student.fieldIdsToValues['lastName'] || '';
-
-      if (firstName || lastName) {
-        return `${firstName} ${lastName}`.trim();
+      const firstStringColumn = this.columnDetails().find(
+        ({ type }) => type === FieldType.TEXT
+      );
+      if (firstStringColumn) {
+        return student.fieldIdsToValues[firstStringColumn.fieldId] || '';
+      } else {
+        return 'Student';
       }
-
-      return student.id.slice(-4);
     });
   });
 
