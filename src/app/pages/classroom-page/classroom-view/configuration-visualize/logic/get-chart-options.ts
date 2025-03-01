@@ -1,5 +1,5 @@
 import { ChartConfiguration } from 'chart.js';
-import { ViewingBy } from '../configuration-visualize.component';
+import { ViewingBy } from '../configuration-visualize.service';
 
 /**
  * Generates chart configuration options for visualization

@@ -1,6 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { ViewingBy } from './configuration-visualize.component';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { ChartData, ChartType } from 'chart.js';
 import { ClassroomPageService } from '../../classroom-page.service';
 import {
   calculateClassAverage,
@@ -10,10 +9,14 @@ import {
   ClassroomsService,
   FieldType,
 } from '@shared/classrooms';
-import { createBackgroundGradient } from './logic/create-background-gradient';
 import { getStudentDataset } from './logic/get-student-dataset';
 import { getGroupDataset } from './logic/get-group-dataset';
 import { getChartOptions } from './logic/get-chart-options';
+
+export enum ViewingBy {
+  Students = 'Students',
+  Groups = 'Groups',
+}
 
 @Injectable({
   providedIn: 'root',

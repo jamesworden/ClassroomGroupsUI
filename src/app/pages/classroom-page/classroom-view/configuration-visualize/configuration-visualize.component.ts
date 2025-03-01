@@ -1,95 +1,99 @@
-import { Component, inject, input } from '@angular/core';
+// configuration-visualize.component.ts
+import { Component, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
-import {
-  provideCharts,
-  withDefaultRegisterables,
-  BaseChartDirective,
-} from 'ng2-charts';
-import { ChartType } from 'chart.js';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import {
   ConfigurationDetail,
   ColumnDetail,
   ClassroomDetail,
 } from '@shared/classrooms';
-import { MatChipsModule } from '@angular/material/chips';
 import { ConfigurationVisualizeService } from './configuration-visualize.service';
-
-export enum ViewingBy {
-  Students = 'Students',
-  Groups = 'Groups',
-}
+import {
+  ConfigurationHeaderComponent,
+  ControlsPanelComponent,
+  StatsPanelComponent,
+  ChartDisplayComponent,
+  EmptyStateComponent,
+} from './components';
 
 @Component({
   selector: 'app-configuration-visualize',
   standalone: true,
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatCardModule,
-    MatDividerModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonToggleModule,
-    MatIconModule,
-    FormsModule,
-    BaseChartDirective,
-    MatChipsModule,
+    ConfigurationHeaderComponent,
+    StatsPanelComponent,
+    ControlsPanelComponent,
+    ChartDisplayComponent,
+    EmptyStateComponent,
   ],
-  templateUrl: './configuration-visualize.component.html',
-  styleUrl: './configuration-visualize.component.scss',
+  template: `
+    <div class="flex flex-col h-full relative">
+      <div
+        class="panel mx-4 mb-4 flex-auto rounded-b-lg shadow-lg flex flex-col flex-1 h-full"
+      >
+        <div class="flex flex-col flex-1 overflow-hidden">
+          <!-- Header Component -->
+          <app-configuration-header
+            [configurationDetail]="configurationDetail()"
+            [chartType]="service.chartType()"
+            [showUngroupedStudents]="service.showUngroupedStudents()"
+            (chartTypeChange)="service.setChartType($event)"
+            (showUngroupedStudentsChange)="
+              service.setShowUngroupedStudents($event)
+            "
+          ></app-configuration-header>
+
+          <div
+            class="px-4 flex flex-wrap justify-between items-center mb-4 gap-2 border-b border-zinc-300 dark:border-zinc-700 pb-4"
+          >
+            <!-- Stats Panel Component -->
+            <app-stats-panel
+              [viewingBy]="service.viewingBy()"
+              [showingStudentDetails]="service.showingStudentDetails()"
+              [allGroupDetails]="service.allGroupDetails()"
+              [averageScore]="service.averageScore()"
+            ></app-stats-panel>
+
+            <!-- Controls Panel Component -->
+            <app-controls-panel
+              [viewingBy]="service.viewingBy()"
+              [selectedColumn]="service.selectedColumn()"
+              [selectedColumnLabel]="service.selectedColumnLabel()"
+              [numericColumns]="service.numericColumns()"
+              (viewingByChange)="service.setViewingBy($event)"
+              (selectedColumnChange)="service.setSelectedColumn($event)"
+            ></app-controls-panel>
+          </div>
+
+          <!-- Main content area -->
+          <div class="relative flex-1 p-4 overflow-hidden">
+            <div class="absolute inset-4 overflow-hidden">
+              <!-- Chart Display Component -->
+              <app-chart-display
+                *ngIf="service.numericColumns().length"
+                [chartData]="service.chartData()"
+                [chartOptions]="service.chartOptions()"
+                [chartType]="service.chartType()"
+              ></app-chart-display>
+
+              <!-- Empty State Component -->
+              <app-empty-state
+                *ngIf="!service.numericColumns().length"
+              ></app-empty-state>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
   providers: [provideCharts(withDefaultRegisterables())],
 })
 export class ConfigurationVisualizeComponent {
-  readonly #configurationVisualizeService = inject(
-    ConfigurationVisualizeService
-  );
-
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly classroom = input.required<ClassroomDetail>();
   readonly columnDetails = input.required<ColumnDetail[]>();
 
-  readonly viewingBy = this.#configurationVisualizeService.viewingBy;
-  readonly selectedColumn = this.#configurationVisualizeService.selectedColumn;
-  readonly chartType = this.#configurationVisualizeService.chartType;
-  readonly showUngroupedStudents =
-    this.#configurationVisualizeService.showUngroupedStudents;
-  readonly chartData = this.#configurationVisualizeService.chartData;
-  readonly chartOptions = this.#configurationVisualizeService.chartOptions;
-  readonly selectedColumnLabel =
-    this.#configurationVisualizeService.selectedColumnLabel;
-  readonly numericColumns = this.#configurationVisualizeService.numericColumns;
-  readonly averageScore = this.#configurationVisualizeService.averageScore;
-  readonly allGroupDetails =
-    this.#configurationVisualizeService.allGroupDetails;
-  readonly showingStudentDetails =
-    this.#configurationVisualizeService.showingStudentDetails;
-
-  readonly ViewingBy = ViewingBy;
-
-  setViewingBy(viewingBy: ViewingBy) {
-    this.#configurationVisualizeService.setViewingBy(viewingBy);
-  }
-
-  setSelectedColumn(selectedColumn: string | 'average') {
-    this.#configurationVisualizeService.setSelectedColumn(selectedColumn);
-  }
-
-  setChartType(chartType: ChartType) {
-    this.#configurationVisualizeService.setChartType(chartType);
-  }
-
-  toggleShowUngroupedStudents() {
-    this.#configurationVisualizeService.setShowUngroupedStudents(
-      !this.showUngroupedStudents()
-    );
-  }
+  readonly service = inject(ConfigurationVisualizeService);
 }
