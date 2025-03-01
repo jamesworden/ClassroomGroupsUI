@@ -12,6 +12,7 @@ import {
 } from '@shared/classrooms';
 import { createBackgroundGradient } from './logic/create-background-gradient';
 import { getStudentDataset } from './logic/get-student-dataset';
+import { getGroupDataset } from './logic/get-group-dataset';
 
 @Injectable({
   providedIn: 'root',
@@ -134,69 +135,15 @@ export class ConfigurationVisualizeService {
     );
   });
 
-  readonly groupDataset = computed(() => {
-    const groups = this.showingGroups();
-
-    if (this.selectedColumn() === 'average') {
-      // Average scores across all columns for each group
-      const data = groups.map((group) => {
-        const groupStudents = group.studentDetails;
-
-        const allScores = groupStudents.flatMap((student) =>
-          this.numericColumns()
-            .filter(({ type }) => type === FieldType.NUMBER)
-            .map((col) =>
-              parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
-            )
-            .filter((score) => !isNaN(score))
-        );
-
-        return allScores.length
-          ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length
-          : 0;
-      });
-
-      return {
-        data,
-        label: 'Average Score',
-        backgroundColor: createBackgroundGradient(this.chartType(), true),
-        borderColor: 'rgba(137, 111, 255, 1)',
-        pointBackgroundColor: 'rgba(137, 111, 255, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(137, 111, 255, 1)',
-        borderWidth: this.chartType() === 'line' ? 3 : 0,
-      };
-    } else {
-      // Specific column averages for each group
-      const data = groups.map((group) => {
-        const groupStudents = group.studentDetails;
-
-        const columnScores = groupStudents
-          .map((student) =>
-            parseFloat(student.fieldIdsToValues[this.selectedColumn()] || '0')
-          )
-          .filter((score) => !isNaN(score));
-
-        return columnScores.length
-          ? columnScores.reduce((sum, score) => sum + score, 0) /
-              columnScores.length
-          : 0;
-      });
-
-      return {
-        data,
-        label: this.selectedColumnLabel(),
-        backgroundColor: createBackgroundGradient(this.chartType(), true),
-        borderColor: 'rgba(255, 126, 146, 1)',
-        pointBackgroundColor: 'rgba(255, 126, 146, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(255, 126, 146, 1)',
-        borderWidth: this.chartType() === 'line' ? 3 : 0,
-      };
-    }
-  });
+  readonly groupDataset = computed(() =>
+    getGroupDataset(
+      this.showingGroups(),
+      this.numericColumns(),
+      this.selectedColumn(),
+      this.chartType(),
+      this.selectedColumnLabel()
+    )
+  );
 
   readonly chartData = computed((): ChartData => {
     if (this.viewingBy() === ViewingBy.Students) {
