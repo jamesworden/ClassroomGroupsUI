@@ -6,11 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-empty-state',
   standalone: true,
   imports: [CommonModule, MatIconModule],
+  styleUrl: 'empty-state.component.scss',
   template: `
     <div
       class="flex flex-col items-center justify-center text-center p-8 bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg h-full"
     >
-      <mat-icon class="text-6xl mb-4 text-zinc-400 dark:text-zinc-600"
+      <mat-icon class="text-6xl mb-4 text-zinc-400 dark:text-zinc-600 big-icon"
         >data_array</mat-icon
       >
       <h3 class="text-xl font-medium mb-2">No numeric data available</h3>
