@@ -1062,22 +1062,6 @@ export class ClassroomsService {
     configurationId: string,
     columnId: string
   ) {
-    const getUpdateStrategy =
-      (classroomId: string, columnId: string) => (draft: ClassroomsState) => {
-        draft.configurationDetails.forEach((configurationDetail) => {
-          if (configurationDetail.classroomId === classroomId) {
-            configurationDetail.columnDetails.forEach((columnDetail) => {
-              if (columnDetail.id === columnId) {
-                columnDetail.enabled = true;
-              }
-            });
-          }
-        });
-      };
-    this.patchState((draft) => {
-      draft.updatingClassroomIds.add(classroomId);
-      getUpdateStrategy(classroomId, columnId);
-    });
     this.#httpClient
       .post<EnableColumnResponse>(
         `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/enable`,
@@ -1089,7 +1073,20 @@ export class ClassroomsService {
       .pipe(
         tap(({ enabledColumn }) => {
           console.log('[Enabled Column]', enabledColumn);
-          getUpdateStrategy(classroomId, enabledColumn.id);
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.add(classroomId);
+            draft.configurationDetails.forEach(
+              (configurationDetail) =>
+                (configurationDetail.columnDetails =
+                  configurationDetail.columnDetails.map((columnDetail) => {
+                    if (columnDetail.id === enabledColumn.id) {
+                      columnDetail.enabled = true;
+                      return { ...columnDetail };
+                    }
+                    return columnDetail;
+                  }))
+            );
+          });
         }),
         catchError((error) => {
           console.log('[Enable Column Failed]', error);
@@ -1113,22 +1110,6 @@ export class ClassroomsService {
     configurationId: string,
     columnId: string
   ) {
-    const getUpdateStrategy =
-      (classroomId: string, columnId: string) => (draft: ClassroomsState) => {
-        draft.configurationDetails.forEach((configurationDetail) => {
-          if (configurationDetail.classroomId === classroomId) {
-            configurationDetail.columnDetails.forEach((columnDetail) => {
-              if (columnDetail.id === columnId) {
-                columnDetail.enabled = false;
-              }
-            });
-          }
-        });
-      };
-    this.patchState((draft) => {
-      draft.updatingClassroomIds.add(classroomId);
-      getUpdateStrategy(classroomId, columnId);
-    });
     this.#httpClient
       .post<DisableColumnResponse>(
         `${environment.BASE_API}/api/v1/classrooms/${classroomId}/configurations/${configurationId}/columns/${columnId}/disable`,
@@ -1140,7 +1121,20 @@ export class ClassroomsService {
       .pipe(
         tap(({ disabledColumn }) => {
           console.log('[Disabled Column]', disabledColumn);
-          getUpdateStrategy(classroomId, disabledColumn.id);
+          this.patchState((draft) => {
+            draft.updatingClassroomIds.add(classroomId);
+            draft.configurationDetails.forEach(
+              (configurationDetail) =>
+                (configurationDetail.columnDetails =
+                  configurationDetail.columnDetails.map((columnDetail) => {
+                    if (columnDetail.id === disabledColumn.id) {
+                      columnDetail.enabled = false;
+                      return { ...columnDetail };
+                    }
+                    return columnDetail;
+                  }))
+            );
+          });
         }),
         catchError((error) => {
           console.log('[Disable Column Failed]', error);
