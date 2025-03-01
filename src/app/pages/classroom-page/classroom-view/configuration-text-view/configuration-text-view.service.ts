@@ -11,6 +11,10 @@ interface TextGroup {
   students: string[];
 }
 
+const STORAGE_KEY_SHOW_GROUP_NAMES = 'config-text-view-show-group-names';
+const STORAGE_KEY_SHOW_UNGROUPED_STUDENTS =
+  'config-text-view-show-ungrouped-students';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -18,14 +22,20 @@ export class ConfigurationTextViewService {
   readonly #classroomPageService = inject(ClassroomPageService);
   readonly #classroomsService = inject(ClassroomsService);
 
-  private readonly _showGroupNames = signal(true);
-  private readonly _showUngroupedStudents = signal(true);
+  private readonly _showGroupNames = signal<boolean>(
+    JSON.parse(localStorage.getItem(STORAGE_KEY_SHOW_GROUP_NAMES) || 'true')
+  );
+  private readonly _showUngroupedStudents = signal<boolean>(
+    JSON.parse(
+      localStorage.getItem(STORAGE_KEY_SHOW_UNGROUPED_STUDENTS) || 'true'
+    )
+  );
   private readonly _showingCopiedMessage = signal(false);
   private readonly _showingCopiedTimeout = signal<number | undefined>(
     undefined
   );
   private readonly _visibleFieldIds = signal<string[]>([]);
-  private readonly _editableText = signal('');
+  private readonly _editableText = signal<string>('');
   private readonly _isTextModified = signal(false);
 
   public readonly showGroupNames = this._showGroupNames.asReadonly();
@@ -131,6 +141,20 @@ export class ConfigurationTextViewService {
       if (!this.isTextModified() || !this.editableText()) {
         this._editableText.set(text);
       }
+    });
+
+    effect(() => {
+      localStorage.setItem(
+        STORAGE_KEY_SHOW_GROUP_NAMES,
+        JSON.stringify(this.showGroupNames())
+      );
+    });
+
+    effect(() => {
+      localStorage.setItem(
+        STORAGE_KEY_SHOW_UNGROUPED_STUDENTS,
+        JSON.stringify(this.showUngroupedStudents())
+      );
     });
   }
 

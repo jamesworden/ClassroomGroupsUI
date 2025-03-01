@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { ChartData, ChartType } from 'chart.js';
 import { ClassroomPageService } from '../../classroom-page.service';
 import {
@@ -18,6 +18,11 @@ export enum ViewingBy {
   Students = 'Students',
   Groups = 'Groups',
 }
+
+const STORAGE_KEY_VIEWING_BY = 'config-visualize-viewing-by';
+const STORAGE_KEY_CHART_TYPE = 'config-visualize-chart-type';
+const STORAGE_KEY_SHOW_UNGROUPED_STUDENTS =
+  'config-visualize-show-ungrouped-students';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +46,9 @@ export class ConfigurationVisualizeService {
     this.#classroomsService.select.defaultGroup(this.configurationId())()
   );
 
-  private readonly _viewingBy = signal<ViewingBy>(ViewingBy.Students);
+  private readonly _viewingBy = signal<ViewingBy>(
+    this.#getStoredViewingBy() || ViewingBy.Students
+  );
   public viewingBy = this._viewingBy.asReadonly();
 
   private readonly _selectedColumn = signal<string | 'average'>('average');
@@ -50,10 +57,16 @@ export class ConfigurationVisualizeService {
    */
   readonly selectedColumn = this._selectedColumn.asReadonly();
 
-  private readonly _chartType = signal<ChartType>('bar');
+  private readonly _chartType = signal<ChartType>(
+    this.#getStoredChartType() || 'bar'
+  );
   readonly chartType = this._chartType.asReadonly();
 
-  private readonly _showUngroupedStudents = signal(true);
+  private readonly _showUngroupedStudents = signal(
+    JSON.parse(
+      localStorage.getItem(STORAGE_KEY_SHOW_UNGROUPED_STUDENTS) || 'true'
+    )
+  );
   readonly showUngroupedStudents = this._showUngroupedStudents.asReadonly();
 
   readonly showingGroups = computed(() =>
@@ -169,6 +182,39 @@ export class ConfigurationVisualizeService {
   });
 
   readonly chartOptions = computed(() => getChartOptions(this.viewingBy()));
+
+  constructor() {
+    effect(() => {
+      localStorage.setItem(STORAGE_KEY_VIEWING_BY, this.viewingBy());
+    });
+
+    effect(() => {
+      localStorage.setItem(STORAGE_KEY_CHART_TYPE, this.chartType());
+    });
+
+    effect(() => {
+      localStorage.setItem(
+        STORAGE_KEY_SHOW_UNGROUPED_STUDENTS,
+        JSON.stringify(this.showUngroupedStudents())
+      );
+    });
+  }
+
+  #getStoredViewingBy(): ViewingBy | null {
+    const stored = localStorage.getItem(STORAGE_KEY_VIEWING_BY);
+    if (stored === ViewingBy.Students || stored === ViewingBy.Groups) {
+      return stored as ViewingBy;
+    }
+    return null;
+  }
+
+  #getStoredChartType(): ChartType | null {
+    const stored = localStorage.getItem(STORAGE_KEY_CHART_TYPE) as ChartType;
+    if (stored as ChartType) {
+      return stored;
+    }
+    return null;
+  }
 
   setViewingBy(viewingBy: ViewingBy) {
     this._viewingBy.set(viewingBy);
