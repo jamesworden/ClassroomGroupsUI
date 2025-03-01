@@ -16,7 +16,7 @@ import { MobileWarningViewComponent } from './mobile-warning-view/mobile-warning
 import { ClassroomNotFoundViewComponent } from './classroom-not-found-view/classroom-not-found-view.component';
 import { ClassroomViewComponent } from './classroom-view/classroom-view.component';
 import { ClassroomsService } from '@shared/classrooms';
-import { ConfigurationPreviewService } from './classroom-view/configuration-text-view/configuration-text-view.service';
+import { ConfigurationTextViewService } from './classroom-view/configuration-text-view/configuration-text-view.service';
 import { ConfigurationVisualizeService } from './classroom-view/configuration-visualize/configuration-visualize.service';
 
 @Component({
@@ -40,7 +40,7 @@ import { ConfigurationVisualizeService } from './classroom-view/configuration-vi
   ],
   providers: [
     ClassroomPageService,
-    ConfigurationPreviewService,
+    ConfigurationTextViewService,
     ConfigurationVisualizeService,
   ],
   templateUrl: './classroom-page.component.html',

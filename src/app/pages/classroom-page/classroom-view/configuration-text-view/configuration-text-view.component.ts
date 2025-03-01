@@ -18,7 +18,7 @@ import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatMenuModule } from '@angular/material/menu';
 import { ColumnListComponent } from '../column-list/column-list.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfigurationPreviewService } from './configuration-text-view.service';
+import { ConfigurationTextViewService } from './configuration-text-view.service';
 
 @Component({
   selector: 'app-configuration-text-view',
@@ -37,9 +37,9 @@ import { ConfigurationPreviewService } from './configuration-text-view.service';
   templateUrl: './configuration-text-view.component.html',
   styleUrl: './configuration-text-view.component.scss',
 })
-export class ConfigurationPreviewComponent {
+export class ConfigurationTextViewComponent {
   readonly #clipboard = inject(Clipboard);
-  readonly #configurationPreviewService = inject(ConfigurationPreviewService);
+  readonly #configurationPreviewService = inject(ConfigurationTextViewService);
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly classroom = input.required<Classroom>();

@@ -10,7 +10,7 @@ interface TextGroup {
 @Injectable({
   providedIn: 'root',
 })
-export class ConfigurationPreviewService {
+export class ConfigurationTextViewService {
   readonly #classroomPageService = inject(ClassroomPageService);
   readonly #classroomsService = inject(ClassroomsService);
 
