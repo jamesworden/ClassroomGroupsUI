@@ -53,7 +53,7 @@ export class ConfigurationVisualizeService {
   private readonly _chartType = signal<ChartType>('bar');
   readonly chartType = this._chartType.asReadonly();
 
-  private readonly _showUngroupedStudents = signal(false);
+  private readonly _showUngroupedStudents = signal(true);
   readonly showUngroupedStudents = this._showUngroupedStudents.asReadonly();
 
   readonly showingGroups = computed(() =>
