@@ -79,6 +79,6 @@ export class ConfigurationHeaderComponent {
   readonly showUngroupedStudentsChange = output<boolean>();
 
   toggleShowUngroupedStudents() {
-    this.showUngroupedStudentsChange.emit(!this.showUngroupedStudents);
+    this.showUngroupedStudentsChange.emit(!this.showUngroupedStudents());
   }
 }
