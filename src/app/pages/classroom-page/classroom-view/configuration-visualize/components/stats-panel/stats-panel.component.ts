@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { StudentDetail } from '@shared/classrooms';
-import { ViewingBy } from '../configuration-visualize.service';
+import { ViewingBy } from '../../configuration-visualize.service';
 
 @Component({
   selector: 'app-stats-panel',
