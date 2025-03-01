@@ -14,7 +14,6 @@ export class ConfigurationTextViewService {
   readonly #classroomPageService = inject(ClassroomPageService);
   readonly #classroomsService = inject(ClassroomsService);
 
-  // Private signals
   private readonly _showGroupNames = signal(true);
   private readonly _showUngroupedStudents = signal(true);
   private readonly _showingCopiedMessage = signal(false);
@@ -25,7 +24,6 @@ export class ConfigurationTextViewService {
   private readonly _editableText = signal('');
   private readonly _isTextModified = signal(false);
 
-  // Public readonly accessors
   public readonly showGroupNames = this._showGroupNames.asReadonly();
   public readonly showUngroupedStudents =
     this._showUngroupedStudents.asReadonly();
@@ -37,7 +35,6 @@ export class ConfigurationTextViewService {
   public readonly editableText = this._editableText.asReadonly();
   public readonly isTextModified = this._isTextModified.asReadonly();
 
-  // Computed values remain the same
   readonly classroomId = this.#classroomPageService.classroomId;
   readonly configurationId = this.#classroomPageService.configurationId;
   readonly configurationDetail = computed(() =>
@@ -133,7 +130,6 @@ export class ConfigurationTextViewService {
     });
   }
 
-  // Setter methods for private signals
   public setShowGroupNames(show: boolean) {
     this._showGroupNames.set(show);
   }
