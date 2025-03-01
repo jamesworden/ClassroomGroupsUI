@@ -20,6 +20,7 @@ import {
   ToggleThemeButtonComponent,
 } from '@ui-inputs';
 import { ClassroomsPageService } from './classrooms-page.service';
+import { ClassroomCardComponent } from './classroom-card/classroom-card.component';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -38,6 +39,7 @@ import { ClassroomsPageService } from './classrooms-page.service';
     ToggleThemeButtonComponent,
     AccountMenuButtonComponent,
     CodeLinksMenuButtonComponent,
+    ClassroomCardComponent,
   ],
   templateUrl: './classrooms-page.component.html',
   styleUrl: './classrooms-page.component.scss',

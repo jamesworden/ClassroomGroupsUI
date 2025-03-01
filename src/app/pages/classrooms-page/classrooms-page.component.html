@@ -55,73 +55,11 @@
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-auto mt-12"
         >
           @for (classroom of classroomDetails(); track classroom.id) {
-            <div
-              class="bg-white dark:bg-zinc-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden cursor-pointer border border-gray-100 dark:border-gray-700 flex flex-col justify-between"
-              (click)="viewClassroom(classroom.id)"
-            >
-              <div class="p-6">
-                <div class="flex items-center justify-between mb-4">
-                  <div
-                    class="flex items-center overflow-hidden max-w-[calc(100%-48px)]"
-                  >
-                    <mat-icon class="text-primary mr-3 flex-shrink-0"
-                      >school</mat-icon
-                    >
-                    <h3
-                      class="text-lg font-medium w-full"
-                      [style.white-space]="'nowrap'"
-                      [style.overflow]="'hidden'"
-                      [style.text-overflow]="'ellipsis'"
-                      [style.display]="'block'"
-                    >
-                      {{ classroom.label }}
-                    </h3>
-                  </div>
-
-                  <button
-                    mat-icon-button
-                    color="warn"
-                    (click)="
-                      $event.stopPropagation();
-                      openDeleteClassroomDialog(classroom)
-                    "
-                    matTooltip="Delete classroom"
-                    class="flex-shrink-0"
-                  >
-                    <mat-icon
-                      class="!text-red-500 opacity-70 hover:opacity-100 !flex"
-                      >delete</mat-icon
-                    >
-                  </button>
-                </div>
-
-                <p class="text-zinc-600 dark:text-zinc-300 description">
-                  {{ classroom.description || 'No description provided' }}
-                </p>
-              </div>
-
-              <div
-                class="bg-zinc-50 dark:bg-zinc-700 px-6 py-3 flex justify-between items-center"
-              >
-                <span class="text-sm text-gray-500 dark:text-gray-400">
-                  <mat-icon class="align-middle text-sm mr-1"
-                    >calendar_today</mat-icon
-                  >
-                  Created recently
-                </span>
-
-                <button
-                  mat-button
-                  color="primary"
-                  class="!text-sm"
-                  (click)="
-                    $event.stopPropagation(); viewClassroom(classroom.id)
-                  "
-                >
-                  View details
-                </button>
-              </div>
-            </div>
+            <app-classroom-card
+              [classroom]="classroom"
+              (viewed)="viewClassroom(classroom.id)"
+              (deleted)="openDeleteClassroomDialog(classroom)"
+            ></app-classroom-card>
           }
         </div>
 
