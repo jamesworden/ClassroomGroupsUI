@@ -47,7 +47,7 @@ import { ConfigurationDetail } from '@shared/classrooms';
           </div>
 
           <mat-button-toggle-group
-            [value]="chartType"
+            [value]="chartType()"
             (change)="chartTypeChange.emit($event.value)"
             aria-label="Chart Type"
             class="border border-zinc-400 dark:border-zinc-600"
