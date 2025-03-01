@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 
 import { ColumnDetail } from '@shared/classrooms';
-import { ViewingBy } from '../configuration-visualize.service';
+import { ViewingBy } from '../../configuration-visualize.service';
 
 @Component({
   selector: 'app-controls-panel',
