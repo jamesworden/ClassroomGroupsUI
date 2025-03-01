@@ -13,7 +13,7 @@ import {
   withDefaultRegisterables,
   BaseChartDirective,
 } from 'ng2-charts';
-import { Chart, ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
 import {
   ConfigurationDetail,
