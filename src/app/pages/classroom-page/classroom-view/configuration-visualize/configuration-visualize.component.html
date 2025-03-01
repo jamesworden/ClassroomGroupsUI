@@ -189,7 +189,7 @@
                       <mat-icon
                         *ngIf="selectedColumn() === 'average'"
                         class="mr-2 selected-option-icon"
-                        >calculate</mat-icon
+                        >ssid_chart</mat-icon
                       >
                       <span>{{ selectedColumnLabel() }}</span>
                     </div>
@@ -199,14 +199,19 @@
                   <mat-option value="average">
                     <div class="flex items-center">
                       <mat-icon class="mr-2 selected-option-icon"
-                        >calculate</mat-icon
+                        >ssid_chart</mat-icon
                       >
                       <span>Average Score</span>
                     </div>
                   </mat-option>
                   @for (column of numberColumns(); track column.id) {
                     <mat-option [value]="column.fieldId">
-                      <span>{{ column.label }}</span>
+                      <div class="flex items-center">
+                        <mat-icon class="mr-2 selected-option-icon"
+                          >assignment</mat-icon
+                        >
+                        <span>{{ column.label }}</span>
+                      </div>
                     </mat-option>
                   }
                 </mat-select>
