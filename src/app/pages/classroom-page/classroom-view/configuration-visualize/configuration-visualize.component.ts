@@ -521,7 +521,7 @@ export class ConfigurationVisualizeComponent {
     borderColor: 'transparent',
   }));
 
-  readonly averageClassScore = computed(() => {
+  readonly averageStudentScore = computed(() => {
     if (this.selectedColumn() === 'average') {
       const values = Object.values(this.averageScores());
       return values.length > 0
@@ -536,6 +536,46 @@ export class ConfigurationVisualizeComponent {
 
       return scores.length > 0
         ? scores.reduce((sum, val) => sum + val, 0) / scores.length
+        : 0;
+    }
+  });
+
+  readonly averageGroupScore = computed(() => {
+    if (this.selectedColumn() === 'average') {
+      // For average column, calculate average of group average scores
+      return this.showingGroups().length > 0
+        ? this.showingGroups()
+            .map((group) => {
+              const studentValues = group.studentDetails
+                .map((s) =>
+                  parseFloat(s.fieldIdsToValues[this.selectedColumn()] || '0')
+                )
+                .filter((v) => !isNaN(v));
+
+              return studentValues.length > 0
+                ? studentValues.reduce((sum, val) => sum + val, 0) /
+                    studentValues.length
+                : 0;
+            })
+            .reduce((sum, val) => sum + val, 0) / this.showingGroups().length
+        : 0;
+    } else {
+      // For other columns, calculate average of group average scores
+      return this.showingGroups().length > 0
+        ? this.showingGroups()
+            .map((group) => {
+              const studentValues = group.studentDetails
+                .map((s) =>
+                  parseFloat(s.fieldIdsToValues[this.selectedColumn()] || '0')
+                )
+                .filter((v) => !isNaN(v));
+
+              return studentValues.length > 0
+                ? studentValues.reduce((sum, val) => sum + val, 0) /
+                    studentValues.length
+                : 0;
+            })
+            .reduce((sum, val) => sum + val, 0) / this.showingGroups().length
         : 0;
     }
   });

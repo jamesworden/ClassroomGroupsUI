@@ -121,7 +121,12 @@
                   }}
                 </div>
                 <div class="text-base font-semibold">
-                  {{ averageClassScore() | number: '1.1-1' }}%
+                  {{
+                    (viewingBy() === ViewingBy.Groups
+                      ? averageGroupScore()
+                      : averageStudentScore()
+                    ) | number: '1.1-1'
+                  }}%
                 </div>
               </div>
             </div>
