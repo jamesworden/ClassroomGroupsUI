@@ -163,7 +163,6 @@ export class ConfigurationVisualizeComponent {
           }
         },
         borderColor: 'rgba(94, 129, 244, 1)',
-        hoverBackgroundColor: 'rgba(94, 129, 244, 0.9)',
         pointBackgroundColor: 'rgba(94, 129, 244, 1)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
@@ -213,7 +212,6 @@ export class ConfigurationVisualizeComponent {
           }
         },
         borderColor: 'rgba(66, 186, 255, 1)',
-        hoverBackgroundColor: 'rgba(66, 186, 255, 0.9)',
         pointBackgroundColor: 'rgba(66, 186, 255, 1)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
@@ -282,7 +280,6 @@ export class ConfigurationVisualizeComponent {
           }
         },
         borderColor: 'rgba(137, 111, 255, 1)',
-        hoverBackgroundColor: 'rgba(137, 111, 255, 0.9)',
         pointBackgroundColor: 'rgba(137, 111, 255, 1)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
@@ -342,7 +339,6 @@ export class ConfigurationVisualizeComponent {
           }
         },
         borderColor: 'rgba(255, 126, 146, 1)',
-        hoverBackgroundColor: 'rgba(255, 126, 146, 0.9)',
         pointBackgroundColor: 'rgba(255, 126, 146, 1)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
@@ -537,49 +533,6 @@ export class ConfigurationVisualizeComponent {
   });
 
   readonly ViewingBy = ViewingBy;
-
-  constructor() {
-    const customHoverPlugin = {
-      id: 'customHoverEffects',
-      beforeDatasetsDraw: (chart: any) => {
-        const activeElements = chart.getActiveElements();
-        if (activeElements.length === 0) return;
-
-        const ctx = chart.ctx;
-        ctx.save();
-        const activeDatasetIndex = activeElements[0].datasetIndex;
-
-        chart.data.datasets.forEach((dataset: any, i: any) => {
-          if (i !== activeDatasetIndex) {
-            chart.getDatasetMeta(i).data.forEach((dataPoint: any) => {
-              dataPoint.options.backgroundColor = this.adjustOpacity(
-                dataPoint.options.backgroundColor,
-                0.3
-              );
-            });
-          }
-        });
-      },
-      afterDatasetsDraw: (chart: any) => {
-        chart.ctx.restore();
-      },
-    };
-
-    // Register the plugin correctly
-    Chart.register(customHoverPlugin);
-  }
-
-  adjustOpacity(color: string, opacity: number) {
-    if (typeof color === 'string' && color.startsWith('rgba')) {
-      const parts = color.match(
-        /^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d*(?:\.\d+)?)\)$/
-      );
-      if (parts) {
-        return `rgba(${parts[1]}, ${parts[2]}, ${parts[3]}, ${opacity})`;
-      }
-    }
-    return color;
-  }
 
   setViewMode(mode: ViewingBy) {
     this.viewingBy.set(mode);
