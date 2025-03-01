@@ -22,6 +22,7 @@ import {
   ClassroomDetail,
   FieldType,
 } from '@shared/classrooms';
+import { MatChipsModule } from '@angular/material/chips';
 
 enum ViewingBy {
   Students = 'Students',
@@ -42,6 +43,7 @@ enum ViewingBy {
     MatIconModule,
     FormsModule,
     BaseChartDirective,
+    MatChipsModule,
   ],
   templateUrl: './configuration-visualize.component.html',
   styleUrl: './configuration-visualize.component.scss',
@@ -60,14 +62,18 @@ export class ConfigurationVisualizeComponent {
   readonly viewingBy = signal<ViewingBy>(ViewingBy.Students);
   readonly selectedColumn = signal<string | 'average'>('average');
   readonly chartType = signal<ChartType>('bar');
+  readonly showUngroupedStudents = signal(true);
 
-  // Computed properties
+  readonly showingGroups = computed(() =>
+    this.showUngroupedStudents() ? this.allGroupDetails() : this.groupDetails()
+  );
+
+  readonly showingStudentDetails = computed(() =>
+    this.showingGroups().flatMap((group) => group.studentDetails)
+  );
+
   readonly allGroupDetails = computed(() => {
     return [this.defaultGroup(), ...this.groupDetails()];
-  });
-
-  readonly allStudentDetails = computed(() => {
-    return this.allGroupDetails().flatMap((group) => group.studentDetails);
   });
 
   readonly numberColumns = computed(() => {
@@ -92,7 +98,7 @@ export class ConfigurationVisualizeComponent {
 
   // New computed signals for chart data generation
   readonly studentLabels = computed(() => {
-    return this.allStudentDetails().map((student) => {
+    return this.showingStudentDetails().map((student) => {
       const firstName = student.fieldIdsToValues['firstName'] || '';
       const lastName = student.fieldIdsToValues['lastName'] || '';
 
@@ -105,13 +111,13 @@ export class ConfigurationVisualizeComponent {
   });
 
   readonly groupLabels = computed(() => {
-    return this.allGroupDetails().map((group) =>
+    return this.showingGroups().map((group) =>
       group.id === this.defaultGroup().id ? 'Ungrouped Students' : group.label
     );
   });
 
   readonly studentDataset = computed(() => {
-    const students = this.allStudentDetails();
+    const students = this.showingStudentDetails();
 
     if (this.selectedColumn() === 'average') {
       // Average scores for all number columns
@@ -224,7 +230,7 @@ export class ConfigurationVisualizeComponent {
   });
 
   readonly groupDataset = computed(() => {
-    const groups = this.allGroupDetails();
+    const groups = this.showingGroups();
 
     if (this.selectedColumn() === 'average') {
       // Average scores across all columns for each group
@@ -522,7 +528,7 @@ export class ConfigurationVisualizeComponent {
         ? values.reduce((sum, val) => sum + val, 0) / values.length
         : 0;
     } else {
-      const scores = this.allStudentDetails()
+      const scores = this.showingStudentDetails()
         .map((s) =>
           parseFloat(s.fieldIdsToValues[this.selectedColumn()] || '0')
         )
@@ -546,5 +552,9 @@ export class ConfigurationVisualizeComponent {
 
   setChartType(type: ChartType) {
     this.chartType.set(type);
+  }
+
+  toggleShowUngroupedStudents() {
+    this.showUngroupedStudents.set(!this.showUngroupedStudents());
   }
 }
