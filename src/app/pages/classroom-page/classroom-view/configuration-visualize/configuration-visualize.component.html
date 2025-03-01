@@ -121,12 +121,7 @@
                   }}
                 </div>
                 <div class="text-base font-semibold">
-                  {{
-                    (viewingBy() === ViewingBy.Groups
-                      ? averageGroupScore()
-                      : averageStudentScore()
-                    ) | number: '1.1-1'
-                  }}%
+                  {{ averageScore() | number: '1.1-1' }}%
                 </div>
               </div>
             </div>
@@ -140,7 +135,7 @@
                 <mat-label>View By</mat-label>
                 <mat-select
                   [value]="viewingBy()"
-                  (selectionChange)="setViewMode($event.value)"
+                  (selectionChange)="setViewingBy($event.value)"
                 >
                   <!-- Custom display template for the selection value -->
                   <mat-select-trigger>
@@ -209,7 +204,7 @@
                       <span>Average Score</span>
                     </div>
                   </mat-option>
-                  @for (column of numberColumns(); track column.id) {
+                  @for (column of numericColumns(); track column.id) {
                     <mat-option [value]="column.fieldId">
                       <div class="flex items-center">
                         <mat-icon class="mr-2 selected-option-icon"
@@ -245,7 +240,7 @@
         </div>
 
         <!-- Empty state -->
-        @if (noDataAvailable()) {
+        @if (!numericColumns().length) {
           <div
             class="absolute inset-4 flex flex-col items-center justify-center text-center p-8 bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg"
           >
