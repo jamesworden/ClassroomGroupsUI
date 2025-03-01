@@ -1,5 +1,5 @@
 // configuration-visualize.component.ts
-import { Component, input, inject } from '@angular/core';
+import { Component, input, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
@@ -32,10 +32,18 @@ import {
   styleUrl: './configuration-visualize.component.scss',
   providers: [provideCharts(withDefaultRegisterables())],
 })
-export class ConfigurationVisualizeComponent {
+export class ConfigurationVisualizeComponent implements OnDestroy {
+  readonly #configurationVisualizeService = inject(
+    ConfigurationVisualizeService
+  );
+
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly classroom = input.required<ClassroomDetail>();
   readonly columnDetails = input.required<ColumnDetail[]>();
 
   readonly service = inject(ConfigurationVisualizeService);
+
+  ngOnDestroy() {
+    this.#configurationVisualizeService.setAverageSettingsOpen(false);
+  }
 }

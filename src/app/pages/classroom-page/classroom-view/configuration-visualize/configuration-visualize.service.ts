@@ -23,6 +23,7 @@ const STORAGE_KEY_VIEWING_BY = 'config-visualize-viewing-by';
 const STORAGE_KEY_CHART_TYPE = 'config-visualize-chart-type';
 const STORAGE_KEY_SHOW_UNGROUPED_STUDENTS =
   'config-visualize-show-ungrouped-students';
+const STORAGE_KEY_ENABLED_COLUMNS = 'config-visualize-enabled-columns';
 
 @Injectable({
   providedIn: 'root',
@@ -62,12 +63,19 @@ export class ConfigurationVisualizeService {
   );
   readonly chartType = this._chartType.asReadonly();
 
+  private readonly _averageSettingsOpen = signal(false);
+  public readonly averageSettingsOpen = this._averageSettingsOpen.asReadonly();
+
   private readonly _showUngroupedStudents = signal<boolean>(
     JSON.parse(
       localStorage.getItem(STORAGE_KEY_SHOW_UNGROUPED_STUDENTS) || 'true'
     )
   );
   readonly showUngroupedStudents = this._showUngroupedStudents.asReadonly();
+
+  private readonly _enabledColumnsForAverage = signal<string[]>([]);
+  readonly enabledColumnsForAverage =
+    this._enabledColumnsForAverage.asReadonly();
 
   readonly showingGroups = computed(() =>
     this.showUngroupedStudents()
@@ -83,11 +91,17 @@ export class ConfigurationVisualizeService {
     this.columnDetails().filter(({ type }) => FieldType.NUMBER === type)
   );
 
+  readonly enabledNumericColumns = computed(() => {
+    return this.numericColumns().filter((column) =>
+      this.enabledColumnsForAverage().includes(column.id)
+    );
+  });
+
   readonly averageStudentScore = computed(() =>
     this.selectedColumn() === 'average'
       ? calculateClassAverage(
           this.showingStudentDetails(),
-          this.columnDetails()
+          this.enabledNumericColumns()
         )
       : calculateClassFieldAverage(
           this.showingStudentDetails(),
@@ -97,7 +111,10 @@ export class ConfigurationVisualizeService {
 
   readonly averageGroupScore = computed(() =>
     this.selectedColumn() === 'average'
-      ? calculateClassGroupAverage(this.showingGroups(), this.columnDetails())
+      ? calculateClassGroupAverage(
+          this.showingGroups(),
+          this.enabledNumericColumns()
+        ) // Use enabled columns only
       : calculateClassGroupFieldAverage(
           this.showingGroups(),
           this.selectedColumn()
@@ -150,7 +167,7 @@ export class ConfigurationVisualizeService {
   readonly studentDataset = computed(() => {
     return getStudentDataset(
       this.showingStudentDetails(),
-      this.numericColumns(),
+      this.enabledNumericColumns(), // Use enabled columns for dataset
       this.selectedColumn(),
       this.chartType(),
       this.selectedColumnLabel()
@@ -160,7 +177,7 @@ export class ConfigurationVisualizeService {
   readonly groupDataset = computed(() =>
     getGroupDataset(
       this.showingGroups(),
-      this.numericColumns(),
+      this.enabledNumericColumns(), // Use enabled columns for dataset
       this.selectedColumn(),
       this.chartType(),
       this.selectedColumnLabel()
@@ -198,6 +215,25 @@ export class ConfigurationVisualizeService {
         JSON.stringify(this.showUngroupedStudents())
       );
     });
+
+    effect(() => {
+      localStorage.setItem(
+        STORAGE_KEY_ENABLED_COLUMNS,
+        JSON.stringify(this.enabledColumnsForAverage())
+      );
+    });
+
+    effect(
+      () =>
+        this.selectedColumn() !== 'average' &&
+        this.setAverageSettingsOpen(false)
+    );
+
+    if (this.enabledColumnsForAverage().length === 0) {
+      this._enabledColumnsForAverage.set(
+        this.numericColumns().map((col) => col.id)
+      );
+    }
   }
 
   #getStoredViewingBy(): ViewingBy | null {
@@ -230,5 +266,13 @@ export class ConfigurationVisualizeService {
 
   setSelectedColumn(selectedColumn: string) {
     this._selectedColumn.set(selectedColumn);
+  }
+
+  setAverageSettingsOpen(averageSettingsOpen: boolean) {
+    this._averageSettingsOpen.set(averageSettingsOpen);
+  }
+
+  setEnabledColumnsForAverage(columnIds: string[]) {
+    this._enabledColumnsForAverage.set(columnIds);
   }
 }
