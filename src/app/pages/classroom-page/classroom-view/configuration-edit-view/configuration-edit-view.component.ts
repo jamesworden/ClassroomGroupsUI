@@ -37,7 +37,7 @@ import { AverageScoresPanelComponent } from './average-scores-panel/average-scor
 import { ClassroomPageService } from '../../classroom-page.service';
 
 @Component({
-  selector: 'app-configuration-view',
+  selector: 'app-configuration-edit-view',
   imports: [
     GroupPanelComponent,
     CdkDropList,
@@ -52,10 +52,10 @@ import { ClassroomPageService } from '../../classroom-page.service';
     AddGroupPanelComponent,
     AverageScoresPanelComponent,
   ],
-  templateUrl: './configuration-view.component.html',
-  styleUrl: './configuration-view.component.scss',
+  templateUrl: './configuration-edit-view.component.html',
+  styleUrl: './configuration-edit-view.component.scss',
 })
-export class ConfigurationViewComponent {
+export class ConfigurationEditViewComponent {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #classroomPageService = inject(ClassroomPageService);
 

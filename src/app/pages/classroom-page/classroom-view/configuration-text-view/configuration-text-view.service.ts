@@ -1,6 +1,10 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { ClassroomPageService } from '../../classroom-page.service';
-import { ClassroomsService, FieldType } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  FieldType,
+  UNGROUPED_STUDENTS_DISPLAY_NAME,
+} from '@shared/classrooms';
 
 interface TextGroup {
   name?: string;
@@ -10,9 +14,30 @@ interface TextGroup {
 @Injectable({
   providedIn: 'root',
 })
-export class ConfigurationPreviewService {
+export class ConfigurationTextViewService {
   readonly #classroomPageService = inject(ClassroomPageService);
   readonly #classroomsService = inject(ClassroomsService);
+
+  private readonly _showGroupNames = signal(true);
+  private readonly _showUngroupedStudents = signal(true);
+  private readonly _showingCopiedMessage = signal(false);
+  private readonly _showingCopiedTimeout = signal<number | undefined>(
+    undefined
+  );
+  private readonly _visibleFieldIds = signal<string[]>([]);
+  private readonly _editableText = signal('');
+  private readonly _isTextModified = signal(false);
+
+  public readonly showGroupNames = this._showGroupNames.asReadonly();
+  public readonly showUngroupedStudents =
+    this._showUngroupedStudents.asReadonly();
+  public readonly showingCopiedMessage =
+    this._showingCopiedMessage.asReadonly();
+  public readonly showingCopiedTimeout =
+    this._showingCopiedTimeout.asReadonly();
+  public readonly visibleFieldIds = this._visibleFieldIds.asReadonly();
+  public readonly editableText = this._editableText.asReadonly();
+  public readonly isTextModified = this._isTextModified.asReadonly();
 
   readonly classroomId = this.#classroomPageService.classroomId;
   readonly configurationId = this.#classroomPageService.configurationId;
@@ -28,15 +53,6 @@ export class ConfigurationPreviewService {
   readonly classroomDetail = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
   );
-
-  readonly showGroupNames = signal(true);
-  readonly showUngroupedStudents = signal(true);
-  readonly showingCopiedMessage = signal(false);
-  readonly showingCopiedTimeout = signal<number | undefined>(undefined);
-  readonly visibleFieldIds = signal<string[]>([]);
-
-  readonly editableText = signal('');
-  readonly isTextModified = signal(false);
   readonly characterCount = computed(() => this.editableText().length);
   readonly lineCount = computed(() => {
     const text = this.editableText();
@@ -56,7 +72,7 @@ export class ConfigurationPreviewService {
         if (this.showGroupNames()) {
           const groupName =
             groupDetail.id === this.defaultGroup()?.id
-              ? 'Ungrouped Students'
+              ? UNGROUPED_STUDENTS_DISPLAY_NAME
               : groupDetail.label.trim();
           textGroup.name = groupName;
         }
@@ -107,35 +123,55 @@ export class ConfigurationPreviewService {
       if (firstFieldDetail) {
         visibleFieldIds.push(firstFieldDetail.id);
       }
-      this.visibleFieldIds.set(visibleFieldIds);
+      this._visibleFieldIds.set(visibleFieldIds);
     });
 
     effect(() => {
       const text = this.plainText();
       if (!this.isTextModified() || !this.editableText()) {
-        this.editableText.set(text);
+        this._editableText.set(text);
       }
     });
+  }
+
+  public setShowGroupNames(show: boolean) {
+    this._showGroupNames.set(show);
+  }
+
+  public setShowUngroupedStudents(show: boolean) {
+    this._showUngroupedStudents.set(show);
+  }
+
+  public setVisibleFieldIds(fieldIds: string[]) {
+    this._visibleFieldIds.set(fieldIds);
   }
 
   public updateEditableText(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     const newText = textarea.value;
-    this.editableText.set(newText);
+    this._editableText.set(newText);
 
-    this.isTextModified.set(newText !== this.plainText());
+    this._isTextModified.set(newText !== this.plainText());
 
     if (this.showingCopiedMessage()) {
-      this.showingCopiedMessage.set(false);
+      this._showingCopiedMessage.set(false);
       if (this.showingCopiedTimeout()) {
         window.clearTimeout(this.showingCopiedTimeout());
-        this.showingCopiedTimeout.set(undefined);
+        this._showingCopiedTimeout.set(undefined);
       }
     }
   }
 
   public regenerateText() {
-    this.editableText.set(this.plainText());
-    this.isTextModified.set(false);
+    this._editableText.set(this.plainText());
+    this._isTextModified.set(false);
+  }
+
+  public setShowingCopiedMessage(showing: boolean) {
+    this._showingCopiedMessage.set(showing);
+  }
+
+  public setShowingCopiedTimeout(timeout: number | undefined) {
+    this._showingCopiedTimeout.set(timeout);
   }
 }

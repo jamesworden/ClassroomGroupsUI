@@ -18,10 +18,10 @@ import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatMenuModule } from '@angular/material/menu';
 import { ColumnListComponent } from '../column-list/column-list.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfigurationPreviewService } from './configuration-preview.service';
+import { ConfigurationTextViewService } from './configuration-text-view.service';
 
 @Component({
-  selector: 'app-configuration-preview',
+  selector: 'app-configuration-text-view',
   imports: [
     MatChipsModule,
     MatSlideToggleModule,
@@ -34,12 +34,12 @@ import { ConfigurationPreviewService } from './configuration-preview.service';
     ColumnListComponent,
     MatTooltipModule,
   ],
-  templateUrl: './configuration-preview.component.html',
-  styleUrl: './configuration-preview.component.scss',
+  templateUrl: './configuration-text-view.component.html',
+  styleUrl: './configuration-text-view.component.scss',
 })
-export class ConfigurationPreviewComponent {
+export class ConfigurationTextViewComponent {
   readonly #clipboard = inject(Clipboard);
-  readonly #configurationPreviewService = inject(ConfigurationPreviewService);
+  readonly #configurationTextViewService = inject(ConfigurationTextViewService);
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly classroom = input.required<Classroom>();
@@ -47,38 +47,44 @@ export class ConfigurationPreviewComponent {
   readonly defaultGroup = input.required<GroupDetail>();
 
   readonly showUngroupedStudents =
-    this.#configurationPreviewService.showUngroupedStudents;
-  readonly showGroupNames = this.#configurationPreviewService.showGroupNames;
-  readonly visibleFieldIds = this.#configurationPreviewService.visibleFieldIds;
-  readonly isTextModified = this.#configurationPreviewService.isTextModified;
-  readonly editableText = this.#configurationPreviewService.editableText;
+    this.#configurationTextViewService.showUngroupedStudents;
+  readonly showGroupNames = this.#configurationTextViewService.showGroupNames;
+  readonly visibleFieldIds = this.#configurationTextViewService.visibleFieldIds;
+  readonly isTextModified = this.#configurationTextViewService.isTextModified;
+  readonly editableText = this.#configurationTextViewService.editableText;
   readonly showingCopiedTimeout =
-    this.#configurationPreviewService.showingCopiedTimeout;
+    this.#configurationTextViewService.showingCopiedTimeout;
   readonly showingCopiedMessage =
-    this.#configurationPreviewService.showingCopiedMessage;
-  readonly characterCount = this.#configurationPreviewService.characterCount;
-  readonly lineCount = this.#configurationPreviewService.lineCount;
+    this.#configurationTextViewService.showingCopiedMessage;
+  readonly characterCount = this.#configurationTextViewService.characterCount;
+  readonly lineCount = this.#configurationTextViewService.lineCount;
 
   updateEditableText(event: Event) {
-    this.#configurationPreviewService.updateEditableText(event);
+    this.#configurationTextViewService.updateEditableText(event);
   }
 
   regenerateText() {
-    this.#configurationPreviewService.regenerateText();
+    this.#configurationTextViewService.regenerateText();
   }
 
   toggleShowGroupNames() {
-    this.showGroupNames.set(!this.showGroupNames());
+    this.#configurationTextViewService.setShowGroupNames(
+      !this.showGroupNames()
+    );
   }
 
   toggleShowUngroupedStudents() {
-    this.showUngroupedStudents.set(!this.showUngroupedStudents());
+    this.#configurationTextViewService.setShowUngroupedStudents(
+      !this.showUngroupedStudents()
+    );
   }
 
   toggleVisibleField(fieldId: string, { checked }: MatSlideToggleChange) {
     const visibleFieldIds = new Set(this.visibleFieldIds());
     checked ? visibleFieldIds.add(fieldId) : visibleFieldIds.delete(fieldId);
-    this.visibleFieldIds.set(Array.from(visibleFieldIds));
+    this.#configurationTextViewService.setVisibleFieldIds(
+      Array.from(visibleFieldIds)
+    );
   }
 
   copyText() {
@@ -90,11 +96,11 @@ export class ConfigurationPreviewComponent {
     if (this.showingCopiedTimeout()) {
       window.clearTimeout(this.showingCopiedTimeout());
     }
-    this.showingCopiedMessage.set(true);
+    this.#configurationTextViewService.setShowingCopiedMessage(true);
 
-    this.showingCopiedTimeout.set(
+    this.#configurationTextViewService.setShowingCopiedTimeout(
       window.setTimeout(() => {
-        this.showingCopiedMessage.set(false);
+        this.#configurationTextViewService.setShowingCopiedMessage(false);
       }, 3000)
     );
   }

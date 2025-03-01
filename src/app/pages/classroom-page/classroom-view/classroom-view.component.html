@@ -11,7 +11,7 @@
 
   @if (configurationDetail(); as configurationDetail) {
     @if (configurationViewMode() === ConfigurationViewMode.Edit) {
-      <app-configuration-view
+      <app-configuration-edit-view
         class="flex-1"
         [configurationDetail]="configurationDetail"
         [defaultGroup]="defaultGroup()!"
@@ -20,15 +20,22 @@
         [groupDetails]="listGroupDetails()"
         [anyAverageScores]="anyAverageScores()"
         [averageScores]="averageScores()"
-      ></app-configuration-view>
+      ></app-configuration-edit-view>
+    } @else if (configurationViewMode() === ConfigurationViewMode.Visualize) {
+      <app-configuration-visualize
+        class="flex-1"
+        [configurationDetail]="configurationDetail"
+        [classroom]="classroomDetail()"
+        [columnDetails]="columnDetails()"
+      ></app-configuration-visualize>
     } @else {
-      <app-configuration-preview
+      <app-configuration-text-view
         class="flex-1"
         [configurationDetail]="configurationDetail"
         [classroom]="classroomDetail()"
         [columnDetails]="columnDetails()"
         [defaultGroup]="defaultGroup()!"
-      ></app-configuration-preview>
+      ></app-configuration-text-view>
     }
   } @else if (configurationLoading()) {
     <div class="flex-1">

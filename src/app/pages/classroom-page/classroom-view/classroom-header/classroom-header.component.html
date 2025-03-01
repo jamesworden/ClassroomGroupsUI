@@ -11,7 +11,7 @@
 
     <div class="flex flex-col flex-1">
       <input
-        class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+        class="text-ellipsis text-3xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline mr-4"
         type="text"
         maxlength="150"
         [value]="classroom().label"
@@ -19,7 +19,7 @@
         placeholder="Untitled"
       />
       <input
-        class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+        class="text-ellipsis appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline mr-4"
         type="text"
         maxlength="150"
         [value]="classroom().description"
@@ -39,6 +39,14 @@
         (change)="setConfigurationViewMode($event)"
       >
         <mat-icon class="opacity-80" matTooltip="Edit"> edit </mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle
+        [value]="ConfigurationViewMode.Visualize"
+        (change)="setConfigurationViewMode($event)"
+      >
+        <mat-icon class="opacity-80" matTooltip="Visualize">
+          auto_graph
+        </mat-icon>
       </mat-button-toggle>
       <mat-button-toggle
         [value]="ConfigurationViewMode.Text"
