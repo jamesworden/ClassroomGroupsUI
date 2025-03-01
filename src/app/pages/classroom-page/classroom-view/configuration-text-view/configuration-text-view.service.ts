@@ -14,6 +14,30 @@ export class ConfigurationTextViewService {
   readonly #classroomPageService = inject(ClassroomPageService);
   readonly #classroomsService = inject(ClassroomsService);
 
+  // Private signals
+  private readonly _showGroupNames = signal(true);
+  private readonly _showUngroupedStudents = signal(true);
+  private readonly _showingCopiedMessage = signal(false);
+  private readonly _showingCopiedTimeout = signal<number | undefined>(
+    undefined
+  );
+  private readonly _visibleFieldIds = signal<string[]>([]);
+  private readonly _editableText = signal('');
+  private readonly _isTextModified = signal(false);
+
+  // Public readonly accessors
+  public readonly showGroupNames = this._showGroupNames.asReadonly();
+  public readonly showUngroupedStudents =
+    this._showUngroupedStudents.asReadonly();
+  public readonly showingCopiedMessage =
+    this._showingCopiedMessage.asReadonly();
+  public readonly showingCopiedTimeout =
+    this._showingCopiedTimeout.asReadonly();
+  public readonly visibleFieldIds = this._visibleFieldIds.asReadonly();
+  public readonly editableText = this._editableText.asReadonly();
+  public readonly isTextModified = this._isTextModified.asReadonly();
+
+  // Computed values remain the same
   readonly classroomId = this.#classroomPageService.classroomId;
   readonly configurationId = this.#classroomPageService.configurationId;
   readonly configurationDetail = computed(() =>
@@ -28,15 +52,6 @@ export class ConfigurationTextViewService {
   readonly classroomDetail = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
   );
-
-  readonly showGroupNames = signal(true);
-  readonly showUngroupedStudents = signal(true);
-  readonly showingCopiedMessage = signal(false);
-  readonly showingCopiedTimeout = signal<number | undefined>(undefined);
-  readonly visibleFieldIds = signal<string[]>([]);
-
-  readonly editableText = signal('');
-  readonly isTextModified = signal(false);
   readonly characterCount = computed(() => this.editableText().length);
   readonly lineCount = computed(() => {
     const text = this.editableText();
@@ -107,35 +122,56 @@ export class ConfigurationTextViewService {
       if (firstFieldDetail) {
         visibleFieldIds.push(firstFieldDetail.id);
       }
-      this.visibleFieldIds.set(visibleFieldIds);
+      this._visibleFieldIds.set(visibleFieldIds);
     });
 
     effect(() => {
       const text = this.plainText();
       if (!this.isTextModified() || !this.editableText()) {
-        this.editableText.set(text);
+        this._editableText.set(text);
       }
     });
+  }
+
+  // Setter methods for private signals
+  public setShowGroupNames(show: boolean) {
+    this._showGroupNames.set(show);
+  }
+
+  public setShowUngroupedStudents(show: boolean) {
+    this._showUngroupedStudents.set(show);
+  }
+
+  public setVisibleFieldIds(fieldIds: string[]) {
+    this._visibleFieldIds.set(fieldIds);
   }
 
   public updateEditableText(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     const newText = textarea.value;
-    this.editableText.set(newText);
+    this._editableText.set(newText);
 
-    this.isTextModified.set(newText !== this.plainText());
+    this._isTextModified.set(newText !== this.plainText());
 
     if (this.showingCopiedMessage()) {
-      this.showingCopiedMessage.set(false);
+      this._showingCopiedMessage.set(false);
       if (this.showingCopiedTimeout()) {
         window.clearTimeout(this.showingCopiedTimeout());
-        this.showingCopiedTimeout.set(undefined);
+        this._showingCopiedTimeout.set(undefined);
       }
     }
   }
 
   public regenerateText() {
-    this.editableText.set(this.plainText());
-    this.isTextModified.set(false);
+    this._editableText.set(this.plainText());
+    this._isTextModified.set(false);
+  }
+
+  public setShowingCopiedMessage(showing: boolean) {
+    this._showingCopiedMessage.set(showing);
+  }
+
+  public setShowingCopiedTimeout(timeout: number | undefined) {
+    this._showingCopiedTimeout.set(timeout);
   }
 }

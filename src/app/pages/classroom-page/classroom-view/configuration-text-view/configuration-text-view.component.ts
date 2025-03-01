@@ -68,17 +68,21 @@ export class ConfigurationTextViewComponent {
   }
 
   toggleShowGroupNames() {
-    this.showGroupNames.set(!this.showGroupNames());
+    this.#configurationPreviewService.setShowGroupNames(!this.showGroupNames());
   }
 
   toggleShowUngroupedStudents() {
-    this.showUngroupedStudents.set(!this.showUngroupedStudents());
+    this.#configurationPreviewService.setShowUngroupedStudents(
+      !this.showUngroupedStudents()
+    );
   }
 
   toggleVisibleField(fieldId: string, { checked }: MatSlideToggleChange) {
     const visibleFieldIds = new Set(this.visibleFieldIds());
     checked ? visibleFieldIds.add(fieldId) : visibleFieldIds.delete(fieldId);
-    this.visibleFieldIds.set(Array.from(visibleFieldIds));
+    this.#configurationPreviewService.setVisibleFieldIds(
+      Array.from(visibleFieldIds)
+    );
   }
 
   copyText() {
@@ -90,11 +94,11 @@ export class ConfigurationTextViewComponent {
     if (this.showingCopiedTimeout()) {
       window.clearTimeout(this.showingCopiedTimeout());
     }
-    this.showingCopiedMessage.set(true);
+    this.#configurationPreviewService.setShowingCopiedMessage(true);
 
-    this.showingCopiedTimeout.set(
+    this.#configurationPreviewService.setShowingCopiedTimeout(
       window.setTimeout(() => {
-        this.showingCopiedMessage.set(false);
+        this.#configurationPreviewService.setShowingCopiedMessage(false);
       }, 3000)
     );
   }
