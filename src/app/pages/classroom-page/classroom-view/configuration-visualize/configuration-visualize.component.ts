@@ -118,7 +118,8 @@ export class ConfigurationVisualizeComponent {
           .filter(({ type }) => type === FieldType.NUMBER)
           .map((col) =>
             parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
-          );
+          )
+          .filter((score) => !isNaN(score));
 
         return studentScores.length
           ? studentScores.reduce((sum, score) => sum + score, 0) /
@@ -233,6 +234,7 @@ export class ConfigurationVisualizeComponent {
         // Get all number column scores for all students in the group
         const allScores = groupStudents.flatMap((student) =>
           this.numberColumns()
+            .filter(({ type }) => type === FieldType.NUMBER)
             .map((col) =>
               parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
             )
