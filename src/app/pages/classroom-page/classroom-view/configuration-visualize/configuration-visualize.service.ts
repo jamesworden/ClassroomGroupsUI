@@ -8,6 +8,7 @@ import {
   calculateClassGroupFieldAverage,
   ClassroomsService,
   FieldType,
+  UNGROUPED_STUDENTS_DISPLAY_NAME,
 } from '@shared/classrooms';
 import { getStudentDataset } from './logic/get-student-dataset';
 import { getGroupDataset } from './logic/get-group-dataset';
@@ -127,7 +128,9 @@ export class ConfigurationVisualizeService {
 
   readonly groupLabels = computed(() =>
     this.showingGroups().map((group) =>
-      group.id === this.defaultGroup()?.id ? 'Ungrouped Students' : group.label
+      group.id === this.defaultGroup()?.id
+        ? UNGROUPED_STUDENTS_DISPLAY_NAME
+        : group.label
     )
   );
 

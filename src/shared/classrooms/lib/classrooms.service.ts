@@ -56,6 +56,7 @@ import { MoveColumnDetail } from './models/move-column-detail';
 import { warnOnValueMismatch } from './logic/warn-on-value-mismatch';
 import { environment } from 'environments/environment';
 import { ClassroomSelectors } from './classrooms.selectors';
+import { UNGROUPED_STUDENTS_DISPLAY_NAME } from './constants';
 
 export interface ClassroomsState {
   classroomDetails: ClassroomDetail[];
@@ -1560,7 +1561,7 @@ function getGroupedStudentsMessage(
   studentsPerGroup?: number
 ) {
   if (numberOfGroups === 0 || studentsPerGroup === 0) {
-    return 'Ungrouped students';
+    return UNGROUPED_STUDENTS_DISPLAY_NAME;
   }
 
   return numberOfGroups === undefined

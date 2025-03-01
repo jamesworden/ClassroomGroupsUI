@@ -1,6 +1,10 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { ClassroomPageService } from '../../classroom-page.service';
-import { ClassroomsService, FieldType } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  FieldType,
+  UNGROUPED_STUDENTS_DISPLAY_NAME,
+} from '@shared/classrooms';
 
 interface TextGroup {
   name?: string;
@@ -68,7 +72,7 @@ export class ConfigurationTextViewService {
         if (this.showGroupNames()) {
           const groupName =
             groupDetail.id === this.defaultGroup()?.id
-              ? 'Ungrouped Students'
+              ? UNGROUPED_STUDENTS_DISPLAY_NAME
               : groupDetail.label.trim();
           textGroup.name = groupName;
         }
