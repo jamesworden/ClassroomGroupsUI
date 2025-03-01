@@ -1,9 +1,8 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { ViewingBy } from './configuration-visualize.component';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { ClassroomPageService } from '../../classroom-page.service';
 import {
-  calculateAverageScores,
   calculateClassAverage,
   calculateClassFieldAverage,
   calculateClassGroupAverage,
@@ -524,10 +523,6 @@ export class ConfigurationVisualizeService {
     },
     borderColor: 'transparent',
   }));
-
-  constructor() {
-    effect(() => console.log(this.averageScore()));
-  }
 
   setViewingBy(viewingBy: ViewingBy) {
     this._viewingBy.set(viewingBy);
