@@ -10,6 +10,8 @@ import {
   ClassroomsService,
   FieldType,
 } from '@shared/classrooms';
+import { createBackgroundGradient } from './logic/create-background-gradient';
+import { getStudentDataset } from './logic/get-student-dataset';
 
 @Injectable({
   providedIn: 'root',
@@ -116,121 +118,20 @@ export class ConfigurationVisualizeService {
     });
   });
 
-  readonly groupLabels = computed(() => {
-    return this.showingGroups().map((group) =>
+  readonly groupLabels = computed(() =>
+    this.showingGroups().map((group) =>
       group.id === this.defaultGroup()?.id ? 'Ungrouped Students' : group.label
-    );
-  });
+    )
+  );
 
   readonly studentDataset = computed(() => {
-    const students = this.showingStudentDetails();
-
-    if (this.selectedColumn() === 'average') {
-      const data = students.map((student) => {
-        const studentScores = this.numericColumns()
-          .map((col) =>
-            parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
-          )
-          .filter((score) => !isNaN(score));
-
-        return studentScores.length
-          ? studentScores.reduce((sum, score) => sum + score, 0) /
-              studentScores.length
-          : 0;
-      });
-
-      return {
-        data,
-        label: 'Average Score',
-        backgroundColor: (context: any) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
-          if (!chartArea) {
-            return 'rgba(94, 129, 244, 0.8)';
-          }
-
-          // Create gradient based on chart type
-          if (this.chartType() === 'bar') {
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.bottom,
-              0,
-              chartArea.top
-            );
-            gradient.addColorStop(0, 'rgba(94, 129, 244, 0.2)');
-            gradient.addColorStop(1, 'rgba(94, 129, 244, 0.8)');
-            return gradient;
-          } else if (this.chartType() === 'line') {
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.bottom,
-              0,
-              chartArea.top
-            );
-            gradient.addColorStop(0, 'rgba(94, 129, 244, 0.1)');
-            gradient.addColorStop(1, 'rgba(94, 129, 244, 0.6)');
-            return gradient;
-          } else {
-            return 'rgba(94, 129, 244, 0.7)';
-          }
-        },
-        borderColor: 'rgba(94, 129, 244, 1)',
-        pointBackgroundColor: 'rgba(94, 129, 244, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(94, 129, 244, 1)',
-        borderWidth: this.chartType() === 'line' ? 3 : 0,
-      };
-    } else {
-      // Specific column data
-      const data = students.map((student) => {
-        const value = student.fieldIdsToValues[this.selectedColumn()] || '0';
-        return parseFloat(value) || 0;
-      });
-
-      return {
-        data,
-        label: this.selectedColumnLabel(),
-        backgroundColor: (context: any) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
-          if (!chartArea) {
-            return 'rgba(94, 129, 244, 0.8)';
-          }
-
-          // Create gradient based on chart type
-          if (this.chartType() === 'bar') {
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.bottom,
-              0,
-              chartArea.top
-            );
-            gradient.addColorStop(0, 'rgba(94, 129, 244, 0.2)');
-            gradient.addColorStop(1, 'rgba(94, 129, 244, 0.8)');
-            return gradient;
-          } else if (this.chartType() === 'line') {
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.bottom,
-              0,
-              chartArea.top
-            );
-            gradient.addColorStop(0, 'rgba(94, 129, 244, 0.1)');
-            gradient.addColorStop(1, 'rgba(94, 129, 244, 0.6)');
-            return gradient;
-          } else {
-            return 'rgba(94, 129, 244, 0.7)';
-          }
-        },
-        borderColor: 'rgba(66, 186, 255, 1)',
-        pointBackgroundColor: 'rgba(66, 186, 255, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(66, 186, 255, 1)',
-        borderWidth: this.chartType() === 'line' ? 3 : 0,
-      };
-    }
+    return getStudentDataset(
+      this.showingStudentDetails(),
+      this.numericColumns(),
+      this.selectedColumn(),
+      this.chartType(),
+      this.selectedColumnLabel()
+    );
   });
 
   readonly groupDataset = computed(() => {
@@ -258,38 +159,7 @@ export class ConfigurationVisualizeService {
       return {
         data,
         label: 'Average Score',
-        backgroundColor: (context: any) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
-          if (!chartArea) {
-            return 'rgba(137, 111, 255, 0.8)';
-          }
-
-          // Create gradient based on chart type
-          if (this.chartType() === 'bar') {
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.bottom,
-              0,
-              chartArea.top
-            );
-            gradient.addColorStop(0, 'rgba(137, 111, 255, 0.2)');
-            gradient.addColorStop(1, 'rgba(137, 111, 255, 0.8)');
-            return gradient;
-          } else if (this.chartType() === 'line') {
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.bottom,
-              0,
-              chartArea.top
-            );
-            gradient.addColorStop(0, 'rgba(137, 111, 255, 0.1)');
-            gradient.addColorStop(1, 'rgba(137, 111, 255, 0.6)');
-            return gradient;
-          } else {
-            return 'rgba(137, 111, 255, 0.7)';
-          }
-        },
+        backgroundColor: createBackgroundGradient(this.chartType(), true),
         borderColor: 'rgba(137, 111, 255, 1)',
         pointBackgroundColor: 'rgba(137, 111, 255, 1)',
         pointBorderColor: '#fff',
@@ -317,38 +187,7 @@ export class ConfigurationVisualizeService {
       return {
         data,
         label: this.selectedColumnLabel(),
-        backgroundColor: (context: any) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
-          if (!chartArea) {
-            return 'rgba(137, 111, 255, 0.8)';
-          }
-
-          // Create gradient based on chart type
-          if (this.chartType() === 'bar') {
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.bottom,
-              0,
-              chartArea.top
-            );
-            gradient.addColorStop(0, 'rgba(137, 111, 255, 0.2)');
-            gradient.addColorStop(1, 'rgba(137, 111, 255, 0.8)');
-            return gradient;
-          } else if (this.chartType() === 'line') {
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.bottom,
-              0,
-              chartArea.top
-            );
-            gradient.addColorStop(0, 'rgba(137, 111, 255, 0.1)');
-            gradient.addColorStop(1, 'rgba(137, 111, 255, 0.6)');
-            return gradient;
-          } else {
-            return 'rgba(137, 111, 255, 0.7)';
-          }
-        },
+        backgroundColor: createBackgroundGradient(this.chartType(), true),
         borderColor: 'rgba(255, 126, 146, 1)',
         pointBackgroundColor: 'rgba(255, 126, 146, 1)',
         pointBorderColor: '#fff',
