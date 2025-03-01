@@ -39,11 +39,11 @@ export function getGroupDataset(
       data,
       label: selectedColumnLabel,
       backgroundColor: createBackgroundGradient(chartType, true),
-      borderColor: 'rgba(255, 126, 146, 1)',
-      pointBackgroundColor: 'rgba(255, 126, 146, 1)',
+      borderColor: 'rgba(179, 50, 255, 1)',
+      pointBackgroundColor: 'rgba(179, 50, 255, 1)',
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(255, 126, 146, 1)',
+      pointHoverBorderColor: 'rgba(220, 30, 255, 1)',
       borderWidth: chartType === 'line' ? 3 : 0,
     };
   }
