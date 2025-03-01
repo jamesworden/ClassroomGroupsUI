@@ -11,10 +11,10 @@ import { AccountsService } from '@shared/accounts';
 import { Themes, ThemeService } from '@app/themes';
 import { ConfigurationViewMode } from '@app/models';
 import { ClassroomHeaderComponent } from './classroom-header/classroom-header.component';
-import { ConfigurationViewComponent } from './configuration-view/configuration-view.component';
 import { ConfigurationTextViewComponent } from './configuration-text-view/configuration-text-view.component';
 import { ConfigurationVisualizeComponent } from './configuration-visualize/configuration-visualize.component';
 import { NoSelectedConfigurationViewComponent } from './no-selected-configuration-view/no-selected-configuration-view.component';
+import { ConfigurationEditViewComponent } from './configuration-edit-view/configuration-edit-view.component';
 
 @Component({
   selector: 'app-classroom-view',
@@ -24,7 +24,7 @@ import { NoSelectedConfigurationViewComponent } from './no-selected-configuratio
     ConfigurationVisualizeComponent,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    ConfigurationViewComponent,
+    ConfigurationEditViewComponent,
     NoSelectedConfigurationViewComponent,
   ],
   templateUrl: './classroom-view.component.html',
