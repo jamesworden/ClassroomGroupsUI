@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -28,6 +28,8 @@ import {
   CreateEditGroupDialogOutputs,
 } from './create-edit-group-dialog/create-edit-group-dialog.component';
 import { AccountsService } from '@shared/accounts';
+
+const STORAGE_KEY_SIDENAV_OPEN = 'config-classroom-page-sidenav-open';
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +88,11 @@ export class ClassroomPageService {
       ).length >= this.#accountsService.select.maxFieldsPerClassroom()
   );
 
+  private readonly _sidenavOpen = signal(
+    JSON.parse(localStorage.getItem(STORAGE_KEY_SIDENAV_OPEN) || 'true')
+  );
+  public readonly sidenavOpen = this._sidenavOpen.asReadonly();
+
   constructor() {
     this.classroomId$
       .pipe(takeUntilDestroyed())
@@ -115,6 +122,10 @@ export class ClassroomPageService {
           );
         }
       });
+
+    effect(() => {
+      localStorage.setItem(STORAGE_KEY_SIDENAV_OPEN, `${this.sidenavOpen()}`);
+    });
   }
 
   public selectFirstConfiguration() {
@@ -317,5 +328,9 @@ export class ClassroomPageService {
             .subscribe(() => this.scrollToBottom$.next());
         }
       });
+  }
+
+  public setSidenavOpen(sidenavOpen: boolean) {
+    this._sidenavOpen.set(sidenavOpen);
   }
 }

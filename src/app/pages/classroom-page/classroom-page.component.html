@@ -5,7 +5,7 @@
       <mat-sidenav
         #configurationsSidenav
         mode="side"
-        [opened]="true"
+        [opened]="sidenavOpen()"
         class="max-w-xs shadow-lg border-r border-zinc-400"
       >
         <app-configurations-panel
@@ -20,8 +20,8 @@
           @if (classroomDetail(); as classroomDetail) {
             <app-classroom-view
               [classroomDetail]="classroomDetail"
-              [sidenavOpen]="configurationsSidenav.opened"
-              (sidenavToggled)="configurationsSidenav.toggle()"
+              [sidenavOpen]="sidenavOpen()"
+              (sidenavToggled)="toggleSidenavOpen()"
             ></app-classroom-view>
           } @else {
             <app-classroom-not-found-view></app-classroom-not-found-view>

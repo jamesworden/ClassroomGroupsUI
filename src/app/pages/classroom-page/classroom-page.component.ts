@@ -52,6 +52,7 @@ export class ClassroomPageComponent {
 
   readonly classroomId = this.#classroomPageService.classroomId;
   readonly configurationId = this.#classroomPageService.configurationId;
+  readonly sidenavOpen = this.#classroomPageService.sidenavOpen;
 
   readonly classroomDetail = computed(() =>
     this.#classroomsService.select.classroomDetail(this.classroomId())()
@@ -59,4 +60,8 @@ export class ClassroomPageComponent {
   readonly configurationDetail = computed(() =>
     this.#classroomsService.select.configurationDetail(this.configurationId())()
   );
+
+  toggleSidenavOpen() {
+    this.#classroomPageService.setSidenavOpen(!this.sidenavOpen());
+  }
 }
