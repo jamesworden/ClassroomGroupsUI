@@ -13,6 +13,7 @@ import { ChartConfiguration, ChartType } from 'chart.js';
     >
       <canvas
         baseChart
+        class="h-full w-full"
         [data]="chartData()"
         [options]="chartOptions()"
         [type]="chartType()"
