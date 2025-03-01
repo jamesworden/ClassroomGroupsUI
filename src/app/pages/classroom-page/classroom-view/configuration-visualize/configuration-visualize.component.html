@@ -142,12 +142,12 @@
                     <div class="flex items-center">
                       <mat-icon
                         *ngIf="viewingBy() === ViewingBy.Students"
-                        class="mr-2 text-sm"
+                        class="mr-2 selected-option-icon"
                         >person</mat-icon
                       >
                       <mat-icon
                         *ngIf="viewingBy() === ViewingBy.Groups"
-                        class="mr-2 text-sm"
+                        class="mr-2 selected-option-icon"
                         >groups</mat-icon
                       >
                       <span>{{
@@ -161,13 +161,13 @@
                   <!-- Options in the dropdown -->
                   <mat-option [value]="ViewingBy.Students">
                     <div class="flex items-center">
-                      <mat-icon class="mr-2 text-sm">person</mat-icon>
+                      <mat-icon class="mr-2 text-md">person</mat-icon>
                       <span>Students</span>
                     </div>
                   </mat-option>
                   <mat-option [value]="ViewingBy.Groups">
                     <div class="flex items-center">
-                      <mat-icon class="mr-2 text-sm">groups</mat-icon>
+                      <mat-icon class="mr-2 text-md">groups</mat-icon>
                       <span>Groups</span>
                     </div>
                   </mat-option>
@@ -188,7 +188,7 @@
                     <div class="flex items-center">
                       <mat-icon
                         *ngIf="selectedColumn() === 'average'"
-                        class="mr-2 text-sm"
+                        class="mr-2 selected-option-icon"
                         >calculate</mat-icon
                       >
                       <span>{{ selectedColumnLabel() }}</span>
@@ -198,7 +198,9 @@
                   <!-- Options in the dropdown -->
                   <mat-option value="average">
                     <div class="flex items-center">
-                      <mat-icon class="mr-2 text-sm">calculate</mat-icon>
+                      <mat-icon class="mr-2 selected-option-icon"
+                        >calculate</mat-icon
+                      >
                       <span>Average Score</span>
                     </div>
                   </mat-option>
