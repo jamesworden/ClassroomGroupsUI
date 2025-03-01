@@ -43,8 +43,10 @@ export class ConfigurationVisualizeService {
   private readonly _viewingBy = signal<ViewingBy>(ViewingBy.Students);
   public viewingBy = this._viewingBy.asReadonly();
 
-  // TODO: Type this better.
   private readonly _selectedColumn = signal<string | 'average'>('average');
+  /**
+   * Field id or `average` if the user wants to display average scores and no particular assignment.
+   */
   readonly selectedColumn = this._selectedColumn.asReadonly();
 
   private readonly _chartType = signal<ChartType>('bar');
