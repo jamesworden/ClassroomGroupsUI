@@ -38,7 +38,7 @@ import { ConfigurationDetail } from '@shared/classrooms';
             <mat-chip-listbox [multiple]="true" class="mr-3">
               <mat-chip-option
                 class="border border-zinc-400 dark:border-zinc-600"
-                [selected]="showUngroupedStudents"
+                [selected]="showUngroupedStudents()"
                 (click)="toggleShowUngroupedStudents()"
               >
                 Ungrouped students
