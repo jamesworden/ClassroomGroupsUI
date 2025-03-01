@@ -3,263 +3,53 @@
     class="panel mx-4 mb-4 flex-auto rounded-b-lg shadow-lg flex flex-col flex-1 h-full"
   >
     <div class="flex flex-col flex-1 overflow-hidden">
+      <!-- Header Component -->
+      <app-configuration-header
+        [configurationDetail]="configurationDetail()"
+        [chartType]="service.chartType()"
+        [showUngroupedStudents]="service.showUngroupedStudents()"
+        (chartTypeChange)="service.setChartType($event)"
+        (showUngroupedStudentsChange)="service.setShowUngroupedStudents($event)"
+      ></app-configuration-header>
+
       <div
-        class="px-4 pt-4 flex flex-col border-b border-zinc-300 dark:border-zinc-700"
+        class="px-4 flex flex-wrap justify-between items-center mb-4 gap-2 border-b border-zinc-300 dark:border-zinc-700 pb-4"
       >
-        <div class="flex justify-between items-center mb-4">
-          <!-- Configuration title and description -->
-          <div class="flex-shrink flex-grow overflow-hidden mr-4">
-            <div class="flex flex-col justify-around">
-              <div class="overflow-hidden">
-                <h3
-                  class="text-2xl overflow-hidden text-ellipsis whitespace-nowrap"
-                >
-                  {{ configurationDetail().label }}
-                </h3>
-                <h4
-                  class="text-sm opacity-80 overflow-hidden text-ellipsis whitespace-nowrap"
-                >
-                  {{ configurationDetail().description }}
-                </h4>
-              </div>
-            </div>
-          </div>
+        <!-- Stats Panel Component -->
+        <app-stats-panel
+          [viewingBy]="service.viewingBy()"
+          [showingStudentDetails]="service.showingStudentDetails()"
+          [allGroupDetails]="service.allGroupDetails()"
+          [averageScore]="service.averageScore()"
+        ></app-stats-panel>
 
-          <!-- Chart Type Toggle -->
-          <div class="flex gap-x-2 flex-shrink-0">
-            <div class="flex flex-col justify-around">
-              <mat-chip-listbox [multiple]="true" class="mr-3">
-                <mat-chip-option
-                  class="border border-zinc-400 dark:border-zinc-600"
-                  [selected]="showUngroupedStudents()"
-                  (click)="toggleShowUngroupedStudents()"
-                >
-                  Ungrouped students
-                </mat-chip-option>
-              </mat-chip-listbox>
-            </div>
-
-            <mat-button-toggle-group
-              [value]="chartType()"
-              (change)="setChartType($event.value)"
-              aria-label="Chart Type"
-              class="border border-zinc-400 dark:border-zinc-600"
-            >
-              <mat-button-toggle value="bar">
-                <mat-icon class="text-md">bar_chart</mat-icon>
-                <span class="text-sm hidden sm:inline ml-1">Bar</span>
-              </mat-button-toggle>
-              <mat-button-toggle value="line">
-                <mat-icon class="text-md">show_chart</mat-icon>
-                <span class="text-sm hidden sm:inline ml-1">Line</span>
-              </mat-button-toggle>
-              <mat-button-toggle value="radar">
-                <mat-icon class="text-md">radar</mat-icon>
-                <span class="text-sm hidden sm:inline ml-1">Radar</span>
-              </mat-button-toggle>
-            </mat-button-toggle-group>
-          </div>
-        </div>
-
-        <!-- Row 2: Stat panels on left, Inputs on right -->
-        <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
-          <!-- Left side: Stat panels -->
-          <div class="flex gap-3 mt-1 flex-1">
-            <!-- Students Stat Card -->
-            <div
-              class="bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg h-14 px-3 py-2 flex items-center flex-1"
-            >
-              <div
-                class="mr-2 bg-blue-100 dark:bg-blue-900/30 p-1.5 rounded-full flex flex-col justify-around"
-              >
-                <mat-icon class="text-blue-700 dark:text-blue-500 text-md"
-                  >person</mat-icon
-                >
-              </div>
-              <div class="truncate">
-                <div class="text-xs font-medium opacity-80">Students</div>
-                <div class="text-base font-semibold">
-                  {{ showingStudentDetails().length }}
-                </div>
-              </div>
-            </div>
-
-            <!-- Groups Stat Card -->
-            <div
-              class="bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg h-14 px-3 py-2 flex items-center flex-1"
-            >
-              <div
-                class="mr-2 bg-purple-100 dark:bg-purple-900/30 p-1.5 rounded-full flex flex-col justify-around"
-              >
-                <mat-icon class="text-purple-700 dark:text-purple-500 text-md"
-                  >groups</mat-icon
-                >
-              </div>
-              <div class="truncate">
-                <div class="text-xs font-medium opacity-80">Groups</div>
-                <div class="text-base font-semibold">
-                  {{ allGroupDetails().length }}
-                </div>
-              </div>
-            </div>
-
-            <!-- Average Stat Card -->
-            <div
-              class="bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg h-14 px-3 py-2 flex items-center flex-1"
-            >
-              <div
-                class="mr-2 bg-green-100 dark:bg-green-900/30 p-1.5 rounded-full flex flex-col justify-around"
-              >
-                <mat-icon class="text-green-700 dark:text-green-500 text-md"
-                  >trending_up</mat-icon
-                >
-              </div>
-              <div class="truncate">
-                <div class="text-xs font-medium opacity-80">
-                  {{
-                    viewingBy() === ViewingBy.Groups
-                      ? 'Group Avg'
-                      : 'Student Avg'
-                  }}
-                </div>
-                <div class="text-base font-semibold">
-                  {{ averageScore() | number: '1.1-1' }}%
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right side: Form inputs -->
-          <div class="flex gap-3 flex-1 justify-end mt-1">
-            <!-- View By Dropdown -->
-            <div class="w-64">
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>View By</mat-label>
-                <mat-select
-                  [value]="viewingBy()"
-                  (selectionChange)="setViewingBy($event.value)"
-                >
-                  <!-- Custom display template for the selection value -->
-                  <mat-select-trigger>
-                    <div class="flex items-center">
-                      <mat-icon
-                        *ngIf="viewingBy() === ViewingBy.Students"
-                        class="mr-2 selected-option-icon"
-                        >person</mat-icon
-                      >
-                      <mat-icon
-                        *ngIf="viewingBy() === ViewingBy.Groups"
-                        class="mr-2 selected-option-icon"
-                        >groups</mat-icon
-                      >
-                      <span>{{
-                        viewingBy() === ViewingBy.Students
-                          ? 'Students'
-                          : 'Groups'
-                      }}</span>
-                    </div>
-                  </mat-select-trigger>
-
-                  <!-- Options in the dropdown -->
-                  <mat-option [value]="ViewingBy.Students">
-                    <div class="flex items-center">
-                      <mat-icon class="mr-2 text-md">person</mat-icon>
-                      <span>Students</span>
-                    </div>
-                  </mat-option>
-                  <mat-option [value]="ViewingBy.Groups">
-                    <div class="flex items-center">
-                      <mat-icon class="mr-2 text-md">groups</mat-icon>
-                      <span>Groups</span>
-                    </div>
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-
-            <!-- Score Dropdown -->
-            <div class="w-64">
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Score</mat-label>
-                <mat-select
-                  [value]="selectedColumn()"
-                  (selectionChange)="setSelectedColumn($event.value)"
-                >
-                  <!-- Custom display template for the selection value -->
-                  <mat-select-trigger>
-                    <div class="flex items-center">
-                      @if (selectedColumn() === 'average') {
-                        <mat-icon class="mr-2 selected-option-icon"
-                          >ssid_chart</mat-icon
-                        >
-                      } @else {
-                        <mat-icon class="mr-2 selected-option-icon"
-                          >assignment</mat-icon
-                        >
-                      }
-                      <span>{{ selectedColumnLabel() }}</span>
-                    </div>
-                  </mat-select-trigger>
-
-                  <!-- Selected Column is `fieldId` or `average` -->
-                  <mat-option value="average">
-                    <div class="flex items-center">
-                      <mat-icon class="mr-2 selected-option-icon"
-                        >ssid_chart</mat-icon
-                      >
-                      <span>Average Score</span>
-                    </div>
-                  </mat-option>
-                  @for (column of numericColumns(); track column.id) {
-                    <mat-option [value]="column.fieldId">
-                      <div class="flex items-center">
-                        <mat-icon class="mr-2 selected-option-icon"
-                          >assignment</mat-icon
-                        >
-                        <span>{{ column.label }}</span>
-                      </div>
-                    </mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
+        <!-- Controls Panel Component -->
+        <app-controls-panel
+          [viewingBy]="service.viewingBy()"
+          [selectedColumn]="service.selectedColumn()"
+          [selectedColumnLabel]="service.selectedColumnLabel()"
+          [numericColumns]="service.numericColumns()"
+          (viewingByChange)="service.setViewingBy($event)"
+          (selectedColumnChange)="service.setSelectedColumn($event)"
+        ></app-controls-panel>
       </div>
 
-      <!-- Main content area with relative/absolute positioning -->
+      <!-- Main content area -->
       <div class="relative flex-1 p-4 overflow-hidden">
-        <!-- We may have to change this to overflow-auto at some point... -->
         <div class="absolute inset-4 overflow-hidden">
-          <div
-            class="bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg p-4 h-full"
-          >
-            <canvas
-              baseChart
-              [data]="chartData()"
-              [options]="chartOptions()"
-              [type]="chartType()"
-              style="max-height: calc(100vh - 16rem)"
-            >
-            </canvas>
-          </div>
-        </div>
+          <!-- Chart Display Component -->
+          <app-chart-display
+            *ngIf="service.numericColumns().length"
+            [chartData]="service.chartData()"
+            [chartOptions]="service.chartOptions()"
+            [chartType]="service.chartType()"
+          ></app-chart-display>
 
-        <!-- Empty state -->
-        @if (!numericColumns().length) {
-          <div
-            class="absolute inset-4 flex flex-col items-center justify-center text-center p-8 bg-zinc-50/80 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-600 rounded-lg"
-          >
-            <mat-icon class="text-6xl mb-4 text-zinc-400 dark:text-zinc-600"
-              >data_array</mat-icon
-            >
-            <h3 class="text-xl font-medium mb-2">No numeric data available</h3>
-            <p class="opacity-70 max-w-md">
-              Add number columns to your configuration to visualize data.
-              Numeric data allows you to track and analyze student performance.
-            </p>
-          </div>
-        }
+          <!-- Empty State Component -->
+          <app-empty-state
+            *ngIf="!service.numericColumns().length"
+          ></app-empty-state>
+        </div>
       </div>
     </div>
   </div>
