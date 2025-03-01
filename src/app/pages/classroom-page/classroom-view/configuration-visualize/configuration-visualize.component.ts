@@ -20,6 +20,7 @@ import {
   GroupDetail,
   ColumnDetail,
   ClassroomDetail,
+  FieldType,
 } from '@shared/classrooms';
 
 enum ViewingBy {
@@ -114,10 +115,10 @@ export class ConfigurationVisualizeComponent {
       // Average scores for all number columns
       const data = students.map((student) => {
         const studentScores = this.numberColumns()
+          .filter(({ type }) => type === FieldType.NUMBER)
           .map((col) =>
             parseFloat(student.fieldIdsToValues[col.fieldId] || '0')
-          )
-          .filter((score) => !isNaN(score));
+          );
 
         return studentScores.length
           ? studentScores.reduce((sum, score) => sum + score, 0) /
