@@ -103,7 +103,7 @@ export class CsvImportDialogComponent implements OnInit {
 
   readonly classNameFormValid = signal<boolean>(false);
   readonly isLoading = signal<boolean>(false);
-  readonly currentStep = signal<number>(1);
+  currentStep = 1;
   readonly csvHeaders = signal<string[]>([]);
   readonly previewData = signal<any[]>([]);
   readonly detectedFields = signal<DetectedField[]>([]);
@@ -114,22 +114,11 @@ export class CsvImportDialogComponent implements OnInit {
     warnings: string[];
   }>({ totalRows: 0, validRows: 0, errorRows: 0, warnings: [] });
 
-  readonly canProceedToNextStep = computed(() => {
-    if (this.currentStep() === 1) {
-      return this.previewData().length > 0;
-    } else if (this.currentStep() === 2) {
-      return this.classNameFormValid();
-    }
-    return true;
-  });
-
   readonly displayedPreviewColumns = computed(() => this.csvHeaders());
 
   readonly totalSteps = 2;
   readonly FieldType = FieldType;
   readonly MAX_CLASSROOM_NAME_LENGTH = MAX_CLASSROOM_NAME_LENGTH;
-
-  private isUpdatingStep = false;
 
   ngOnInit() {
     this.parseCSV();
@@ -139,10 +128,6 @@ export class CsvImportDialogComponent implements OnInit {
     });
 
     this.classNameFormValid.set(this.classNameForm.valid);
-
-    setTimeout(() => {
-      this.selectStep(this.currentStep());
-    });
   }
 
   parseCSV() {
@@ -307,55 +292,35 @@ export class CsvImportDialogComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.currentStep() < this.totalSteps && this.canProceedToNextStep()) {
-      this.selectStep(this.currentStep() + 1);
-
-      // No need to directly manipulate stepper here anymore
-    } else if (this.currentStep() === this.totalSteps) {
+    if (this.currentStep < this.totalSteps && this.canProceed()) {
+      this.currentStep++;
+      this.stepper.next();
+    } else if (this.currentStep === this.totalSteps) {
       this.importStudents();
     }
   }
 
   prevStep() {
-    if (this.currentStep() > 1) {
-      this.selectStep(this.currentStep() - 1);
-
-      // No need to directly manipulate stepper here anymore
-    }
-  }
-
-  selectStep(step: number) {
-    // Prevent infinite loops by checking if we're already updating
-    if (this.isUpdatingStep) {
-      return;
-    }
-
-    this.isUpdatingStep = true;
-
-    // Convert from 1-based to 0-based indexing for the stepper
-    const stepperIndex = step - 1;
-
-    // Update the current step signal
-    this.currentStep.set(step);
-
-    // Update the stepper index if it's available
-    if (this.stepper && this.stepper.selectedIndex !== stepperIndex) {
-      // Use a timeout to break the call stack and prevent circular updates
-      setTimeout(() => {
-        this.stepper.selectedIndex = stepperIndex;
-        this.isUpdatingStep = false;
-      });
-    } else {
-      this.isUpdatingStep = false;
+    if (this.currentStep > 1) {
+      this.currentStep--;
+      this.stepper.previous();
     }
   }
 
   handleStepperSelectionChange(event: StepperSelectionEvent) {
-    if (!this.isUpdatingStep) {
-      // Only update our step if the change originated from the stepper UI
-      // Convert from stepper's 0-based to our 1-based indexing
-      this.selectStep(event.selectedIndex + 1);
+    // Only update if there's a valid change
+    if (event.selectedIndex >= 0) {
+      this.currentStep = event.selectedIndex + 1;
     }
+  }
+
+  canProceed(): boolean {
+    if (this.currentStep === 1) {
+      return this.previewData().length > 0;
+    } else if (this.currentStep === 2) {
+      return this.classNameFormValid();
+    }
+    return true;
   }
 
   importStudents() {

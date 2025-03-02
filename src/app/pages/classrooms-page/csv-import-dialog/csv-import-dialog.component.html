@@ -6,15 +6,14 @@
     </h2>
     <div class="-mb-6">
       <mat-horizontal-stepper
-        [linear]="true"
-        [selectedIndex]="currentStep() - 1"
         #stepper
         (selectionChange)="handleStepperSelectionChange($event)"
       >
         @for (step of [1, 2]; track step) {
           <mat-step
-            [completed]="currentStep() > step"
-            [editable]="currentStep() >= step"
+            [completed]="currentStep > step"
+            [editable]="true"
+            [state]="currentStep === step ? 'current' : ''"
           >
             <ng-template matStepLabel>{{ getStepLabel(step) }}</ng-template>
           </mat-step>
@@ -30,7 +29,7 @@
     }
 
     <!-- Step 1: CSV Preview -->
-    @if (currentStep() === 1) {
+    @if (currentStep === 1) {
       <div class="py-6">
         <div class="flex justify-between items-center mb-4">
           <h3 class="m-0 font-medium dark:text-white">Preview your CSV file</h3>
@@ -181,7 +180,7 @@
     }
 
     <!-- Step 2: Class Selection -->
-    @if (currentStep() === 2) {
+    @if (currentStep === 2) {
       <div class="pb-6">
         <div class="mb-6" [formGroup]="classNameForm">
           <mat-form-field appearance="outline" class="w-full">
@@ -280,7 +279,7 @@
     >
       Cancel
     </button>
-    @if (currentStep() > 1) {
+    @if (currentStep > 1) {
       <button
         mat-button
         (click)="prevStep()"
@@ -294,9 +293,9 @@
       mat-raised-button
       color="primary"
       (click)="nextStep()"
-      [disabled]="!canProceedToNextStep() || isLoading()"
+      [disabled]="!canProceed() || isLoading()"
     >
-      {{ currentStep() < totalSteps ? 'Next' : 'Import Students' }}
+      {{ currentStep < totalSteps ? 'Next' : 'Import Students' }}
     </button>
   </mat-dialog-actions>
 </div>
