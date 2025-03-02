@@ -35,6 +35,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 
 enum FieldType {
   TEXT = 'text',
@@ -128,6 +129,8 @@ export class CsvImportDialogComponent implements OnInit {
   readonly FieldType = FieldType;
   readonly MAX_CLASSROOM_NAME_LENGTH = MAX_CLASSROOM_NAME_LENGTH;
 
+  private isUpdatingStep = false;
+
   ngOnInit() {
     this.parseCSV();
 
@@ -138,9 +141,7 @@ export class CsvImportDialogComponent implements OnInit {
     this.classNameFormValid.set(this.classNameForm.valid);
 
     setTimeout(() => {
-      if (this.stepper) {
-        this.stepper.selectedIndex = this.currentStep() - 1;
-      }
+      this.selectStep(this.currentStep());
     });
   }
 
@@ -307,13 +308,9 @@ export class CsvImportDialogComponent implements OnInit {
 
   nextStep() {
     if (this.currentStep() < this.totalSteps && this.canProceedToNextStep()) {
-      this.currentStep.set(this.currentStep() + 1);
+      this.selectStep(this.currentStep() + 1);
 
-      setTimeout(() => {
-        if (this.stepper) {
-          this.stepper.next();
-        }
-      });
+      // No need to directly manipulate stepper here anymore
     } else if (this.currentStep() === this.totalSteps) {
       this.importStudents();
     }
@@ -321,24 +318,43 @@ export class CsvImportDialogComponent implements OnInit {
 
   prevStep() {
     if (this.currentStep() > 1) {
-      this.currentStep.set(this.currentStep() - 1);
+      this.selectStep(this.currentStep() - 1);
 
-      setTimeout(() => {
-        if (this.stepper) {
-          this.stepper.previous();
-        }
-      });
+      // No need to directly manipulate stepper here anymore
     }
   }
 
   selectStep(step: number) {
+    // Prevent infinite loops by checking if we're already updating
+    if (this.isUpdatingStep) {
+      return;
+    }
+
+    this.isUpdatingStep = true;
+
+    // Convert from 1-based to 0-based indexing for the stepper
     const stepperIndex = step - 1;
 
+    // Update the current step signal
     this.currentStep.set(step);
 
-    // Only update the stepper index if it's different to avoid circular updates
+    // Update the stepper index if it's available
     if (this.stepper && this.stepper.selectedIndex !== stepperIndex) {
-      this.stepper.selectedIndex = stepperIndex;
+      // Use a timeout to break the call stack and prevent circular updates
+      setTimeout(() => {
+        this.stepper.selectedIndex = stepperIndex;
+        this.isUpdatingStep = false;
+      });
+    } else {
+      this.isUpdatingStep = false;
+    }
+  }
+
+  handleStepperSelectionChange(event: StepperSelectionEvent) {
+    if (!this.isUpdatingStep) {
+      // Only update our step if the change originated from the stepper UI
+      // Convert from stepper's 0-based to our 1-based indexing
+      this.selectStep(event.selectedIndex + 1);
     }
   }
 

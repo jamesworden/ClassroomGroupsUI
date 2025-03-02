@@ -9,10 +9,7 @@
         [linear]="true"
         [selectedIndex]="currentStep() - 1"
         #stepper
-        (selectionChange)="
-          $event.previouslySelectedIndex !== $event.selectedIndex &&
-            selectStep($event.selectedIndex + 1)
-        "
+        (selectionChange)="handleStepperSelectionChange($event)"
       >
         @for (step of [1, 2]; track step) {
           <mat-step
