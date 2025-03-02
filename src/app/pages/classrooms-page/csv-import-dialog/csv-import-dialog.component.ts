@@ -309,14 +309,13 @@ export class CsvImportDialogComponent implements OnInit {
     if (this.currentStep() < this.totalSteps && this.canProceedToNextStep()) {
       this.currentStep.set(this.currentStep() + 1);
 
-      // Ensure stepper is updated after the signal
       setTimeout(() => {
         if (this.stepper) {
           this.stepper.next();
         }
       });
     } else if (this.currentStep() === this.totalSteps) {
-      this.importData();
+      this.importStudents();
     }
   }
 
@@ -324,7 +323,6 @@ export class CsvImportDialogComponent implements OnInit {
     if (this.currentStep() > 1) {
       this.currentStep.set(this.currentStep() - 1);
 
-      // Ensure stepper is updated after the signal
       setTimeout(() => {
         if (this.stepper) {
           this.stepper.previous();
@@ -334,10 +332,8 @@ export class CsvImportDialogComponent implements OnInit {
   }
 
   selectStep(step: number) {
-    // Convert from 1-based to 0-based indexing for the stepper
     const stepperIndex = step - 1;
 
-    // Update the current step signal
     this.currentStep.set(step);
 
     // Only update the stepper index if it's different to avoid circular updates
@@ -346,7 +342,7 @@ export class CsvImportDialogComponent implements OnInit {
     }
   }
 
-  importData() {
+  importStudents() {
     this.isLoading.set(true);
 
     const importPayload = {
