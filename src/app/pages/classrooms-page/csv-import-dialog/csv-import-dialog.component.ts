@@ -6,7 +6,6 @@ import {
 } from '@angular/material/dialog';
 import {
   FormBuilder,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
@@ -76,79 +75,79 @@ interface DetectedField {
   ],
 })
 export class CsvImportDialogComponent implements OnInit {
-  // Injected services - make public for template access
-  dialogRef = inject(MatDialogRef<CsvImportDialogComponent>);
-  data = inject<CsvImportData>(MAT_DIALOG_DATA);
-  fb = inject(FormBuilder);
-  classroomsService = inject(ClassroomsService);
-  snackBar = inject(MatSnackBar);
+  readonly #dialogRef = inject(MatDialogRef<CsvImportDialogComponent>);
+  readonly #fb = inject(FormBuilder);
+  readonly #snackBar = inject(MatSnackBar);
+  readonly #classroomsService = inject(ClassroomsService);
 
-  // Form controls
-  classNameForm = this.fb.group({
-    className: ['', [Validators.required, Validators.maxLength(50)]],
+  readonly data = inject<CsvImportData>(MAT_DIALOG_DATA);
+
+  readonly classNameFormValid = signal<boolean>(false);
+
+  readonly classNameForm = this.#fb.group({
+    className: [
+      '',
+      [Validators.required, Validators.maxLength(MAX_CLASSROOM_NAME_LENGTH)],
+    ],
     createNewClass: [true],
   });
 
-  // State signals
-  isLoading = signal<boolean>(false);
-  currentStep = signal<number>(1);
-  csvHeaders = signal<string[]>([]);
-  previewData = signal<any[]>([]);
-  detectedFields = signal<DetectedField[]>([]);
-  importSummary = signal<{
+  readonly isLoading = signal<boolean>(false);
+  readonly currentStep = signal<number>(1);
+  readonly csvHeaders = signal<string[]>([]);
+  readonly previewData = signal<any[]>([]);
+  readonly detectedFields = signal<DetectedField[]>([]);
+  readonly importSummary = signal<{
     totalRows: number;
     validRows: number;
     errorRows: number;
     warnings: string[];
   }>({ totalRows: 0, validRows: 0, errorRows: 0, warnings: [] });
 
-  // Computed values
-  canProceedToNextStep = computed(() => {
+  readonly canProceedToNextStep = computed(() => {
     if (this.currentStep() === 1) {
-      // Can proceed if there's data to import
       return this.previewData().length > 0;
     } else if (this.currentStep() === 2) {
-      // Can proceed if class name is valid
-      return this.classNameForm.valid;
+      return this.classNameFormValid();
     }
     return true;
   });
 
-  // Constants
+  readonly displayedPreviewColumns = computed(() => this.csvHeaders());
+
   readonly totalSteps = 2;
   readonly FieldType = FieldType;
   readonly MAX_CLASSROOM_NAME_LENGTH = MAX_CLASSROOM_NAME_LENGTH;
 
-  // Display column configurations
-  displayedPreviewColumns = computed(() => this.csvHeaders());
-
   ngOnInit() {
     this.parseCSV();
+
+    this.classNameForm.statusChanges.subscribe((status) => {
+      this.classNameFormValid.set(status === 'VALID');
+    });
+
+    this.classNameFormValid.set(this.classNameForm.valid);
   }
 
   parseCSV() {
-    const delimiter = ','; // Default to comma as specified
-    const skipHeader = true; // Default to treating first row as headers
-    const trimWhitespace = true; // Default to trimming whitespace
+    const delimiter = ',';
+    const skipHeader = true;
+    const trimWhitespace = true;
 
     try {
-      // Split into rows
       const rows = this.data.csvData.split(/\r?\n/);
       if (rows.length === 0) {
         throw new Error('CSV file is empty');
       }
 
-      // Get headers (first row as headers)
       let headers = rows[0].split(delimiter);
 
       if (trimWhitespace) {
         headers = headers.map((header) => header.trim());
       }
 
-      // Set CSV headers
       this.csvHeaders.set(headers);
 
-      // Get preview data (first 5 rows)
       const preview = [];
       const startRow = skipHeader ? 1 : 0;
       const endRow = Math.min(startRow + 3, rows.length);
@@ -171,17 +170,14 @@ export class CsvImportDialogComponent implements OnInit {
         preview.push(rowObj);
       }
 
-      // Set preview data
       this.previewData.set(preview);
 
-      // Auto-detect field types
       this.detectFieldTypes(headers, preview);
 
-      // Validate the preview to give initial feedback
       this.validateImport();
     } catch (error) {
       console.error('Error parsing CSV', error);
-      this.snackBar.open(
+      this.#snackBar.open(
         'Error parsing CSV file. Please check the format.',
         'Close',
         {
@@ -195,27 +191,21 @@ export class CsvImportDialogComponent implements OnInit {
   detectFieldTypes(headers: string[], preview: any[]) {
     const detected: DetectedField[] = [];
 
-    // Helper function to check if a value could be numeric
     const isNumeric = (value: string) => {
       return !isNaN(parseFloat(value)) && isFinite(Number(value));
     };
 
-    // Helper function to check if a value looks like an email
     const isEmail = (value: string) => {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     };
 
-    // Analyze each column
     headers.forEach((header) => {
-      // Get all non-empty values for this column
       const values = preview
         .map((row) => row[header])
         .filter((val) => val !== undefined && val !== null && val !== '');
 
-      // Default to TEXT
       let fieldType = FieldType.TEXT;
 
-      // Check sample values to determine type
       if (values.length > 0) {
         if (values.every(isNumeric)) {
           fieldType = FieldType.NUMBER;
@@ -236,10 +226,9 @@ export class CsvImportDialogComponent implements OnInit {
   }
 
   generateFieldName(header: string): string {
-    // Convert header to camelCase and clean it up
     const cleanHeader = header
       .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, '') // Remove special characters
+      .replace(/[^a-z0-9\s]/g, '')
       .trim();
 
     return cleanHeader
@@ -251,33 +240,27 @@ export class CsvImportDialogComponent implements OnInit {
   }
 
   validateImport() {
-    // Get the entire CSV data, not just the preview
     const rows = this.data.csvData.split(/\r?\n/);
     const headers = this.csvHeaders();
     const delimiter = ',';
     const skipHeader = true;
 
-    // Calculate actual totals from the full dataset
     const startRow = skipHeader ? 1 : 0;
     let totalRows = 0;
     let validRows = 0;
     let errorRows = 0;
     const warnings: string[] = [];
 
-    // Process all rows in the CSV, not just the preview
     for (let i = startRow; i < rows.length; i++) {
       const row = rows[i];
 
-      // Skip empty rows
       if (row.trim() === '') continue;
 
       totalRows++;
 
-      // Parse the row
       const rowData = row.split(delimiter);
       let hasEmptyValue = false;
 
-      // Check each field in the row
       for (let j = 0; j < headers.length; j++) {
         let value = rowData[j] || '';
         value = value.trim();
@@ -299,7 +282,6 @@ export class CsvImportDialogComponent implements OnInit {
       warnings.push('Some rows have empty values');
     }
 
-    // Update import summary
     this.importSummary.set({
       totalRows,
       validRows,
@@ -323,25 +305,14 @@ export class CsvImportDialogComponent implements OnInit {
   }
 
   importData() {
-    if (!this.classNameForm.valid) {
-      this.snackBar.open('Please enter a valid class name', 'Close', {
-        duration: 3000,
-      });
-      return;
-    }
-
     this.isLoading.set(true);
 
-    // Prepare the import payload
     const importPayload = {
-      // CSV data
       csvData: this.data.csvData,
 
-      // Class settings
       className: this.classNameForm.get('className')?.value,
       createNewClass: this.classNameForm.get('createNewClass')?.value,
 
-      // Field definitions
       fields: this.detectedFields().map((field) => ({
         csvHeader: field.csvHeader,
         fieldName: field.fieldName,
@@ -349,24 +320,20 @@ export class CsvImportDialogComponent implements OnInit {
       })),
     };
 
-    console.log('Import payload:', importPayload);
+    console.log('[Import CSV Dialog] Import Payload:', importPayload);
 
-    // In a real implementation, you would call your service
-    // this.classroomsService.importCSV(importPayload).subscribe(...)
-
-    // Simulate successful import
     setTimeout(() => {
       this.isLoading.set(false);
-      this.snackBar.open('Students imported successfully!', 'Close', {
+      this.#snackBar.open('Students imported successfully!', 'Close', {
         duration: 3000,
         panelClass: 'success-snackbar',
       });
-      this.dialogRef.close(true);
+      this.#dialogRef.close(true);
     }, 1500);
   }
 
   cancel() {
-    this.dialogRef.close(false);
+    this.#dialogRef.close(false);
   }
 
   getStepLabel(step: number): string {
