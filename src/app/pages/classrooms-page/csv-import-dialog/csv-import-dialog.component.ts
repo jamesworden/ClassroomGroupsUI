@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  computed,
+  ViewChild,
+} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -25,7 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -82,7 +89,8 @@ export class CsvImportDialogComponent implements OnInit {
 
   readonly data = inject<CsvImportData>(MAT_DIALOG_DATA);
 
-  readonly classNameFormValid = signal<boolean>(false);
+  @ViewChild('stepper')
+  stepper!: MatStepper;
 
   readonly classNameForm = this.#fb.group({
     className: [
@@ -92,6 +100,7 @@ export class CsvImportDialogComponent implements OnInit {
     createNewClass: [true],
   });
 
+  readonly classNameFormValid = signal<boolean>(false);
   readonly isLoading = signal<boolean>(false);
   readonly currentStep = signal<number>(1);
   readonly csvHeaders = signal<string[]>([]);
@@ -127,6 +136,12 @@ export class CsvImportDialogComponent implements OnInit {
     });
 
     this.classNameFormValid.set(this.classNameForm.valid);
+
+    setTimeout(() => {
+      if (this.stepper) {
+        this.stepper.selectedIndex = this.currentStep() - 1;
+      }
+    });
   }
 
   parseCSV() {
@@ -293,6 +308,13 @@ export class CsvImportDialogComponent implements OnInit {
   nextStep() {
     if (this.currentStep() < this.totalSteps && this.canProceedToNextStep()) {
       this.currentStep.set(this.currentStep() + 1);
+
+      // Ensure stepper is updated after the signal
+      setTimeout(() => {
+        if (this.stepper) {
+          this.stepper.next();
+        }
+      });
     } else if (this.currentStep() === this.totalSteps) {
       this.importData();
     }
@@ -301,6 +323,26 @@ export class CsvImportDialogComponent implements OnInit {
   prevStep() {
     if (this.currentStep() > 1) {
       this.currentStep.set(this.currentStep() - 1);
+
+      // Ensure stepper is updated after the signal
+      setTimeout(() => {
+        if (this.stepper) {
+          this.stepper.previous();
+        }
+      });
+    }
+  }
+
+  selectStep(step: number) {
+    // Convert from 1-based to 0-based indexing for the stepper
+    const stepperIndex = step - 1;
+
+    // Update the current step signal
+    this.currentStep.set(step);
+
+    // Only update the stepper index if it's different to avoid circular updates
+    if (this.stepper && this.stepper.selectedIndex !== stepperIndex) {
+      this.stepper.selectedIndex = stepperIndex;
     }
   }
 

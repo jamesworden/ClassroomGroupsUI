@@ -9,9 +9,16 @@
         [linear]="true"
         [selectedIndex]="currentStep() - 1"
         #stepper
+        (selectionChange)="
+          $event.previouslySelectedIndex !== $event.selectedIndex &&
+            selectStep($event.selectedIndex + 1)
+        "
       >
         @for (step of [1, 2]; track step) {
-          <mat-step [completed]="currentStep() > step">
+          <mat-step
+            [completed]="currentStep() > step"
+            [editable]="currentStep() >= step"
+          >
             <ng-template matStepLabel>{{ getStepLabel(step) }}</ng-template>
           </mat-step>
         }
