@@ -70,13 +70,12 @@
             </button>
 
             <button
-              [tabindex]="-1"
-              matTooltip="More"
               mat-icon-button
-              [matMenuTriggerFor]="moreMenu"
+              (click)="exportToTextFile()"
               class="!flex"
+              matTooltip="Export to text file"
             >
-              <mat-icon>more_vert</mat-icon>
+              <mat-icon>file_download</mat-icon>
             </button>
           </div>
         </div>
@@ -193,18 +192,3 @@
     </mat-slide-toggle>
   </div>
 </ng-template>
-
-<mat-menu #moreMenu="matMenu">
-  <ng-template matMenuContent>
-    <button
-      mat-menu-item
-      (click)="exportToTextFile()"
-      matTooltipPosition="left"
-      class="!flex"
-      matTooltip="More"
-    >
-      <mat-icon>file_download</mat-icon>
-      <span>Export to text file</span>
-    </button>
-  </ng-template>
-</mat-menu>
