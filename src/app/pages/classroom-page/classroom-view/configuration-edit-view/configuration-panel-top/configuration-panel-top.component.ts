@@ -42,6 +42,7 @@ import {
 import { ColumnListComponent } from '../../column-list/column-list.component';
 import { ClassroomPageService } from 'app/pages/classroom-page/classroom-page.service';
 import { downloadCsvFile } from '@shared/ui-outputs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -68,6 +69,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   readonly #classroomPageService = inject(ClassroomPageService);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
+  readonly #matSnackBar = inject(MatSnackBar);
 
   @ViewChild('toolbar')
   toolbar!: ElementRef<HTMLDivElement>;
@@ -218,11 +220,24 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   }
 
   exportToCsv() {
+    const enabledColumns = this.columnDetails().filter(
+      (column) => column.enabled
+    );
+    const numDisabledColumns =
+      this.columnDetails().length - enabledColumns.length;
+
     const data = getCsvDataFromConfiguration(
-      this.columnDetails(),
+      enabledColumns,
       this.studentsInConfiguration()
     );
     downloadCsvFile(this.configurationLabel(), data);
+
+    if (numDisabledColumns) {
+      const s = numDisabledColumns === 1 ? '' : 's';
+      this.#matSnackBar.open(
+        `CSV downloaded, excluding ${numDisabledColumns} disabled column${s}.`
+      );
+    }
   }
 }
 
@@ -230,10 +245,8 @@ function getCsvDataFromConfiguration(
   columnViewModels: ColumnViewModel[],
   studentDetails: StudentDetail[]
 ) {
-  const enabledColumns = columnViewModels.filter((column) => column.enabled);
-
   return studentDetails.map((student) => {
-    return enabledColumns.reduce(
+    return columnViewModels.reduce(
       (studentObj, column) => {
         studentObj[column.label] =
           student.fieldIdsToValues[column.fieldId] || '';
