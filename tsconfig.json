@@ -20,8 +20,11 @@
       "@shared/classrooms": [
         "shared/classrooms"
       ],
-      "@ui-inputs": [
+      "@shared/ui-inputs": [
         "shared/ui-inputs/src/public-api"
+      ],
+      "@shared/ui-outputs": [
+        "shared/ui-outputs/index.ts"
       ]
     },
     "outDir": "./dist/out-tsc",

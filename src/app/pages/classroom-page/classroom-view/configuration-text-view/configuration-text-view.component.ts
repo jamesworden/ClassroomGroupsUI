@@ -20,6 +20,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ColumnListComponent } from '../column-list/column-list.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfigurationTextViewService } from './configuration-text-view.service';
+import { downloadTextFile } from '@shared/ui-outputs';
 
 @Component({
   selector: 'app-configuration-text-view',
@@ -107,15 +108,8 @@ export class ConfigurationTextViewComponent {
   }
 
   exportToTextFile() {
-    const blob = new Blob([this.editableText()], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
     const fileName = this.configurationDetail().label || 'Groups';
-    a.download = `${fileName}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    const text = this.editableText();
+    downloadTextFile(fileName, text);
   }
 }

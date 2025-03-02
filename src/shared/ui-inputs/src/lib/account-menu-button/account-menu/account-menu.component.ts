@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { AccountsService } from '@shared/accounts';
-import { GoogleSignInButtonComponent } from '@ui-inputs';
+import { GoogleSignInButtonComponent } from '@shared/ui-inputs';
 
 @Component({
   selector: 'app-account-menu',

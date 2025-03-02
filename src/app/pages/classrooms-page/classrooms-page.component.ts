@@ -18,7 +18,7 @@ import {
   AccountMenuButtonComponent,
   CodeLinksMenuButtonComponent,
   ToggleThemeButtonComponent,
-} from '@ui-inputs';
+} from '@shared/ui-inputs';
 import { ClassroomsPageService } from './classrooms-page.service';
 import { ClassroomCardComponent } from './classroom-card/classroom-card.component';
 

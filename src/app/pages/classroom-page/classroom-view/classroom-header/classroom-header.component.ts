@@ -16,7 +16,7 @@ import {
   AccountMenuButtonComponent,
   CodeLinksMenuButtonComponent,
   ToggleThemeButtonComponent,
-} from '@ui-inputs';
+} from '@shared/ui-inputs';
 import { AccountsService } from '@shared/accounts';
 import {
   MatButtonToggleChange,

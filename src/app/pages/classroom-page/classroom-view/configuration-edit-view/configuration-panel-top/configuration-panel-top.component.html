@@ -192,6 +192,10 @@
       <mat-icon>add_column_right</mat-icon>
       <span>Add column</span>
     </button>
+    <button mat-menu-item (click)="exportToCsv()">
+      <mat-icon>file_download</mat-icon>
+      <span>Export to CSV</span>
+    </button>
     <button mat-menu-item (click)="openDeleteConfigurationDialog()">
       <mat-icon class="!text-red-500">delete</mat-icon>
       <span>Delete configuration</span>

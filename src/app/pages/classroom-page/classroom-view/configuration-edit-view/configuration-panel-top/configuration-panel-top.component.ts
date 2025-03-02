@@ -31,6 +31,7 @@ import {
   GroupDetail,
   MAX_CLASSROOM_NAME_LENGTH,
   MAX_CONFIGURATION_NAME_LENGTH,
+  StudentDetail,
   StudentGroupingStrategy,
 } from '@shared/classrooms';
 import { AccountsService } from '@shared/accounts';
@@ -40,6 +41,7 @@ import {
 } from '@angular/material/checkbox';
 import { ColumnListComponent } from '../../column-list/column-list.component';
 import { ClassroomPageService } from 'app/pages/classroom-page/classroom-page.service';
+import { downloadCsvFile } from '@shared/ui-outputs';
 
 @Component({
   selector: 'app-configuration-panel-top',
@@ -214,4 +216,30 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
     const number = +element.value;
     this.#classroomPageService.setGroupingValue(number);
   }
+
+  exportToCsv() {
+    const data = getCsvDataFromConfiguration(
+      this.columnDetails(),
+      this.studentsInConfiguration()
+    );
+    downloadCsvFile(this.configurationLabel(), data);
+  }
+}
+
+function getCsvDataFromConfiguration(
+  columnViewModels: ColumnViewModel[],
+  studentDetails: StudentDetail[]
+) {
+  const enabledColumns = columnViewModels.filter((column) => column.enabled);
+
+  return studentDetails.map((student) => {
+    return enabledColumns.reduce(
+      (studentObj, column) => {
+        studentObj[column.label] =
+          student.fieldIdsToValues[column.fieldId] || '';
+        return studentObj;
+      },
+      {} as Record<string, string | number>
+    );
+  });
 }

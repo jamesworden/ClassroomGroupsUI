@@ -10,7 +10,7 @@ import {
   AccountMenuButtonComponent,
   CodeLinksMenuButtonComponent,
   ToggleThemeButtonComponent,
-} from '@ui-inputs';
+} from '@shared/ui-inputs';
 
 @Component({
   selector: 'app-toolbar',

@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ToolbarComponent } from '@app/components';
 import { Themes, ThemeService } from '@app/themes';
-import { GoogleSignInButtonComponent } from '@ui-inputs';
+import { GoogleSignInButtonComponent } from '@shared/ui-inputs';
 
 @Component({
   selector: 'app-sign-in-page',
