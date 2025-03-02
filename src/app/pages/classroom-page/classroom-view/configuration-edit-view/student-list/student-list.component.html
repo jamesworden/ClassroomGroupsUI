@@ -48,7 +48,9 @@
               </div>
             }
 
+            <!-- Ensure that the [type] input is above the [value] input to avoid strange behavior when rearranging columns. -->
             <input
+              [type]="columnDetail.type === FieldType.TEXT ? 'text' : 'number'"
               [value]="
                 student.fieldIdsToValues[columnDetail.fieldId] === undefined
                   ? ''
@@ -58,7 +60,6 @@
                 columnDetail.type === FieldType.TEXT ? 'Add text' : 'Add grade'
               "
               class="bg-transparent flex-1 text-ellipsis p-1 student-field-input"
-              [type]="columnDetail.type === FieldType.TEXT ? 'text' : 'number'"
               (change)="saveEdits(student.id, columnDetail.fieldId, $event)"
             />
           </div>
