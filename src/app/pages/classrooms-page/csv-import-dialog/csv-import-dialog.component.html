@@ -1,244 +1,291 @@
-<div class="p-6">
-  <h2 mat-dialog-title>
-    Import Classroom Data
-    <div class="text-sm font-normal opacity-70 mt-1">
-      {{ data.fileName }}
+<div class="w-full">
+  <!-- Header with progress indicator -->
+  <div class="pb-4 shadow-md dark:shadow-zinc-800">
+    <h2 mat-dialog-title class="mb-4 font-medium dark:text-white">
+      Import Students from CSV
+    </h2>
+    <div class="-mb-6">
+      <mat-horizontal-stepper
+        [linear]="true"
+        [selectedIndex]="currentStep() - 1"
+        #stepper
+      >
+        @for (step of [1, 2]; track step) {
+          <mat-step [completed]="currentStep() > step">
+            <ng-template matStepLabel>{{ getStepLabel(step) }}</ng-template>
+          </mat-step>
+        }
+      </mat-horizontal-stepper>
     </div>
-  </h2>
+  </div>
 
-  <div mat-dialog-content>
-    <!-- Progress Stepper -->
-    <div class="stepper mb-6">
-      <div class="flex justify-between">
-        <div
-          *ngFor="let step of [1, 2, 3]; let i = index"
-          class="step-item"
-          [ngClass]="{
-            active: currentStep() >= step,
-            completed: currentStep() > step,
-          }"
-        >
-          <div class="step-circle">
-            <span *ngIf="currentStep() <= step">{{ step }}</span>
-            <mat-icon *ngIf="currentStep() > step">check</mat-icon>
+  <mat-dialog-content>
+    <!-- Loading indicator -->
+    @if (isLoading()) {
+      <mat-progress-bar mode="indeterminate" class="mb-6"></mat-progress-bar>
+    }
+
+    <!-- Step 1: CSV Preview -->
+    @if (currentStep() === 1) {
+      <div class="py-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="m-0 font-medium dark:text-white">Preview your CSV file</h3>
+          <div class="flex items-center text-zinc-600 dark:text-zinc-300">
+            <mat-icon class="mr-2 text-lg h-[18px] w-[18px]"
+              >description</mat-icon
+            >
+            <span>{{ data.fileName }}</span>
           </div>
-          <div class="step-label">
-            {{
-              step === 1
-                ? 'Map Fields'
-                : step === 2
-                  ? 'Select Classes'
-                  : 'Review & Import'
-            }}
-          </div>
-          <div *ngIf="i < 2" class="step-line"></div>
         </div>
-      </div>
-    </div>
 
-    <!-- Step 1: Field Mapping -->
-    <div *ngIf="currentStep() === 1" class="step-content">
-      <div class="mb-4">
-        <h3 class="text-lg font-medium mb-2">CSV Settings</h3>
-        <form
-          [formGroup]="importForm"
-          class="grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
-          <mat-form-field appearance="outline">
-            <mat-label>Delimiter</mat-label>
-            <input
-              matInput
-              formControlName="delimiter"
-              (change)="onDelimiterChange()"
-            />
-            <mat-hint
-              >Common values: comma (,), semicolon (;), tab (\t)</mat-hint
-            >
-          </mat-form-field>
+        <div class="mb-8">
+          <div class="border border-zinc-500 dark:border-zinc-600 rounded">
+            <table mat-table [dataSource]="previewData()">
+              @for (column of csvHeaders(); track column; let i = $index) {
+                <ng-container [matColumnDef]="column">
+                  <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+                  <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
+                </ng-container>
+              }
 
-          <div class="flex items-center">
-            <mat-checkbox
-              formControlName="skipHeaderRow"
-              (change)="onSkipHeaderChange()"
-            >
-              Skip header row
-            </mat-checkbox>
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedPreviewColumns()"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedPreviewColumns()"
+              ></tr>
+            </table>
           </div>
-        </form>
-      </div>
 
-      <div class="mb-4">
-        <h3 class="text-lg font-medium mb-2">Field Mapping</h3>
-        <p class="text-sm opacity-70 mb-4">
-          Map CSV columns to classroom fields. At minimum, Class Name and
-          Student Name are required.
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <mat-form-field
-            *ngFor="let field of fieldOptions"
-            appearance="outline"
-          >
-            <mat-label>{{ field.label }}</mat-label>
-            <mat-select
-              [value]="fieldMappings[field.value]"
-              (selectionChange)="updateMapping(field.value, $event.value)"
+          @if (previewData().length > 0) {
+            <div
+              class="flex items-center mt-2 text-zinc-600 dark:text-zinc-300 text-sm"
             >
-              <mat-option>None</mat-option>
-              <mat-option *ngFor="let header of csvHeaders" [value]="header">
-                {{ header }}
-              </mat-option>
-            </mat-select>
-            <mat-hint
-              *ngIf="
-                field.value === 'className' || field.value === 'studentName'
-              "
-            >
-              Required
-            </mat-hint>
-          </mat-form-field>
+              <mat-icon class="mr-1 text-md">info</mat-icon>
+              <span>Showing {{ previewData().length }} of many rows</span>
+            </div>
+          }
         </div>
-      </div>
 
-      <div>
-        <h3 class="text-lg font-medium mb-2">Preview</h3>
-        <div class="csv-preview">
-          <table class="w-full">
-            <thead>
-              <tr>
-                <th
-                  *ngFor="let header of csvHeaders"
-                  class="text-left p-2 bg-gray-100 dark:bg-gray-700"
+        <div class="mb-6">
+          <h4 class="mt-0 mb-4 font-medium dark:text-white">Detected Fields</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            @for (field of detectedFields(); track field) {
+              <div
+                class="bg-zinc-100 dark:bg-zinc-800 rounded p-3 border border-transparent dark:border-zinc-700"
+              >
+                <div class="flex justify-between items-center mb-2">
+                  <span class="font-medium dark:text-white">{{
+                    field.csvHeader
+                  }}</span>
+                  @switch (field.fieldType) {
+                    @case (FieldType.TEXT) {
+                      <span
+                        class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100 uppercase border border-blue-300 dark:border-blue-700 ml-2"
+                        >text</span
+                      >
+                    }
+                    @case (FieldType.NUMBER) {
+                      <span
+                        class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-900 dark:bg-green-900 dark:text-green-100 uppercase border border-green-300 dark:border-green-700 ml-2"
+                        >grade</span
+                      >
+                    }
+                    @case (FieldType.EMAIL) {
+                      <span
+                        class="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-900 dark:bg-orange-900 dark:text-orange-100 uppercase border border-orange-300 dark:border-orange-700 ml-2"
+                        >email</span
+                      >
+                    }
+                    @case (FieldType.DATE) {
+                      <span
+                        class="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-purple-100 uppercase border border-purple-300 dark:border-purple-700 ml-2"
+                        >date</span
+                      >
+                    }
+                  }
+                </div>
+                <div
+                  class="text-sm text-zinc-600 dark:text-zinc-300 flex gap-2"
                 >
-                  {{ header }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of previewData">
-                <td *ngFor="let header of csvHeaders" class="p-2 border-b">
-                  {{ row[header] }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  <span class="font-medium">Sample:</span>
+                  <span class="truncate">{{ field.sampleData }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (importSummary().warnings.length > 0) {
+          <div
+            class="bg-amber-50 dark:bg-amber-900/30 rounded p-4 mb-6 border border-amber-200 dark:border-amber-800"
+          >
+            <h4
+              class="mt-0 mb-2 font-medium text-amber-800 dark:text-amber-200"
+            >
+              Validation Issues
+            </h4>
+            <ul class="list-none p-0 m-0">
+              @for (warning of importSummary().warnings; track warning) {
+                <li class="flex items-start mb-1">
+                  <mat-icon
+                    class="mr-2 text-amber-600 dark:text-amber-400 text-lg h-[18px] w-[18px]"
+                    >warning</mat-icon
+                  >
+                  <span class="dark:text-amber-100">{{ warning }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div class="flex gap-6 mt-6">
+          <div
+            class="bg-zinc-100 dark:bg-zinc-800 rounded p-4 flex-1 text-center border border-transparent dark:border-zinc-700"
+          >
+            <div class="text-sm text-zinc-600 dark:text-zinc-300 mb-2">
+              Total Rows
+            </div>
+            <div class="text-xl font-medium dark:text-white">
+              {{ importSummary().totalRows }}
+            </div>
+          </div>
+          <div
+            class="bg-zinc-100 dark:bg-zinc-800 rounded p-4 flex-1 text-center border border-transparent dark:border-zinc-700"
+          >
+            <div class="text-sm text-zinc-600 dark:text-zinc-300 mb-2">
+              Valid Rows
+            </div>
+            <div class="text-xl font-medium dark:text-white">
+              {{ importSummary().validRows }}
+            </div>
+          </div>
+          @if (importSummary().errorRows > 0) {
+            <div
+              class="bg-zinc-100 dark:bg-zinc-800 rounded p-4 flex-1 text-center border border-transparent dark:border-zinc-700"
+            >
+              <div class="text-sm text-zinc-600 dark:text-zinc-300 mb-2">
+                Rows with Issues
+              </div>
+              <div class="text-xl font-medium text-red-500 dark:text-red-400">
+                {{ importSummary().errorRows }}
+              </div>
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
 
     <!-- Step 2: Class Selection -->
-    <div *ngIf="currentStep() === 2" class="step-content">
-      <div class="mb-4">
-        <h3 class="text-lg font-medium mb-2">Class Selection</h3>
-        <p class="text-sm opacity-70 mb-4">
-          Select which classes you want to import from the CSV file.
-        </p>
-
-        <div class="mb-4">
-          <mat-checkbox formControlName="createNewClassrooms">
-            Create new classrooms for classes that don't exist
-          </mat-checkbox>
-
-          <div
-            *ngIf="data.currentClassroomsCount >= data.maxClassrooms"
-            class="mt-2 text-sm text-warning"
-          >
-            <mat-icon class="text-warning align-middle text-sm"
-              >warning</mat-icon
+    @if (currentStep() === 2) {
+      <div class="pb-6">
+        <div class="mb-6" [formGroup]="classNameForm">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Class Name</mat-label>
+            <input
+              matInput
+              formControlName="className"
+              placeholder="e.g. Math 101 - Spring 2025"
+            />
+            <mat-error
+              *ngIf="classNameForm.get('className')?.hasError('required')"
             >
-            You've reached your classroom limit ({{ data.maxClassrooms }}).
-            Upgrade your subscription to create more classrooms.
-          </div>
+              Class name is required
+            </mat-error>
+            <mat-error
+              *ngIf="classNameForm.get('className')?.hasError('maxlength')"
+            >
+              Class name cannot exceed 50 characters
+            </mat-error>
+          </mat-form-field>
         </div>
 
-        <div class="classes-list mt-6">
-          <div
-            *ngIf="availableClasses.length === 0"
-            class="text-center p-4 opacity-70"
-          >
-            No classes detected in the CSV. Please check your field mapping.
-          </div>
+        <div
+          class="bg-zinc-100 dark:bg-zinc-800 rounded p-4 mb-4 border border-transparent dark:border-zinc-700"
+        >
+          <h4 class="mt-0 mb-2 font-medium dark:text-white">Import Summary</h4>
+          <p class="mb-4 dark:text-zinc-200">
+            You are about to import
+            <strong class="dark:text-white">{{
+              importSummary().validRows
+            }}</strong>
+            students to the class.
+          </p>
 
-          <mat-selection-list *ngIf="availableClasses.length > 0">
-            <mat-list-option
-              *ngFor="let className of availableClasses"
-              [value]="className"
-              [selected]="true"
-            >
-              {{ className }}
-            </mat-list-option>
-          </mat-selection-list>
-        </div>
-      </div>
-    </div>
-
-    <!-- Step 3: Review & Import -->
-    <div *ngIf="currentStep() === 3" class="step-content">
-      <div class="mb-4">
-        <h3 class="text-lg font-medium mb-2">Review & Import</h3>
-        <p class="text-sm opacity-70 mb-4">
-          Review your import settings before finalizing.
-        </p>
-
-        <div class="review-details p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h4 class="font-medium mb-2">Field Mappings</h4>
-              <ul class="list-none">
-                <li *ngFor="let field of fieldOptions" class="mb-1">
-                  <span class="font-medium">{{ field.label }}:</span>
-                  <span class="ml-2">{{
-                    fieldMappings[field.value] || 'Not mapped'
-                  }}</span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 class="font-medium mb-2">Import Settings</h4>
-              <ul class="list-none">
-                <li class="mb-1">
-                  <span class="font-medium">Create new classrooms:</span>
-                  <span class="ml-2">{{
-                    importForm.get('createNewClassrooms')?.value ? 'Yes' : 'No'
-                  }}</span>
-                </li>
-                <li class="mb-1">
-                  <span class="font-medium">Skip header row:</span>
-                  <span class="ml-2">{{
-                    importForm.get('skipHeaderRow')?.value ? 'Yes' : 'No'
-                  }}</span>
-                </li>
-                <li class="mb-1">
-                  <span class="font-medium">Delimiter:</span>
-                  <span class="ml-2"
-                    >"{{ importForm.get('delimiter')?.value }}"</span
+          <div>
+            <h5 class="mb-2 font-medium dark:text-white">
+              The following fields will be imported:
+            </h5>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              @for (field of detectedFields(); track field) {
+                <div class="flex items-center gap-2 dark:text-zinc-200">
+                  <mat-icon class="text-green-500 dark:text-green-400 text-md"
+                    >check_circle</mat-icon
                   >
-                </li>
-                <li class="mb-1">
-                  <span class="font-medium">Classes to import:</span>
-                  <span class="ml-2">{{ availableClasses.length }}</span>
-                </li>
-              </ul>
+                  <span>{{ field.csvHeader }}</span>
+                  @switch (field.fieldType) {
+                    @case (FieldType.TEXT) {
+                      <span
+                        class="ml-auto text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100 uppercase border border-blue-300 dark:border-blue-700"
+                        >text</span
+                      >
+                    }
+                    @case (FieldType.NUMBER) {
+                      <span
+                        class="ml-auto text-xs px-2 py-1 rounded-full bg-green-100 text-green-900 dark:bg-green-900 dark:text-green-100 uppercase border border-green-300 dark:border-green-700"
+                        >grade</span
+                      >
+                    }
+                    @case (FieldType.EMAIL) {
+                      <span
+                        class="ml-auto text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-900 dark:bg-orange-900 dark:text-orange-100 uppercase border border-orange-300 dark:border-orange-700"
+                        >email</span
+                      >
+                    }
+                    @case (FieldType.DATE) {
+                      <span
+                        class="ml-auto text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-purple-100 uppercase border border-purple-300 dark:border-purple-700"
+                        >date</span
+                      >
+                    }
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    }
+  </mat-dialog-content>
 
-  <div mat-dialog-actions align="end">
-    <button mat-button (click)="cancel()" [disabled]="isLoading()">
+  <mat-dialog-actions align="end" class="dark:bg-zinc-900">
+    <button
+      mat-button
+      (click)="cancel()"
+      [disabled]="isLoading()"
+      class="dark:text-zinc-300"
+    >
       Cancel
     </button>
-
+    @if (currentStep() > 1) {
+      <button
+        mat-button
+        (click)="prevStep()"
+        [disabled]="isLoading()"
+        class="dark:text-zinc-300"
+      >
+        Back
+      </button>
+    }
     <button
-      *ngIf="currentStep() > 1"
-      mat-button
-      (click)="prevStep()"
-      [disabled]="isLoading()"
+      mat-raised-button
+      color="primary"
+      (click)="nextStep()"
+      [disabled]="!canProceedToNextStep() || isLoading()"
     >
-      Back
+      {{ currentStep() < totalSteps ? 'Next' : 'Import Students' }}
     </button>
-  </div>
+  </mat-dialog-actions>
 </div>
