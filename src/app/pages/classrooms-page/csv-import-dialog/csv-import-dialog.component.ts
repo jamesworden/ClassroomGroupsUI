@@ -175,6 +175,14 @@ export class CsvImportDialogComponent implements OnInit {
 
       this.detectFieldTypes(headers, preview);
 
+      // TODO: Angular material doesn't like when we upload files with duplicate column names
+      // Therefore, we should throw a mat snackbar error here if they are the same.
+      if (areAnyStringsEqual(headers)) {
+        // Throw snackbar message
+        // Close Modal
+        return;
+      }
+
       this.validateImport();
     } catch (error) {
       console.error('Error parsing CSV', error);
@@ -365,4 +373,12 @@ export class CsvImportDialogComponent implements OnInit {
         return `Step ${step}`;
     }
   }
+}
+
+function areAnyStringsEqual(arr: string[]): boolean {
+  const normalizedStrings = arr.map((str) =>
+    str.replace(/\s+/g, '').toLowerCase()
+  );
+  const uniqueStrings = new Set(normalizedStrings);
+  return uniqueStrings.size < normalizedStrings.length;
 }
