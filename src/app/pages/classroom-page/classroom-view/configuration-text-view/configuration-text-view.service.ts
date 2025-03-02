@@ -127,11 +127,11 @@ export class ConfigurationTextViewService {
   constructor() {
     effect(() => {
       const visibleFieldIds: string[] = [];
-      const firstFieldDetail = this.classroomDetail()?.fieldDetails.find(
-        ({ type }) => type === FieldType.TEXT
+      const primaryColumnDetil = this.columnDetails().find(
+        ({ isPrimary }) => isPrimary
       );
-      if (firstFieldDetail) {
-        visibleFieldIds.push(firstFieldDetail.id);
+      if (primaryColumnDetil) {
+        visibleFieldIds.push(primaryColumnDetil.fieldId);
       }
       this._visibleFieldIds.set(visibleFieldIds);
     });

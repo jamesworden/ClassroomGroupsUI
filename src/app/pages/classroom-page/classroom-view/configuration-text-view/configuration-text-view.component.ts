@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import {
   Classroom,
   ColumnDetail,
+  ColumnViewModel,
   ConfigurationDetail,
   GroupDetail,
 } from '@shared/classrooms';
@@ -43,7 +44,7 @@ export class ConfigurationTextViewComponent {
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly classroom = input.required<Classroom>();
-  readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly columnDetails = input.required<ColumnViewModel[]>();
   readonly defaultGroup = input.required<GroupDetail>();
 
   readonly showUngroupedStudents =

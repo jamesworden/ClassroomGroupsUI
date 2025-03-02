@@ -21,6 +21,7 @@ import { ConfigurationPanelTopComponent } from './configuration-panel-top/config
 import {
   ClassroomsService,
   ColumnDetail,
+  ColumnViewModel,
   ConfigurationDetail,
   Group,
   GroupDetail,
@@ -61,7 +62,7 @@ export class ConfigurationEditViewComponent {
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
   readonly defaultGroup = input.required<GroupDetail>();
-  readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly columnDetails = input.required<ColumnViewModel[]>();
   readonly classroomId = input.required<string>();
   readonly groupDetails = input.required<GroupDetail[]>();
   readonly anyAverageScores = input.required<boolean>();

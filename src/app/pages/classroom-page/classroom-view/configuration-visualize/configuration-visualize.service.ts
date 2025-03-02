@@ -145,11 +145,11 @@ export class ConfigurationVisualizeService {
    */
   readonly studentLabels = computed(() => {
     return this.showingStudentDetails().map((student) => {
-      const firstStringColumn = this.columnDetails().find(
-        ({ type }) => type === FieldType.TEXT
+      const primaryColumn = this.columnDetails().find(
+        ({ isPrimary }) => isPrimary
       );
-      if (firstStringColumn) {
-        return student.fieldIdsToValues[firstStringColumn.fieldId] || '';
+      if (primaryColumn) {
+        return student.fieldIdsToValues[primaryColumn.fieldId] || '';
       } else {
         return 'Student';
       }

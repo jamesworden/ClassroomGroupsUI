@@ -1,8 +1,18 @@
 import { computed, Signal } from '@angular/core';
 import { ClassroomsState } from './classrooms.service';
+import { ConfigurationViewModel } from './models';
+import { getColumnViewModels } from './logic/get-view-models';
 
 export class ClassroomSelectors {
   constructor(private _state: Signal<ClassroomsState>) {}
+
+  private readonly configurationViewModels: Signal<ConfigurationViewModel[]> =
+    computed(() =>
+      this._state().configurationDetails.map((configurationDetail) => ({
+        ...configurationDetail,
+        columnDetails: getColumnViewModels(configurationDetail.columnDetails),
+      }))
+    );
 
   public readonly classroomDetails = computed(() =>
     this._state().classroomDetails.sort((a, b) =>
@@ -15,12 +25,12 @@ export class ClassroomSelectors {
 
   public readonly configurationDetail = (configurationId?: string) =>
     computed(() =>
-      this._state().configurationDetails.find((c) => c.id === configurationId)
+      this.configurationViewModels().find((c) => c.id === configurationId)
     );
 
   public readonly configurationDetails = (classroomId?: string) =>
     computed(() =>
-      this._state().configurationDetails.filter(
+      this.configurationViewModels().filter(
         (c) => c.classroomId === classroomId
       )
     );

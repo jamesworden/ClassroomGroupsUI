@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import {
   ClassroomsService,
   ColumnDetail,
+  ColumnViewModel,
   FieldType,
   GroupDetail,
   MoveColumnDetail,
@@ -28,6 +29,7 @@ import { AccountsService } from '@shared/accounts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { ClassroomPageService } from '../../classroom-page.service';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-column-list',
@@ -43,6 +45,7 @@ import { ClassroomPageService } from '../../classroom-page.service';
     MatSlideToggleModule,
     MatTooltipModule,
     MatButtonModule,
+    MatChipsModule,
   ],
   templateUrl: './column-list.component.html',
   styleUrl: './column-list.component.scss',
@@ -55,7 +58,7 @@ export class ColumnListComponent {
   readonly classroomId = input.required<string>();
   readonly configurationId = input.required<string>();
   readonly defaultGroup = input.required<GroupDetail>();
-  readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly columnDetails = input.required<ColumnViewModel[]>();
   readonly enableDrag = input(true);
   readonly rightHeaderTemplate = input<TemplateRef<ColumnDetail>>();
   readonly roundBottom = input(true);
@@ -70,7 +73,7 @@ export class ColumnListComponent {
 
   readonly FieldType = FieldType;
 
-  editingColumnDetails: ColumnDetail[] = [];
+  editingColumnDetails: ColumnViewModel[] = [];
 
   constructor() {
     effect(() => (this.editingColumnDetails = this.columnDetails()));

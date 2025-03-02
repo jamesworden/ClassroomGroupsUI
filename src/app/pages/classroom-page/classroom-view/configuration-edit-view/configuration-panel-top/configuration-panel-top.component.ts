@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import {
   ClassroomsService,
   ColumnDetail,
+  ColumnViewModel,
   ConfigurationDetail,
   FieldType,
   GroupDetail,
@@ -70,7 +71,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
   toolbar!: ElementRef<HTMLDivElement>;
 
   readonly configurationDetail = input.required<ConfigurationDetail>();
-  readonly columnDetails = input.required<ColumnDetail[]>();
+  readonly columnDetails = input.required<ColumnViewModel[]>();
   readonly defaultGroup = input.required<GroupDetail>();
   readonly collapsed = input(false);
 
