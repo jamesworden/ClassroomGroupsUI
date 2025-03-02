@@ -39,9 +39,13 @@
           </div>
         </div>
 
-        <div class="mb-8">
-          <div class="border border-zinc-500 dark:border-zinc-600 rounded">
-            <table mat-table [dataSource]="previewData()">
+        <div class="mb-12">
+          <div class="bg-zinc-900 p-2 rounded-lg">
+            <table
+              mat-table
+              [dataSource]="previewData()"
+              class="!bg-transparent"
+            >
               @for (column of csvHeaders(); track column; let i = $index) {
                 <ng-container [matColumnDef]="column">
                   <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
@@ -62,7 +66,7 @@
 
           @if (previewData().length > 0) {
             <div
-              class="flex items-center mt-2 text-zinc-600 dark:text-zinc-300 text-sm"
+              class="flex items-center mt-4 text-zinc-600 dark:text-zinc-300 text-sm"
             >
               <mat-icon class="mr-1 text-md">info</mat-icon>
               <span>Showing {{ previewData().length }} of many rows</span>
