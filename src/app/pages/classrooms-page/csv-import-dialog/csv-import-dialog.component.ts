@@ -12,7 +12,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ClassroomsService } from '@shared/classrooms';
+import {
+  ClassroomsService,
+  MAX_CLASSROOM_NAME_LENGTH,
+} from '@shared/classrooms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -114,6 +117,7 @@ export class CsvImportDialogComponent implements OnInit {
   // Constants
   readonly totalSteps = 2;
   readonly FieldType = FieldType;
+  readonly MAX_CLASSROOM_NAME_LENGTH = MAX_CLASSROOM_NAME_LENGTH;
 
   // Display column configurations
   displayedPreviewColumns = computed(() => this.csvHeaders());

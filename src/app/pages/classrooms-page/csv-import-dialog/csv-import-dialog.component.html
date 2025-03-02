@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full h-full">
   <!-- Header with progress indicator -->
   <div class="pb-4 shadow-md dark:shadow-zinc-800">
     <h2 mat-dialog-title class="mb-4 font-medium dark:text-white">
@@ -188,7 +188,15 @@
               matInput
               formControlName="className"
               placeholder="e.g. Math 101 - Spring 2025"
+              #classNameInput
+              autocomplete="off"
+              [maxLength]="MAX_CLASSROOM_NAME_LENGTH"
             />
+            <mat-hint align="end">
+              {{ classNameForm.get('className')?.value?.length || 0 }}/{{
+                MAX_CLASSROOM_NAME_LENGTH
+              }}
+            </mat-hint>
             <mat-error
               *ngIf="classNameForm.get('className')?.hasError('required')"
             >
@@ -197,7 +205,8 @@
             <mat-error
               *ngIf="classNameForm.get('className')?.hasError('maxlength')"
             >
-              Class name cannot exceed 50 characters
+              Class name cannot exceed
+              {{ MAX_CLASSROOM_NAME_LENGTH }} characters
             </mat-error>
           </mat-form-field>
         </div>
