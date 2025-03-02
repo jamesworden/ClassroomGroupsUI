@@ -1,0 +1,244 @@
+<div class="p-6">
+  <h2 mat-dialog-title>
+    Import Classroom Data
+    <div class="text-sm font-normal opacity-70 mt-1">
+      {{ data.fileName }}
+    </div>
+  </h2>
+
+  <div mat-dialog-content>
+    <!-- Progress Stepper -->
+    <div class="stepper mb-6">
+      <div class="flex justify-between">
+        <div
+          *ngFor="let step of [1, 2, 3]; let i = index"
+          class="step-item"
+          [ngClass]="{
+            active: currentStep() >= step,
+            completed: currentStep() > step,
+          }"
+        >
+          <div class="step-circle">
+            <span *ngIf="currentStep() <= step">{{ step }}</span>
+            <mat-icon *ngIf="currentStep() > step">check</mat-icon>
+          </div>
+          <div class="step-label">
+            {{
+              step === 1
+                ? 'Map Fields'
+                : step === 2
+                  ? 'Select Classes'
+                  : 'Review & Import'
+            }}
+          </div>
+          <div *ngIf="i < 2" class="step-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Field Mapping -->
+    <div *ngIf="currentStep() === 1" class="step-content">
+      <div class="mb-4">
+        <h3 class="text-lg font-medium mb-2">CSV Settings</h3>
+        <form
+          [formGroup]="importForm"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Delimiter</mat-label>
+            <input
+              matInput
+              formControlName="delimiter"
+              (change)="onDelimiterChange()"
+            />
+            <mat-hint
+              >Common values: comma (,), semicolon (;), tab (\t)</mat-hint
+            >
+          </mat-form-field>
+
+          <div class="flex items-center">
+            <mat-checkbox
+              formControlName="skipHeaderRow"
+              (change)="onSkipHeaderChange()"
+            >
+              Skip header row
+            </mat-checkbox>
+          </div>
+        </form>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="text-lg font-medium mb-2">Field Mapping</h3>
+        <p class="text-sm opacity-70 mb-4">
+          Map CSV columns to classroom fields. At minimum, Class Name and
+          Student Name are required.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field
+            *ngFor="let field of fieldOptions"
+            appearance="outline"
+          >
+            <mat-label>{{ field.label }}</mat-label>
+            <mat-select
+              [value]="fieldMappings[field.value]"
+              (selectionChange)="updateMapping(field.value, $event.value)"
+            >
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let header of csvHeaders" [value]="header">
+                {{ header }}
+              </mat-option>
+            </mat-select>
+            <mat-hint
+              *ngIf="
+                field.value === 'className' || field.value === 'studentName'
+              "
+            >
+              Required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium mb-2">Preview</h3>
+        <div class="csv-preview">
+          <table class="w-full">
+            <thead>
+              <tr>
+                <th
+                  *ngFor="let header of csvHeaders"
+                  class="text-left p-2 bg-gray-100 dark:bg-gray-700"
+                >
+                  {{ header }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of previewData">
+                <td *ngFor="let header of csvHeaders" class="p-2 border-b">
+                  {{ row[header] }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Class Selection -->
+    <div *ngIf="currentStep() === 2" class="step-content">
+      <div class="mb-4">
+        <h3 class="text-lg font-medium mb-2">Class Selection</h3>
+        <p class="text-sm opacity-70 mb-4">
+          Select which classes you want to import from the CSV file.
+        </p>
+
+        <div class="mb-4">
+          <mat-checkbox formControlName="createNewClassrooms">
+            Create new classrooms for classes that don't exist
+          </mat-checkbox>
+
+          <div
+            *ngIf="data.currentClassroomsCount >= data.maxClassrooms"
+            class="mt-2 text-sm text-warning"
+          >
+            <mat-icon class="text-warning align-middle text-sm"
+              >warning</mat-icon
+            >
+            You've reached your classroom limit ({{ data.maxClassrooms }}).
+            Upgrade your subscription to create more classrooms.
+          </div>
+        </div>
+
+        <div class="classes-list mt-6">
+          <div
+            *ngIf="availableClasses.length === 0"
+            class="text-center p-4 opacity-70"
+          >
+            No classes detected in the CSV. Please check your field mapping.
+          </div>
+
+          <mat-selection-list *ngIf="availableClasses.length > 0">
+            <mat-list-option
+              *ngFor="let className of availableClasses"
+              [value]="className"
+              [selected]="true"
+            >
+              {{ className }}
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Review & Import -->
+    <div *ngIf="currentStep() === 3" class="step-content">
+      <div class="mb-4">
+        <h3 class="text-lg font-medium mb-2">Review & Import</h3>
+        <p class="text-sm opacity-70 mb-4">
+          Review your import settings before finalizing.
+        </p>
+
+        <div class="review-details p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium mb-2">Field Mappings</h4>
+              <ul class="list-none">
+                <li *ngFor="let field of fieldOptions" class="mb-1">
+                  <span class="font-medium">{{ field.label }}:</span>
+                  <span class="ml-2">{{
+                    fieldMappings[field.value] || 'Not mapped'
+                  }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="font-medium mb-2">Import Settings</h4>
+              <ul class="list-none">
+                <li class="mb-1">
+                  <span class="font-medium">Create new classrooms:</span>
+                  <span class="ml-2">{{
+                    importForm.get('createNewClassrooms')?.value ? 'Yes' : 'No'
+                  }}</span>
+                </li>
+                <li class="mb-1">
+                  <span class="font-medium">Skip header row:</span>
+                  <span class="ml-2">{{
+                    importForm.get('skipHeaderRow')?.value ? 'Yes' : 'No'
+                  }}</span>
+                </li>
+                <li class="mb-1">
+                  <span class="font-medium">Delimiter:</span>
+                  <span class="ml-2"
+                    >"{{ importForm.get('delimiter')?.value }}"</span
+                  >
+                </li>
+                <li class="mb-1">
+                  <span class="font-medium">Classes to import:</span>
+                  <span class="ml-2">{{ availableClasses.length }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()" [disabled]="isLoading()">
+      Cancel
+    </button>
+
+    <button
+      *ngIf="currentStep() > 1"
+      mat-button
+      (click)="prevStep()"
+      [disabled]="isLoading()"
+    >
+      Back
+    </button>
+  </div>
+</div>
