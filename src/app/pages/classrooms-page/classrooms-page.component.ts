@@ -118,7 +118,7 @@ export class ClassroomsPageComponent {
 
   processFile(file: File) {
     if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
-      this.#matSnackBar.open('Please upload a CSV file', 'Dismiss', {
+      this.#matSnackBar.open('Please upload a CSV file', 'Close', {
         duration: 5000,
         panelClass: 'error-snackbar',
       });

@@ -122,13 +122,9 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Get Classroom Details Failed]', error);
-          this.#matSnackBar.open(
-            'Error fetching classroom details',
-            undefined,
-            {
-              duration: 3000,
-            }
-          );
+          this.#matSnackBar.open('Error fetching classroom details', 'Close', {
+            duration: 3000,
+          });
           return of(null);
         }),
         finalize(() => {
@@ -176,7 +172,7 @@ export class ClassroomsService {
           console.log('[Get Configuration Detail Failed]', error);
           this.#matSnackBar.open(
             'Error fetching configuration detail',
-            undefined,
+            'Close',
             {
               duration: 3000,
             }
@@ -214,13 +210,13 @@ export class ClassroomsService {
           this.patchState((draft) => {
             draft.classroomDetails.push(createdClassroomDetail);
           });
-          this.#matSnackBar.open('Classroom created', undefined, {
+          this.#matSnackBar.open('Classroom created', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Create Classroom Failed]', error);
-          this.#matSnackBar.open('Error creating classroom', undefined, {
+          this.#matSnackBar.open('Error creating classroom', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -260,13 +256,13 @@ export class ClassroomsService {
               ({ id }) => id !== deletedClassroom.id
             );
           });
-          this.#matSnackBar.open('Classroom deleted', undefined, {
+          this.#matSnackBar.open('Classroom deleted', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Delete Classroom Failed]', error);
-          this.#matSnackBar.open('Error deleting classroom', undefined, {
+          this.#matSnackBar.open('Error deleting classroom', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -313,13 +309,13 @@ export class ClassroomsService {
               getConfigurationFromDetail(createdConfigurationDetail)
             );
           });
-          this.#matSnackBar.open('Configuration created', undefined, {
+          this.#matSnackBar.open('Configuration created', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Create Configuration Failed]', error);
-          this.#matSnackBar.open('Error creating configuration', undefined, {
+          this.#matSnackBar.open('Error creating configuration', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -361,7 +357,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Get Configurations Failed]', error);
-          this.#matSnackBar.open('Error fetching configurations', undefined, {
+          this.#matSnackBar.open('Error fetching configurations', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -426,7 +422,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Patch Configuration Failed]', error);
-          this.#matSnackBar.open(failureMessage, undefined, {
+          this.#matSnackBar.open(failureMessage, 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -481,7 +477,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Patch Classroom Failed]', error);
-          this.#matSnackBar.open(failureMessage, undefined, {
+          this.#matSnackBar.open(failureMessage, 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -527,13 +523,13 @@ export class ClassroomsService {
               }
             });
           });
-          this.#matSnackBar.open('Created group', undefined, {
+          this.#matSnackBar.open('Created group', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Create Group Failed]', error);
-          this.#matSnackBar.open('Error creating group', undefined, {
+          this.#matSnackBar.open('Error creating group', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -584,13 +580,13 @@ export class ClassroomsService {
               }
             });
           });
-          this.#matSnackBar.open('Deleted group', undefined, {
+          this.#matSnackBar.open('Deleted group', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Delete Group Failed]', error);
-          this.#matSnackBar.open('Error deleting group', undefined, {
+          this.#matSnackBar.open('Error deleting group', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -639,13 +635,13 @@ export class ClassroomsService {
               });
             });
           });
-          this.#matSnackBar.open('Created student', undefined, {
+          this.#matSnackBar.open('Created student', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Create Student Failed]', error);
-          this.#matSnackBar.open('Error creating student', undefined, {
+          this.#matSnackBar.open('Error creating student', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -709,7 +705,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Patch Group Failed]', error);
-          this.#matSnackBar.open(failureMessage, undefined, {
+          this.#matSnackBar.open(failureMessage, 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -746,13 +742,13 @@ export class ClassroomsService {
               ({ id }) => id !== deletedConfiguration.id
             );
           });
-          this.#matSnackBar.open('Configuration deleted', undefined, {
+          this.#matSnackBar.open('Configuration deleted', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Delete Configuration Failed]', error);
-          this.#matSnackBar.open('Error deleting configuration', undefined, {
+          this.#matSnackBar.open('Error deleting configuration', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -810,13 +806,13 @@ export class ClassroomsService {
               }
             });
           });
-          this.#matSnackBar.open('Column created', undefined, {
+          this.#matSnackBar.open('Column created', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Create Column Failed]', error);
-          this.#matSnackBar.open('Error creating column', undefined, {
+          this.#matSnackBar.open('Error creating column', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -862,7 +858,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Upsert Student Field Failed]', error);
-          this.#matSnackBar.open('Error upserting student field', undefined, {
+          this.#matSnackBar.open('Error upserting student field', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -902,7 +898,7 @@ export class ClassroomsService {
       .pipe(
         tap((response) => {
           if (response.errorMessage) {
-            this.#matSnackBar.open(response.errorMessage, undefined, {
+            this.#matSnackBar.open(response.errorMessage, 'Close', {
               duration: 3000,
             });
             return;
@@ -925,13 +921,13 @@ export class ClassroomsService {
             studentsPerGroup
           );
 
-          this.#matSnackBar.open(message, undefined, {
+          this.#matSnackBar.open(message, 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Group Students Failed]', error);
-          this.#matSnackBar.open('Error grouping students', undefined, {
+          this.#matSnackBar.open('Error grouping students', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -975,13 +971,13 @@ export class ClassroomsService {
               );
             });
           });
-          this.#matSnackBar.open('Deleted student', undefined, {
+          this.#matSnackBar.open('Deleted student', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Delete Student Failed]', error);
-          this.#matSnackBar.open('Error deleting student', undefined, {
+          this.#matSnackBar.open('Error deleting student', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1037,14 +1033,14 @@ export class ClassroomsService {
                 });
               });
             });
-            this.#matSnackBar.open('Deleted column', undefined, {
+            this.#matSnackBar.open('Deleted column', 'Close', {
               duration: 3000,
             });
           }
         ),
         catchError((error) => {
           console.log('[Delete Column Failed]', error);
-          this.#matSnackBar.open('Error deleting column', undefined, {
+          this.#matSnackBar.open('Error deleting column', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1093,7 +1089,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Enable Column Failed]', error);
-          this.#matSnackBar.open('Error enabling column', undefined, {
+          this.#matSnackBar.open('Error enabling column', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1141,7 +1137,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Disable Column Failed]', error);
-          this.#matSnackBar.open('Error disabling column', undefined, {
+          this.#matSnackBar.open('Error disabling column', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1184,7 +1180,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Sort Groups Failed]', error);
-          this.#matSnackBar.open('Error sorting groups', undefined, {
+          this.#matSnackBar.open('Error sorting groups', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1229,7 +1225,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Lock Group Failed]', error);
-          this.#matSnackBar.open('Error locking group', undefined, {
+          this.#matSnackBar.open('Error locking group', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1274,7 +1270,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Unlock Group Failed]', error);
-          this.#matSnackBar.open('Error unlocking group', undefined, {
+          this.#matSnackBar.open('Error unlocking group', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1324,7 +1320,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Move Student Failed]', error);
-          this.#matSnackBar.open('Error moving student', undefined, {
+          this.#matSnackBar.open('Error moving student', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1368,7 +1364,7 @@ export class ClassroomsService {
         }),
         catchError((error) => {
           console.log('[Move Column Failed]', error);
-          this.#matSnackBar.open('Error moving column', undefined, {
+          this.#matSnackBar.open('Error moving column', 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1433,13 +1429,13 @@ export class ClassroomsService {
         tap(({ updatedFieldDetail }) => {
           console.log('[Patched Field]', updatedFieldDetail);
           this.patchState(getUpdateStrategy(updatedFieldDetail));
-          this.#matSnackBar.open('Column updated', undefined, {
+          this.#matSnackBar.open('Column updated', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Patch Field Failed]', error);
-          this.#matSnackBar.open(failureMessage, undefined, {
+          this.#matSnackBar.open(failureMessage, 'Close', {
             duration: 3000,
           });
           return of(null);
@@ -1472,13 +1468,13 @@ export class ClassroomsService {
           this.patchState((draft) => {
             draft.classroomDetails.push(importedClassroomDetail);
           });
-          this.#matSnackBar.open('Classroom imported successfully', undefined, {
+          this.#matSnackBar.open('Classroom imported successfully', 'Close', {
             duration: 3000,
           });
         }),
         catchError((error) => {
           console.log('[Import Classroom Failed]', error);
-          this.#matSnackBar.open('Error importing classroom', undefined, {
+          this.#matSnackBar.open('Error importing classroom', 'Close', {
             duration: 3000,
           });
           return of(null);

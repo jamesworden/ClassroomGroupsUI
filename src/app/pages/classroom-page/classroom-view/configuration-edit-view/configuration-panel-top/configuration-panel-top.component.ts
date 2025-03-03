@@ -236,7 +236,7 @@ export class ConfigurationPanelTopComponent implements AfterViewInit {
       const s = numDisabledColumns === 1 ? '' : 's';
       this.#matSnackBar.open(
         `CSV downloaded, excluding ${numDisabledColumns} disabled column${s}.`,
-        undefined,
+        'Close',
         {
           duration: 5000,
         }
