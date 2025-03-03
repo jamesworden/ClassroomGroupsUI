@@ -11,6 +11,7 @@ import {
   ViewingBy,
 } from '../../configuration-visualize.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-controls-panel',
@@ -22,6 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     FormsModule,
     MatTooltipModule,
+    MatBadgeModule,
   ],
   styleUrl: './controls-panel.component.scss',
   template: `
@@ -33,8 +35,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
             matTooltip="{{
               averageSettingsOpen() ? 'Hide' : 'Show'
             }} average settings"
+            [matBadge]="enabledColumnsForAverage().length === 0 ? '!' : ''"
+            matBadgeColor="warn"
+            matBadgeSize="large"
+            [matBadgeHidden]="enabledColumnsForAverage().length > 0"
             (click)="toggleAverageSettings()"
-            class="mr-2 !flex "
+            class="mr-2 !flex"
           >
             <mat-icon class="settings-icon">settings_suggest</mat-icon>
           </button>
@@ -149,6 +155,8 @@ export class ControlsPanelComponent {
 
   readonly averageSettingsOpen =
     this.#configurationVisualizeService.averageSettingsOpen;
+  readonly enabledColumnsForAverage =
+    this.#configurationVisualizeService.enabledColumnsForAverage;
 
   readonly ViewingBy = ViewingBy;
 
