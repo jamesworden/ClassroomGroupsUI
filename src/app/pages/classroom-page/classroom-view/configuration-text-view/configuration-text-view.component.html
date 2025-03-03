@@ -80,16 +80,18 @@
           </div>
         </div>
 
-        <app-column-list
-          class="py-4"
-          [classroomId]="classroom().id"
-          [columnDetails]="columnDetails()"
-          [configurationId]="configurationDetail().id"
-          [defaultGroup]="defaultGroup()"
-          [enableDrag]="false"
-          [rightHeaderTemplate]="columnRightHeaderTemplate"
-          [enableContextMenu]="false"
-        ></app-column-list>
+        <div class="w-full flex overflow-x-auto">
+          <app-column-list
+            class="py-4"
+            [classroomId]="classroom().id"
+            [columnDetails]="columnDetails()"
+            [configurationId]="configurationDetail().id"
+            [defaultGroup]="defaultGroup()"
+            [enableDrag]="false"
+            [rightHeaderTemplate]="columnRightHeaderTemplate"
+            [enableContextMenu]="false"
+          ></app-column-list>
+        </div>
       </div>
 
       <!-- Rest of the component unchanged -->
