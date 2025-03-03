@@ -127,28 +127,8 @@ export class ClassroomsPageComponent {
     const reader = new FileReader();
     reader.onload = (e) => {
       const csvData = e.target?.result as string;
-      this.openCsvImportDialog(csvData, file.name);
+      this.#classroomsPageService.openCsvImportDialog(csvData, file.name);
     };
     reader.readAsText(file);
-  }
-
-  openCsvImportDialog(csvData: string, fileName: string) {
-    this.#matDialog
-      .open(CsvImportDialogComponent, {
-        data: {
-          csvData,
-          fileName,
-          maxClassrooms: this.account()?.subscription?.maxClassrooms ?? 0,
-          currentClassroomsCount: this.classroomDetails().length,
-        },
-        width: '90vw',
-        maxWidth: '800px',
-      })
-      .afterClosed()
-      .subscribe((classroomDetail) => {
-        if (classroomDetail) {
-          this.viewClassroom(classroomDetail.id);
-        }
-      });
   }
 }
