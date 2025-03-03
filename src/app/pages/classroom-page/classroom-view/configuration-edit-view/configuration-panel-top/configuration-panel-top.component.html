@@ -26,8 +26,10 @@
         </div>
       </div>
 
-      <!-- Modified button container - added flex-shrink-0 -->
-      <div class="flex gap-x-4 mt-2 flex-shrink-0 sticky right-0 pr-2">
+      <!-- Higher z-index so it overlaps the configuration label and description on small resolutions. -->
+      <div
+        class="flex gap-x-4 mt-2 flex-shrink-0 sticky right-0 pr-2 z-50 panel"
+      >
         <mat-form-field appearance="outline" subscriptSizing="dynamic">
           <mat-label>{{
             groupingByDivision() ? 'Number of groups' : 'Students per group'
