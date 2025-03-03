@@ -37,6 +37,8 @@ import {
   EnableColumnResponse,
   DisableColumnResponse,
   Group,
+  ImportClassroomRequest,
+  ImportedClassroomResponse,
 } from './models';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -45,6 +47,7 @@ import {
   finalize,
   map,
   of,
+  skip,
   take,
   tap,
 } from 'rxjs';
@@ -234,7 +237,7 @@ export class ClassroomsService {
     classroomDetail$.subscribe((classroomDetail) =>
       value$.next(classroomDetail)
     );
-    return value$.asObservable();
+    return value$.pipe(skip(1));
   }
 
   public deleteClassroom(classroomId: string) {
@@ -281,7 +284,7 @@ export class ClassroomsService {
     deletedClassroom$.subscribe((deletedClassroom) =>
       value$.next(deletedClassroom)
     );
-    return value$.asObservable();
+    return value$.pipe(skip(1));
   }
 
   public createConfiguration(classroomId: string, label: string) {
@@ -335,7 +338,7 @@ export class ClassroomsService {
     configuration$.subscribe((createdConfigurationDetail) =>
       value$.next(createdConfigurationDetail)
     );
-    return value$.asObservable();
+    return value$.pipe(skip(1));
   }
 
   public getConfigurations(classroomId: string) {
@@ -546,7 +549,7 @@ export class ClassroomsService {
 
     const value$ = new BehaviorSubject<Group | undefined>(undefined);
     group$.subscribe((createdGroupDetail) => value$.next(createdGroupDetail));
-    return value$.asObservable();
+    return value$.pipe(skip(1));
   }
 
   public deleteGroup(
@@ -766,7 +769,7 @@ export class ClassroomsService {
     deletedConfiguration$.subscribe((classroomDetail) =>
       value$.next(classroomDetail)
     );
-    return value$.asObservable();
+    return value$.pipe(skip(1));
   }
 
   public createColumn(
@@ -1449,6 +1452,52 @@ export class ClassroomsService {
         take(1)
       )
       .subscribe();
+  }
+
+  importClassroom(request: ImportClassroomRequest) {
+    this.patchState((draft) => {
+      draft.classroomsLoading = true;
+    });
+
+    const importedClassroomDetail$ = this.#httpClient
+      .post<ImportedClassroomResponse>(
+        `${environment.BASE_API}/api/v1/classrooms/import`,
+        request,
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(({ importedClassroomDetail }) => {
+          console.log('[Imported Classroom Detail]', importedClassroomDetail);
+          this.patchState((draft) => {
+            draft.classroomDetails.push(importedClassroomDetail);
+          });
+          this.#matSnackBar.open('Classroom imported successfully', undefined, {
+            duration: 3000,
+          });
+        }),
+        catchError((error) => {
+          console.log('[Import Classroom Failed]', error);
+          this.#matSnackBar.open('Error importing classroom', undefined, {
+            duration: 3000,
+          });
+          return of(null);
+        }),
+        finalize(() => {
+          this.patchState((draft) => {
+            draft.classroomsLoading = false;
+          });
+        }),
+        map((res) => res?.importedClassroomDetail),
+        take(1)
+      );
+
+    const value$ = new BehaviorSubject<ClassroomDetail | undefined>(undefined);
+    importedClassroomDetail$.subscribe((classroomDetail) =>
+      value$.next(classroomDetail)
+    );
+    return value$.pipe(skip(1));
   }
 
   getPatchedConfigurationDetail(

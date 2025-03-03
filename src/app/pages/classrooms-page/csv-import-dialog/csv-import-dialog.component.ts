@@ -20,6 +20,8 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   ClassroomsService,
+  FieldType,
+  ImportClassroomRequest,
   MAX_CLASSROOM_NAME_LENGTH,
 } from '@shared/classrooms';
 import { CommonModule } from '@angular/common';
@@ -37,13 +39,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { areAnyStringsEqual } from '@shared/util';
-
-enum FieldType {
-  TEXT = 'text',
-  NUMBER = 'number',
-  EMAIL = 'email',
-  DATE = 'date',
-}
+import { Router } from '@angular/router';
+import { AccountsService } from '@shared/accounts';
 
 // Define CSV parsing errors enum
 export enum CsvParsingError {
@@ -51,14 +48,16 @@ export enum CsvParsingError {
   DUPLICATE_HEADERS = 'File contains duplicate header names',
   INVALID_FORMAT = 'Invalid CSV format',
   MISSING_REQUIRED_HEADERS = 'Missing required headers',
+  TOO_MANY_STUDENTS = 'Too many students for your account subscription',
+  TOO_MANY_FIELDS = 'Too many fields for your account subscription',
 }
 
 // Define the parsed CSV data interface
 interface ParsedCsvData {
   rawData: string;
   headers: string[];
-  rows: any[];
-  preview: any[];
+  rows: Record<string, string>[];
+  preview: Record<string, string>[];
   errors: CsvParsingError[];
 }
 
@@ -105,6 +104,8 @@ export class CsvImportDialogComponent implements OnInit {
   readonly #fb = inject(FormBuilder);
   readonly #snackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
+  readonly #router = inject(Router);
+  readonly #accountsService = inject(AccountsService);
 
   readonly data = inject<CsvImportData>(MAT_DIALOG_DATA);
 
@@ -116,8 +117,13 @@ export class CsvImportDialogComponent implements OnInit {
       '',
       [Validators.required, Validators.maxLength(MAX_CLASSROOM_NAME_LENGTH)],
     ],
-    createNewClass: [true],
   });
+
+  // Add computed values for account limits
+  readonly maxStudentsPerClassroom =
+    this.#accountsService.select.maxStudentsPerClassroom;
+  readonly maxFieldsPerClassroom =
+    this.#accountsService.select.maxFieldsPerClassroom;
 
   readonly classNameFormValid = signal<boolean>(false);
   readonly isLoading = signal<boolean>(false);
@@ -164,6 +170,12 @@ export class CsvImportDialogComponent implements OnInit {
         result.errors.push(CsvParsingError.DUPLICATE_HEADERS);
       }
 
+      // Check if header count exceeds field limit
+      const maxFields = this.maxFieldsPerClassroom();
+      if (headers.length > maxFields) {
+        result.errors.push(CsvParsingError.TOO_MANY_FIELDS);
+      }
+
       result.headers = headers;
 
       // Parse all data rows
@@ -189,6 +201,12 @@ export class CsvImportDialogComponent implements OnInit {
       }
 
       result.rows = parsedRows;
+
+      // Check if student count exceeds limit
+      const maxStudents = this.maxStudentsPerClassroom();
+      if (parsedRows.length > maxStudents) {
+        result.errors.push(CsvParsingError.TOO_MANY_STUDENTS);
+      }
 
       // Only get a few rows for preview
       const previewEndRow = Math.min(3, parsedRows.length);
@@ -252,6 +270,8 @@ export class CsvImportDialogComponent implements OnInit {
   // Calculate import summary based on parsed data
   readonly importSummary = computed(() => {
     const { rawData, headers, errors } = this.parsedCsvData();
+    const maxStudents = this.maxStudentsPerClassroom();
+    const maxFields = this.maxFieldsPerClassroom();
     const rows = rawData.split(/\r?\n/);
     const delimiter = ',';
     const skipHeader = true;
@@ -297,6 +317,14 @@ export class CsvImportDialogComponent implements OnInit {
       !errorStrings.includes('Some rows have empty values')
     ) {
       warnings.push('Some rows have empty values');
+    }
+
+    if (rows.length > maxStudents) {
+      warnings.push(`Student limit exceeded: ${rows.length}/${maxStudents}`);
+    }
+
+    if (headers.length > maxFields) {
+      warnings.push(`Field limit exceeded: ${headers.length}/${maxFields}`);
     }
 
     return {
@@ -383,31 +411,31 @@ export class CsvImportDialogComponent implements OnInit {
   importStudents() {
     this.isLoading.set(true);
 
-    const importPayload = {
-      csvData: this.rawCsvData(),
-      className: this.classNameForm.get('className')?.value,
-      createNewClass: this.classNameForm.get('createNewClass')?.value,
+    const request: ImportClassroomRequest = {
+      label: this.classNameForm.get('className')?.value || '',
       fields: this.detectedFields().map((field) => ({
-        csvHeader: field.csvHeader,
-        fieldName: field.fieldName,
-        fieldType: field.fieldType,
+        label: field.csvHeader,
+        type: field.fieldType,
       })),
+      students: this.parsedCsvData().rows,
     };
 
-    console.log('[Import CSV Dialog] Import Payload:', importPayload);
-
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.#snackBar.open('Students imported successfully!', 'Close', {
-        duration: 3000,
-        panelClass: 'success-snackbar',
+    this.#classroomsService
+      .importClassroom(request)
+      .subscribe((classroomDetail) => {
+        this.isLoading.set(false);
+        if (classroomDetail) {
+          this.#snackBar.open('Students imported successfully!', 'Close', {
+            duration: 3000,
+            panelClass: 'success-snackbar',
+          });
+        }
+        this.#dialogRef.close(classroomDetail);
       });
-      this.#dialogRef.close(true);
-    }, 1500);
   }
 
   cancel() {
-    this.#dialogRef.close(false);
+    this.#dialogRef.close();
   }
 
   getStepLabel(step: number): string {

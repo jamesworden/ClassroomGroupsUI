@@ -133,24 +133,22 @@ export class ClassroomsPageComponent {
   }
 
   openCsvImportDialog(csvData: string, fileName: string) {
-    const dialogRef = this.#matDialog.open(CsvImportDialogComponent, {
-      data: {
-        csvData,
-        fileName,
-        maxClassrooms: this.account()?.subscription?.maxClassrooms ?? 0,
-        currentClassroomsCount: this.classroomDetails().length,
-      },
-      width: '90vw', // Make dialog 90% of viewport width
-      maxWidth: '800px', // Set maximum width to 1400px
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      // if (result) {
-      //   // LOAD CLASSROOMS
-      //   // this.snackBar.open('Classroom data imported successfully', 'Dismiss', {
-      //   //   duration: 5000
-      //   // });
-      // }
-    });
+    this.#matDialog
+      .open(CsvImportDialogComponent, {
+        data: {
+          csvData,
+          fileName,
+          maxClassrooms: this.account()?.subscription?.maxClassrooms ?? 0,
+          currentClassroomsCount: this.classroomDetails().length,
+        },
+        width: '90vw',
+        maxWidth: '800px',
+      })
+      .afterClosed()
+      .subscribe((classroomDetail) => {
+        if (classroomDetail) {
+          this.viewClassroom(classroomDetail.id);
+        }
+      });
   }
 }

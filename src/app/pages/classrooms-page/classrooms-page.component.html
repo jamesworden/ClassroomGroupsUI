@@ -65,7 +65,7 @@
         </div>
       } @else if (!classroomsLoading()) {
         <div
-          class="flex flex-col lg:flex-row items-center justify-between w-full p-8 rounded-xl bg-white dark:bg-gray-800 shadow-md mt-16"
+          class="flex flex-col lg:flex-row items-center justify-between w-full p-8 rounded-xl bg-white dark:bg-gray-800 shadow-md mt-8"
         >
           <div class="flex flex-col items-start max-w-md mb-8 lg:mb-0 lg:pr-8">
             <div class="mb-2 text-primary">
@@ -111,42 +111,46 @@
         </div>
       }
 
-      <!-- CSV Upload Area - Always visible -->
-      <div class="my-8 w-full flex-1 flex flex-col justify-around">
-        <div
-          class="cursor-pointer rounded-lg border border-3 border-dashed border-gray-400 dark:border-gray-500 transition-colors"
-          [ngClass]="{
-            'border-black dark:border-white': isDragging(),
-          }"
-          (dragover)="onDragOver($event)"
-          (dragleave)="onDragLeave($event)"
-          (drop)="onDrop($event)"
-          (click)="fileInput.click()"
-        >
-          <input
-            #fileInput
-            type="file"
-            accept=".csv"
-            class="hidden"
-            (change)="onFileSelected($event)"
-          />
-          <div class="flex flex-col items-center justify-center p-8">
-            <div [ngClass]="{ bounce: isDragging() }">
-              <mat-icon class="text-6xl big-icon text-gradient-fade"
-                >cloud_upload</mat-icon
-              >
-            </div>
-            <h3 class="text-xl font-medium mb-2">Import Classroom Data</h3>
-            <p class="text-center opacity-75 max-w-md">
-              Import your classroom data by dropping a CSV file here, or click
-              to browse
-            </p>
-            <div class="mt-4 flex items-center">
-              <span class="text-sm opacity-60">Supported format: CSV</span>
+      @if (
+        classroomDetails().length <
+        (account()?.subscription?.maxClassrooms ?? 0)
+      ) {
+        <div class="my-8 w-full flex-1 flex flex-col justify-around">
+          <div
+            class="cursor-pointer rounded-lg border border-3 border-dashed border-gray-400 dark:border-gray-500 transition-colors"
+            [ngClass]="{
+              'border-black dark:border-white': isDragging(),
+            }"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+            (click)="fileInput.click()"
+          >
+            <input
+              #fileInput
+              type="file"
+              accept=".csv"
+              class="hidden"
+              (change)="onFileSelected($event)"
+            />
+            <div class="flex flex-col items-center justify-center p-8">
+              <div [ngClass]="{ 'animate-pulse': isDragging() }">
+                <mat-icon class="text-6xl big-icon text-gradient-fade"
+                  >cloud_upload</mat-icon
+                >
+              </div>
+              <h3 class="text-xl font-medium mb-2">Import Classroom Data</h3>
+              <p class="text-center opacity-75 max-w-md">
+                Import your classroom data by dropping a CSV file here, or click
+                to browse
+              </p>
+              <div class="mt-4 flex items-center">
+                <span class="text-sm opacity-60">Supported format: CSV</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 
@@ -154,52 +158,3 @@
     <p>© {{ fullYear }} ClassroomGroups. All rights reserved.</p>
   </footer>
 </div>
-
-<!-- Add these styles to your component's CSS file -->
-<style>
-  .csv-drop-area {
-    border: 2px dashed rgba(var(--primary-color-rgb), 0.4);
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    background-color: rgba(var(--primary-color-rgb), 0.05);
-    cursor: pointer;
-  }
-
-  .csv-drop-area:hover {
-    border-color: rgba(var(--primary-color-rgb), 0.7);
-    background-color: rgba(var(--primary-color-rgb), 0.08);
-  }
-
-  .active-drop {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.3);
-    background-color: rgba(var(--primary-color-rgb), 0.1);
-  }
-
-  .upload-icon {
-    color: rgba(var(--primary-color-rgb), 0.7);
-    transition: all 0.3s ease;
-  }
-
-  .upload-icon-container {
-    transition: transform 0.3s ease;
-  }
-
-  .bounce {
-    animation: bounce-animation 1s infinite;
-  }
-
-  @keyframes bounce-animation {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  .hidden {
-    display: none;
-  }
-</style>

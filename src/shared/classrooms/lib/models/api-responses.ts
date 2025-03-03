@@ -123,3 +123,7 @@ export interface EnableColumnResponse {
 export interface DisableColumnResponse {
   disabledColumn: Column;
 }
+
+export interface ImportedClassroomResponse {
+  importedClassroomDetail: ClassroomDetail;
+}

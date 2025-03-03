@@ -39,6 +39,8 @@ export interface Group {
 export enum FieldType {
   TEXT = 'TEXT',
   NUMBER = 'NUMBER',
+  EMAIL = 'EMAIL',
+  DATE = 'DATE',
 }
 
 export enum ColumnSort {
@@ -122,4 +124,13 @@ export interface StudentDetail {
 export enum StudentGroupingStrategy {
   MixedAbilities,
   SimilarAbilities,
+}
+
+export interface ImportClassroomRequest {
+  label: string;
+  fields: {
+    label: string;
+    type: FieldType;
+  }[];
+  students: Record<string, string>[];
 }
