@@ -8,7 +8,7 @@
       >
         <div class="flex flex-col">
           <input
-            class="text-ellipsis text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline whitespace-nowrap overflow-hidden"
+            class="text-ellipsis text-2xl m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline whitespace-nowrap overflow-hidden max-w-xl"
             type="text"
             [maxLength]="MAX_CLASSROOM_NAME_LENGTH"
             [value]="configurationLabel()"
@@ -16,7 +16,7 @@
             placeholder="Untitled"
           />
           <input
-            class="text-ellipsis text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline whitespace-nowrap overflow-hidden"
+            class="text-ellipsis text-sm appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline whitespace-nowrap overflow-hidden max-w-xl"
             type="text"
             [maxLength]="MAX_CONFIGURATION_NAME_LENGTH"
             [value]="configurationDescription()"
