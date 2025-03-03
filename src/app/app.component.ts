@@ -11,7 +11,6 @@ import { combineLatest, filter } from 'rxjs';
   imports: [RouterModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [ThemeService, ClassroomsService, AccountsService],
 })
 export class AppComponent {
   readonly #accountsService = inject(AccountsService);
