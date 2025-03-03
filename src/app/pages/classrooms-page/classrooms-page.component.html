@@ -53,7 +53,7 @@
       <!-- Existing classroom cards or empty state -->
       @if (classroomDetails().length > 0) {
         <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-auto"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1"
         >
           @for (classroom of classroomDetails(); track classroom.id) {
             <app-classroom-card
@@ -150,6 +150,9 @@
             </div>
           </div>
         </div>
+      } @else {
+        <!-- Flex Placeholder -->
+        <div class="flex-1"></div>
       }
     </div>
   </div>
