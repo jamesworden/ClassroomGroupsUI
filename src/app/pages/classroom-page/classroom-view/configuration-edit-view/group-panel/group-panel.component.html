@@ -1,5 +1,5 @@
 <div
-  class="panel flex-col gap-y-2 px-2 shadow-lg flex-1"
+  class="panel flex-col gap-y-2 shadow-lg flex-1"
   [ngClass]="{
     'pt-1 rounded-lg': !collapsed(),
     'py-2 rounded-md': collapsed(),
@@ -8,24 +8,26 @@
   @if (!collapsed()) {
     <div class="flex justify-between">
       <div class="flex gap-x-2 flex-1">
-        <div class="flex flex-col justify-around">
-          <ng-content></ng-content>
-        </div>
+        <div class="sticky left-0 flex pl-4">
+          <div class="flex flex-col justify-around">
+            <ng-content></ng-content>
+          </div>
 
-        <div class="flex flex-col justify-around flex-1">
-          <input
-            class="text-ellipsis text-lg m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
-            type="text"
-            [maxLength]="MAX_GROUP_NAME_LENGTH"
-            [value]="groupDetail().label || ''"
-            (change)="updateLabel($event)"
-            placeholder="Untitled"
-            tabindex="-1"
-          />
+          <div class="flex flex-col justify-around flex-1">
+            <input
+              class="text-ellipsis text-lg m-0 appearance-none bg-transparent rounded border border-transparent hover-border-primary px-2 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              [maxLength]="MAX_GROUP_NAME_LENGTH"
+              [value]="groupDetail().label || ''"
+              (change)="updateLabel($event)"
+              placeholder="Untitled"
+              tabindex="-1"
+            />
+          </div>
         </div>
       </div>
 
-      <div class="flex gap-x-2 pb-1">
+      <div class="flex gap-x-2 pb-1 sticky right-0 pr-3">
         <button
           [tabIndex]="-1"
           mat-icon-button
@@ -38,22 +40,24 @@
     </div>
   }
 
-  @if (columnDetails().length) {
-    <app-student-list
-      [roundedTop]="true"
-      [roundedBottom]="true"
-      [classroomId]="classroomId()"
-      [configurationId]="groupDetail().configurationId"
-      [groupId]="groupDetail().id"
-      [groupDetail]="groupDetail()"
-      [studentDetails]="groupDetail().studentDetails"
-      [groupIndex]="groupIndex()"
-      [columnDetails]="columnDetails()"
-      (studentFieldUpdated)="updateStudentField($event)"
-      (studentDeleted)="deleteStudent($event)"
-      (studentPositionUpdated)="updateStudentPosition($event)"
-    ></app-student-list>
-  }
+  <div class="px-2">
+    @if (columnDetails().length) {
+      <app-student-list
+        [roundedTop]="true"
+        [roundedBottom]="true"
+        [classroomId]="classroomId()"
+        [configurationId]="groupDetail().configurationId"
+        [groupId]="groupDetail().id"
+        [groupDetail]="groupDetail()"
+        [studentDetails]="groupDetail().studentDetails"
+        [groupIndex]="groupIndex()"
+        [columnDetails]="columnDetails()"
+        (studentFieldUpdated)="updateStudentField($event)"
+        (studentDeleted)="deleteStudent($event)"
+        (studentPositionUpdated)="updateStudentPosition($event)"
+      ></app-student-list>
+    }
+  </div>
 
   @if (!collapsed()) {
     <app-group-footer

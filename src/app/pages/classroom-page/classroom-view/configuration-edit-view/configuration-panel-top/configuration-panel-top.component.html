@@ -1,10 +1,10 @@
-<div class="panel pt-2 px-2 flex flex-col w-full">
+<div class="panel pt-2 flex flex-col w-full">
   <!-- Toolbar -->
   <div #toolbar>
     <div class="flex justify-between min-h-16 flex-wrap gap-y-4">
       <!-- Modified input container - added max-width and flex properties -->
       <div
-        class="flex flex-col justify-around flex-shrink flex-grow overflow-hidden mr-4"
+        class="flex flex-col justify-around flex-shrink flex-grow overflow-hidden mr-4 sticky left-0 pl-2"
       >
         <div class="flex flex-col">
           <input
@@ -27,7 +27,7 @@
       </div>
 
       <!-- Modified button container - added flex-shrink-0 -->
-      <div class="flex gap-x-4 mt-2 flex-shrink-0">
+      <div class="flex gap-x-4 mt-2 flex-shrink-0 sticky right-0 pr-2">
         <mat-form-field appearance="outline" subscriptSizing="dynamic">
           <mat-label>{{
             groupingByDivision() ? 'Number of groups' : 'Students per group'
@@ -120,7 +120,7 @@
   </div>
 
   <div>
-    <div class="mt-4">
+    <div class="mt-4 px-2">
       <app-column-list
         [classroomId]="classroomId()"
         [columnDetails]="columnDetails()"

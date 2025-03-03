@@ -1,6 +1,8 @@
-<div class="py-2 flex justify-between flex-1" matTooltipPosition="right">
+<!-- group-footer.component.html - Improved approach -->
+<div class="py-2 flex w-full" matTooltipPosition="right">
+  <!-- "Add student" button remains in normal flow -->
   <div
-    class="max-w-36"
+    class="max-w-36 sticky left-0 pl-2"
     [matTooltip]="
       studentsInConfiguration().length >=
       (account()?.subscription?.maxStudentsPerClassroom ?? 0)
@@ -23,27 +25,30 @@
     </button>
   </div>
 
+  <!-- Lock/unlock button container with sticky positioning -->
   @if (showLockButton()) {
-    @if (groupDetail().isLocked) {
-      <button
-        [tabindex]="-1"
-        matSuffix
-        mat-raised-button
-        (click)="!updatingGroup() && toggleGroupLocked()"
-      >
-        <mat-icon class="text-md">lock_open_right</mat-icon>
-        <span class="text-sm opacity-80">Unlock group</span>
-      </button>
-    } @else {
-      <button
-        [tabindex]="-1"
-        matSuffix
-        mat-button
-        (click)="!updatingGroup() && toggleGroupLocked()"
-      >
-        <mat-icon class="text-md">lock_person</mat-icon>
-        <span class="text-sm opacity-80">Lock group</span>
-      </button>
-    }
+    <div class="ml-auto sticky right-0 pr-2" style="position: -webkit-sticky">
+      @if (groupDetail().isLocked) {
+        <button
+          [tabindex]="-1"
+          matSuffix
+          mat-raised-button
+          (click)="!updatingGroup() && toggleGroupLocked()"
+        >
+          <mat-icon class="text-md">lock_open_right</mat-icon>
+          <span class="text-sm opacity-80">Unlock group</span>
+        </button>
+      } @else {
+        <button
+          [tabindex]="-1"
+          matSuffix
+          mat-button
+          (click)="!updatingGroup() && toggleGroupLocked()"
+        >
+          <mat-icon class="text-md">lock_person</mat-icon>
+          <span class="text-sm opacity-80">Lock group</span>
+        </button>
+      }
+    </div>
   }
 </div>
