@@ -39,7 +39,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { areAnyStringsEqual } from '@shared/util';
-import { Router } from '@angular/router';
 import { AccountsService } from '@shared/accounts';
 
 // Define CSV parsing errors enum
@@ -104,7 +103,6 @@ export class CsvImportDialogComponent implements OnInit {
   readonly #fb = inject(FormBuilder);
   readonly #snackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
-  readonly #router = inject(Router);
   readonly #accountsService = inject(AccountsService);
 
   readonly data = inject<CsvImportData>(MAT_DIALOG_DATA);
