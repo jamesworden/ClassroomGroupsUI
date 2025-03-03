@@ -15,9 +15,7 @@ const STORAGE_KEY_SHOW_GROUP_NAMES = 'config-text-view-show-group-names';
 const STORAGE_KEY_SHOW_UNGROUPED_STUDENTS =
   'config-text-view-show-ungrouped-students';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ConfigurationTextViewService {
   readonly #classroomPageService = inject(ClassroomPageService);
   readonly #classroomsService = inject(ClassroomsService);

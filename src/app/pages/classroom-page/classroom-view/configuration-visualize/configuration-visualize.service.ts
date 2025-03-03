@@ -25,9 +25,7 @@ const STORAGE_KEY_SHOW_UNGROUPED_STUDENTS =
   'config-visualize-show-ungrouped-students';
 const STORAGE_KEY_ENABLED_COLUMNS = 'config-visualize-enabled-columns';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ConfigurationVisualizeService {
   readonly #classroomsService = inject(ClassroomsService);
   readonly #classroomPageService = inject(ClassroomPageService);

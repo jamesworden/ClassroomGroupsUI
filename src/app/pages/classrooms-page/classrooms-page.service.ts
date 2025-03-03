@@ -6,9 +6,7 @@ import { ClassroomDetail, ClassroomsService } from '@shared/classrooms';
 import { CsvImportDialogComponent } from './csv-import-dialog/csv-import-dialog.component';
 import { Router } from '@angular/router';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ClassroomsPageService {
   readonly #matDialog = inject(MatDialog);
   readonly #classroomsService = inject(ClassroomsService);

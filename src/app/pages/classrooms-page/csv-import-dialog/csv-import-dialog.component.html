@@ -1,6 +1,6 @@
 <div class="w-full h-full">
   <!-- Header with progress indicator -->
-  <div class="pb-4 shadow-md dark:shadow-zinc-800">
+  <div class="pb-4">
     <h2 mat-dialog-title class="mb-4 font-medium dark:text-white">
       Import Students from CSV
     </h2>
@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <mat-dialog-content>
+  <mat-dialog-content class="border-t border-zinc-300 dark:border-zinc-700">
     <!-- Loading indicator -->
     @if (isLoading()) {
       <mat-progress-bar mode="indeterminate" class="mb-6"></mat-progress-bar>

@@ -34,9 +34,7 @@ const STORAGE_KEY_GROUPING_VALUE = 'config-classroom-page-grouping-value';
 const STORAGE_KEY_GROUPING_BY_DIVISION =
   'config-classroom-page-grouping-by-division';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ClassroomPageService {
   readonly #matDialog = inject(MatDialog);
   readonly #classroomsService = inject(ClassroomsService);

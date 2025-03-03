@@ -22,7 +22,6 @@ import { ClassroomsPageService } from './classrooms-page.service';
 import { ClassroomCardComponent } from './classroom-card/classroom-card.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { CsvImportDialogComponent } from './csv-import-dialog/csv-import-dialog.component';
 
 @Component({
   selector: 'app-classrooms-view',
@@ -53,7 +52,6 @@ export class ClassroomsPageComponent {
   readonly #accountService = inject(AccountsService);
   readonly #classroomsPageService = inject(ClassroomsPageService);
   readonly #matSnackBar = inject(MatSnackBar);
-  readonly #matDialog = inject(MatDialog);
 
   readonly classroomDetails = this.#classroomsService.select.classroomDetails;
   readonly classroomsLoading = this.#classroomsService.select.classroomsLoading;
@@ -113,6 +111,9 @@ export class ClassroomsPageComponent {
     if (input.files && input.files.length > 0) {
       this.processFile(input.files[0]);
     }
+    // Reset the input if the user tries to select the same file
+    // twice because that would not cause a change event to occur.
+    input.value = '';
   }
 
   processFile(file: File) {

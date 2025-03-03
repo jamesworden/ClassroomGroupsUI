@@ -99,9 +99,9 @@ interface DetectedField {
   ],
 })
 export class CsvImportDialogComponent implements OnInit {
-  readonly #dialogRef = inject(MatDialogRef<CsvImportDialogComponent>);
-  readonly #fb = inject(FormBuilder);
-  readonly #snackBar = inject(MatSnackBar);
+  readonly #matDialogRef = inject(MatDialogRef<CsvImportDialogComponent>);
+  readonly #formBuilder = inject(FormBuilder);
+  readonly #matSnackBar = inject(MatSnackBar);
   readonly #classroomsService = inject(ClassroomsService);
   readonly #accountsService = inject(AccountsService);
 
@@ -110,7 +110,7 @@ export class CsvImportDialogComponent implements OnInit {
   @ViewChild('stepper')
   stepper!: MatStepper;
 
-  readonly classNameForm = this.#fb.group({
+  readonly classNameForm = this.#formBuilder.group({
     className: [
       '',
       [Validators.required, Validators.maxLength(MAX_CLASSROOM_NAME_LENGTH)],
@@ -423,17 +423,17 @@ export class CsvImportDialogComponent implements OnInit {
       .subscribe((classroomDetail) => {
         this.isLoading.set(false);
         if (classroomDetail) {
-          this.#snackBar.open('Students imported successfully!', 'Close', {
+          this.#matSnackBar.open('Students imported successfully!', 'Close', {
             duration: 3000,
             panelClass: 'success-snackbar',
           });
         }
-        this.#dialogRef.close(classroomDetail);
+        this.#matDialogRef.close(classroomDetail);
       });
   }
 
   cancel() {
-    this.#dialogRef.close();
+    this.#matDialogRef.close();
   }
 
   getStepLabel(step: number): string {
