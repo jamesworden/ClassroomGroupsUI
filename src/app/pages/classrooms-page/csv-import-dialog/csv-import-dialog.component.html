@@ -61,7 +61,9 @@
           </div>
         } @else {
           <div class="mb-12">
-            <div class="bg-zinc-900 p-2 rounded-lg">
+            <div
+              class="bg-zinc-300/30 dark:bg-zinc-900 p-2 rounded-lg w-full overflow-x-auto"
+            >
               <table
                 mat-table
                 [dataSource]="previewData()"
@@ -90,7 +92,10 @@
                 class="flex items-center mt-4 text-zinc-600 dark:text-zinc-300 text-sm"
               >
                 <mat-icon class="mr-1 text-md">info</mat-icon>
-                <span>Showing {{ previewData().length }} of many rows</span>
+                <span
+                  >Showing {{ previewData().length }} of
+                  {{ importSummary().totalRows }} rows</span
+                >
               </div>
             }
           </div>

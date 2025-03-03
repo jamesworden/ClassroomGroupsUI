@@ -317,8 +317,6 @@ export class CsvImportDialogComponent implements OnInit {
       warnings.push('Some rows have empty values');
     }
 
-    console.log(rows);
-
     if (totalRows > maxStudents) {
       warnings.push(`Student limit exceeded: ${rows.length}/${maxStudents}`);
     }
