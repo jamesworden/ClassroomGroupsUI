@@ -36,12 +36,30 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { areAnyStringsEqual } from '@shared/util';
 
 enum FieldType {
   TEXT = 'text',
   NUMBER = 'number',
   EMAIL = 'email',
   DATE = 'date',
+}
+
+// Define CSV parsing errors enum
+export enum CsvParsingError {
+  EMPTY_FILE = 'CSV file is empty',
+  DUPLICATE_HEADERS = 'File contains duplicate header names',
+  INVALID_FORMAT = 'Invalid CSV format',
+  MISSING_REQUIRED_HEADERS = 'Missing required headers',
+}
+
+// Define the parsed CSV data interface
+interface ParsedCsvData {
+  rawData: string;
+  headers: string[];
+  rows: any[];
+  preview: any[];
+  errors: CsvParsingError[];
 }
 
 interface CsvImportData {
@@ -104,41 +122,35 @@ export class CsvImportDialogComponent implements OnInit {
   readonly classNameFormValid = signal<boolean>(false);
   readonly isLoading = signal<boolean>(false);
   currentStep = 1;
-  readonly csvHeaders = signal<string[]>([]);
-  readonly previewData = signal<any[]>([]);
-  readonly detectedFields = signal<DetectedField[]>([]);
-  readonly importSummary = signal<{
-    totalRows: number;
-    validRows: number;
-    errorRows: number;
-    warnings: string[];
-  }>({ totalRows: 0, validRows: 0, errorRows: 0, warnings: [] });
 
-  readonly displayedPreviewColumns = computed(() => this.csvHeaders());
+  // Create the source signal for CSV data
+  readonly rawCsvData = signal<string>('');
 
-  readonly totalSteps = 2;
-  readonly FieldType = FieldType;
-  readonly MAX_CLASSROOM_NAME_LENGTH = MAX_CLASSROOM_NAME_LENGTH;
+  // This will be our main computed value that contains parsing results and errors
+  readonly parsedCsvData = computed<ParsedCsvData>(() => {
+    const rawData = this.rawCsvData();
+    const result: ParsedCsvData = {
+      rawData,
+      headers: [],
+      rows: [],
+      preview: [],
+      errors: [],
+    };
 
-  ngOnInit() {
-    this.parseCSV();
-
-    this.classNameForm.statusChanges.subscribe((status) => {
-      this.classNameFormValid.set(status === 'VALID');
-    });
-
-    this.classNameFormValid.set(this.classNameForm.valid);
-  }
-
-  parseCSV() {
-    const delimiter = ',';
-    const skipHeader = true;
-    const trimWhitespace = true;
+    if (!rawData || rawData.trim() === '') {
+      result.errors.push(CsvParsingError.EMPTY_FILE);
+      return result;
+    }
 
     try {
-      const rows = this.data.csvData.split(/\r?\n/);
+      const delimiter = ',';
+      const skipHeader = true;
+      const trimWhitespace = true;
+
+      const rows = rawData.split(/\r?\n/);
       if (rows.length === 0) {
-        throw new Error('CSV file is empty');
+        result.errors.push(CsvParsingError.EMPTY_FILE);
+        return result;
       }
 
       let headers = rows[0].split(delimiter);
@@ -147,13 +159,18 @@ export class CsvImportDialogComponent implements OnInit {
         headers = headers.map((header) => header.trim());
       }
 
-      this.csvHeaders.set(headers);
+      // Check for duplicate headers
+      if (areAnyStringsEqual(headers)) {
+        result.errors.push(CsvParsingError.DUPLICATE_HEADERS);
+      }
 
-      const preview = [];
+      result.headers = headers;
+
+      // Parse all data rows
+      const parsedRows = [];
       const startRow = skipHeader ? 1 : 0;
-      const endRow = Math.min(startRow + 3, rows.length);
 
-      for (let i = startRow; i < endRow; i++) {
+      for (let i = startRow; i < rows.length; i++) {
         if (rows[i].trim() === '') continue;
 
         const rowData = rows[i].split(delimiter);
@@ -168,36 +185,34 @@ export class CsvImportDialogComponent implements OnInit {
           rowObj[header] = value;
         }
 
-        preview.push(rowObj);
+        parsedRows.push(rowObj);
       }
 
-      this.previewData.set(preview);
+      result.rows = parsedRows;
 
-      this.detectFieldTypes(headers, preview);
+      // Only get a few rows for preview
+      const previewEndRow = Math.min(3, parsedRows.length);
+      result.preview = parsedRows.slice(0, previewEndRow);
 
-      // TODO: Angular material doesn't like when we upload files with duplicate column names
-      // Therefore, we should throw a mat snackbar error here if they are the same.
-      if (areAnyStringsEqual(headers)) {
-        // Throw snackbar message
-        // Close Modal
-        return;
-      }
-
-      this.validateImport();
+      return result;
     } catch (error) {
       console.error('Error parsing CSV', error);
-      this.#snackBar.open(
-        'Error parsing CSV file. Please check the format.',
-        'Close',
-        {
-          duration: 5000,
-          panelClass: 'error-snackbar',
-        }
-      );
+      result.errors.push(CsvParsingError.INVALID_FORMAT);
+      return result;
     }
-  }
+  });
 
-  detectFieldTypes(headers: string[], preview: any[]) {
+  // Derived computed values
+  readonly csvHeaders = computed(() => this.parsedCsvData().headers);
+  readonly previewData = computed(() => this.parsedCsvData().preview);
+  readonly csvErrors = computed(() => this.parsedCsvData().errors);
+  readonly hasErrors = computed(() => this.csvErrors().length > 0);
+
+  readonly displayedPreviewColumns = computed(() => this.csvHeaders());
+
+  // Calculate field types based on parsed data
+  readonly detectedFields = computed(() => {
+    const { headers, preview } = this.parsedCsvData();
     const detected: DetectedField[] = [];
 
     const isNumeric = (value: string) => {
@@ -231,26 +246,13 @@ export class CsvImportDialogComponent implements OnInit {
       });
     });
 
-    this.detectedFields.set(detected);
-  }
+    return detected;
+  });
 
-  generateFieldName(header: string): string {
-    const cleanHeader = header
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, '')
-      .trim();
-
-    return cleanHeader
-      .split(/\s+/)
-      .map((word, index) =>
-        index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
-      )
-      .join('');
-  }
-
-  validateImport() {
-    const rows = this.data.csvData.split(/\r?\n/);
-    const headers = this.csvHeaders();
+  // Calculate import summary based on parsed data
+  readonly importSummary = computed(() => {
+    const { rawData, headers, errors } = this.parsedCsvData();
+    const rows = rawData.split(/\r?\n/);
     const delimiter = ',';
     const skipHeader = true;
 
@@ -259,6 +261,9 @@ export class CsvImportDialogComponent implements OnInit {
     let validRows = 0;
     let errorRows = 0;
     const warnings: string[] = [];
+
+    // Add parsing errors to warnings (convert enum values to strings)
+    const errorStrings = errors.map((error) => error.toString());
 
     for (let i = startRow; i < rows.length; i++) {
       const row = rows[i];
@@ -287,16 +292,59 @@ export class CsvImportDialogComponent implements OnInit {
       }
     }
 
-    if (errorRows > 0) {
+    if (
+      errorRows > 0 &&
+      !errorStrings.includes('Some rows have empty values')
+    ) {
       warnings.push('Some rows have empty values');
     }
 
-    this.importSummary.set({
+    return {
       totalRows,
       validRows,
       errorRows,
       warnings,
+      errorStrings, // Add error strings for comparison in template
+    };
+  });
+
+  // Create a filtered warnings computed signal to avoid template function calls
+  readonly filteredWarnings = computed(() => {
+    const summary = this.importSummary();
+    const errorStrings = summary.errorStrings || [];
+
+    return summary.warnings.filter(
+      (warning) => !errorStrings.includes(warning)
+    );
+  });
+
+  readonly totalSteps = 2;
+  readonly FieldType = FieldType;
+  readonly MAX_CLASSROOM_NAME_LENGTH = MAX_CLASSROOM_NAME_LENGTH;
+
+  ngOnInit() {
+    // Initialize the raw CSV data from the input
+    this.rawCsvData.set(this.data.csvData);
+
+    this.classNameForm.statusChanges.subscribe((status) => {
+      this.classNameFormValid.set(status === 'VALID');
     });
+
+    this.classNameFormValid.set(this.classNameForm.valid);
+  }
+
+  generateFieldName(header: string): string {
+    const cleanHeader = header
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .trim();
+
+    return cleanHeader
+      .split(/\s+/)
+      .map((word, index) =>
+        index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .join('');
   }
 
   nextStep() {
@@ -324,7 +372,8 @@ export class CsvImportDialogComponent implements OnInit {
 
   canProceed(): boolean {
     if (this.currentStep === 1) {
-      return this.previewData().length > 0;
+      // Only proceed if we have preview data and no critical errors
+      return this.previewData().length > 0 && !this.hasErrors();
     } else if (this.currentStep === 2) {
       return this.classNameFormValid();
     }
@@ -335,11 +384,9 @@ export class CsvImportDialogComponent implements OnInit {
     this.isLoading.set(true);
 
     const importPayload = {
-      csvData: this.data.csvData,
-
+      csvData: this.rawCsvData(),
       className: this.classNameForm.get('className')?.value,
       createNewClass: this.classNameForm.get('createNewClass')?.value,
-
       fields: this.detectedFields().map((field) => ({
         csvHeader: field.csvHeader,
         fieldName: field.fieldName,
@@ -368,17 +415,9 @@ export class CsvImportDialogComponent implements OnInit {
       case 1:
         return 'Review CSV';
       case 2:
-        return 'Create Class';
+        return 'Create Classroom';
       default:
         return `Step ${step}`;
     }
   }
-}
-
-function areAnyStringsEqual(arr: string[]): boolean {
-  const normalizedStrings = arr.map((str) =>
-    str.replace(/\s+/g, '').toLowerCase()
-  );
-  const uniqueStrings = new Set(normalizedStrings);
-  return uniqueStrings.size < normalizedStrings.length;
 }

@@ -39,40 +39,62 @@
           </div>
         </div>
 
-        <div class="mb-12">
-          <div class="bg-zinc-900 p-2 rounded-lg">
-            <table
-              mat-table
-              [dataSource]="previewData()"
-              class="!bg-transparent"
-            >
-              @for (column of csvHeaders(); track column; let i = $index) {
-                <ng-container [matColumnDef]="column">
-                  <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
-                  <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
-                </ng-container>
+        <!-- CSV Parsing Errors Section -->
+        @if (hasErrors()) {
+          <div
+            class="bg-red-50 dark:bg-red-900/30 rounded p-4 mb-6 border border-red-200 dark:border-red-800"
+          >
+            <h4 class="mt-0 mb-2 font-medium text-red-800 dark:text-red-200">
+              CSV Parsing Errors
+            </h4>
+            <ul class="list-none p-0 m-0">
+              @for (error of csvErrors(); track error) {
+                <li class="flex items-start mb-1">
+                  <mat-icon
+                    class="mr-2 text-red-600 dark:text-red-400 text-md -mt-1"
+                    >error</mat-icon
+                  >
+                  <span class="dark:text-red-100">{{ error }}</span>
+                </li>
               }
-
-              <tr
-                mat-header-row
-                *matHeaderRowDef="displayedPreviewColumns()"
-              ></tr>
-              <tr
-                mat-row
-                *matRowDef="let row; columns: displayedPreviewColumns()"
-              ></tr>
-            </table>
+            </ul>
           </div>
+        } @else {
+          <div class="mb-12">
+            <div class="bg-zinc-900 p-2 rounded-lg">
+              <table
+                mat-table
+                [dataSource]="previewData()"
+                class="!bg-transparent"
+              >
+                @for (column of csvHeaders(); track column; let i = $index) {
+                  <ng-container [matColumnDef]="column">
+                    <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+                    <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
+                  </ng-container>
+                }
 
-          @if (previewData().length > 0) {
-            <div
-              class="flex items-center mt-4 text-zinc-600 dark:text-zinc-300 text-sm"
-            >
-              <mat-icon class="mr-1 text-md">info</mat-icon>
-              <span>Showing {{ previewData().length }} of many rows</span>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedPreviewColumns()"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedPreviewColumns()"
+                ></tr>
+              </table>
             </div>
-          }
-        </div>
+
+            @if (previewData().length > 0) {
+              <div
+                class="flex items-center mt-4 text-zinc-600 dark:text-zinc-300 text-sm"
+              >
+                <mat-icon class="mr-1 text-md">info</mat-icon>
+                <span>Showing {{ previewData().length }} of many rows</span>
+              </div>
+            }
+          </div>
+        }
 
         <div class="mb-6">
           <h4 class="mt-0 mb-4 font-medium dark:text-white">Detected Fields</h4>
@@ -123,7 +145,8 @@
           </div>
         </div>
 
-        @if (importSummary().warnings.length > 0) {
+        <!-- Validation Warnings Section (non-critical issues) -->
+        @if (filteredWarnings().length > 0) {
           <div
             class="bg-amber-50 dark:bg-amber-900/30 rounded p-4 mb-6 border border-amber-200 dark:border-amber-800"
           >
@@ -133,7 +156,7 @@
               Validation Issues
             </h4>
             <ul class="list-none p-0 m-0">
-              @for (warning of importSummary().warnings; track warning) {
+              @for (warning of filteredWarnings(); track warning) {
                 <li class="flex items-start mb-1">
                   <mat-icon
                     class="mr-2 text-amber-600 dark:text-amber-400 text-lg h-[18px] w-[18px]"

@@ -116,7 +116,7 @@
         <div
           class="cursor-pointer rounded-lg border border-3 border-dashed border-gray-400 dark:border-gray-500 transition-colors"
           [ngClass]="{
-            'border-gray-900 dark:border-gray-100': isDragging(),
+            'border-black dark:border-white': isDragging(),
           }"
           (dragover)="onDragOver($event)"
           (dragleave)="onDragLeave($event)"

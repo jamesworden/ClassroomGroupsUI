@@ -25,6 +25,9 @@
       ],
       "@shared/ui-outputs": [
         "shared/ui-outputs/index.ts"
+      ],
+      "@shared/util": [
+        "shared/util/index.ts"
       ]
     },
     "outDir": "./dist/out-tsc",
